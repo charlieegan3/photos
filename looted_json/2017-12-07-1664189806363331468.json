@@ -1,0 +1,56 @@
+{
+    "__typename": "GraphImage", 
+    "caption": "\"The bank made this way through Tivoli Corner for the citizens of London AD 1936\"\n.\n.\n.\n#architecture #picoftheday #late #nofilter", 
+    "code": "BcYY8_HHMuM", 
+    "comments": {
+        "count": 0
+    }, 
+    "comments_disabled": false, 
+    "date": 1512606906, 
+    "dimensions": {
+        "height": 1080, 
+        "width": 1080
+    }, 
+    "display_src": "https://scontent-lht6-1.cdninstagram.com/vp/6833dd5dcf1465daf76634f67d118773/5B16ED66/t51.2885-15/e35/24838474_315582105623209_7618218470575964160_n.jpg", 
+    "edge_media_preview_like": {
+        "count": 8
+    }, 
+    "gating_info": null, 
+    "id": "1664189806363331468", 
+    "is_video": false, 
+    "likes": {
+        "count": 8
+    }, 
+    "media_preview": "ACoqexjiGWwPw/lVd7pmGEG1T1z1I7+w/U1WETlWlb5tgySe3oP/AKwoVixyB8rDg/lU7FGlaW0lwuQQqjjJ7n2H/wBeobqB7ZgG+YN0I/zwat2V8tunlyg4BJBAz15wfx71Be3Qu2VUyFHc9eep/AdKEl0Bt9Rtq5GRj5T+VMNtAT0/U1eKCNMDj/P+fxqoaokluZkK+Wg/dIcY/vt7+oHU+vHqKRIlKAHAPb6+g/wqkp8xwB91eB9PU+56n/61TXERlxzgDt/n2pPXQa0ZFOjqaSFSHBPQVZlDMuV4QcfjUMUhbIbt0NJJLRDbuXnbIqv/AJ707PFMwf8AOaokgtsBcnq1Ts2Kgj+6KJOKANG0ctGR/tfpt/x7VVlj2kkfWptPGYznnDVLN0oAqRnIzT+P8/8A66qRdKsUAf/Z", 
+    "owner": {
+        "id": "302526752"
+    }, 
+    "thumbnail_resources": [
+        {
+            "config_height": 150, 
+            "config_width": 150, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/9ebf75523cd8018c8485ebeb6012ddc8/5B1DCA03/t51.2885-15/s150x150/e35/24838474_315582105623209_7618218470575964160_n.jpg"
+        }, 
+        {
+            "config_height": 240, 
+            "config_width": 240, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/258383f944bd80f1b3308923ac7ccb00/5B275F3C/t51.2885-15/s240x240/e35/24838474_315582105623209_7618218470575964160_n.jpg"
+        }, 
+        {
+            "config_height": 320, 
+            "config_width": 320, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/d761c482de7f9ce2fb205f341b5ea9e1/5B4A0744/t51.2885-15/s320x320/e35/24838474_315582105623209_7618218470575964160_n.jpg"
+        }, 
+        {
+            "config_height": 480, 
+            "config_width": 480, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/39040f3ea5f28dc91c24138cd90f2b71/5B07DCC2/t51.2885-15/s480x480/e35/24838474_315582105623209_7618218470575964160_n.jpg"
+        }, 
+        {
+            "config_height": 640, 
+            "config_width": 640, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/a65121153b217627588b24f761511dc7/5B298907/t51.2885-15/s640x640/sh0.08/e35/24838474_315582105623209_7618218470575964160_n.jpg"
+        }
+    ], 
+    "thumbnail_src": "https://scontent-lht6-1.cdninstagram.com/vp/a65121153b217627588b24f761511dc7/5B298907/t51.2885-15/s640x640/sh0.08/e35/24838474_315582105623209_7618218470575964160_n.jpg"
+}

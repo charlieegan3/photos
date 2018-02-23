@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphVideo", 
+    "caption": "#bubbles #seaweed #tank #water", 
+    "code": "BNjkAOCBUbj", 
+    "comments": {
+        "count": 1
+    }, 
+    "comments_disabled": false, 
+    "date": 1480769543, 
+    "dimensions": {
+        "height": 750, 
+        "width": 750
+    }, 
+    "display_src": "https://scontent-lht6-1.cdninstagram.com/vp/c04318a591d575e1ac4347b2a9eedb05/5A92519E/t51.2885-15/e15/14718118_341402712898258_5317944827059372032_n.jpg", 
+    "edge_media_preview_like": {
+        "count": 4
+    }, 
+    "gating_info": null, 
+    "id": "1397118654155671267", 
+    "is_video": true, 
+    "likes": {
+        "count": 4
+    }, 
+    "media_preview": "ACoqYtuJOTgAenan7EhbIUt33Men4AfqRVRnZAMHA/X/APV6elSxPLsL5yc/p6g/41i+bdu62tdovTotRHuXl4JOOePr0HHUfXn0pAAACpDDocevrgj8O9OlImAKkL2OR19OlVgSjfKfxAP9etbxaa008jGSd9SwH6jnP+f89qXjseKgEjFiQeT9Oe/bingZGdx5+v8AjVk7Fd3BA2n+mD/ge/vU8V0sfA6kc9hn8/8ACoZLd1A46jOc8f8A1qrr8w4wMd+/NZWUlbdGt2mWPMCsfT0Pp1xVlWSY8AKw4zk9Dx1H9RVVEMgyxHAJJPUY9/ekEY25zk5zgenqTRZPyfcLlqW2ZF3DoOmcfz/nVbeB2/z+dJD82F3YBOAMngn25J/Kpmt3BI96pO2kncl26EQn+Qxt05K/4fQ9qh3jjgrnr/8AW9qi703OetNK2w3qXSTGobIZGz0PX2Pv7UJIdu5RhhxuzwfYjoapVNCeSKiSsilqXrKVVBZxwrBgQPun+YH6UNc8n5ieeu2qD8E445pQ7Y6n86fKt+5LZ//Z", 
+    "owner": {
+        "blocked_by_viewer": false, 
+        "followed_by_viewer": false, 
+        "full_name": "Charlie", 
+        "has_blocked_viewer": false, 
+        "id": "302526752", 
+        "is_private": false, 
+        "is_unpublished": false, 
+        "is_verified": false, 
+        "profile_pic_url": "https://scontent-lht6-1.cdninstagram.com/vp/3d9e98260e36ef94ad0d4779ed9605dd/5B112FEC/t51.2885-19/s150x150/26071205_1747670508874077_7029076689892147200_n.jpg", 
+        "requested_by_viewer": false, 
+        "username": "charlieegan3"
+    }, 
+    "thumbnail_resources": [
+        {
+            "config_height": 150, 
+            "config_width": 150, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/def5ef9b68bed9c0dd87388656f2bdbd/5A931FBB/t51.2885-15/s150x150/e15/14718118_341402712898258_5317944827059372032_n.jpg"
+        }, 
+        {
+            "config_height": 240, 
+            "config_width": 240, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/9767a160b26cd3403bc725ba0ce8736c/5A92D744/t51.2885-15/s240x240/e15/14718118_341402712898258_5317944827059372032_n.jpg"
+        }, 
+        {
+            "config_height": 320, 
+            "config_width": 320, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/8127032b2a343e763a1381b8d34b1db3/5A92A8BC/t51.2885-15/s320x320/e15/14718118_341402712898258_5317944827059372032_n.jpg"
+        }, 
+        {
+            "config_height": 480, 
+            "config_width": 480, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/9c3fd747f1e1f77903a2ded160f6e4b0/5A9331FA/t51.2885-15/s480x480/e15/14718118_341402712898258_5317944827059372032_n.jpg"
+        }, 
+        {
+            "config_height": 640, 
+            "config_width": 640, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/44347ff1c7f3a0a83f5e4f22cd49ed70/5A92C74A/t51.2885-15/s640x640/e15/14718118_341402712898258_5317944827059372032_n.jpg"
+        }
+    ], 
+    "thumbnail_src": "https://scontent-lht6-1.cdninstagram.com/vp/44347ff1c7f3a0a83f5e4f22cd49ed70/5A92C74A/t51.2885-15/s640x640/e15/14718118_341402712898258_5317944827059372032_n.jpg", 
+    "video_views": 0
+}

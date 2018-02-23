@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphVideo", 
+    "caption": "Bustling Tourism #tourists #lift #elevator #hyperlapse", 
+    "code": "BGUxr4Tm2QJ", 
+    "comments": {
+        "count": 2
+    }, 
+    "comments_disabled": false, 
+    "date": 1465241015, 
+    "dimensions": {
+        "height": 750, 
+        "width": 750
+    }, 
+    "display_src": "https://scontent-lht6-1.cdninstagram.com/vp/ed020b33b7494f466c3ef35bda3db5f3/5A932E97/t51.2885-15/e15/13381055_195302204198770_22139190_n.jpg", 
+    "edge_media_preview_like": {
+        "count": 11
+    }, 
+    "gating_info": null, 
+    "id": "1266855914872988681", 
+    "is_video": true, 
+    "likes": {
+        "count": 11
+    }, 
+    "media_preview": "ACoqyGG04/zinrgc8/yowGGO46f4f4UqqSPT3pgKDn7o59D/ADqNpOw/OnE44HH8zSnDdeD6+v1/xpARglj9adubt0pWGz8R+nf8zUO40wLCEDORnPfuOeo/lTjGZDgDDDqP6j+opiNz9SP51OxG4N/n/OaQDBCehx/P+VNMYU4P5YxUvnHPTHb3/P8AxFWbKFLlyGzwM+nt/wDX9zQBmSg/ePQ1DWtcQhImTBLKfQ446nPTpWTQBOv9afK+CM8Uxev5Us/agBQDn2/T+laVm3k3OOWDJjgf0rKh5dQema1Iv+PtPp/Q0AajPnesoCBgRjOeCMA/jzXIdOK3tUJ8w/Qf1rDoA//Z", 
+    "owner": {
+        "blocked_by_viewer": false, 
+        "followed_by_viewer": false, 
+        "full_name": "Charlie", 
+        "has_blocked_viewer": false, 
+        "id": "302526752", 
+        "is_private": false, 
+        "is_unpublished": false, 
+        "is_verified": false, 
+        "profile_pic_url": "https://scontent-lht6-1.cdninstagram.com/vp/3d9e98260e36ef94ad0d4779ed9605dd/5B112FEC/t51.2885-19/s150x150/26071205_1747670508874077_7029076689892147200_n.jpg", 
+        "requested_by_viewer": false, 
+        "username": "charlieegan3"
+    }, 
+    "thumbnail_resources": [
+        {
+            "config_height": 150, 
+            "config_width": 150, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/4f2eedae5b6a27c0eeb5e6ae261258a4/5A9323C1/t51.2885-15/s150x150/e15/13381055_195302204198770_22139190_n.jpg"
+        }, 
+        {
+            "config_height": 240, 
+            "config_width": 240, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/f8b5056cce35c9bf1fb3028e67c5069a/5A925838/t51.2885-15/s240x240/e15/13381055_195302204198770_22139190_n.jpg"
+        }, 
+        {
+            "config_height": 320, 
+            "config_width": 320, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/84df6fdba3f9311741a1b8526ea50a2d/5A924681/t51.2885-15/s320x320/e15/13381055_195302204198770_22139190_n.jpg"
+        }, 
+        {
+            "config_height": 480, 
+            "config_width": 480, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/830ed5cbcfaa4e278a0dcaec146adc3d/5A92AF50/t51.2885-15/s480x480/e15/13381055_195302204198770_22139190_n.jpg"
+        }, 
+        {
+            "config_height": 640, 
+            "config_width": 640, 
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/802d2a33bd5e9b2b436004ffc380df3e/5A931AA3/t51.2885-15/s640x640/e15/13381055_195302204198770_22139190_n.jpg"
+        }
+    ], 
+    "thumbnail_src": "https://scontent-lht6-1.cdninstagram.com/vp/802d2a33bd5e9b2b436004ffc380df3e/5A931AA3/t51.2885-15/s640x640/e15/13381055_195302204198770_22139190_n.jpg", 
+    "video_views": 0
+}

@@ -1,0 +1,24 @@
+{
+  "id": "1266080237261383573",
+  "code": "BGSBUSPG2eV",
+  "display_url": "https://scontent-lht6-1.cdninstagram.com/vp/e99ae23d3db1ddfbff1f1d2372362c89/5B12F627/t51.2885-15/e35/13392821_1549620495344560_2054260853_n.jpg",
+  "media_url": "https://scontent-lht6-1.cdninstagram.com/vp/e99ae23d3db1ddfbff1f1d2372362c89/5B12F627/t51.2885-15/e35/13392821_1549620495344560_2054260853_n.jpg",
+  "post_url": "https://www.instagram.com/p/BGSBUSPG2eV",
+  "is_video": false,
+  "caption": "#Prague #architecture",
+  "location": {
+    "id": "446390054",
+    "has_public_page": true,
+    "name": "Prague Castle",
+    "slug": "prague-castle"
+  },
+  "tags": [
+    "#Prague",
+    "#architecture"
+  ],
+  "timestamp": 1465148547,
+  "dimensions": {
+    "height": 1080,
+    "width": 1080
+  }
+}

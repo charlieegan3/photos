@@ -1,0 +1,25 @@
+{
+  "id": "1268651218836350837",
+  "code": "BGbJ4_am2d1",
+  "display_url": "https://scontent-lht6-1.cdninstagram.com/vp/88b28b4868d226b69a0c8f6f1df304f9/5B4985C6/t51.2885-15/e35/13381279_241205699594311_970536983_n.jpg",
+  "media_url": "https://scontent-lht6-1.cdninstagram.com/vp/88b28b4868d226b69a0c8f6f1df304f9/5B4985C6/t51.2885-15/e35/13381279_241205699594311_970536983_n.jpg",
+  "post_url": "https://www.instagram.com/p/BGbJ4_am2d1",
+  "is_video": false,
+  "caption": "#skylight #sky #architecture",
+  "location": {
+    "id": "213131048",
+    "has_public_page": true,
+    "name": "Berlin, Germany",
+    "slug": "berlin-germany"
+  },
+  "tags": [
+    "#skylight",
+    "#sky",
+    "#architecture"
+  ],
+  "timestamp": 1465455032,
+  "dimensions": {
+    "height": 1080,
+    "width": 1080
+  }
+}

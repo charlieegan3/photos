@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y4j3RJG2dN",
   "is_video": false,
   "caption": "Hotel #architecture #hotel #lobby #Sweden",
-  "location": null,
+  "location": {
+    "id": "213030855",
+    "has_public_page": true,
+    "name": "Stockholm Arlanda Airport",
+    "slug": "stockholm-arlanda-airport"
+  },
   "tags": [
     "#architecture",
     "#hotel",

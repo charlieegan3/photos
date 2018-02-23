@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y5Cqdwm2Y2",
   "is_video": false,
   "caption": "The way? #tyresta #Sweden #nationalpark",
-  "location": null,
+  "location": {
+    "id": "523970",
+    "has_public_page": true,
+    "name": "Tyresta nationalpark",
+    "slug": "tyresta-nationalpark"
+  },
   "tags": [
     "#tyresta",
     "#Sweden",

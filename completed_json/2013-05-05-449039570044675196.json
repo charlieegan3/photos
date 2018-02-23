@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y7Txwem2R8",
   "is_video": false,
   "caption": "Cracked #Sweden #architecture",
-  "location": null,
+  "location": {
+    "id": "213094275",
+    "has_public_page": true,
+    "name": "Stockholm, Sweden",
+    "slug": "stockholm-sweden"
+  },
   "tags": [
     "#Sweden",
     "#architecture"

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y7SDTeG2QU",
   "is_video": false,
   "caption": "Gamla Stan #Sweden #architecture",
-  "location": null,
+  "location": {
+    "id": "213094275",
+    "has_public_page": true,
+    "name": "Stockholm, Sweden",
+    "slug": "stockholm-sweden"
+  },
   "tags": [
     "#Sweden",
     "#architecture"

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y5UmrOm2U3",
   "is_video": false,
   "caption": "Orange #Stockholm",
-  "location": null,
+  "location": {
+    "id": "213094275",
+    "has_public_page": true,
+    "name": "Stockholm, Sweden",
+    "slug": "stockholm-sweden"
+  },
   "tags": [
     "#Stockholm"
   ],

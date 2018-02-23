@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y5EBVnm2aY",
   "is_video": false,
   "caption": "Wildlife Scene #visitorcentre #Sweden #nationalpark",
-  "location": null,
+  "location": {
+    "id": "307365235",
+    "has_public_page": true,
+    "name": "Tyresta, Stockholms Län, Sweden",
+    "slug": "tyresta-stockholms-lan-sweden"
+  },
   "tags": [
     "#visitorcentre",
     "#Sweden",

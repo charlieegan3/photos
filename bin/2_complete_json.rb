@@ -2,15 +2,12 @@
 
 require "json"
 require "date"
-require "pry"
-require "nokogiri"
 require "open-uri"
 
 Dir.glob("looted_json/*").shuffle.map do |file|
   completed_file_name = "completed_json/#{file.split("/").last}"
 
   next if File.exists?(completed_file_name)
-  sleep 2
   puts file
 
   raw_data = JSON.parse(File.read(file))

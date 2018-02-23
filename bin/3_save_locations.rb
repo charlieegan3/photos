@@ -2,9 +2,8 @@
 
 require "json"
 require "open-uri"
-require "pry"
 
-locations = Dir.glob("completed_json/*").map do |file|
+Dir.glob("completed_json/*").map do |file|
   JSON.parse(File.read(file))["location"]
 end.uniq.compact.each do |location|
   puts location["name"]

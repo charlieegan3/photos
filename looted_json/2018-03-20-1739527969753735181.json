@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1739527969753735181",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Other people's buses making their way over Putney bridge\n.\n.\n.\n#traveling_uk #scenicbritain #LifeoftheUK #bbcbritain #VisitEngland #visitlondon #timeoutlondon #theprettycities #exploretocreate #instagoodmyphoto #streets_oftheworld #ig_street #vivostreet #watchthisinstagood #justgoshoot #peoplescreatives #monoart #shotbypixel #teampixel #nofilter"
+                }
+            }
+        ]
+    },
+    "shortcode": "BgkC3jaByAN",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1521587915,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lht6-1.cdninstagram.com/vp/22eb8f78f0d9558815fb87d954057777/5B35BD09/t51.2885-15/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+    "edge_liked_by": {
+        "count": 21
+    },
+    "edge_media_preview_like": {
+        "count": 21
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5yiirNrEkrESNsAUsD7jt/nmkMrUlKaSmAUUUuDQBOLZ9oZhtBOPm47ZzzjimFAeVIA9CeR6A9M+5qxdmcBRM+8EcDOcD3qqjgcMAw/Ij6Ef1zU67gWonCZUbee7YJ/w/p7UqJE5/euB6EEdPpg81TIB+7+tNosNvSxvxx6eowz7vxI/kBU2dN9F/Nv8a5qily+bJFzSUUVYBS5pKKACiiigD//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lht6-1.cdninstagram.com/vp/ab3243067ddf25b1a0dfb5460300fe3a/5B73CE68/t51.2885-15/s640x640/sh0.08/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/dd33782efed9ec441795f58ba7c63251/5B3B306C/t51.2885-15/s150x150/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/486fe51573297f9f9b02e4a19533ff84/5B4EDD53/t51.2885-15/s240x240/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/6d3c50dfbda6bef9a4b052ff7cf4bb83/5B71CF2B/t51.2885-15/s320x320/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/607e69d7598c604c83194598bb487cd9/5B3256AD/t51.2885-15/s480x480/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/vp/ab3243067ddf25b1a0dfb5460300fe3a/5B73CE68/t51.2885-15/s640x640/sh0.08/e35/29092506_278295842708770_7877287449011945472_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

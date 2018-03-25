@@ -12,7 +12,10 @@ Dir.glob("looted_json/*").shuffle.map do |file|
 
   raw_data = JSON.parse(File.read(file))
 
-  doc = open("https://www.instagram.com/p/#{raw_data["code"]}").read
+  code = raw_data["code"] || raw_data["shortcode"]
+  timestamp = raw_data["date"] || raw_data["taken_at_timestamp"]
+
+  doc = open("https://www.instagram.com/p/#{code}").read
   page_data = doc.scan(/\{[^\n]+\}/).map { |r| JSON.parse(r) rescue nil }.compact.first
   graph_image = page_data.dig(*%w(entry_data PostPage)).first.dig(*%w(graphql shortcode_media))
 
@@ -21,15 +24,15 @@ Dir.glob("looted_json/*").shuffle.map do |file|
 
   completed_data = {
     id: raw_data["id"],
-    code: raw_data["code"],
+    code: code,
     display_url: graph_image["display_url"],
     media_url: raw_data["is_video"] ? graph_image["video_url"] : graph_image["display_url"],
-    post_url: "https://www.instagram.com/p/#{raw_data["code"]}",
+    post_url: "https://www.instagram.com/p/#{code}",
     is_video: raw_data["is_video"] == true,
     caption: caption,
     location: graph_image["location"],
     tags: tags,
-    timestamp: raw_data["date"],
+    timestamp: timestamp,
     dimensions: raw_data["dimensions"]
   }
 

@@ -14,3 +14,5 @@ data["graphql"]["user"]["edge_owner_to_timeline_media"]["edges"].each do |image|
 
   File.write("looted_json/" + filename, JSON.pretty_generate(image, indent: "    "))
 end
+
+`git checkout looted_json`

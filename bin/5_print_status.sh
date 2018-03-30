@@ -8,11 +8,26 @@ for file in "${files[@]}"; do
   echo "$file:   $res    $size"
 done
 
+counts=()
+
 for dir in "looted_json" "completed_json" "media"; do
   count=$(ls $dir | wc | awk '{ print $1 }')
   echo -e "$count" "\t" $dir
+  counts+=($count)
 done
 
 profile="https://www.instagram.com/charlieegan3/"
-echo $profile
-curl --silent $profile | grep -oh --color "\S\+ Posts" | head -n 1
+actual_count=$(curl --silent $profile | grep -oh --color "\S\+ Posts" | head -n 1 | sed s/[^0-9]//g)
+
+echo "$actual_count posts found at $profile"
+
+counts+=($actual_count)
+
+if [ "${#counts[@]}" -gt 0 ] && [ $(printf "%s\000" "${counts[@]}" |
+       LC_ALL=C sort -z -u |
+       grep -z -c .) -ne 1 ] ; then
+  echo "Missing images"
+  exit 1
+else
+  echo "Counts match"
+fi

@@ -23,3 +23,6 @@ archive:
 
 calendar:
 	./bin/calendar.sh
+
+sync:
+	./bin/sync.sh

@@ -1,3 +1,5 @@
+.PHONY: calendar
+
 all: download status save
 
 download:
@@ -18,3 +20,6 @@ save:
 archive:
 	zip -r "instagram_data_$$(date +"%Y-%m-%d-%H%M").zip" \
 		looted_json completed_json locations media updated_at
+
+calendar:
+	./bin/calendar.sh

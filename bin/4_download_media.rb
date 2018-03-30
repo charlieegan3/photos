@@ -4,7 +4,11 @@ require "json"
 require "open-uri"
 require "fileutils"
 
-Dir.glob("completed_json/*").shuffle.map do |file|
+`mkdir -p media`
+
+files = `git status --porcelain | grep completed_json | awk '{ print $2 }'`.split("\n")
+
+files.shuffle.map do |file|
   data = JSON.parse(File.read(file))
 
   format = data["is_video"] == true ? "mp4" : "jpg"

@@ -2,7 +2,6 @@
 
 require "json"
 require "open-uri"
-require "pry"
 
 url = "https://www.instagram.com/charlieegan3/?__a=1"
 

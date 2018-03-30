@@ -10,7 +10,7 @@ done
 
 counts=()
 
-for dir in "looted_json" "completed_json" "media"; do
+for dir in "looted_json" "completed_json"; do
   count=$(ls $dir | wc | awk '{ print $1 }')
   echo -e "$count" "\t" $dir
   counts+=($count)

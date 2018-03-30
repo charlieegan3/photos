@@ -14,3 +14,7 @@ save:
 		git add . && \
 		git commit -m "Add $$(git status --porcelain | grep media | wc | awk '{ print $$1 }') images" && \
 		git push origin master
+
+archive:
+	zip -r "instagram_data_$$(date +"%Y-%m-%d-%H%M").zip" \
+		looted_json completed_json locations media updated_at

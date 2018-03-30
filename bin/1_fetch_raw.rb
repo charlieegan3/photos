@@ -21,7 +21,10 @@ data["graphql"]["user"]["edge_owner_to_timeline_media"]["edges"].each do |image|
   end
 end
 
-puts "#{count} new images"
+if count > 0
+  puts "#{count} new images"
+  `date > updated_at`
+end
 
 if count >= 12
   raise "Potentially missing images"

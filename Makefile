@@ -11,10 +11,7 @@ sync:
 	./bin/sync.sh
 
 save:
-	test -n "$$(git status --porcelain)" && \
-		git add . && \
-		git -c user.name=automated -c user.email=git@charlieegan3.com commit -m "Add $(git status --porcelain | grep media | wc | awk '{ print $$1 }') images" && \
-		git push origin master
+	./bin/save.sh
 
 notify:
 	curl -s --form-string "token=$$PUSHOVER_TOKEN" \

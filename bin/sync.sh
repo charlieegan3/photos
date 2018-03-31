@@ -3,6 +3,7 @@
 set -e
 
 if [ -z "$(ls -A media)" ]; then
+  echo "Nothing to sync"
   exit 0
 fi
 

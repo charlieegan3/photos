@@ -3,7 +3,7 @@
 require "json"
 require "open-uri"
 
-locations_with_missing_data = %w(743759226 502239540)
+locations_with_missing_data = %w(743759226 502239540 215736018)
 
 Dir.glob("completed_json/*").map do |file|
   JSON.parse(File.read(file))["location"]

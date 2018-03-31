@@ -13,7 +13,8 @@ data["graphql"]["user"]["edge_owner_to_timeline_media"]["edges"].each do |image|
   filename = Time.at(image["taken_at_timestamp"]).strftime("%Y-%m-%d") + "-" + image["id"] + ".json"
   image.merge!(scraper_version: "v2")
 
-  unless File.exists?("looted_json/" + filename)
+  # images may have different dates if collected in another timezone! Only check IDs
+  if `ls looted_json | grep #{image["id"]}` == ""
     count += 1
 
     File.write("looted_json/" + filename, JSON.pretty_generate(image, indent: "    "))

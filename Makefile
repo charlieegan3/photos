@@ -28,4 +28,5 @@ calendar:
 	./bin/calendar.sh
 
 docker_image:
-	docker build -t "charlieegan3-instagram-archive:$$(cat Dockerfile entrypoint.sh | shasum | awk '{ print $$1 }')" .
+	docker build -t "charlieegan3/instagram-archive:$$(cat Dockerfile entrypoint.sh | shasum | awk '{ print $$1 }')" .
+	docker push "charlieegan3/instagram-archive:$$(cat Dockerfile entrypoint.sh | shasum | awk '{ print $$1 }')"

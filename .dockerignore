@@ -1,0 +1,12 @@
+.git/
+Makefile
+bin/
+completed_json/
+looted_json/
+updated_at
+Dockerfile
+account.json
+media/
+locations/
+.gitignore
+.envrc.template

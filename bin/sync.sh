@@ -2,12 +2,15 @@
 
 set -e
 
+b2 authorize_account "$B2_ACCOUNT_ID" "$B2_ACCOUNT_KEY"
+echo $GOOGLE_JSON > /tmp/account.json && gcloud auth activate-service-account --key-file /tmp/account.json
+
 bucket="charlieegan3-instagram-archive"
 folder="current"
 path="$bucket/$folder"
 
 aws s3 sync --size-only --acl public-read media s3://$path
-gsutil rsync -c -a public-read media gs://$path
+gsutil -o "GSUtil:default_project_id=$GOOGLE_PROJECT" rsync -c -a public-read media gs://$path
 b2 sync --compareVersions size --threads 4 media b2://$path
 
 counts=()

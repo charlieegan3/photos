@@ -1,7 +1,5 @@
 .PHONY: calendar
 
-all: download status save
-
 download:
 	./bin/1_fetch_raw.rb
 	./bin/2_complete_json.rb

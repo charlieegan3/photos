@@ -1,14 +1,22 @@
 {{ define "main" }}
 {{ $path := .RelPermalink }}
 <div class="mw7 center cf">
+	{{ $.Scratch.Add "used" (slice "") }}
 	{{ range $_, $tag := .Data.Terms.ByCount }}
 		<div class="fl w-third">
 			<a href="{{ $path }}{{ lower $tag.Name }}" class="db aspect-ratio aspect-ratio--1x1 dim">
+				{{ $availablePages := where $tag.WeightedPages ".Params.id" "not in" ($.Scratch.Get "used") }}
+				{{ if (eq (len $availablePages) 0) }}
+					{{ $.Scratch.Set "page" (index (shuffle $tag.WeightedPages) 0) }}
+				{{ else }}
+					{{ $.Scratch.Set "page" (index $availablePages 0) }}
+					{{ $.Scratch.Add "used" (slice ($.Scratch.Get "page").Params.id) }}
+				{{ end }}
 				<div style="margin: auto; width: 100%; z-index: 1000; position: absolute; top: 50%; margin-top: -50px;">
 					<p class="tc f7 f5-ns near-white" style="overflow: hidden; text-overflow: ellipsis;">#{{ $tag.Name }}</p>
 					<p class="tc f7 f6-ns silver">{{ len $tag.WeightedPages }} posts</p>
 				</div>
-				<span role="img" data-src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ (index (shuffle $tag.WeightedPages) 0).Params.file_reference }}.jpg" class="bg-center cover aspect-ratio--object lazyload o-40"></span>
+				<span role="img" data-src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ ($.Scratch.Get "page").Params.file_reference }}.jpg" class="bg-center cover aspect-ratio--object lazyload o-40"></span>
 			</a>
 		</div>
 	{{ end }}

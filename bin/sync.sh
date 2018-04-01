@@ -15,7 +15,7 @@ folder="current"
 path="$bucket/$folder"
 
 aws s3 sync --size-only --acl public-read media s3://$path
-gsutil -o "GSUtil:default_project_id=$GOOGLE_PROJECT" rsync -c -a public-read media gs://$path
+gsutil -o "GSUtil:default_project_id=$GOOGLE_PROJECT" -h "Cache-Control: public, max-age=2629800" rsync -c -a public-read media gs://$path
 b2 sync --compareVersions size --threads 4 media b2://$path
 
 counts=()

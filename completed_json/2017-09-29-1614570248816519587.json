@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "Budapest",
   "location": {
-    "id": "214906359",
+    "id": "213205633",
     "has_public_page": true,
-    "name": "Budapest Airport",
-    "slug": "budapest-airport"
+    "name": "Budapest, Hungary",
+    "slug": "budapest-hungary"
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1506691794,
   "dimensions": {
     "height": 1078,

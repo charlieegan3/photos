@@ -1,0 +1,6 @@
+baseURL: "https://photos.charlieegan3.com/"
+languageCode: "en-us"
+title: "Photo Gallery"
+taxonomies:
+  tag: "tags"
+  location: "locations"

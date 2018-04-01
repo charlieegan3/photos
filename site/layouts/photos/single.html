@@ -3,17 +3,35 @@
 {{ end }}
 
 {{ define "main" }}
-	<div class="mw6 center">
+	<div class="mw6 center f7 f5-ns">
 		<img class="ba bw2 b--moon-gray br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
 
-		<div class="f7 f5-ns">
+		<div>
 			{{ .Content }}
 		</div>
 
-		<div class="f7 f5-ns monospace">
-			{{ range .Params.Tags }}
-				<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
-			{{ end }}
+		<div class="f6-ns monospace">
+			<p>
+				{{ range .Params.Tags }}
+					<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
+				{{ end }}
+			</p>
+		</div>
+
+		<div class="">
+			<p>
+				{{ $pageId := .Params.id }}
+				{{ range .Params.locations }}
+					{{ $location := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+					{{ if (gt (len $location.Pages) 1) }}
+						<a class="link dim silver" href="{{ $location.Permalink }}">{{ $location.Params.name }} <span class="mid-gray">({{ sub (len $location.Pages) 1 }} other posts)</span></a>
+						{{ $.Scratch.Add "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
+						{{ partial "photo_grid.html" $ }}
+					{{ else }}
+						<span class="silver">{{ $location.Params.name }}</span>
+					{{ end }}
+				{{ end }}
+			</p>
 		</div>
 	</div>
 {{ end }}

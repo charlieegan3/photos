@@ -1,0 +1,19 @@
+{{ define "main" }}
+{{ $path := .RelPermalink }}
+<div class="mw7 center cf">
+	{{ range $_, $location := .Data.Terms.ByCount }}
+		{{ $page := ($.Site.GetPage "taxonomyTerm" "locations" $location.Name) }}
+		{{ if (ne $page.Params.name "") }}
+			<div class="fl w-third">
+				<a href="{{ $page.Permalink }}" class="db aspect-ratio aspect-ratio--1x1 dim">
+					<div style="margin: auto; width: 100%; z-index: 1000; position: absolute; top: 50%; margin-top: -50px;">
+						<p class="tc f7 f5-ns near-white" style="overflow: hidden; text-overflow: ellipsis;">{{ replaceRE ",.*" "" $page.Params.name }}</p>
+						<p class="tc f7 f6-ns silver">{{ len $location.WeightedPages }} posts</p>
+					</div>
+					<span role="img" data-src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ (index ($location.WeightedPages) 0).Params.file_reference }}.jpg" class="bg-center cover aspect-ratio--object lazyload o-40"></span>
+				</a>
+			</div>
+		{{ end }}
+	{{ end }}
+</div>
+{{ end }}

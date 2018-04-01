@@ -11,6 +11,8 @@ date: <%= DateTime.strptime(@data["timestamp"].to_s,'%s').iso8601 %>
 title: |-
   <%= @title %>
 file_reference: <%= @file_reference %>
+locations:
+<% if @data["location"] %> - <%= @location_slug %><% end %>
 ---
 
 <%= format_caption(@data["caption"]) %>
@@ -49,6 +51,14 @@ def format_tags(tags)
   tags.map { |t| t.gsub("#", "").strip }
 end
 
+def format_location_slug(id, slug)
+  if slug == ""
+    id
+  else
+    [slug, id].join("-")
+  end
+end
+
 `mkdir -p site/content/photos`
 
 Dir.glob("completed_json/*").shuffle.each do |file|
@@ -56,7 +66,21 @@ Dir.glob("completed_json/*").shuffle.each do |file|
   @data = JSON.parse(File.read(file))
   @data["tags"] = format_tags(@data["tags"])
   @title = format_title(@data)
+  if @data["location"]
+    @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])
+  end
 
   markdown = ERB.new(page_template).result()
   File.write("site/content/photos/#{@file_reference}.md", markdown)
+end
+
+`rm -r site/content/locations/*`
+Dir.glob("locations/*").shuffle.each do |file|
+  @data = JSON.parse(File.read(file))
+
+  slug = format_location_slug(@data["id"], @data["slug"])
+
+  path = "site/content/locations/#{slug}"
+  `mkdir -p #{path}`
+  File.write("#{path}/_index.md", @data.to_yaml + "---\n")
 end

@@ -4,7 +4,7 @@
 
 {{ define "main" }}
 	<div class="mw6 center f7 f5-ns">
-		<img class="ba bw2 b--moon-gray br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
+		<img class="ba bw2 b--moon-gray border-box br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
 
 		<div>
 			{{ .Content }}
@@ -18,11 +18,22 @@
 			</p>
 		</div>
 
-		<div class="">
-			<p>
-				{{ $pageId := .Params.id }}
-				{{ range .Params.locations }}
-					{{ $location := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+		<div>
+			{{ $pageId := .Params.id }}
+			{{ range .Params.locations }}
+				{{ $location := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+
+				<div id="mapid" style="width: 100%; height: 250px;"></div>
+				<script>
+					var lat = {{ $location.Params.lat }};
+					var lon = {{ $location.Params.long }};
+					var mymap = L.map('mapid').setView([lat, lon], 10);
+					var marker = L.marker([lat, lon]).addTo(mymap);
+
+					var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mymap);
+				</script>
+
+				<p>
 					{{ if (gt (len $location.Pages) 1) }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">{{ $location.Params.name }} <span class="mid-gray">({{ sub (len $location.Pages) 1 }} other posts)</span></a>
 						{{ $.Scratch.Add "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
@@ -30,8 +41,8 @@
 					{{ else }}
 						<span class="silver">{{ $location.Params.name }}</span>
 					{{ end }}
-				{{ end }}
-			</p>
+				</p>
+			{{ end }}
 		</div>
 	</div>
 {{ end }}

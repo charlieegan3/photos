@@ -4,3 +4,14 @@ title: "Photo Gallery"
 taxonomies:
   tag: "tags"
   location: "locations"
+menu:
+  main:
+  - name: "Latest"
+    weight: 8
+    url: "/"
+  - name: "Tags"
+    weight: 9
+    url: "/tags/"
+  - name: "Locations"
+    weight: 10
+    url: "/locations/"

@@ -68,6 +68,19 @@
 		</script>
 	</head>
 	<body class="bg-near-black silver">
+		<div class="mw7 center cf tc bg-near-white">
+			{{ $currentPage := . }}
+			{{ range .Site.Menus.main }}
+				{{ if $currentPage.IsMenuCurrent "main" . }}
+					<div class="fl w-third pt1 pb2 bg-near-black">
+						<span class="link gray">{{ .Name }}</span>
+					</div>
+				{{ else }}
+					<a class="fl w-third pt1 pb2 db dim link gray" href="{{ .URL }}">{{ .Name }}</a>
+				{{ end }}
+			{{end}}
+		</div>
+
 		<section class="mw7 mw8-ns center pa3 ph5-ns">
 			{{ block "main" . }}
 			{{ end }}

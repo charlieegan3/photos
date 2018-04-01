@@ -15,3 +15,6 @@ menu:
   - name: "Locations"
     weight: 10
     url: "/locations/"
+disableKinds:
+  - RSS
+  - Sitemap

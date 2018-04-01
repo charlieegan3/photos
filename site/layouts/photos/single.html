@@ -1,0 +1,19 @@
+{{ define "title" }}
+	{{ .Params.title }} - {{ $.Site.Title }}
+{{ end }}
+
+{{ define "main" }}
+	<div class="mw6 center">
+		<img class="ba bw2 b--moon-gray br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
+
+		<div class="f7 f5-ns">
+			{{ .Content }}
+		</div>
+
+		<div class="f7 f5-ns monospace">
+			{{ range .Params.Tags }}
+				<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
+			{{ end }}
+		</div>
+	</div>
+{{ end }}

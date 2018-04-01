@@ -1,0 +1,4 @@
+{{ define "main" }}
+	{{ $.Scratch.Add "images" .Pages }}
+	{{ partial "photo_grid.html" . }}
+{{ end }}

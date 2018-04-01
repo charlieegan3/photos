@@ -1,0 +1,9 @@
+<div class="mw7 center cf">
+	{{ range $.Scratch.Get "images" }}
+		<div class="fl w-third">
+			<a href="{{ .RelPermalink }}" class="db aspect-ratio aspect-ratio--1x1 dim">
+				<span role="img" data-src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg" class="bg-center cover aspect-ratio--object lazyload"></span>
+			</a>
+		</div>
+	{{ end }}
+</div>

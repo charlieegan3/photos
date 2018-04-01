@@ -1,6 +1,50 @@
+{{ define "title" }}
+	Locations - {{ $.Site.Title }}
+{{ end }}
+
 {{ define "main" }}
 {{ $path := .RelPermalink }}
+
 <div class="mw7 center cf">
+	<div id="photomap" style="width: 100%; height: 400px;"></div>
+	<script>
+		var mymap = L.map('photomap', { minZoom: 4, maxZoom: 14, zoomControl: false }).setView([0, 0], 5);
+
+		L.Icon.Small = L.Icon.Default.extend({
+			options: {
+				shadowSize:   [0, 0],
+				shadowAnchor: [0, 0],
+				iconAnchor: [ 6, 20 ],
+				iconSize: [ 12, 20 ],
+				popupAnchor: [ 0, -18 ],
+			}
+		});
+
+		var smallIcon = new L.Icon.Small();
+
+		var markers = [
+			{{ range $_, $location := .Data.Terms.ByCount }}
+				{{ $page := ($.Site.GetPage "taxonomyTerm" "locations" $location.Name) }}
+				L.marker([{{ $page.Params.lat }}, {{ $page.Params.long }}])
+					.setIcon(smallIcon)
+					{{ if (gt (len $location.WeightedPages) 1) }}
+					.bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $location.WeightedPages }} posts</a>")
+					{{ else }}
+					{{ $post := index $location.WeightedPages 0 }}
+					.bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ $post.Params.file_reference }}.jpg">' + "</a>")
+					{{ end }}
+					.addTo(mymap),
+			{{ end }}
+		];
+
+		var group = new L.featureGroup(markers);
+		mymap.fitBounds(group.getBounds());
+
+		var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mymap);
+	</script>
+
+	<br>
+
 	{{ range $_, $location := .Data.Terms.ByCount }}
 		{{ $page := ($.Site.GetPage "taxonomyTerm" "locations" $location.Name) }}
 		{{ if (ne $page.Params.name "") }}

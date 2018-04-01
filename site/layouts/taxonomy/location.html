@@ -1,5 +1,5 @@
 {{ define "title" }}
-	{{ lower .Params.name }} - {{ $.Site.Title }}
+	{{ replaceRE ",.*" "" .Params.name }} - {{ $.Site.Title }}
 {{ end }}
 
 {{ define "main" }}

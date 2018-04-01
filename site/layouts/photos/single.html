@@ -23,11 +23,11 @@
 			{{ range .Params.locations }}
 				{{ $location := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
 
-				<div id="mapid" style="width: 100%; height: 250px;"></div>
+				<div id="photomap" style="width: 100%; height: 250px;"></div>
 				<script>
 					var lat = {{ $location.Params.lat }};
 					var lon = {{ $location.Params.long }};
-					var mymap = L.map('mapid').setView([lat, lon], 10);
+					var mymap = L.map('photomap', { zoomControl: false }).setView([lat, lon], 7);
 					var marker = L.marker([lat, lon]).addTo(mymap);
 
 					var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mymap);

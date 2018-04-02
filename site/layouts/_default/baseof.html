@@ -34,6 +34,9 @@
 			.leaflet-popup-close-button {
 				display: none;
 			}
+			div.content > p:first-child {
+				margin-top: 0px;
+			}
 		</style>
 		<script>
 			function isScrolledIntoView(el) {
@@ -86,7 +89,7 @@
 			{{end}}
 		</div>
 
-		<section class="mw7 mw8-ns center pa3-ns ph5-ns">
+		<section class="mw7 mw9-ns center pa3-ns ph5-ns">
 			{{ block "main" . }}
 			{{ end }}
 		</section>

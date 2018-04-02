@@ -3,29 +3,34 @@
 {{ end }}
 
 {{ define "main" }}
-	<div class="mw6 center ph3-ns">
+<div class="center cf">
+	<div class="w-100 fl w-50-l center ph3-ns">
 		{{ if .Params.is_video }}
-			<video class="w-100" autoplay loop>
+			<video class="w-100 mw6 mw9-ns" autoplay loop>
 				<source src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.mp4" type="video/mp4">
 				Video not supported
 			</video>
 		{{ else }}
-			<img class="w-100" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
+			<img class="w-100 mw6 mw9-ns" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
 		{{ end }}
 	</div>
 
-	<div class="mw6 center f7 f5-ns ph3">
-		<div>
-			{{ .Content }}
-		</div>
+	<div class="w-100 fl w-50-l center f7 f5-ns ph3 pt2 pt0-l">
+		{{ if (gt (len .Content) 0) }}
+			<div class="content">
+				{{ .Content }}
+			</div>
+		{{ end }}
 
-		<div class="f6-ns monospace">
-			<p>
-				{{ range .Params.Tags }}
-					<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
-				{{ end }}
-			</p>
-		</div>
+		{{ if (gt (len .Params.Tags) 0) }}
+			<div class="f6-ns monospace">
+				<p>
+					{{ range .Params.Tags }}
+						<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
+					{{ end }}
+				</p>
+			</div>
+		{{ end }}
 
 		<div>
 			{{ $pageId := .Params.id }}
@@ -43,15 +48,23 @@
 				</script>
 
 				<p>
-					{{ if (gt (len $location.Pages) 1) }}
-						<a class="link dim silver" href="{{ $location.Permalink }}">{{ $location.Params.name }} <span class="mid-gray">({{ sub (len $location.Pages) 1 }} other posts)</span></a>
+					{{ if (gt (len $location.Pages) 2) }}
+						<a class="link dim silver" href="{{ $location.Permalink }}">
+							<span class="mid-gray">View photos near</span>
+							{{ $location.Params.name }}
+							<span class="mid-gray">{{ sub (len $location.Pages) 1 }} other posts</span>
+						</a>
 						{{ $.Scratch.Set "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
 						{{ partial "photo_grid.html" $ }}
 					{{ else }}
-						<a class="link dim silver" href="{{ $location.Permalink }}">{{ $location.Params.name }}</a>
+						<a class="link dim silver" href="{{ $location.Permalink }}">
+							<span class="mid-gray">View photos near</span>
+							{{ $location.Params.name }}
+						</a>
 					{{ end }}
 				</p>
 			{{ end }}
 		</div>
 	</div>
+</div>
 {{ end }}

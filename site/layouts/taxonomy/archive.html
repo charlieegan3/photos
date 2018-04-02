@@ -1,0 +1,9 @@
+{{ define "title" }}
+	{{ $currentTaxonomy := index (last 1 (split (delimit (split .URL "/") "," "") ",")) 0 }}
+	{{ $currentTaxonomy }} - {{ $.Site.Title }}
+{{ end }}
+
+{{ define "main" }}
+	{{ $.Scratch.Set "images" .Pages }}
+	{{ partial "photo_grid.html" . }}
+{{ end }}

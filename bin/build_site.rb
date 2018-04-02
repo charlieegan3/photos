@@ -71,6 +71,15 @@ Dir.glob("completed_json/*").shuffle.each do |file|
     @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])
   end
 
+  year, month, day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %d").split(" ")
+  @data["archive"] = [
+    "#{year}",
+    "#{month}",
+    "#{year}-#{month}",
+    "#{month}-#{day}",
+    "#{year}-#{month}-#{day}",
+  ]
+
   markdown = ERB.new(page_template).result()
   File.write("site/content/photos/#{@file_reference}.md", markdown)
 end

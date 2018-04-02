@@ -4,6 +4,7 @@ title: "Photo Gallery"
 taxonomies:
   tag: "tags"
   location: "locations"
+  archive: "archive"
 menu:
   main:
   - name: "Latest"
@@ -15,6 +16,9 @@ menu:
   - name: "Locations"
     weight: 10
     url: "/locations/"
+  - name: "Calendar"
+    weight: 11
+    url: "/calendar/"
 disableKinds:
   - RSS
   - Sitemap

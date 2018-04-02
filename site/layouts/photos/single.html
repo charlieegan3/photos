@@ -3,16 +3,18 @@
 {{ end }}
 
 {{ define "main" }}
-	<div class="mw6 center f7 f5-ns">
+	<div class="mw6 center ph3-ns">
 		{{ if .Params.is_video }}
 			<video class="w-100" autoplay loop>
 				<source src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.mp4" type="video/mp4">
 				Video not supported
 			</video>
 		{{ else }}
-			<img class="ba bw2 b--moon-gray border-box br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
+			<img class="w-100" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
 		{{ end }}
+	</div>
 
+	<div class="mw6 center f7 f5-ns ph3">
 		<div>
 			{{ .Content }}
 		</div>

@@ -73,11 +73,11 @@
 		</script>
 	</head>
 	<body class="bg-near-black silver">
-		<div class="mw7 center cf tc bg-near-white">
+		<div class="mw7 center cf tc bg-near-black f6 f5-ns">
 			{{ $currentPage := . }}
 			{{ range .Site.Menus.main }}
 				{{ if $currentPage.IsMenuCurrent "main" . }}
-					<div class="fl w-third pt1 pb2 bg-near-black">
+					<div class="fl w-third pt1 pb2 bg-dark-gray">
 						<span class="link gray">{{ .Name }}</span>
 					</div>
 				{{ else }}
@@ -86,7 +86,7 @@
 			{{end}}
 		</div>
 
-		<section class="mw7 mw8-ns center pa3 ph5-ns">
+		<section class="mw7 mw8-ns center pa3-ns ph5-ns">
 			{{ block "main" . }}
 			{{ end }}
 		</section>

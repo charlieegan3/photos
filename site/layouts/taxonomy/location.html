@@ -5,8 +5,8 @@
 {{ define "main" }}
 	<h1 class="tc">{{ replaceRE ",.*" "" .Params.name }}</h1>
 
-	{{ $.Scratch.Set "images" .Pages }}
-	{{ partial "photo_grid.html" . }}
+	{{ $.Scratch.Set "posts" .Pages }}
+	{{ partial "post_grid.html" . }}
 
 	<div class="mw7 center cf">
 		{{ range (first 10 .Params.near) }}
@@ -15,8 +15,8 @@
 				<span class="dark-gray">Nearby posts from</span>
 				<a class="link gray dim" href="{{ $location.Permalink }}">{{ replaceRE ",.*" "" $location.Params.name }}</a>
 			</p>
-			{{ $.Scratch.Set "images" $location.Pages }}
-			{{ partial "photo_grid.html" $ }}
+			{{ $.Scratch.Set "posts" $location.Pages }}
+			{{ partial "post_grid.html" $ }}
 		{{ end }}
 	</div>
 {{ end }}

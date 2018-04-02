@@ -1,0 +1,65 @@
+{{ $.Scratch.Add "locations" slice }}
+{{ range $.Scratch.Get "posts" }}
+    {{ range .Params.locations }}
+        {{ $.Scratch.Add "locations" . }}
+    {{ end }}
+{{ end }}
+
+{{ $locations := $.Scratch.Get "locations" }}
+
+{{ if (gt (len $locations) 0) }}
+    {{ $.Scratch.Set "single" false }}
+
+    {{ $single := cond (eq (len $locations) 1) true false }}
+
+    {{ $.Scratch.Set "height" "400px"}}
+    {{ $.Scratch.Set "zoom" "5"}}
+    {{ if $single }}
+        {{ $.Scratch.Set "height" "250px" }}
+        {{ $.Scratch.Set "zoom" "7" }}
+    {{ end }}
+    {{ $firstLocation := ($.Site.GetPage "taxonomyTerm" "locations" (index $locations 0)) }}
+    {{ $centerLat := $firstLocation.Params.lat }}
+    {{ $centerLong := $firstLocation.Params.long }}
+
+    <div class="mw7 center cf">
+        <div id="photomap" style="width: 100%; height: {{ $.Scratch.Get "height" }};"></div>
+        <script>
+            var mymap = L.map('photomap', { minZoom: 4, maxZoom: 14, zoomControl: false }).setView([{{ $centerLat }}, {{ $centerLong }}], {{ $.Scratch.Get "zoom" }});
+
+            L.Icon.Small = L.Icon.Default.extend({
+                options: {
+                    shadowSize:   [0, 0],
+                    shadowAnchor: [0, 0],
+                    iconAnchor: [ 6, 20 ],
+                    iconSize: [ 12, 20 ],
+                    popupAnchor: [ 0, -18 ],
+                }
+            });
+
+            var smallIcon = new L.Icon.Small();
+
+            var markers = [
+                {{ range ($.Scratch.Get "locations") }}
+                    {{ $page := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+                    L.marker([{{ $page.Params.lat }}, {{ $page.Params.long }}])
+                        .setIcon(smallIcon)
+                        {{ if (gt (len $page.Pages) 1) }}
+                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $page.Pages }} posts</a>")
+                        {{ else }}
+                        {{ $post := index $page.Pages 0 }}
+                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ $post.Params.file_reference }}.jpg">' + "</a>")
+                        {{ end }}
+                        .addTo(mymap),
+                {{ end }}
+            ];
+
+            var group = new L.featureGroup(markers);
+            {{ if (not $single) }}
+                mymap.fitBounds(group.getBounds());
+            {{ end }}
+
+            var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mymap);
+        </script>
+    </div>
+{{ end }}

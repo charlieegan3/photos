@@ -18,6 +18,8 @@
 		</div>
 	{{ end }}
 
-	{{ $.Scratch.Set "images" .Pages }}
-	{{ partial "photo_grid.html" . }}
+	{{ $.Scratch.Set "posts" .Pages }}
+	{{ partial "post_map.html" $ }}
+	<br>
+	{{ partial "post_grid.html" $ }}
 {{ end }}

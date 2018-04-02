@@ -48,7 +48,7 @@ def format_title(data)
 end
 
 def format_tags(tags)
-  tags.map { |t| t.gsub("#", "").strip }
+  tags.map { |t| t.gsub("#", "").strip.downcase }.uniq.uniq
 end
 
 def format_location_slug(id, slug)

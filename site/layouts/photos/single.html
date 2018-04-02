@@ -41,19 +41,14 @@
 		</div>
 
 		<div>
+			{{ $.Scratch.Set "posts" (slice .) }}
+			{{ partial "post_map.html" $ }}
+		</div>
+
+		<div>
 			{{ $pageId := .Params.id }}
 			{{ range .Params.locations }}
 				{{ $location := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
-
-				<div id="photomap" style="width: 100%; height: 250px;"></div>
-				<script>
-					var lat = {{ $location.Params.lat }};
-					var lon = {{ $location.Params.long }};
-					var mymap = L.map('photomap', { zoomControl: false }).setView([lat, lon], 7);
-					var marker = L.marker([lat, lon]).addTo(mymap);
-
-					var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mymap);
-				</script>
 
 				<p>
 					{{ if (gt (len $location.Pages) 2) }}
@@ -61,8 +56,8 @@
 							<span class="mid-gray">View {{ sub (len $location.Pages) 1 }} other posts near</span>
 							{{ $location.Params.name }}
 						</a>
-						{{ $.Scratch.Set "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
-						{{ partial "photo_grid.html" $ }}
+						{{ $.Scratch.Set "posts" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
+						{{ partial "post_grid.html" $ }}
 					{{ else }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">
 							<span class="mid-gray">View posts near</span>

@@ -50,15 +50,14 @@
 				<p>
 					{{ if (gt (len $location.Pages) 2) }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">
-							<span class="mid-gray">View photos near</span>
+							<span class="mid-gray">View {{ sub (len $location.Pages) 1 }} other posts near</span>
 							{{ $location.Params.name }}
-							<span class="mid-gray">{{ sub (len $location.Pages) 1 }} other posts</span>
 						</a>
 						{{ $.Scratch.Set "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
 						{{ partial "photo_grid.html" $ }}
 					{{ else }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">
-							<span class="mid-gray">View photos near</span>
+							<span class="mid-gray">View posts near</span>
 							{{ $location.Params.name }}
 						</a>
 					{{ end }}
@@ -67,8 +66,8 @@
 		</div>
 
 		<p>
-			<span class="mid-gray">View this post on</span>
 			<a class="link dim silver" href="https://www.instagram.com/p/{{ .Params.code }}">
+				<span class="mid-gray">View this post on</span>
 				Instagram
 			</a>
 		</p>

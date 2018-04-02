@@ -10,7 +10,7 @@
 		{{ range (first 10 .Params.near) }}
 			{{ $location := index (where (where $.Site.Pages "Type" "locations") "Params.id" (index . "id")) 0 }}
 			<p>
-				<span class="dark-gray">Nearby photos from</span>
+				<span class="dark-gray">Nearby posts from</span>
 				<a class="link gray dim" href="{{ $location.Permalink }}">{{ replaceRE ",.*" "" $location.Params.name }}</a>
 			</p>
 			{{ $.Scratch.Set "images" $location.Pages }}

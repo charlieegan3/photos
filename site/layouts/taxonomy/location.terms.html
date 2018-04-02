@@ -1,9 +1,9 @@
 {{ define "title" }}
-	Locations - {{ $.Site.Title }}
+	{{ .Title }} - {{ $.Site.Title }}
 {{ end }}
 
 {{ define "main" }}
-{{ $path := .RelPermalink }}
+<h1 class="tc">{{ .Title }}</h1>
 
 <div class="mw7 center cf">
 	<div id="photomap" style="width: 100%; height: 400px;"></div>

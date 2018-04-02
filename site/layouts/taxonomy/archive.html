@@ -1,9 +1,23 @@
 {{ define "title" }}
-	{{ $currentTaxonomy := index (last 1 (split (delimit (split .URL "/") "," "") ",")) 0 }}
-	{{ $currentTaxonomy }} - {{ $.Site.Title }}
+	{{ .Title }} - {{ $.Site.Title }}
 {{ end }}
 
 {{ define "main" }}
+	<h1 class="tc">{{ .Title }}</h1>
+
+	{{ if (gt (len .Params.related) 0) }}
+		<div class="mw7 center cf">
+			<p>
+			<span class="mid-gray">Related</span>
+			    {{ $related := .Params.related  }}
+				{{ range $i, $e := .Params.related }}
+				{{ $archive := ($.Site.GetPage "taxonomyTerm" "archive" $e) }}
+					<a class="link gray dim" href="{{ $archive.Permalink }}">{{ $archive.Title }}</a>{{ if (ne $i (sub (len $related) 1)) }},{{ end }}
+				{{ end }}
+			</p>
+		</div>
+	{{ end }}
+
 	{{ $.Scratch.Set "images" .Pages }}
 	{{ partial "photo_grid.html" . }}
 {{ end }}

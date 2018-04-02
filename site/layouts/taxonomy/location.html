@@ -3,6 +3,8 @@
 {{ end }}
 
 {{ define "main" }}
+	<h1 class="tc">{{ replaceRE ",.*" "" .Params.name }}</h1>
+
 	{{ $.Scratch.Set "images" .Pages }}
 	{{ partial "photo_grid.html" . }}
 

@@ -61,6 +61,37 @@ end
 
 `mkdir -p site/content/photos`
 
+class Fixnum
+  def ordinalize
+    if (11..13).include?(self % 100)
+      "#{self}th"
+    else
+      case self % 10
+        when 1; "#{self}st"
+        when 2; "#{self}nd"
+        when 3; "#{self}rd"
+        else    "#{self}th"
+      end
+    end
+  end
+end
+
+plurals = {
+  january: "Januaries",
+  february: "Februaries",
+  march: "Marches",
+  april: "Aprils",
+  may: "Mays",
+  june: "Junes",
+  july: "Julys",
+  august: "Augusts",
+  september: "Septembers",
+  october: "Octobers",
+  november: "Novembers",
+  december: "Decembers",
+}
+
+archives = {}
 Dir.glob("completed_json/*").shuffle.each do |file|
   @file_reference = file.split("/").last.gsub(".json", "")
   @data = JSON.parse(File.read(file))
@@ -71,18 +102,28 @@ Dir.glob("completed_json/*").shuffle.each do |file|
     @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])
   end
 
-  year, month, day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %d").split(" ")
-  @data["archive"] = [
-    "#{year}",
-    "#{month}",
-    "#{year}-#{month}",
-    "#{month}-#{day}",
-    "#{year}-#{month}-#{day}",
-  ]
+  year, month, month_string, day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %B %d").split(" ")
+  archive = {
+    "#{year}" => { title: "Year of #{year}", related: [] },
+    "#{month}" => { title: "All #{plurals[month_string.downcase.to_sym]}", related: [] },
+    "#{year}-#{month}" => { title: "#{month_string} #{year}", related: ["#{year}", "#{month}"] },
+    "#{month}-#{day}" => { title: "All #{[month_string.capitalize, day.to_i.ordinalize].join(" ")}s", related: ["#{month}"], related: [] },
+    "#{year}-#{month}-#{day}" => { title: DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%A, %B #{day.to_i.ordinalize}, %Y"), related: ["#{year}-#{month}", "#{month}-#{day}", "#{month}", "#{year}"] },
+  }
+  @data["archive"] = archive.keys
+  archives.merge!(archive)
 
   markdown = ERB.new(page_template).result()
   File.write("site/content/photos/#{@file_reference}.md", markdown)
 end
+
+`rm -r site/content/archive || true`
+archives.each do |slug, data|
+  data = JSON.parse(JSON.generate(data))
+  `mkdir -p site/content/archive/#{slug}/`
+  File.write("site/content/archive/#{slug}/_index.md", data.to_yaml + "---\n")
+end
+
 
 `rm -r site/content/locations/*`
 locations = []

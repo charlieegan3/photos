@@ -22,16 +22,21 @@
 			</div>
 		{{ end }}
 
-		<div class="f6-ns">
+		<div>
 			<p class="mid-gray">
-				<time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" itemprop="datePublished">
-					{{ .Date.Format "Monday" }},
-					{{ .Date.Format "2" }}{{ if in (slice 1 21 31) .Date.Day }}st{{ else if in (slice 2 22) .Date.Day}}nd{{ else if in (slice 3 23) .Date.Day}}rd{{ else }}th{{ end }}
-					{{ .Date.Format "January" }}
-					{{ if (ne (.Date.Format "2006") (dateFormat "2006" now )) }}
-						{{ dateFormat "2006" now }}
-					{{ end }}
-				</time>
+				{{ $archive := ($.Site.GetPage "taxonomyTerm" "archive" (.Date.Format "2006-01-02")) }}
+
+				<a class="link gray dim" href="{{ $archive.Permalink }}">
+					<span class="mid-gray">View posts from</span>
+					<time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" itemprop="datePublished">
+						{{ .Date.Format "Monday" }},
+						{{ .Date.Format "2" }}{{ if in (slice 1 21 31) .Date.Day }}st{{ else if in (slice 2 22) .Date.Day}}nd{{ else if in (slice 3 23) .Date.Day}}rd{{ else }}th{{ end }}
+						{{ .Date.Format "January" }}
+						{{ if (ne (.Date.Format "2006") (dateFormat "2006" now )) }}
+							{{ dateFormat "2006" now }}
+						{{ end }}
+					</time>
+				</a>
 			</p>
 		</div>
 

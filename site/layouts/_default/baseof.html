@@ -44,7 +44,6 @@
 				return isVisible;
 			}
 
-
 			function ready(fn) {
 				if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
 					fn();
@@ -58,7 +57,12 @@
 				for (var i = 0; i < images.length; i++) {
 					if (isScrolledIntoView(images[i])) {
 						var src = images[i].getAttribute("data-src");
-						images[i].style.backgroundImage = 'url("'+src+'")';
+						if (images[i].tagName.toLowerCase() == "video") {
+							images[i].children[0].setAttribute("src", src);
+							images[i].load();
+						} else {
+							images[i].style.backgroundImage = 'url("'+src+'")';
+						}
 						images[i].classList.remove("lazyload");
 						images[i].removeAttribute("data-src");
 					}

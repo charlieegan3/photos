@@ -65,6 +65,7 @@ Dir.glob("completed_json/*").shuffle.each do |file|
   @file_reference = file.split("/").last.gsub(".json", "")
   @data = JSON.parse(File.read(file))
   @data["tags"] = format_tags(@data["tags"])
+  @data["tags"] << "video" if @data["is_video"]
   @title = format_title(@data)
   if @data["location"]
     @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])

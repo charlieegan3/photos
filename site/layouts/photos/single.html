@@ -36,10 +36,10 @@
 				<p>
 					{{ if (gt (len $location.Pages) 1) }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">{{ $location.Params.name }} <span class="mid-gray">({{ sub (len $location.Pages) 1 }} other posts)</span></a>
-						{{ $.Scratch.Add "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
+						{{ $.Scratch.Set "images" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
 						{{ partial "photo_grid.html" $ }}
 					{{ else }}
-						<span class="silver">{{ $location.Params.name }}</span>
+						<a class="link dim silver" href="{{ $location.Permalink }}">{{ $location.Params.name }}</a>
 					{{ end }}
 				</p>
 			{{ end }}

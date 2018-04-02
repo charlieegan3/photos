@@ -3,6 +3,18 @@
 {{ end }}
 
 {{ define "main" }}
-	{{ $.Scratch.Add "images" .Pages }}
+	{{ $.Scratch.Set "images" .Pages }}
 	{{ partial "photo_grid.html" . }}
+
+	<div class="mw7 center cf">
+		{{ range (first 10 .Params.near) }}
+			{{ $location := index (where (where $.Site.Pages "Type" "locations") "Params.id" (index . "id")) 0 }}
+			<p>
+				<span class="dark-gray">Nearby photos from</span>
+				<a class="link gray dim" href="{{ $location.Permalink }}">{{ replaceRE ",.*" "" $location.Params.name }}</a>
+			</p>
+			{{ $.Scratch.Set "images" $location.Pages }}
+			{{ partial "photo_grid.html" $ }}
+		{{ end }}
+	</div>
 {{ end }}

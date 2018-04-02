@@ -22,15 +22,18 @@
 			</div>
 		{{ end }}
 
-		{{ if (gt (len .Params.Tags) 0) }}
-			<div class="f6-ns monospace">
-				<p>
-					{{ range .Params.Tags }}
-						<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
+		<div class="f6-ns">
+			<p class="mid-gray">
+				<time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" itemprop="datePublished">
+					{{ .Date.Format "Monday" }},
+					{{ .Date.Format "2" }}{{ if in (slice 1 21 31) .Date.Day }}st{{ else if in (slice 2 22) .Date.Day}}nd{{ else if in (slice 3 23) .Date.Day}}rd{{ else }}th{{ end }}
+					{{ .Date.Format "January" }}
+					{{ if (ne (.Date.Format "2006") (dateFormat "2006" now )) }}
+						{{ dateFormat "2006" now }}
 					{{ end }}
-				</p>
-			</div>
-		{{ end }}
+				</time>
+			</p>
+		</div>
 
 		<div>
 			{{ $pageId := .Params.id }}
@@ -71,6 +74,16 @@
 				Instagram
 			</a>
 		</p>
+
+		{{ if (gt (len .Params.Tags) 0) }}
+			<div class="f6-ns monospace">
+				<p>
+					{{ range .Params.Tags }}
+						<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
+					{{ end }}
+				</p>
+			</div>
+		{{ end }}
 	</div>
 </div>
 {{ end }}

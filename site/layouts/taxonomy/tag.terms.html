@@ -22,7 +22,7 @@
 						<p class="tc f7 f5-ns near-white" style="overflow: hidden; text-overflow: ellipsis;">#{{ $tag.Name }}</p>
 						<p class="tc f7 f6-ns silver">{{ len $tag.WeightedPages }} posts</p>
 					</div>
-					<span role="img" data-src="https://images.weserv.nl/?w=400&url=storage.googleapis.com/charlieegan3-instagram-archive/current/{{ ($.Scratch.Get "page").Params.file_reference }}.jpg" class="bg-center cover aspect-ratio--object lazyload o-40"></span>
+					<span role="img" data-src="{{ $.Site.Params.image_source }}{{ ($.Scratch.Get "page").Params.file_reference }}.jpg&w={{ $.Site.Params.grid_image_size }}" class="bg-center cover aspect-ratio--object lazyload o-40"></span>
 				</a>
 			</div>
 		{{ end }}

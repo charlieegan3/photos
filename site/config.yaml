@@ -22,3 +22,10 @@ menu:
 disableKinds:
   - RSS
   - Sitemap
+params:
+  map_image_size: 200
+  small_grid_image_size: 300
+  grid_image_size: 400
+  single_image_size: 1080
+  video_source: https://storage.googleapis.com/charlieegan3-instagram-archive/current/
+  image_source: https://images.weserv.nl/?url=storage.googleapis.com/charlieegan3-instagram-archive/current/

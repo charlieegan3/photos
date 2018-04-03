@@ -48,7 +48,7 @@
                         .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $page.Pages }} posts</a>")
                         {{ else }}
                         {{ $post := index $page.Pages 0 }}
-                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ $post.Params.file_reference }}.jpg">' + "</a>")
+                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="{{ $.Site.Params.image_source }}{{ $post.Params.file_reference }}.jpg&w={{ $.Site.Params.map_image_size }}">' + "</a>")
                         {{ end }}
                         .addTo(mymap),
                 {{ end }}

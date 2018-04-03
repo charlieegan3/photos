@@ -7,11 +7,11 @@
 	<div class="w-100 fl w-50-l center ph3-ns">
 		{{ if .Params.is_video }}
 			<video class="w-100 mw6 mw9-ns" autoplay loop>
-				<source src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.mp4" type="video/mp4">
+				<source src="{{ $.Site.Params.video_source }}{{ .Params.file_reference }}.mp4" type="video/mp4">
 				Video not supported
 			</video>
 		{{ else }}
-			<img class="w-100 mw6 mw9-ns" src="https://images.weserv.nl/?w=1080&url=storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg">
+		<img class="w-100 mw6 mw9-ns" src="{{ $.Site.Params.image_source }}{{ .Params.file_reference }}.jpg&w={{ $.Site.Params.single_image_size }}">
 		{{ end }}
 	</div>
 
@@ -57,6 +57,7 @@
 							{{ $location.Params.name }}
 						</a>
 						{{ $.Scratch.Set "posts" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
+						{{ $.Scratch.Set "size" $.Site.Params.small_grid_image_size }}
 						{{ partial "post_grid.html" $ }}
 					{{ else }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">

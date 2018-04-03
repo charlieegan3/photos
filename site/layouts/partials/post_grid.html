@@ -1,14 +1,16 @@
+{{ $size := cond (ne ($.Scratch.Get "size") nil) ($.Scratch.Get "size") $.Site.Params.grid_image_size }}
+
 <div class="mw7 center cf">
 	{{ range $.Scratch.Get "posts" }}
 		<div class="fl w-third">
 			<a href="{{ .RelPermalink }}" class="db aspect-ratio aspect-ratio--1x1 dim">
 				{{ if .Params.is_video }}
-					<video class="lazyload w-100" data-src="https://storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.mp4" autoplay loop muted>
+					<video class="lazyload w-100" data-src="{{ $.Site.Params.video_source }}{{ .Params.file_reference }}.mp4" autoplay loop muted>
 						<source type="video/mp4" src="">
 						Video not supported
 					</video>
 				{{ else }}
-					<span role="img" data-src="https://images.weserv.nl/?w=400&url=storage.googleapis.com/charlieegan3-instagram-archive/current/{{ .Params.file_reference }}.jpg" class="bg-center cover aspect-ratio--object lazyload"></span>
+					<span role="img" data-src="{{ $.Site.Params.image_source }}{{ .Params.file_reference }}.jpg&w={{ $size }}" class="bg-center cover aspect-ratio--object lazyload"></span>
 				{{ end }}
 			</a>
 		</div>

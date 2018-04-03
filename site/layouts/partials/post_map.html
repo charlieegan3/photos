@@ -42,12 +42,13 @@
             var markers = [
                 {{ range ($.Scratch.Get "locations") }}
                     {{ $page := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+                    {{ $posts := intersect $page.Pages ($.Scratch.Get "posts") }}
                     L.marker([{{ $page.Params.lat }}, {{ $page.Params.long }}])
                         .setIcon(smallIcon)
-                        {{ if (gt (len $page.Pages) 1) }}
-                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $page.Pages }} posts</a>")
+                        {{ if (gt (len $posts) 1) }}
+                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $posts }} posts</a>")
                         {{ else }}
-                        {{ $post := index $page.Pages 0 }}
+                        {{ $post := index $posts 0 }}
                         .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="{{ $.Site.Params.image_source }}{{ $post.Params.file_reference }}.jpg&w={{ $.Site.Params.map_image_size }}">' + "</a>")
                         {{ end }}
                         .addTo(mymap),

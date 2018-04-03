@@ -1,9 +1,9 @@
-{{ $.Scratch.Add "locations" slice }}
-{{ range $.Scratch.Get "posts" }}
-    {{ range .Params.locations }}
-        {{ $.Scratch.Add "locations" . }}
-    {{ end }}
-{{ end }}
+{{- $.Scratch.Add "locations" slice -}}
+{{- range $.Scratch.Get "posts" -}}
+    {{- range .Params.locations -}}
+        {{- $.Scratch.Add "locations" . -}}
+    {{- end -}}
+{{- end -}}
 
 {{ $locations := $.Scratch.Get "locations" }}
 

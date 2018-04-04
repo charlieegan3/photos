@@ -107,7 +107,7 @@ Dir.glob("completed_json/*").shuffle.each do |file|
     "#{year}" => { title: "Year of #{year}", related: [] },
     "#{month}" => { title: "All #{plurals[month_string.downcase.to_sym]}", related: [] },
     "#{year}-#{month}" => { title: "#{month_string} #{year}", related: ["#{year}", "#{month}"] },
-    "#{month}-#{day}" => { title: "All #{[month_string.capitalize, day.to_i.ordinalize].join(" ")}s", related: ["#{month}"], related: [] },
+    "#{month}-#{day}" => { title: "All #{[month_string.capitalize, day.to_i.ordinalize].join(" ")}s", related: ["#{month}"] },
     "#{year}-#{month}-#{day}" => { title: DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%A, %B #{day.to_i.ordinalize}, %Y"), related: ["#{year}-#{month}", "#{month}-#{day}", "#{month}", "#{year}"] },
   }
   @data["archive"] = archive.keys

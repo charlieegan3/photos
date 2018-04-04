@@ -44,6 +44,15 @@ docker_run:
 						-e PUSHOVER_USER="$$PUSHOVER_USER" \
 						charlieegan3/instagram-archive:latest
 
+hugo_server:
+	cd site; hugo server; cd ..
+
+hugo_build:
+	cd site; hugo; cd ..
+
+build_site:
+	./bin/build_site.rb
+
 hyper:
 	hyper cron rm charlieegan3-instagram-archive || true
 	hyper cron create --hour=0,12,18 --dom=* \

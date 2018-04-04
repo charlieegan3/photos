@@ -1,30 +1,30 @@
-{{ $context := .context }}
-{{ $year := .year }}
+{{- $context := .context -}}
+{{- $year := .year -}}
 
-{{ $day := .day }}
-{{ $dayTwoLetters := printf "%02d" $day }}
-{{ $pageMap := .pagemap }}
+{{- $day := .day -}}
+{{- $dayTwoLetters := printf "%02d" $day -}}
+{{- $pageMap := .pagemap -}}
 
-{{ $month := .month }}
-{{ $monthTwoLetters := printf "%02d" $month }}
+{{- $month := .month -}}
+{{- $monthTwoLetters := printf "%02d" $month -}}
 
-{{ $dateString := (string (delimit (slice $year $monthTwoLetters $dayTwoLetters) "-")) }}
+{{- $dateString := (string (delimit (slice $year $monthTwoLetters $dayTwoLetters) "-")) -}}
 
-{{ $context.Scratch.Set "isFuture" false }}
+{{- $context.Scratch.Set "isFuture" false -}}
 
-{{ if le now (time $dateString) }}
-    {{ $context.Scratch.Set "isFuture" true }}
-{{ end }}
+{{- if le now (time $dateString) -}}
+    {{- $context.Scratch.Set "isFuture" true -}}
+{{- end -}}
 
-{{ $isFuture := $context.Scratch.Get "isFuture" }}
+{{- $isFuture := $context.Scratch.Get "isFuture" -}}
 
 {{- $articlesFound := index ($context.Scratch.Get "ArticlesPerDay") $dateString -}}
-<li class="calendar-day {{ if $isFuture }}calendar-day-future{{ end }} {{ if gt $articlesFound 0 }}calendar-day-has-articles{{ end }} {{ if eq (now.Format "2006-01-02") $dateString }}calendar-day-is-today{{ end }}">
+<li class="calendar-day {{- if $isFuture -}}calendar-day-future{{- end -}} {{- if gt $articlesFound 0 -}}calendar-day-has-articles{{- end -}} {{- if eq (now.Format "2006-01-02") $dateString -}}calendar-day-is-today{{- end -}}">
     {{- if gt $articlesFound 0 -}}
-        <a href="/archive/{{ delimit (slice $year $monthTwoLetters $dayTwoLetters) "-" }}/" title="{{ $articlesFound }} article{{ if gt $articlesFound 1 }}s{{ end }}">
-        <time datetime="{{ $dateString }}">{{ $day }}</time>
+        <a href="/archive/{{- delimit (slice $year $monthTwoLetters $dayTwoLetters) "-" -}}/" title="{{- $articlesFound -}} article{{- if gt $articlesFound 1 -}}s{{- end -}}">
+        <time datetime="{{- $dateString -}}">{{- $day -}}</time>
         </a>
     {{- else -}}
-        <time class="dark-gray" datetime="{{ $dateString }}">{{ $day }}</time>
+        <time class="dark-gray" datetime="{{- $dateString -}}">{{- $day -}}</time>
     {{- end -}}
 </li>

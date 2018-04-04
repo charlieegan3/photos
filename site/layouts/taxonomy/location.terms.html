@@ -1,18 +1,18 @@
 {{ define "title" }}
-	{{ .Title }} - {{ $.Site.Title }}
+	{{- .Title -}} - {{- $.Site.Title -}}
 {{ end }}
 
 {{ define "main" }}
 <h1 class="tc">{{ .Title }}</h1>
 
 <div class="mw7 center cf">
-	{{ $.Scratch.Set "posts" (where $.Site.Pages "Type" "photos") }}
-	{{ partial "post_map.html" $ }}
+	{{- $.Scratch.Set "posts" (where $.Site.Pages "Type" "photos") -}}
+	{{- partial "post_map.html" $ -}}
 	<br>
 
-	{{ range $_, $location := .Data.Terms.ByCount }}
-		{{ $page := ($.Site.GetPage "taxonomyTerm" "locations" $location.Name) }}
-		{{ if (ne $page.Params.name "") }}
+	{{- range $_, $location := .Data.Terms.ByCount -}}
+		{{- $page := ($.Site.GetPage "taxonomyTerm" "locations" $location.Name) -}}
+		{{- if (ne $page.Params.name "") -}}
 			<div class="fl w-third">
 				<a href="{{ $page.Permalink }}" class="db aspect-ratio aspect-ratio--1x1 dim">
 					<div style="margin: auto; width: 100%; z-index: 1000; position: absolute; top: 50%; margin-top: -50px;">
@@ -22,7 +22,7 @@
 					<span role="img" data-src="{{ $.Site.Params.image_source }}{{ (index ($location.WeightedPages) 0).Params.file_reference }}.jpg&w={{ $.Site.Params.grid_image_size }}" class="bg-center cover aspect-ratio--object lazyload o-40"></span>
 				</a>
 			</div>
-		{{ end }}
-	{{ end }}
+		{{- end -}}
+	{{- end -}}
 </div>
-{{ end }}
+{{- end -}}

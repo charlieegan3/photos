@@ -1,54 +1,66 @@
 {{ define "title" }}
-	{{ .Params.title }} - {{ $.Site.Title }}
+	{{- .Params.title -}} - {{- $.Site.Title -}}
 {{ end }}
 
 {{ define "main" }}
 <div class="center cf">
 	<div class="w-100 fl w-50-l center ph3-ns">
-		{{ if .Params.is_video }}
+		{{- if .Params.is_video -}}
 			<video class="w-100 mw6 mw9-ns" autoplay loop>
 				<source src="{{ $.Site.Params.video_source }}{{ .Params.file_reference }}.mp4" type="video/mp4">
 				Video not supported
 			</video>
-		{{ else }}
+		{{- else -}}
 		<img class="w-100 mw6 mw9-ns" src="{{ $.Site.Params.image_source }}{{ .Params.file_reference }}.jpg&w={{ $.Site.Params.single_image_size }}">
-		{{ end }}
+		{{- end -}}
 	</div>
 
 	<div class="w-100 fl w-50-l center f7 f5-ns ph3 pt2 pt0-l">
-		{{ if (gt (len .Content) 0) }}
+		{{- if (gt (len .Content) 0) -}}
 			<div class="content">
-				{{ .Content }}
+				{{- .Content -}}
 			</div>
-		{{ end }}
+		{{- end -}}
 
 		<div>
 			<p class="mid-gray">
-				{{ $archive := ($.Site.GetPage "taxonomyTerm" "archive" (.Date.Format "2006-01-02")) }}
+				{{- $archive := ($.Site.GetPage "taxonomyTerm" "archive" (.Date.Format "2006-01-02")) -}}
 
 				<a class="link gray dim" href="{{ $archive.Permalink }}">
 					<span class="mid-gray">View posts from</span>
 					<time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" itemprop="datePublished">
-						{{ .Date.Format "Monday" }},
-						{{ .Date.Format "2" }}{{ if in (slice 1 21 31) .Date.Day }}st{{ else if in (slice 2 22) .Date.Day}}nd{{ else if in (slice 3 23) .Date.Day}}rd{{ else }}th{{ end }}
+						{{- .Date.Format "Monday" -}},
+
+						{{ .Date.Format "2" -}}
+						{{- if in (slice 1 21 31) .Date.Day -}}
+							st
+						{{- else if in (slice 2 22) .Date.Day}}
+							nd
+						{{- else if in (slice 3 23) .Date.Day -}}
+							rd
+						{{- else -}}
+							th
+						{{- end }}
+
 						{{ .Date.Format "January" }}
-						{{ if (ne (.Date.Format "2006") (dateFormat "2006" now )) }}
-							{{ dateFormat "2006" now }}
-						{{ end }}
+
+						{{ if (ne (.Date.Format "2006") (dateFormat "2006" now )) -}}
+							{{- dateFormat "2006" now -}}
+						{{- end -}}
 					</time>
 				</a>
 			</p>
 		</div>
 
 		<div>
-			{{ $.Scratch.Set "posts" (slice .) }}
-			{{ partial "post_map.html" $ }}
+			{{- $.Scratch.Set "posts" (slice .) -}}
+			{{- partial "post_map.html" $ -}}
 		</div>
 
 		<div>
-			{{ $pageId := .Params.id }}
-			{{ range .Params.locations }}
-				{{ $location := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+			{{- $pageId := .Params.id -}}
+			{{- range .Params.locations -}}
+				{{- $location := ($.Site.GetPage "taxonomyTerm" "locations" .) -}}
 
 				<p>
 					{{ if (gt (len $location.Pages) 2) }}
@@ -66,7 +78,7 @@
 						</a>
 					{{ end }}
 				</p>
-			{{ end }}
+			{{- end -}}
 		</div>
 
 		<p>
@@ -79,9 +91,9 @@
 		{{ if (gt (len .Params.Tags) 0) }}
 			<div class="f6-ns monospace">
 				<p>
-					{{ range .Params.Tags }}
+					{{- range .Params.Tags -}}
 						<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
-					{{ end }}
+					{{- end -}}
 				</p>
 			</div>
 		{{ end }}

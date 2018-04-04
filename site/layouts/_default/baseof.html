@@ -2,9 +2,9 @@
 <html>
 	<head>
 		<title>
-			{{ block "title" . }}
-				{{ $.Site.Title }}
-			{{ end }}
+			{{- block "title" . -}}
+				{{- $.Site.Title -}}
+			{{- end -}}
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -19,15 +19,14 @@
 	</head>
 	<body class="bg-near-black silver">
 		<div class="mw7 center cf tc bg-near-black f6 f5-ns">
-			{{ $currentPage := . }}
-			{{ range .Site.Menus.main }}
+			{{- range .Site.Menus.main -}}
 				<a class="fl w-25 pt1 pb2 db dim link gray" href="{{ .URL }}">{{ .Name }}</a>
-			{{end}}
+			{{- end -}}
 		</div>
 
 		<section class="mw7 mw9-ns center pa3-ns ph5-ns">
-			{{ block "main" . }}
-			{{ end }}
+			{{- block "main" . -}}
+			{{- end -}}
 		</section>
 	</body>
 </html>

@@ -1,31 +1,31 @@
-{{ $months := seq 12 }}
-{{ $context := .context }}
-{{ $year := .year }}
-{{ $from := .from }}
-{{ $fromMonth := .fromMonth }}
-{{ $to := .to }}
-{{ $toMonth := .toMonth }}
+{{- $months := seq 12 -}}
+{{- $context := .context -}}
+{{- $year := .year -}}
+{{- $from := .from -}}
+{{- $fromMonth := .fromMonth -}}
+{{- $to := .to -}}
+{{- $toMonth := .toMonth -}}
 
-{{ $isLeapYear := (modBool $year 4) }}
+{{- $isLeapYear := (modBool $year 4) -}}
 
 <div class="calendar-year mb5">
     <header>
         <h2 class="mv2">
-            {{ $articlesThisYear := index ($context.Scratch.Get "ArticlesPerYear") (string $year) }}
-            {{ if gt $articlesThisYear 0}}
-                <a class="link dim gray" href="/archive/{{ $year }}/">
-                    {{ $year }}
+            {{- $articlesThisYear := index ($context.Scratch.Get "ArticlesPerYear") (string $year) -}}
+            {{- if gt $articlesThisYear 0 -}}
+                <a class="link dim gray" href="/archive/{{- $year -}}/">
+                    {{- $year -}}
                 </a>
-            {{ else }}
-                <span>{{ $year }}</span>
-            {{ end }}
+            {{- else -}}
+                <span>{{- $year -}}</span>
+            {{- end -}}
         </h2>
     </header>
     <div class="w-100">
-        {{ range $months }}
-            {{ if or (and (ne $year $from) (ne $year $to)) (and (eq $year $from) (ge . $fromMonth)) (and (eq $year $to) (le . $toMonth))  }}
-            {{ partialCached "calendar/month" (dict "context" $context "year" $year "isLeapYear" $isLeapYear "month" .) (string (delimit (slice $year .) "")) }}
-            {{ end }}
-        {{ end }}
+        {{- range $months -}}
+            {{- if or (and (ne $year $from) (ne $year $to)) (and (eq $year $from) (ge . $fromMonth)) (and (eq $year $to) (le . $toMonth)) -}}
+                {{- partialCached "calendar/month" (dict "context" $context "year" $year "isLeapYear" $isLeapYear "month" .) (string (delimit (slice $year .) "")) -}}
+            {{- end -}}
+        {{- end -}}
     </div>
 </div>

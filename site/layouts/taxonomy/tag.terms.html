@@ -1,5 +1,5 @@
 {{ define "title" }}
-	{{ .Title }} - {{ $.Site.Title }}
+	{{- .Title }} - {{ $.Site.Title -}}
 {{ end }}
 
 {{ define "main" }}
@@ -11,13 +11,13 @@
 		{{ range $_, $tag := .Data.Terms.ByCount }}
 			<div class="fl w-third">
 				<a href="{{ $path }}{{ lower $tag.Name }}" class="db aspect-ratio aspect-ratio--1x1 dim">
-					{{ $availablePages := where $tag.WeightedPages ".Params.id" "not in" ($.Scratch.Get "used") }}
-					{{ if (eq (len $availablePages) 0) }}
-						{{ $.Scratch.Set "page" (index (shuffle $tag.WeightedPages) 0) }}
-					{{ else }}
-						{{ $.Scratch.Set "page" (index $availablePages 0) }}
-						{{ $.Scratch.Add "used" (slice ($.Scratch.Get "page").Params.id) }}
-					{{ end }}
+					{{- $availablePages := where $tag.WeightedPages ".Params.id" "not in" ($.Scratch.Get "used") -}}
+					{{- if (eq (len $availablePages) 0) -}}
+						{{ $.Scratch.Set "page" (index (shuffle $tag.WeightedPages) 0) -}}
+					{{- else -}}
+						{{- $.Scratch.Set "page" (index $availablePages 0) -}}
+						{{- $.Scratch.Add "used" (slice ($.Scratch.Get "page").Params.id) -}}
+					{{- end -}}
 					<div style="margin: auto; width: 100%; z-index: 1000; position: absolute; top: 50%; margin-top: -50px;">
 						<p class="tc f7 f5-ns near-white" style="overflow: hidden; text-overflow: ellipsis;">#{{ $tag.Name }}</p>
 						<p class="tc f7 f6-ns silver">{{ len $tag.WeightedPages }} posts</p>

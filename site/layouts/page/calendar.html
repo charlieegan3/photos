@@ -1,9 +1,9 @@
 {{ define "title" }}
-	{{ .Title }} - {{ $.Site.Title }}
+	{{- .Title -}} - {{- $.Site.Title -}}
 {{ end }}
 
 {{ define "main" }}
 	<h1 class="tc">{{ .Title }}</h1>
 
-	{{ partial "calendar" (dict "context" . "from" 2013 "fromMonth" 1 "to" (now.Format "2006") "toMonth" (now.Format "1") "pages" .Site.Pages) }}
+	{{- partial "calendar" (dict "context" . "from" 2013 "fromMonth" 1 "to" (now.Format "2006") "toMonth" (now.Format "1") "pages" .Site.Pages) -}}
 {{ end }}

@@ -93,7 +93,7 @@
 				<p>
 					{{- range .Params.Tags -}}
 						<a class="link dim mid-gray" href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
-					{{- end -}}
+					{{ end }}
 				</p>
 			</div>
 		{{ end }}

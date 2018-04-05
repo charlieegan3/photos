@@ -44,8 +44,8 @@
 
 						{{ .Date.Format "January" }}
 
-						{{ if (ne (.Date.Format "2006") (dateFormat "2006" now )) -}}
-							{{- dateFormat "2006" now -}}
+						{{ if (ne (.Date.Format "2006") (dateFormat "2006" now)) -}}
+							{{- (.Date.Format "2006") -}}
 						{{- end -}}
 					</time>
 				</a>

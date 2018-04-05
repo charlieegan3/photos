@@ -53,7 +53,7 @@
 		</div>
 
 		<div>
-			{{- $.Scratch.Set "posts" (slice .) -}}
+			{{- $.Scratch.Set "posts" (where $.Site.Pages ".Params.file_reference" .Params.file_reference) -}}
 			{{- partial "post_map.html" $ -}}
 		</div>
 

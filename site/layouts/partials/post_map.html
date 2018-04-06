@@ -49,7 +49,11 @@
                         .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $posts }} posts</a>")
                         {{- else -}}
                         {{- $post := index $posts 0 -}}
-                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="{{ $.Site.Params.image_source }}{{ $post.Params.file_reference }}.jpg&w={{ $.Site.Params.map_image_size }}">' + "</a>")
+                            {{- if $post.Params.is_video -}}
+                                .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">View posts</a>")
+                            {{- else -}}
+                                .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="{{ $.Site.Params.image_source }}{{ $post.Params.file_reference }}.jpg&w={{ $.Site.Params.map_image_size }}">' + "</a>")
+                            {{- end -}}
                         {{- end -}}
                         .addTo(mymap),
                 {{- end -}}

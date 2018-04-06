@@ -1,6 +1,4 @@
 {{ define "main" }}
-	<h1 class="display tc">Latest Photos</h1>
-
 	{{- $.Scratch.Set "posts" .Pages -}}
 	{{- partial "post_grid.html" . -}}
 {{ end }}

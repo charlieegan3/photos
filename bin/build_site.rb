@@ -102,13 +102,14 @@ Dir.glob("completed_json/*").shuffle.each do |file|
     @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])
   end
 
-  year, month, month_string, day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %B %d").split(" ")
+  year, month, month_string, day, week_day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %B %d %A").split(" ")
   archive = {
-    "#{year}" => { title: "Year of #{year}", related: [] },
-    "#{month}" => { title: "All #{plurals[month_string.downcase.to_sym]}", related: [] },
-    "#{year}-#{month}" => { title: "#{month_string} #{year}", related: ["#{year}", "#{month}"] },
-    "#{month}-#{day}" => { title: "All #{[month_string.capitalize, day.to_i.ordinalize].join(" ")}s", related: ["#{month}"] },
-    "#{year}-#{month}-#{day}" => { title: DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%A, %B #{day.to_i.ordinalize}, %Y"), related: ["#{year}-#{month}", "#{month}-#{day}", "#{month}", "#{year}"] },
+    "#{year}" => { title: "Year of #{year}", related: [], class: "year" },
+    "#{month}" => { title: "All #{plurals[month_string.downcase.to_sym]}", related: [], class: "month" },
+    "#{week_day.downcase}" => { title: "Taken on a #{week_day}", related: [], class: "week-day" },
+    "#{year}-#{month}" => { title: "#{month_string} #{year}", related: ["#{year}", "#{month}"], class: "year-month" },
+    "#{month}-#{day}" => { title: "All #{[month_string.capitalize, day.to_i.ordinalize].join(" ")}s", related: ["#{month}"], class: "month-day" },
+    "#{year}-#{month}-#{day}" => { title: DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%A, %B #{day.to_i.ordinalize}, %Y"), related: ["#{year}-#{month}", "#{month}-#{day}", "#{week_day.downcase}", "#{month}", "#{year}"], class: "day" },
   }
   @data["archive"] = archive.keys
   archives.merge!(archive)
@@ -116,6 +117,14 @@ Dir.glob("completed_json/*").shuffle.each do |file|
   markdown = ERB.new(page_template).result()
   File.write("site/content/photos/#{@file_reference}.md", markdown)
 end
+
+years = archives.select { |k,v| v[:class] == "year" }.keys
+months = archives.select { |k,v| v[:class] == "month" }.keys
+week_days = %w(monday tuesday wednesday thursday friday saturday sunday)
+
+archives.select { |k,v| v[:class] == "year" }.map { |k, _| archives[k][:related] = (years - [k]).sort.reverse }
+archives.select { |k,v| v[:class] == "month" }.map { |k, _| archives[k][:related] = (months - [k]).sort }
+archives.select { |k,v| v[:class] == "week-day" }.map { |k, _| archives[k][:related] = (week_days - [k]) }
 
 `rm -r site/content/archive || true`
 archives.each do |slug, data|

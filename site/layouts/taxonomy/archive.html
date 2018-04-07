@@ -9,11 +9,12 @@
 		<div class="mw7 f7 f6-ns center cf ph3 ph0-ns">
 			<p>
 			<span class="mid-gray">Related</span>
-			    {{ $related := .Params.related  }}
+				{{ $related := .Params.related  }}
 				{{ range $i, $e := .Params.related }}
-				{{ $archive := ($.Site.GetPage "taxonomyTerm" "archive" $e) }}
-					<a class="link gray nowrap dim" href="{{ $archive.Permalink }}">{{ $archive.Title }}</a>{{ if (ne $i (sub (len $related) 1)) }},{{ end }}
+					{{ $archive := ($.Site.GetPage "taxonomyTerm" "archive" $e) }}
+					<a class="link gray nowrap dim" href="{{ $archive.Permalink }}">{{ $archive.Title }}</a>,
 				{{ end }}
+				<a class="link gray nowrap dim" href="/archive">All Archives</a>
 			</p>
 		</div>
 	{{ end }}

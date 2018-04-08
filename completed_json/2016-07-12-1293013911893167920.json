@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHxtU1cB88w",
   "is_video": false,
   "caption": "#beach #sunset #reflection #clouds #sky",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#beach",
     "#sunset",

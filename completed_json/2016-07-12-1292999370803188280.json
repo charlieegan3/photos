@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHxqBO_hxI4",
   "is_video": false,
   "caption": "Finn the Dog #dog #beach #sky #blue #clouds #landscape #sea #atlantic #ocean",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#dog",
     "#beach",

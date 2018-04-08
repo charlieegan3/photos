@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/eXw0wcG2f4",
   "is_video": false,
   "caption": "Westminster",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "2575556",
+    "name": "Westminster Abbey",
+    "slug": "westminster-abbey",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1379441881,
   "dimensions": {
     "height": 612,

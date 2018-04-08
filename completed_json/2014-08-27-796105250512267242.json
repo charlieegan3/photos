@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sMVYHkm2fq",
   "is_video": false,
   "caption": "#crane #construction #Skyline #clouds",
-  "location": null,
+  "location": {
+    "id": "640673344",
+    "name": "Highgate",
+    "slug": "highgate",
+    "has_public_page": true
+  },
   "tags": [
     "#crane",
     "#construction",

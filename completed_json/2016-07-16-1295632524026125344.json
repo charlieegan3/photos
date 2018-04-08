@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BH7AuqCBRwg",
   "is_video": false,
   "caption": "#jellyfish #orange #pattern #macro #closeup",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#jellyfish",
     "#orange",

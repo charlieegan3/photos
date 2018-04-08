@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/7kUqFGm2bX",
   "is_video": false,
   "caption": "#landscape #green #sky #clouds",
-  "location": null,
+  "location": {
+    "id": "434673456635993",
+    "name": "Faebait",
+    "slug": "faebait",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape",
     "#green",

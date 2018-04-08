@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BH7A_tqB1Z8",
   "is_video": true,
   "caption": "#clouds #sky #hyperlapse #timelapse",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#clouds",
     "#sky",

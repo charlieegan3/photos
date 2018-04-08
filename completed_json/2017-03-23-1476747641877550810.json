@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BR-dif5Adba",
   "is_video": false,
   "caption": "Little house on the hill - Nava, Spain\n.\n.\n.\n#landscape #landscapephotography #nofilter #thirds #green #blue #sky #house #rural #countryside #spain #picoftheday #instagood #latergram #view #nature #instasky",
-  "location": null,
+  "location": {
+    "id": "253793674",
+    "has_public_page": true,
+    "name": "Nava, Asturias",
+    "slug": "nava-asturias"
+  },
   "tags": [
     "#landscape",
     "#landscapephotography",

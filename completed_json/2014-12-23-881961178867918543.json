@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/w9WwT0G2bP",
   "is_video": true,
   "caption": "#hyperlapse #landscape",
-  "location": null,
+  "location": {
+    "id": "120837368316504",
+    "name": "Kilcoy Castle",
+    "slug": "kilcoy-castle",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse",
     "#landscape"

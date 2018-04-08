@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHwOayaBeIQ",
   "is_video": false,
   "caption": "#Uist #beach #landscape #sea #altantic #flowers #seaside",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#Uist",
     "#beach",

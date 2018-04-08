@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BTa2x3WgHqm",
   "is_video": false,
   "caption": "St. Paul's\n.\n.\n.\n#architecture #cathedral #church #london",
-  "location": null,
+  "location": {
+    "id": "213045606",
+    "name": "St. Paul's Cathedral",
+    "slug": "st-pauls-cathedral",
+    "has_public_page": true
+  },
   "tags": [
     "#architecture",
     "#cathedral",

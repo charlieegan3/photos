@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sC-abym2SV",
   "is_video": false,
   "caption": "#art #blue #sculpture",
-  "location": null,
+  "location": {
+    "id": "213076320",
+    "name": "Tate Modern",
+    "slug": "tate-modern",
+    "has_public_page": true
+  },
   "tags": [
     "#art",
     "#blue",

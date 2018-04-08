@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOu1aX0hx-M",
   "is_video": false,
   "caption": "Dune Sunset at Culbin Beach - #dune #sanddune #forest #sunset #sky #landscape #clouds #orange #cloud #sun #nofilter",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#dune",
     "#sanddune",

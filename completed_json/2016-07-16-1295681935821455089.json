@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BH7L9sWhz7x",
   "is_video": false,
   "caption": "#yellow #flowers #flower #field",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#yellow",
     "#flowers",

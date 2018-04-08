@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/xwG5MZm2db",
   "is_video": false,
   "caption": "Coniston Hall",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "283079521",
+    "name": "Coniston Hall",
+    "slug": "coniston-hall",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1421060947,
   "dimensions": {
     "height": 640,

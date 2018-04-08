@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/w9VxTbG2ZF",
   "is_video": false,
   "caption": "#landscape #trees #field",
-  "location": null,
+  "location": {
+    "id": "120837368316504",
+    "name": "Kilcoy Castle",
+    "slug": "kilcoy-castle",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape",
     "#trees",

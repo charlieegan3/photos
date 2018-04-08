@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/WZw4Eam2bN",
   "is_video": false,
   "caption": "Battlement #battlement #turrets #tower #castle",
-  "location": null,
+  "location": {
+    "id": "261177520",
+    "name": "Crombie Halls - Aberdeen",
+    "slug": "crombie-halls-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#battlement",
     "#turrets",

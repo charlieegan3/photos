@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BH8APSJh1lM",
   "is_video": false,
   "caption": "#sky #clouds #rocks #landscape #bay #sea #atlantic #view",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#sky",
     "#clouds",

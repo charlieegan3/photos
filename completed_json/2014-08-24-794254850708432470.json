@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sFwpQdm2ZW",
   "is_video": false,
   "caption": "#streetart #graffiti #London #shoreditch",
-  "location": null,
+  "location": {
+    "id": "213650536",
+    "name": "Shoreditch",
+    "slug": "shoreditch",
+    "has_public_page": true
+  },
   "tags": [
     "#streetart",
     "#graffiti",

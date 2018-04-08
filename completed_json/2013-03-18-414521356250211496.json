@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XArPovG2So",
   "is_video": false,
   "caption": "Construction #construction #night #build #work #site #yard #blue #crane #development",
-  "location": null,
+  "location": {
+    "id": "229733878",
+    "name": "Aberdeen Airport",
+    "slug": "aberdeen-airport",
+    "has_public_page": true
+  },
   "tags": [
     "#construction",
     "#night",

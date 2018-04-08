@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/X1w5hxG2V4",
   "is_video": false,
   "caption": "All Yellow #yellow #bark #tree",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#yellow",
     "#bark",

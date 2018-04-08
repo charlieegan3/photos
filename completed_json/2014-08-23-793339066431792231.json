@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sCga15G2Rn",
   "is_video": false,
   "caption": "Poppies #London #Toweroflondon #city #red #castle #old #moat",
-  "location": null,
+  "location": {
+    "id": "97944",
+    "name": "Tower of London",
+    "slug": "tower-of-london",
+    "has_public_page": true
+  },
   "tags": [
     "#London",
     "#Toweroflondon",

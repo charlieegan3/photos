@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3G-piOm2VZ",
   "is_video": false,
   "caption": "#sea #green #trees #clouds #landscape",
-  "location": null,
+  "location": {
+    "id": "254970202",
+    "name": "Cromarty, Highland, United Kingdom",
+    "slug": "cromarty-highland-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#sea",
     "#green",

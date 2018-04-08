@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHzjw5FBnv1",
   "is_video": false,
   "caption": "#moon #sea #boat #sky #clouds #fishing",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#moon",
     "#sea",

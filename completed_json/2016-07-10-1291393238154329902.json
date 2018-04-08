@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHr807Zh78u",
   "is_video": false,
   "caption": "#sand #plants #green #beach",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#sand",
     "#plants",

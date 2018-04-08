@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/xPlvFBG2WW",
   "is_video": false,
   "caption": "#lakedistrict #landscape #lane #farmland",
-  "location": null,
+  "location": {
+    "id": "469973249",
+    "name": "Lake District",
+    "slug": "lake-district",
+    "has_public_page": true
+  },
   "tags": [
     "#lakedistrict",
     "#landscape",

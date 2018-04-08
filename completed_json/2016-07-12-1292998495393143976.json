@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHxp0ftBdyo",
   "is_video": false,
   "caption": "#panorama #landscape #layout #Uist #scotland",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#panorama",
     "#landscape",

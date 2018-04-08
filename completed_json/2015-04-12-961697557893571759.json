@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1YotVnm2Sv",
   "is_video": false,
   "caption": "#rainbow",
-  "location": null,
+  "location": {
+    "id": "429467379",
+    "name": "Perthshire",
+    "slug": "perthshire",
+    "has_public_page": true
+  },
   "tags": [
     "#rainbow"
   ],

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Z7pQ9bG2V8",
   "is_video": false,
   "caption": "'Summer Meadow' #summer #bright #meadow #field #forest #trees",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#summer",
     "#bright",

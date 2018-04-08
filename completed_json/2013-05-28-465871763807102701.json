@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Z3G-agm2bt",
   "is_video": false,
   "caption": "'Heights' #hills #Dingwall #Scotland #grass #sunset #evening",
-  "location": null,
+  "location": {
+    "id": "1028906833",
+    "name": "Heights Of Fodderty",
+    "slug": "heights-of-fodderty",
+    "has_public_page": true
+  },
   "tags": [
     "#hills",
     "#Dingwall",

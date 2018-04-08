@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/nh9dSUm2cL",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "19850271",
+    "name": "Don Street Halls",
+    "slug": "don-street-halls",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1399111401,
   "dimensions": {
     "height": 640,

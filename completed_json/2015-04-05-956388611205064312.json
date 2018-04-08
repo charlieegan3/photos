@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/1Fxl_uG2Z4",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1024811590",
+    "name": "Findhorn Beach",
+    "slug": "findhorn-beach",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1428230428,
   "dimensions": {
     "height": 640,

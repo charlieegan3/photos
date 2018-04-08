@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHxthFgB0nR",
   "is_video": false,
   "caption": "#barrel #water #rocks #sea #beach",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#barrel",
     "#water",

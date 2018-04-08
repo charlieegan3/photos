@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vr21HGm2Yt",
   "is_video": false,
   "caption": "Statue #statue #night #Scotland #floodlit #dark #gothic #architecture  #grim #office",
-  "location": null,
+  "location": {
+    "id": "229744708",
+    "name": "Marischal College",
+    "slug": "marischal-college",
+    "has_public_page": true
+  },
   "tags": [
     "#statue",
     "#night",

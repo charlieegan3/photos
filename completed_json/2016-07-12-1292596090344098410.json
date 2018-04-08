@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHwOUuzBMpq",
   "is_video": false,
   "caption": "#track #sea #Atlantic #grass #landscape #flowers #Uist",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#track",
     "#sea",

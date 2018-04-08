@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/xHFrQ9G2eU",
   "is_video": true,
   "caption": "#hyperlapse",
-  "location": null,
+  "location": {
+    "id": "427059647651495",
+    "name": "The Scottish Borders",
+    "slug": "the-scottish-borders",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse"
   ],

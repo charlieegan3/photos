@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHzkfCyhSb0",
   "is_video": true,
   "caption": "#sea #wave #rocks #slomo",
-  "location": null,
+  "location": {
+    "id": "705577040",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#sea",
     "#wave",

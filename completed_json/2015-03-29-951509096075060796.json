@@ -6,9 +6,14 @@
   "post_url": "https://www.instagram.com/p/00cHtIG2Y8",
   "is_video": false,
   "caption": "Moon",
-  "location": null,
+  "location": {
+    "id": "358582079",
+    "name": "Seaton, Aberdeen",
+    "slug": "seaton-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
-
+    "#moon"
   ],
   "timestamp": 1427648745,
   "dimensions": {

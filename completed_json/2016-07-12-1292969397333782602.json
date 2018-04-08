@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHxjNEBh_BK",
   "is_video": false,
   "caption": "#sand #beach #footprints #sky #rocks #landscape",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#sand",
     "#beach",

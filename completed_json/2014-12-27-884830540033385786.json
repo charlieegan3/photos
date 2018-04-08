@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/xHjLApG2U6",
   "is_video": false,
   "caption": "Borders #Scotland",
-  "location": null,
+  "location": {
+    "id": "427059647651495",
+    "name": "The Scottish Borders",
+    "slug": "the-scottish-borders",
+    "has_public_page": true
+  },
   "tags": [
     "#Scotland"
   ],

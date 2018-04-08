@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3G_YsFG2W_",
   "is_video": false,
   "caption": "#cracked #glass #window #coast #landscape #sea",
-  "location": null,
+  "location": {
+    "id": "818879292",
+    "name": "Upper Eathie, Highland, United Kingdom",
+    "slug": "upper-eathie-highland-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#cracked",
     "#glass",

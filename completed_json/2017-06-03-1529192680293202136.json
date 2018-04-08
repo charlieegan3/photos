@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BU4yKQGAPjY",
   "is_video": false,
   "caption": "The other side of this shop is a pub\n.\n.\n.\n#shop #oldfashioned #retro #picoftheday #ireland #instagood #nofilter #nofilterneeded",
-  "location": null,
+  "location": {
+    "id": "127063995",
+    "name": "Murrisk",
+    "slug": "murrisk",
+    "has_public_page": true
+  },
   "tags": [
     "#shop",
     "#oldfashioned",

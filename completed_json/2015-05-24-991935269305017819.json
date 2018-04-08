@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3ED983G2Xb",
   "is_video": false,
   "caption": "#trees #landscape",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#trees",
     "#landscape"

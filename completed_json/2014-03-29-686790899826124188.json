@@ -6,9 +6,15 @@
   "post_url": "https://www.instagram.com/p/mH-K9DG2Wc",
   "is_video": false,
   "caption": "Droplets",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
-
+    "#droplets",
+    "#window"
   ],
   "timestamp": 1396091876,
   "dimensions": {

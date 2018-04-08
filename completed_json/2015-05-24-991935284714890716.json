@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3ED-LNm2Xc",
   "is_video": false,
   "caption": "#rust #sign #fish",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#rust",
     "#sign",

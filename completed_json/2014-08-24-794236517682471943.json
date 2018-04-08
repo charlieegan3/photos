@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sFseegG2QH",
   "is_video": false,
   "caption": "Notting Hill Carnival #London #Street #art #graffiti",
-  "location": null,
+  "location": {
+    "id": "7856081",
+    "name": "Notting Hill",
+    "slug": "notting-hill",
+    "has_public_page": true
+  },
   "tags": [
     "#London",
     "#Street",

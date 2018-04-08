@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vgev8Tm2ZE",
   "is_video": false,
   "caption": "Graffiti Shelter #sky #graffiti #green #architecture",
-  "location": null,
+  "location": {
+    "id": "255073745",
+    "name": "Aberdeen Beach Leisure Centre",
+    "slug": "aberdeen-beach-leisure-centre",
+    "has_public_page": true
+  },
   "tags": [
     "#sky",
     "#graffiti",

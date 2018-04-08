@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sE6G7hG2dh",
   "is_video": false,
   "caption": "#face #model #spotlight",
-  "location": null,
+  "location": {
+    "id": "213385402",
+    "name": "London, United Kingdom",
+    "slug": "london-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#face",
     "#model",

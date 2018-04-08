@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vythbam2ZB",
   "is_video": false,
   "caption": "Dune Skyline #skyline #dune #forest #clouds #sky",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#skyline",
     "#dune",

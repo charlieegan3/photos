@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/xKY3tGG2YT",
   "is_video": true,
   "caption": "#fire #flame #slomo",
-  "location": null,
+  "location": {
+    "id": "469973249",
+    "name": "Lake District",
+    "slug": "lake-district",
+    "has_public_page": true
+  },
   "tags": [
     "#fire",
     "#flame",

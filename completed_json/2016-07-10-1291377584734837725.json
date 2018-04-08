@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHr5RJBBZvd",
   "is_video": false,
   "caption": "#oystercatcher #birds #beach",
-  "location": null,
+  "location": {
+    "id": "705577040",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#oystercatcher",
     "#birds",

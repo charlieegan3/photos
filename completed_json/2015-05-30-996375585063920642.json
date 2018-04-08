@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3T1lDKm2QC",
   "is_video": false,
   "caption": "#field #landscape #farm",
-  "location": null,
+  "location": {
+    "id": "1033488271",
+    "name": "Redcastle",
+    "slug": "redcastle",
+    "has_public_page": true
+  },
   "tags": [
     "#field",
     "#landscape",

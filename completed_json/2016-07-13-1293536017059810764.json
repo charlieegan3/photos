@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHzkCdxBg3M",
   "is_video": true,
   "caption": "#bubbles",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#bubbles"
   ],

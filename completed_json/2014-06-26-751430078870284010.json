@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/ptnazsm2bq",
   "is_video": true,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1403797467,
   "dimensions": {
     "height": 640,

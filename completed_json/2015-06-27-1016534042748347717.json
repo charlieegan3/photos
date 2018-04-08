@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4bdFN4G2VF",
   "is_video": false,
   "caption": "Contrasting two weeks. (Made with #dubblestudio)",
-  "location": null,
+  "location": {
+    "id": "223196746",
+    "name": "Broadgate",
+    "slug": "broadgate",
+    "has_public_page": true
+  },
   "tags": [
     "#dubblestudio"
   ],

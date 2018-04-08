@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/07WflTm2cM",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "678169468",
+    "name": "Aberdeen Beach - BoD end",
+    "slug": "aberdeen-beach-bod-end",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1427880675,
   "dimensions": {
     "height": 640,

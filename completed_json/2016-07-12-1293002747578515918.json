@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BHxqyX3BYHO",
   "is_video": false,
   "caption": "#sun #sea #sky",
-  "location": null,
+  "location": {
+    "id": "238229249",
+    "name": "South Uist",
+    "slug": "south-uist",
+    "has_public_page": true
+  },
   "tags": [
     "#sun",
     "#sea",

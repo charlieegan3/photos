@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BH7QlbjBr_J",
   "is_video": false,
   "caption": "#sheep #skyline #horizon #rock #cliff #clouds #hill #grass",
-  "location": null,
+  "location": {
+    "id": "992403011",
+    "name": "Eriskay",
+    "slug": "eriskay",
+    "has_public_page": true
+  },
   "tags": [
     "#sheep",
     "#skyline",

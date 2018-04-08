@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Z0ULDNG2ax",
   "is_video": false,
   "caption": "'Young Barley' #arable #crops #field #sky #green #farm #plants #crop #Scotland",
-  "location": null,
+  "location": {
+    "id": "493393547525616",
+    "name": "Garguston",
+    "slug": "garguston",
+    "has_public_page": true
+  },
   "tags": [
     "#arable",
     "#crops",

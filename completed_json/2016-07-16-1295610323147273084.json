@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BH67rl2hbN8",
   "is_video": false,
   "caption": "#gradient #sea #rock #seaweed #green #water",
-  "location": null,
+  "location": {
+    "id": "992403011",
+    "name": "Eriskay",
+    "slug": "eriskay",
+    "has_public_page": true
+  },
   "tags": [
     "#gradient",
     "#sea",

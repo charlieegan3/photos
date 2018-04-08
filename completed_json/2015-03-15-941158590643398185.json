@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/0PqsBwm2Yp",
   "is_video": false,
   "caption": "Tanker #sea #boat #sky #clouds",
-  "location": null,
+  "location": {
+    "id": "320928369",
+    "name": "Aberdeen Beach Front",
+    "slug": "aberdeen-beach-front",
+    "has_public_page": true
+  },
   "tags": [
     "#sea",
     "#boat",

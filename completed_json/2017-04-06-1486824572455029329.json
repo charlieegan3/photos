@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BSiQxI0gQpR",
   "is_video": false,
   "caption": "Lon-don Heathrow\n.\n.\n.\n#Heathrow #airport #travel #sky #blue #reflection #glass #architecture #picoftheday #instagood #latergram #view #instasky #mysecretlondon #thisislondon #londonlife #londontown #nofilter #nofilters",
-  "location": null,
+  "location": {
+    "id": "213103343",
+    "name": "Heathrow Airport",
+    "slug": "heathrow-airport",
+    "has_public_page": true
+  },
   "tags": [
     "#Heathrow",
     "#airport",

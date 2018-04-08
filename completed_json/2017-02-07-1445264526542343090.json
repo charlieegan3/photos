@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BQOnG33B4uy",
   "is_video": false,
   "caption": "\"My First Instagram Photo\", 4 years and over 1000 posts earlier\n.\n.\n.\n#latergram #throwback #firstinstapic #first #glass #reflection #view #height",
-  "location": null,
+  "location": {
+    "id": "1030685075",
+    "name": "The Sir Duncan Rice Library",
+    "slug": "the-sir-duncan-rice-library",
+    "has_public_page": true
+  },
   "tags": [
     "#latergram",
     "#throwback",

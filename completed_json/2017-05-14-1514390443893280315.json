@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BUEMhXLgU47",
   "is_video": false,
   "caption": "Navan\n.\n.\n.\n#navancentre #navan #path #willow #ireland #green #grass #nofilter #latergram",
-  "location": null,
+  "location": {
+    "id": "216163942",
+    "name": "Armagh",
+    "slug": "armagh",
+    "has_public_page": true
+  },
   "tags": [
     "#navancentre",
     "#navan",

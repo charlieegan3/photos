@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BbmOpLkn0YV",
   "is_video": false,
   "caption": "River Findhorn; mid-october\n·\n·\n·\n#river #nature #riverplate #riverrocks #riverstone #photography #instagood #longexposure #longexposure_shots #longexpoelite #amazing_longexpo #longexposureoftheday #longexposurephotography #longexpohunter #landscape #photooftheday #longexposures #longexposureshots #longexpo #longexposure_world #jaw_dropping_shots #longexposure_kings #artofvisuals #earthpix #ic_longexpo #nofilter #nofilters #latergram",
-  "location": null,
+  "location": {
+    "id": "434917697",
+    "name": "River Findhorn",
+    "slug": "river-findhorn",
+    "has_public_page": true
+  },
   "tags": [
     "#river",
     "#nature",

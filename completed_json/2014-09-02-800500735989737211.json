@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb8y2bG2b7",
   "is_video": false,
   "caption": "#glowing #fish",
-  "location": null,
+  "location": {
+    "id": "1227829",
+    "name": "SEA LIFE London Aquarium™",
+    "slug": "sea-life-london-aquariumtm",
+    "has_public_page": true
+  },
   "tags": [
     "#glowing",
     "#fish"

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb75hQG2bH",
   "is_video": false,
   "caption": "#squirrel #London #park #grey",
-  "location": null,
+  "location": {
+    "id": "213385402",
+    "name": "London, United Kingdom",
+    "slug": "london-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#squirrel",
     "#London",

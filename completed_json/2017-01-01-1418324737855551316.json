@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOu5tWgB3dU",
   "is_video": false,
   "caption": "Through the Trees Again - #trees #sunset #light #dark",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#trees",
     "#sunset",

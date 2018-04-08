@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/1GADZBm2T0",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "242489432",
+    "name": "Findhorn",
+    "slug": "findhorn",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1428238009,
   "dimensions": {
     "height": 640,

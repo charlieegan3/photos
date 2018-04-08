@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/1EtFwUG2S7",
   "is_video": true,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1016504063",
+    "name": "Orrin Falls",
+    "slug": "orrin-falls",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1428194512,
   "dimensions": {
     "height": 640,

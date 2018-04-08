@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BUL6aZoA2oN",
   "is_video": false,
   "caption": "Forward Head Posture\n.\n.\n.\n#bloom #light #tunnel #blue #cold #picoftheday #latergram #nofilter #sonyrx100iv #ireland #silhouette",
-  "location": null,
+  "location": {
+    "id": "258993813",
+    "name": "Castle Coole",
+    "slug": "castle-coole",
+    "has_public_page": true
+  },
   "tags": [
     "#bloom",
     "#light",

@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/qphCSbm2cS",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "840843",
+    "name": "Royal Albert Hall",
+    "slug": "royal-albert-hall",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1405807386,
   "dimensions": {
     "height": 640,

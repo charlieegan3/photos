@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3RVWIfm2Rf",
   "is_video": false,
   "caption": "#boat #canal",
-  "location": null,
+  "location": {
+    "id": "220626031",
+    "name": "Caledonian Canal",
+    "slug": "caledonian-canal",
+    "has_public_page": true
+  },
   "tags": [
     "#boat",
     "#canal"

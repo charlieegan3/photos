@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/20W_jVm2X4",
   "is_video": false,
   "caption": "#log #wood #green",
-  "location": null,
+  "location": {
+    "id": "1565480680173369",
+    "name": "River Conon",
+    "slug": "river-conon",
+    "has_public_page": true
+  },
   "tags": [
     "#log",
     "#wood",

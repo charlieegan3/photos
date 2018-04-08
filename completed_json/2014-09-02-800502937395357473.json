@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb9S4pG2ch",
   "is_video": false,
   "caption": "#fish #aquarium",
-  "location": null,
+  "location": {
+    "id": "1227829",
+    "name": "SEA LIFE London Aquarium™",
+    "slug": "sea-life-london-aquariumtm",
+    "has_public_page": true
+  },
   "tags": [
     "#fish",
     "#aquarium"

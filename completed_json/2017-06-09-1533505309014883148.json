@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BVIGvQlAftM",
   "is_video": false,
   "caption": "Polished blocks\n.\n.\n.\n#sky #architecture #nofilter",
-  "location": null,
+  "location": {
+    "id": "462595280",
+    "name": "The Giant's Causeway",
+    "slug": "the-giants-causeway",
+    "has_public_page": true
+  },
   "tags": [
     "#sky",
     "#architecture",

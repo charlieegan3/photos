@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb7BEhG2aH",
   "is_video": false,
   "caption": "Maps #London #museum",
-  "location": null,
+  "location": {
+    "id": "243298",
+    "name": "Museum of London",
+    "slug": "museum-of-london",
+    "has_public_page": true
+  },
   "tags": [
     "#London",
     "#museum"

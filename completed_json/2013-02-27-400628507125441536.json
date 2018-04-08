@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/WPUYEuG2QA",
   "is_video": false,
   "caption": "Soar #bird #sky #architecture #blue",
-  "location": null,
+  "location": {
+    "id": "229819782",
+    "name": "Aberdeen Harbour.",
+    "slug": "aberdeen-harbour",
+    "has_public_page": true
+  },
   "tags": [
     "#bird",
     "#sky",

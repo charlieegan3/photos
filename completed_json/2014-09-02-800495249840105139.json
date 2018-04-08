@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb7jBDG2az",
   "is_video": false,
   "caption": "#cat #art #tshirt",
-  "location": null,
+  "location": {
+    "id": "358140325",
+    "name": "Camden Town",
+    "slug": "camden-town",
+    "has_public_page": true
+  },
   "tags": [
     "#cat",
     "#art",

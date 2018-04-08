@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb7JyNm2aU",
   "is_video": false,
   "caption": "Romans #London #museum #shadow",
-  "location": null,
+  "location": {
+    "id": "243298",
+    "name": "Museum of London",
+    "slug": "museum-of-london",
+    "has_public_page": true
+  },
   "tags": [
     "#London",
     "#museum",

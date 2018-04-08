@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BVm7hvsAerw",
   "is_video": false,
   "caption": "Hipster level over 9,000!\n.\n.\n.\n#vintage #car #putney #london #hipster #evening #summer #color #dusk #instagood #instalondon #picoftheday #filter #maxfilter #morefilters #filterfilter",
-  "location": null,
+  "location": {
+    "id": "49143886",
+    "name": "Putney",
+    "slug": "putney",
+    "has_public_page": true
+  },
   "tags": [
     "#vintage",
     "#car",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BGWrgK7m2b1",
   "is_video": false,
   "caption": "#art #sculpture (Ales Vesely)",
-  "location": null,
+  "location": {
+    "id": "242193994",
+    "name": "National Gallery in Prague",
+    "slug": "national-gallery-in-prague",
+    "has_public_page": true
+  },
   "tags": [
     "#art",
     "#sculpture"

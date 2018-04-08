@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/qpCW9nG2Rm",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "213833551",
+    "name": "Albert Memorial",
+    "slug": "albert-memorial",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1405791303,
   "dimensions": {
     "height": 640,

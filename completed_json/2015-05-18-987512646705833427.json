@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/20WYUmG2XT",
   "is_video": true,
   "caption": "Shake it off #dog #river",
-  "location": null,
+  "location": {
+    "id": "1565480680173369",
+    "name": "River Conon",
+    "slug": "river-conon",
+    "has_public_page": true
+  },
   "tags": [
     "#dog",
     "#river"

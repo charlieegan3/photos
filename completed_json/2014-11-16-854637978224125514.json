@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/vcSLaPm2ZK",
   "is_video": true,
   "caption": "#road #sea #farmland #green",
-  "location": null,
+  "location": {
+    "id": "293048364",
+    "name": "Inverbervie, Aberdeenshire, United Kingdom",
+    "slug": "inverbervie-aberdeenshire-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#road",
     "#sea",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BVps95gAL33",
   "is_video": false,
   "caption": "Blue dots of paint on a stone\n.\n.\n.\n#art #paint #stone #ornament #pattern #painting #blue",
-  "location": null,
+  "location": {
+    "id": "49143886",
+    "name": "Putney",
+    "slug": "putney",
+    "has_public_page": true
+  },
   "tags": [
     "#art",
     "#paint",

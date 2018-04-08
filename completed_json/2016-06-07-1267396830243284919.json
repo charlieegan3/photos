@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BGWsrPAG2e3",
   "is_video": false,
   "caption": "#Prague #charlesbridge #art #painting (Oskar K.)",
-  "location": null,
+  "location": {
+    "id": "242193994",
+    "name": "National Gallery in Prague",
+    "slug": "national-gallery-in-prague",
+    "has_public_page": true
+  },
   "tags": [
     "#Prague",
     "#charlesbridge",

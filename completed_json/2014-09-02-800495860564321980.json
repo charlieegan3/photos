@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb7r51G2a8",
   "is_video": false,
   "caption": "#glass #architecture #London",
-  "location": null,
+  "location": {
+    "id": "358140325",
+    "name": "Camden Town",
+    "slug": "camden-town",
+    "has_public_page": true
+  },
   "tags": [
     "#glass",
     "#architecture",

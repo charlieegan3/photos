@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/qolN0im2TK",
   "is_video": false,
   "caption": "Archway",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "640673344",
+    "name": "Highgate",
+    "slug": "highgate",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1405776024,
   "dimensions": {
     "height": 640,

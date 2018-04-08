@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3RVIDGm2RH",
   "is_video": false,
   "caption": "#landscape #clouds #cloud #bloom #gorse #field",
-  "location": null,
+  "location": {
+    "id": "220626031",
+    "name": "Caledonian Canal",
+    "slug": "caledonian-canal",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape",
     "#clouds",

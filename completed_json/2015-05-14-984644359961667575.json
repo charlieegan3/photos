@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/2qKNQZm2f3",
   "is_video": false,
   "caption": "#cpu #macro",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#cpu",
     "#macro"

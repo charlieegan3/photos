@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/2taJX3G2VV",
   "is_video": false,
   "caption": "#beetle #closeup",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#beetle",
     "#closeup"

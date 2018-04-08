@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/1EsBVVG2Qm",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "12700129",
+    "name": "Meston",
+    "slug": "meston",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1428193952,
   "dimensions": {
     "height": 640,

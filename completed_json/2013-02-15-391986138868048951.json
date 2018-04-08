@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/VwnVEEG2Q3",
   "is_video": false,
   "caption": "Bridge #road #path #landscape #scotland",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#road",
     "#path",

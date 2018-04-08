@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BR3GeMPgB1X",
   "is_video": false,
   "caption": "Atmospheric Power Distribution, Pandenes - Spain\n.\n.\n.\n#pylon #landscape #evening #sun #jacobsladders #skyscape #skyporn #country #countryside #rural #nofilter #clouds #picoftheday #instagood #latergram #view #nature #instasky",
-  "location": null,
+  "location": {
+    "id": "605315801",
+    "name": "Pandenes",
+    "slug": "pandenes",
+    "has_public_page": true
+  },
   "tags": [
     "#pylon",
     "#landscape",

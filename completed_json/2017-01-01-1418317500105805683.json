@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOu4EB0hs9z",
   "is_video": false,
   "caption": "A Little Bit of the Moon - #moon #sky #night #cloud #blue",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#moon",
     "#sky",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/2tp7U-G2St",
   "is_video": false,
   "caption": "#lark #bloom #clouds #sky #yellow",
-  "location": null,
+  "location": {
+    "id": "220626031",
+    "name": "Caledonian Canal",
+    "slug": "caledonian-canal",
+    "has_public_page": true
+  },
   "tags": [
     "#lark",
     "#bloom",

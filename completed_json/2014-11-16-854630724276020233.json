@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/vcQh2em2QJ",
   "is_video": false,
   "caption": "#wind #turbine #sky #electricity #renewables #field",
-  "location": null,
+  "location": {
+    "id": "293048364",
+    "name": "Inverbervie, Aberdeenshire, United Kingdom",
+    "slug": "inverbervie-aberdeenshire-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#wind",
     "#turbine",

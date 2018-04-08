@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOvReqgBswf",
   "is_video": false,
   "caption": "In 2017 I'd like to take better photos. #whpresolutions #whpresolutions2017 \nTaking photos on Culbin Beach near Nairn, Scotland earlier today. #me #beach #landscape #photography #scotland #photooftheday #picoftheday #igers",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#whpresolutions",
     "#whpresolutions2017",

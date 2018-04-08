@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/2rJK9gG2XU",
   "is_video": false,
   "caption": "#pylon #landscape",
-  "location": null,
+  "location": {
+    "id": "229815996",
+    "name": "Moray",
+    "slug": "moray",
+    "has_public_page": true
+  },
   "tags": [
     "#pylon",
     "#landscape"

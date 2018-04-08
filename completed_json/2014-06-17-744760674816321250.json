@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/pV6-NJG2bi",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "306600748",
+    "name": "Long Sutton, Somerset",
+    "slug": "long-sutton-somerset",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1403002412,
   "dimensions": {
     "height": 640,

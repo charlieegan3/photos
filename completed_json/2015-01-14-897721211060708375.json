@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/x1WK9km2QX",
   "is_video": false,
   "caption": "#snow #closeup",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#snow",
     "#closeup"

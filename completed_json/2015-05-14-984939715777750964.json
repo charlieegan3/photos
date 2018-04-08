@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/2rNXP8G2e0",
   "is_video": false,
   "caption": "#landscape #yellow",
-  "location": null,
+  "location": {
+    "id": "229815996",
+    "name": "Moray",
+    "slug": "moray",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape",
     "#yellow"

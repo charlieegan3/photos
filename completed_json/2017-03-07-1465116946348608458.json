@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BRVJBmlg4vK",
   "is_video": false,
   "caption": "Glowing\n.\n.\n.\n#crystal #rock #light #glowing #nofilter #macro #color #gem #rock #rocks #gems",
-  "location": null,
+  "location": {
+    "id": "231401561",
+    "name": "Hereford, Herefordshire",
+    "slug": "hereford-herefordshire",
+    "has_public_page": true
+  },
   "tags": [
     "#crystal",
     "#rock",

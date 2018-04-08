@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3G_p5Vm2Xp",
   "is_video": false,
   "caption": "#sky #green #sheep #field #landscape",
-  "location": null,
+  "location": {
+    "id": "361685871",
+    "name": "Black Isle",
+    "slug": "black-isle",
+    "has_public_page": true
+  },
   "tags": [
     "#sky",
     "#green",

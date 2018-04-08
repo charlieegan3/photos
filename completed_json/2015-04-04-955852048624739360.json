@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/1D3l-4G2Qg",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "531489327",
+    "name": "Redcastle",
+    "slug": "redcastle",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1428166465,
   "dimensions": {
     "height": 640,

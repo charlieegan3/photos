@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/V9GENoG2QA",
   "is_video": false,
   "caption": "Old Stacks #architecture #stacks #highrise",
-  "location": null,
+  "location": {
+    "id": "261616428",
+    "name": "Mounthooly Roonaboot",
+    "slug": "mounthooly-roonaboot",
+    "has_public_page": true
+  },
   "tags": [
     "#architecture",
     "#stacks",

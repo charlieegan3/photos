@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOuy_X3Bse-",
   "is_video": false,
   "caption": "Trees Through Trees - #trees",
-  "location": null,
+  "location": {
+    "id": "1016286366",
+    "name": "Gollanfield",
+    "slug": "gollanfield",
+    "has_public_page": true
+  },
   "tags": [
     "#trees"
   ],

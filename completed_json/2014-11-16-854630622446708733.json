@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/vcQgXpG2f9",
   "is_video": true,
   "caption": "East Coast",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "293048364",
+    "name": "Inverbervie, Aberdeenshire, United Kingdom",
+    "slug": "inverbervie-aberdeenshire-united-kingdom",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1416099931,
   "dimensions": {
     "height": 640,

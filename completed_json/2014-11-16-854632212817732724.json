@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/vcQ3gym2R0",
   "is_video": true,
   "caption": "#beach #sea #Scotland #waves",
-  "location": null,
+  "location": {
+    "id": "293048364",
+    "name": "Inverbervie, Aberdeenshire, United Kingdom",
+    "slug": "inverbervie-aberdeenshire-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#beach",
     "#sea",

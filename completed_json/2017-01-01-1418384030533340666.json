@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOvHMLHBs36",
   "is_video": false,
   "caption": "Culbin Beach Glow - #beach #sunset #scotland #landscape #sea #sky",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#beach",
     "#sunset",

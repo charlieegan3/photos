@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BUd18CkgT8w",
   "is_video": false,
   "caption": "Weed\n.\n.\n.\n#weed #seaweed #sea #ocean #atlantic #wave #spray #water #gray #overcast #ireland #nofilter #nofilterneeded #instagood #latergram #igersireland #west #westcoast #coast #beach",
-  "location": null,
+  "location": {
+    "id": "234396875",
+    "name": "Easky",
+    "slug": "easky",
+    "has_public_page": true
+  },
   "tags": [
     "#weed",
     "#seaweed",

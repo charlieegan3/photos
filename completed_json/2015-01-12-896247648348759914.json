@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/xwHHzWm2dq",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "469973249",
+    "name": "Lake District",
+    "slug": "lake-district",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1421061067,
   "dimensions": {
     "height": 640,

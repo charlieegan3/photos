@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BOu2CZYBx2_",
   "is_video": false,
   "caption": "Through the trees at Culbin Forest - #silhouette #clouds #sky #forest #trees #sun #light #sunset #dusk",
-  "location": null,
+  "location": {
+    "id": "337750034",
+    "name": "Culbin Forest",
+    "slug": "culbin-forest",
+    "has_public_page": true
+  },
   "tags": [
     "#silhouette",
     "#clouds",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1llzr4G2f0",
   "is_video": false,
   "caption": "#landscape #field #green",
-  "location": null,
+  "location": {
+    "id": "361685871",
+    "name": "Black Isle",
+    "slug": "black-isle",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape",
     "#field",

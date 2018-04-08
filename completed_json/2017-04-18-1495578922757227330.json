@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BTBXRs4gYNC",
   "is_video": false,
   "caption": "A bright purple light\n.\n.\n.\n#purple #light #nofilter #latergram",
-  "location": null,
+  "location": {
+    "id": "348052800",
+    "name": "Tobacco Dock Venue LTD",
+    "slug": "tobacco-dock-venue-ltd",
+    "has_public_page": true
+  },
   "tags": [
     "#purple",
     "#light",

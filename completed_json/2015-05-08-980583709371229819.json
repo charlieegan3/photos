@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/2bu7A1m2Z7",
   "is_video": false,
   "caption": "#orange #flats #architecture #sunset",
-  "location": null,
+  "location": {
+    "id": "358582079",
+    "name": "Seaton, Aberdeen",
+    "slug": "seaton-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#orange",
     "#flats",

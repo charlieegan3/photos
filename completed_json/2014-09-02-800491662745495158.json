@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sb6u0Tm2Z2",
   "is_video": false,
   "caption": "#rings #neon #London",
-  "location": null,
+  "location": {
+    "id": "243298",
+    "name": "Museum of London",
+    "slug": "museum-of-london",
+    "has_public_page": true
+  },
   "tags": [
     "#rings",
     "#neon",

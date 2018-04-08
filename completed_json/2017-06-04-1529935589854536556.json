@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BU7bFAigeNs",
   "is_video": false,
   "caption": "HDR, Sony RX100 IV\n.\n.\n.\n#nofilter #landscape #rural #ireland #field #green #grass #igersireland #instagood #picoftheday #trees #forest #farmland #farm #nature",
-  "location": null,
+  "location": {
+    "id": "501937601",
+    "name": "County Mayo",
+    "slug": "county-mayo",
+    "has_public_page": true
+  },
   "tags": [
     "#nofilter",
     "#landscape",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1lAq8Nm2du",
   "is_video": false,
   "caption": "Made with #dubblestudio @dubblestudio",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#dubblestudio"
   ],

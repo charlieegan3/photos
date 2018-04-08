@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/qrWEN2m2Zx",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "312687372398414",
+    "name": "Highgate Cemetery",
+    "slug": "highgate-cemetery",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1405868744,
   "dimensions": {
     "height": 640,

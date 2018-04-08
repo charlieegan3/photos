@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1_jeb2m2Wy",
   "is_video": false,
   "caption": "#inkwell #blackandwhite #night",
-  "location": null,
+  "location": {
+    "id": "19850271",
+    "name": "Don Street Halls",
+    "slug": "don-street-halls",
+    "has_public_page": true
+  },
   "tags": [
     "#inkwell",
     "#blackandwhite",

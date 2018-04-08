@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6qMdPhG2Yk",
   "is_video": false,
   "caption": "#night #light #pipes #abstract #interior #architecture",
-  "location": null,
+  "location": {
+    "id": "213385402",
+    "name": "London, United Kingdom",
+    "slug": "london-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#night",
     "#light",

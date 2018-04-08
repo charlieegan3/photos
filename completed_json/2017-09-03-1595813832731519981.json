@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BYleDnTnevt",
   "is_video": false,
   "caption": "Abstract September; it's a thing, you heard it here first.\n.\n.\n.\n#abstract #blackandwhite #grayscale #dark #nofilter",
-  "location": null,
+  "location": {
+    "id": "49143886",
+    "name": "Putney",
+    "slug": "putney",
+    "has_public_page": true
+  },
   "tags": [
     "#abstract",
     "#blackandwhite",

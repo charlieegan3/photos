@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/qhtsGYm2RR",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "213650536",
+    "name": "Shoreditch",
+    "slug": "shoreditch",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1405545585,
   "dimensions": {
     "height": 640,

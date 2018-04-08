@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6x9CBIG2d_",
   "is_video": true,
   "caption": "#car #night #lights #reflections #bond #jamesbond",
-  "location": null,
+  "location": {
+    "id": "342604967",
+    "name": "Covent Garden London",
+    "slug": "covent-garden-london",
+    "has_public_page": true
+  },
   "tags": [
     "#car",
     "#night",

@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/p_2oGTm2eQ",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "223196746",
+    "name": "Broadgate",
+    "slug": "broadgate",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1404409420,
   "dimensions": {
     "height": 640,

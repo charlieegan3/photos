@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/-coASbm2ce",
   "is_video": true,
   "caption": "#chvrches",
-  "location": null,
+  "location": {
+    "id": "70422",
+    "name": "Music Hall Aberdeen",
+    "slug": "music-hall-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#chvrches"
   ],

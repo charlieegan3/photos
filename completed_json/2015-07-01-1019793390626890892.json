@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/4nCK-Im2SM",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1021225954",
+    "name": "Coptic Street",
+    "slug": "coptic-street",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1435788867,
   "dimensions": {
     "height": 640,

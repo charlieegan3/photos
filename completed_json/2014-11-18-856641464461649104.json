@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/vjZt-NG2TQ",
   "is_video": false,
   "caption": "#lamppost",
-  "location": null,
+  "location": {
+    "id": "358582079",
+    "name": "Seaton, Aberdeen",
+    "slug": "seaton-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#lamppost"
   ],

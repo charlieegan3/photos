@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4wmx7fm2Sh",
   "is_video": true,
   "caption": "#hyperlapse #people",
-  "location": null,
+  "location": {
+    "id": "80388",
+    "name": "British Museum",
+    "slug": "british-museum",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse",
     "#people"

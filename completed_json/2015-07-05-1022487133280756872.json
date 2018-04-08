@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4wmqFem2SI",
   "is_video": false,
   "caption": "#Shakespeare #face #sculpture",
-  "location": null,
+  "location": {
+    "id": "80388",
+    "name": "British Museum",
+    "slug": "british-museum",
+    "has_public_page": true
+  },
   "tags": [
     "#Shakespeare",
     "#face",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/354Irgm2Xo",
   "is_video": true,
   "caption": "Stabilise this. #hyperlapse doesn't really do running...",
-  "location": null,
+  "location": {
+    "id": "280000444",
+    "name": "Ben Wyvis",
+    "slug": "ben-wyvis",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse"
   ],

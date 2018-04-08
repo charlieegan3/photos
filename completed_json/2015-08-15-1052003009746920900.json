@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6Zdynim2XE",
   "is_video": true,
   "caption": "#water #reed #water",
-  "location": null,
+  "location": {
+    "id": "320492",
+    "name": "Hackney Marshes",
+    "slug": "hackney-marshes",
+    "has_public_page": true
+  },
   "tags": [
     "#water",
     "#reed"

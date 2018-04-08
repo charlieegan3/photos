@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4sL83Em2fM",
   "is_video": false,
   "caption": "#spiral #staircase #stairs",
-  "location": null,
+  "location": {
+    "id": "1021225954",
+    "name": "Coptic Street",
+    "slug": "coptic-street",
+    "has_public_page": true
+  },
   "tags": [
     "#spiral",
     "#staircase",

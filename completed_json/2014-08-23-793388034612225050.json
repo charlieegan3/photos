@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/sCrjbEG2Qa",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "213076320",
+    "name": "Tate Modern",
+    "slug": "tate-modern",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1408799245,
   "dimensions": {
     "height": 640,

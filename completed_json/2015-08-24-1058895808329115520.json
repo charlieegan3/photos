@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6x9CCdm2eA",
   "is_video": true,
   "caption": "#jamesbond #bond #pinball #game #arcade",
-  "location": null,
+  "location": {
+    "id": "342604967",
+    "name": "Covent Garden London",
+    "slug": "covent-garden-london",
+    "has_public_page": true
+  },
   "tags": [
     "#jamesbond",
     "#bond",

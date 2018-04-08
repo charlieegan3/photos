@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/rpZvUEG2T5",
   "is_video": false,
   "caption": "#London",
-  "location": null,
+  "location": {
+    "id": "242813649",
+    "name": "Angel, London",
+    "slug": "angel-london",
+    "has_public_page": true
+  },
   "tags": [
     "#London"
   ],

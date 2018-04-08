@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/rG5WyFm2TO",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "2086",
+    "name": "Blue Fin Building",
+    "slug": "blue-fin-building",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1406793216,
   "dimensions": {
     "height": 640,

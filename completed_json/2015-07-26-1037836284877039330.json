@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/5nIpo3G2bi",
   "is_video": false,
   "caption": "#cables #bombe #Bletchley",
-  "location": null,
+  "location": {
+    "id": "1019807437",
+    "name": "Bletchley Park",
+    "slug": "bletchley-park",
+    "has_public_page": true
+  },
   "tags": [
     "#cables",
     "#bombe",

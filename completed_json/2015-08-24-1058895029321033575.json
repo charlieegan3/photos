@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6x82s9G2dn",
   "is_video": false,
   "caption": "#house #architecture #london #windows #door #doorway",
-  "location": null,
+  "location": {
+    "id": "1561651337181441",
+    "name": "Russell Square",
+    "slug": "russell-square",
+    "has_public_page": true
+  },
   "tags": [
     "#house",
     "#architecture",

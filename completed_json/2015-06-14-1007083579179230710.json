@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/354S30G2X2",
   "is_video": false,
   "caption": "#landscape",
-  "location": null,
+  "location": {
+    "id": "280000444",
+    "name": "Ben Wyvis",
+    "slug": "ben-wyvis",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape"
   ],

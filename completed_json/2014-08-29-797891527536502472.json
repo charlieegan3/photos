@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sSrh3sG2bI",
   "is_video": true,
   "caption": "#criticalmass",
-  "location": null,
+  "location": {
+    "id": "213234067",
+    "name": "National Theatre",
+    "slug": "national-theatre",
+    "has_public_page": true
+  },
   "tags": [
     "#criticalmass"
   ],

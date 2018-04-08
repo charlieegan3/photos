@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/p_20gpm2ep",
   "is_video": false,
   "caption": "#London",
-  "location": null,
+  "location": {
+    "id": "223196746",
+    "name": "Broadgate",
+    "slug": "broadgate",
+    "has_public_page": true
+  },
   "tags": [
     "#London"
   ],

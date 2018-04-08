@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Ba40ZBvH337",
   "is_video": false,
   "caption": "Down into the deep\n.\n.\n.\n#budapest #neon #nofilter #stairs",
-  "location": null,
+  "location": {
+    "id": "213205633",
+    "name": "Budapest, Hungary",
+    "slug": "budapest-hungary",
+    "has_public_page": true
+  },
   "tags": [
     "#budapest",
     "#neon",

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/354xXNm2Ys",
   "is_video": false,
   "caption": "#landscape #snow #mountain #june",
-  "location": null,
+  "location": {
+    "id": "280000444",
+    "name": "Ben Wyvis",
+    "slug": "ben-wyvis",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape",
     "#snow",

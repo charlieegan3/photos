@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/rwvMVcG2b0",
   "is_video": false,
   "caption": "",
-  "location": null,
+  "location": {
+    "id": "169805",
+    "name": "Raynes Park",
+    "slug": "raynes-park",
+    "has_public_page": true
+  },
   "tags": [],
   "timestamp": 1408197173,
   "dimensions": {

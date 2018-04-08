@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sXC1JPm2Sj",
   "is_video": true,
   "caption": "Camden Market #London #art",
-  "location": null,
+  "location": {
+    "id": "358140325",
+    "name": "Camden Town",
+    "slug": "camden-town",
+    "has_public_page": true
+  },
   "tags": [
     "#London",
     "#art"

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4gbDBtG2Zu",
   "is_video": false,
   "caption": "#Barbican #london",
-  "location": null,
+  "location": {
+    "id": "23320",
+    "name": "Barbican Centre",
+    "slug": "barbican-centre",
+    "has_public_page": true
+  },
   "tags": [
     "#Barbican",
     "#london"

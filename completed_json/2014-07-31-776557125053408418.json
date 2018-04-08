@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/rG4pdCm2Si",
   "is_video": false,
   "caption": "Blue Fin building #architecture",
-  "location": null,
+  "location": {
+    "id": "2086",
+    "name": "Blue Fin Building",
+    "slug": "blue-fin-building",
+    "has_public_page": true
+  },
   "tags": [
     "#architecture"
   ],

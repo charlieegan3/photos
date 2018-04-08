@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/tbI7pOm2RF",
   "is_video": false,
   "caption": "Made with #fragmentapp",
-  "location": null,
+  "location": {
+    "id": "840955354",
+    "name": "University of Aberdeen",
+    "slug": "university-of-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#fragmentapp"
   ],

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/_MlaAcG2W4",
   "is_video": false,
   "caption": "#trainshot #landscape #farmland #scotland",
-  "location": null,
+  "location": {
+    "id": "229815996",
+    "name": "Moray",
+    "slug": "moray",
+    "has_public_page": true
+  },
   "tags": [
     "#trainshot",
     "#landscape",

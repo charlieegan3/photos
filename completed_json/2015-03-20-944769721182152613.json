@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/0cfw5Jm2el",
   "is_video": false,
   "caption": "Eclipse Flare",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "358582079",
+    "name": "Seaton, Aberdeen",
+    "slug": "seaton-aberdeen",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1426845348,
   "dimensions": {
     "height": 640,

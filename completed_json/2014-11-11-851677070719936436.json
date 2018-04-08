@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/vRw8iPm2e0",
   "is_video": false,
   "caption": "A lack of desk space does *look* cool #architecture #building",
-  "location": null,
+  "location": {
+    "id": "1030685075",
+    "name": "The Sir Duncan Rice Library",
+    "slug": "the-sir-duncan-rice-library",
+    "has_public_page": true
+  },
   "tags": [
     "#architecture",
     "#building"

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/rG4fGsm2Sb",
   "is_video": false,
   "caption": "#lights #London #Mercedes #car",
-  "location": null,
+  "location": {
+    "id": "25619",
+    "name": "South Bank London",
+    "slug": "south-bank-london",
+    "has_public_page": true
+  },
   "tags": [
     "#lights",
     "#London",

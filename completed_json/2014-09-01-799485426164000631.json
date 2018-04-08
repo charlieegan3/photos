@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sYV8Jdm2d3",
   "is_video": false,
   "caption": "Digital Revolution at the Barbican Centre #London",
-  "location": null,
+  "location": {
+    "id": "23320",
+    "name": "Barbican Centre",
+    "slug": "barbican-centre",
+    "has_public_page": true
+  },
   "tags": [
     "#London"
   ],

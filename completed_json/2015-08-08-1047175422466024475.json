@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6IUH-hm2Qb",
   "is_video": false,
   "caption": "#balcony #house #brick",
-  "location": null,
+  "location": {
+    "id": "231401561",
+    "name": "Hereford, Herefordshire",
+    "slug": "hereford-herefordshire",
+    "has_public_page": true
+  },
   "tags": [
     "#balcony",
     "#house",

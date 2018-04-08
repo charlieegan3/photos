@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sCtidxG2Tl",
   "is_video": false,
   "caption": "Lights #lamps #lights #color #light",
-  "location": null,
+  "location": {
+    "id": "213076320",
+    "name": "Tate Modern",
+    "slug": "tate-modern",
+    "has_public_page": true
+  },
   "tags": [
     "#lamps",
     "#lights",

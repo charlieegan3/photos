@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/7iV1d3G2bR",
   "is_video": false,
   "caption": "\"The Hobbiton Hue\" #saturation #green #grass #park #trees #path #trail",
-  "location": null,
+  "location": {
+    "id": "228425711",
+    "name": "Cannizaro Park",
+    "slug": "cannizaro-park",
+    "has_public_page": true
+  },
   "tags": [
     "#saturation",
     "#green",

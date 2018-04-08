@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/6cbZZVm2Tk",
   "is_video": false,
   "caption": "#triangle #roof",
-  "location": null,
+  "location": {
+    "id": "80388",
+    "name": "British Museum",
+    "slug": "british-museum",
+    "has_public_page": true
+  },
   "tags": [
     "#triangle",
     "#roof"

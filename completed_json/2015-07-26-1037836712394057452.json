@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/5nIv3BG2bs",
   "is_video": false,
   "caption": "So hipster",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1019807437",
+    "name": "Bletchley Park",
+    "slug": "bletchley-park",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1437939798,
   "dimensions": {
     "height": 1080,

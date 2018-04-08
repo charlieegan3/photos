@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/qHVg0Nm2Tv",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "228760114",
+    "name": "Haywards Heath",
+    "slug": "haywards-heath",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1404660494,
   "dimensions": {
     "height": 640,

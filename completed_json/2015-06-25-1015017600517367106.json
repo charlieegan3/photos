@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4WESE_m2VC",
   "is_video": false,
   "caption": "#London #balconies #flowers",
-  "location": null,
+  "location": {
+    "id": "1021225954",
+    "name": "Coptic Street",
+    "slug": "coptic-street",
+    "has_public_page": true
+  },
   "tags": [
     "#London",
     "#balconies",

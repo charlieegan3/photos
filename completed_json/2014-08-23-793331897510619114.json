@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sCeyhUG2fq",
   "is_video": false,
   "caption": "",
-  "location": null,
+  "location": {
+    "id": "454920422",
+    "name": "Bank and Monument stations",
+    "slug": "bank-and-monument-stations",
+    "has_public_page": true
+  },
   "tags": [],
   "timestamp": 1408792553,
   "dimensions": {

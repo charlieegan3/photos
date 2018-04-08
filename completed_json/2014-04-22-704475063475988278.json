@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/nGzFZ3m2c2",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "358582079",
+    "name": "Seaton, Aberdeen",
+    "slug": "seaton-aberdeen",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1398199993,
   "dimensions": {
     "height": 640,

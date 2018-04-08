@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1fO6F1m2Yw",
   "is_video": false,
   "caption": "#landscape",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#landscape"
   ],

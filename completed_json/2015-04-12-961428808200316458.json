@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1Xrmg9m2Yq",
   "is_video": false,
   "caption": "#train #railway #station #tracks #bridge",
-  "location": null,
+  "location": {
+    "id": "350452047",
+    "name": "Hereford railway station",
+    "slug": "hereford-railway-station",
+    "has_public_page": true
+  },
   "tags": [
     "#train",
     "#railway",

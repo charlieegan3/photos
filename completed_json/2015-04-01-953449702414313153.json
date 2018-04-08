@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/07VXPnm2bB",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "255073745",
+    "name": "Aberdeen Beach Leisure Centre",
+    "slug": "aberdeen-beach-leisure-centre",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1427880083,
   "dimensions": {
     "height": 640,

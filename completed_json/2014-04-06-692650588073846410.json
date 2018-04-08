@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/mcygo_m2aK",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "242489432",
+    "name": "Findhorn",
+    "slug": "findhorn",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1396790406,
   "dimensions": {
     "height": 640,

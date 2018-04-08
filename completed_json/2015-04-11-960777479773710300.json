@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/1VXgcGG2fc",
   "is_video": false,
   "caption": "#sign #bike #hipster #coffee",
-  "location": null,
+  "location": {
+    "id": "231401561",
+    "name": "Hereford, Herefordshire",
+    "slug": "hereford-herefordshire",
+    "has_public_page": true
+  },
   "tags": [
     "#sign",
     "#bike",

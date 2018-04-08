@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/orM56tm2fm",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "831360764",
+    "name": "Camphill, Aberdeen City, United Kingdom",
+    "slug": "camphill-aberdeen-city-united-kingdom",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1401568974,
   "dimensions": {
     "height": 640,

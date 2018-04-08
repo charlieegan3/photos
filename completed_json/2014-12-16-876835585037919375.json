@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/wrJVGkm2SP",
   "is_video": false,
   "caption": "Don Street #dark #night",
-  "location": null,
+  "location": {
+    "id": "19850271",
+    "name": "Don Street Halls",
+    "slug": "don-street-halls",
+    "has_public_page": true
+  },
   "tags": [
     "#dark",
     "#night"

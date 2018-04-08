@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BR5JIEig4qa",
   "is_video": false,
   "caption": "Tanker .\n.\n.\n#boat #ship #sea #planewindow #clouds #view #vista #seascape #nofilter #picoftheday #instagood #latergram #view #instasky",
-  "location": null,
+  "location": {
+    "id": "261004029",
+    "name": "Bay of Biscay",
+    "slug": "bay-of-biscay",
+    "has_public_page": true
+  },
   "tags": [
     "#boat",
     "#ship",

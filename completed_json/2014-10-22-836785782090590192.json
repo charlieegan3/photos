@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/uc3Dw-m2fw",
   "is_video": true,
   "caption": "Aberdeen Campus #hyperlapse",
-  "location": null,
+  "location": {
+    "id": "1030685075",
+    "name": "The Sir Duncan Rice Library",
+    "slug": "the-sir-duncan-rice-library",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse"
   ],

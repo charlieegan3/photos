@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/4czVrBm2TV",
   "is_video": false,
   "caption": "#london #bttower #night",
-  "location": null,
+  "location": {
+    "id": "1021225954",
+    "name": "Coptic Street",
+    "slug": "coptic-street",
+    "has_public_page": true
+  },
   "tags": [
     "#london",
     "#bttower",

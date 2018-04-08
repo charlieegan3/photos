@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/1TtPUkG2bV",
   "is_video": false,
   "caption": "",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "344225019",
+    "name": "Hereford Cathedral",
+    "slug": "hereford-cathedral",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1428697907,
   "dimensions": {
     "height": 640,

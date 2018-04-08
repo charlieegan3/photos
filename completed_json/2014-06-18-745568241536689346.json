@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/pYyl2Qm2TC",
   "is_video": false,
   "caption": "London",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "61205540",
+    "name": "London Euston Station",
+    "slug": "london-euston-station",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1403098682,
   "dimensions": {
     "height": 640,

@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/00cVWYm2Zc",
   "is_video": false,
   "caption": "Flood",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847245894",
+    "name": "Seaton Park",
+    "slug": "seaton-park",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1427648856,
   "dimensions": {
     "height": 640,

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BRh4xLQA5Ml",
   "is_video": false,
   "caption": "Mambo número cinco, Broadgate Circle\n.\n.\n.\n#architecture #blue #sky #abstract #picoftheday #latergram #lines #shapes #shadows #windows #building #metal #matte #nofilter #igerslondon #instalondon #instadaily #picoftheday",
-  "location": null,
+  "location": {
+    "id": "223196746",
+    "name": "Broadgate",
+    "slug": "broadgate",
+    "has_public_page": true
+  },
   "tags": [
     "#architecture",
     "#blue",

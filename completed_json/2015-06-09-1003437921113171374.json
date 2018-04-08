@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/3s7XkKG2Wu",
   "is_video": true,
   "caption": "Cycling on the shore road #hyperlapse",
-  "location": null,
+  "location": {
+    "id": "531489327",
+    "name": "Redcastle",
+    "slug": "redcastle",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse"
   ],

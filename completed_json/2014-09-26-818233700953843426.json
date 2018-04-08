@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/ta8zdAm2bi",
   "is_video": true,
   "caption": "#hyperlapse",
-  "location": null,
+  "location": {
+    "id": "4070741",
+    "name": "North Kessock",
+    "slug": "north-kessock",
+    "has_public_page": true
+  },
   "tags": [
     "#hyperlapse"
   ],

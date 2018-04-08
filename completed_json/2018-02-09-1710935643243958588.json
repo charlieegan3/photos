@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Be-ducRHFE8",
   "is_video": false,
   "caption": "More wide-angle tracks\n.\n.\n.\n#scotland_greatshots #VisualsOfScotland #VisitScotland #lovescotland #traveling_scotland #instascotland #nationaltrustforscotland #thisisscotland #hiddenscotland #discoverearth #passionpassport #weneedtogohere #BestVacations #worldtravelbook #livefolk #liveauthentic #igshotz #exploretocreate #travelandlife #huntgram #worldplaces #ig_udog #bestvacations #TheBest_Capture #theworldshotz #beautifuldestinations #shotonmoment #shotbypixel #teampixel #nofilter",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#scotland_greatshots",
     "#VisualsOfScotland",

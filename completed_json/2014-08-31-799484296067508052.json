@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/sYVrs-m2dU",
   "is_video": true,
   "caption": "",
-  "location": null,
+  "location": {
+    "id": "23320",
+    "name": "Barbican Centre",
+    "slug": "barbican-centre",
+    "has_public_page": true
+  },
   "tags": [],
   "timestamp": 1409525976,
   "dimensions": {

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/BU91xUTAk6b",
   "is_video": false,
   "caption": "I think this is a lifeboat\n.\n.\n.\n#sea #boat #lifeboat #rnli #sky #seascape #landscape #landscapephotography #clouds #nofilter #nofilterneeded #picoftheday #instagood #igersireland #holiday #view #nature",
-  "location": null,
+  "location": {
+    "id": "510139435",
+    "name": "Downhill Beach",
+    "slug": "downhill-beach",
+    "has_public_page": true
+  },
   "tags": [
     "#sea",
     "#boat",

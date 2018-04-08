@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/tpIPaOG2Qs",
   "is_video": false,
   "caption": "#glass",
-  "location": null,
+  "location": {
+    "id": "1551373",
+    "name": "Aberdeen Sports Village",
+    "slug": "aberdeen-sports-village",
+    "has_public_page": true
+  },
   "tags": [
     "#glass"
   ],

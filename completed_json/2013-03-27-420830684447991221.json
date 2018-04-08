@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XXF0chG2W1",
   "is_video": false,
   "caption": "Strut #hen #chicken #bird #farm #grass",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#hen",
     "#chicken",

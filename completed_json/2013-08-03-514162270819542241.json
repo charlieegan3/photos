@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/ciq9x1G2Th",
   "is_video": false,
   "caption": "#green #field #farm #farmland #tree #trees #paddock #pasture #nature #countryside #beautiful #instagood #latergram #picoftheday",
-  "location": null,
+  "location": {
+    "id": "120837368316504",
+    "name": "Kilcoy Castle",
+    "slug": "kilcoy-castle",
+    "has_public_page": true
+  },
   "tags": [
     "#green",
     "#field",

@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/VeRYuyG2f3",
   "is_video": false,
   "caption": "59",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "265016680",
+    "name": "Rosemount, Aberdeen",
+    "slug": "rosemount-aberdeen",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1360332926,
   "dimensions": {
     "height": 612,

@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/hy_qvGm2UR",
   "is_video": false,
   "caption": "Christmas",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "840955354",
+    "name": "University of Aberdeen",
+    "slug": "university-of-aberdeen",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1386798083,
   "dimensions": {
     "height": 640,

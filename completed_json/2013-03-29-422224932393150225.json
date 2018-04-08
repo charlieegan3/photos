@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XcC1bGm2cR",
   "is_video": false,
   "caption": "Moss Forest #trees #forest #moss #plantation #flare #Sun #bright #highland #Scotland",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#trees",
     "#forest",

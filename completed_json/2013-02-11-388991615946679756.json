@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vl-dBRG2XM",
   "is_video": false,
   "caption": "Air Mail #airmail #letter #paper",
-  "location": null,
+  "location": {
+    "id": "1888807458062317",
+    "name": "Old Aberdeen Bookshop",
+    "slug": "old-aberdeen-bookshop",
+    "has_public_page": true
+  },
   "tags": [
     "#airmail",
     "#letter",

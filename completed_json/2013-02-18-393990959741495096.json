@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/V3vLDAG2c4",
   "is_video": false,
   "caption": "Bright Spires #bright #spires #architecture #skyline #sky #amaro",
-  "location": null,
+  "location": {
+    "id": "229744708",
+    "name": "Marischal College",
+    "slug": "marischal-college",
+    "has_public_page": true
+  },
   "tags": [
     "#bright",
     "#spires",

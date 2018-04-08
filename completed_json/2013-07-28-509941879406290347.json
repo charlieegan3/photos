@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/cTrXACG2Wr",
   "is_video": false,
   "caption": "#sand #waves #beach",
-  "location": null,
+  "location": {
+    "id": "239930611",
+    "name": "Findhorn Beach!",
+    "slug": "findhorn-beach",
+    "has_public_page": true
+  },
   "tags": [
     "#sand",
     "#waves",

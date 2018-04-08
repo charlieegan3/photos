@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/Zyjr0Am2Xf",
   "is_video": false,
   "caption": "'New Leaves' tags: deciduous tree leaves sunlight sky summer spring beach",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1369603543,
   "dimensions": {
     "height": 612,

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/VuI0hfm2TL",
   "is_video": false,
   "caption": "Tracks #train #station #rail",
-  "location": null,
+  "location": {
+    "id": "251349954",
+    "name": "Aberdeen railway station",
+    "slug": "aberdeen-railway-station",
+    "has_public_page": true
+  },
   "tags": [
     "#train",
     "#station",

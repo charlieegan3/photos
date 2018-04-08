@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/eXwoMHm2ft",
   "is_video": false,
   "caption": "Layered",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "213385402",
+    "name": "London, United Kingdom",
+    "slug": "london-united-kingdom",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1379441778,
   "dimensions": {
     "height": 612,

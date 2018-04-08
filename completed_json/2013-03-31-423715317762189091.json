@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XhVtYpG2cj",
   "is_video": false,
   "caption": "Breakwater #post #beach #sky #clouds #sea",
-  "location": null,
+  "location": {
+    "id": "239930611",
+    "name": "Findhorn Beach!",
+    "slug": "findhorn-beach",
+    "has_public_page": true
+  },
   "tags": [
     "#post",
     "#beach",

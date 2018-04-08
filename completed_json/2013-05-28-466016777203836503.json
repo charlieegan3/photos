@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Z3n8owm2ZX",
   "is_video": false,
   "caption": "'Scarred Ridge' #wyvis #Munro #hill #Scotland",
-  "location": null,
+  "location": {
+    "id": "280000444",
+    "name": "Ben Wyvis",
+    "slug": "ben-wyvis",
+    "has_public_page": true
+  },
   "tags": [
     "#wyvis",
     "#Munro",

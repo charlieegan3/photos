@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/a5WrcvG2UV",
   "is_video": true,
   "caption": "B&W breakfast #horse #grazing #blackandwhite",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#horse",
     "#grazing",

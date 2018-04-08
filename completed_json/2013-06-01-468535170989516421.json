@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/aAkkFvm2aF",
   "is_video": false,
   "caption": "'Sky Blue' #takeoff #plane #sky #blue #airplane #Ryanair #clouds",
-  "location": null,
+  "location": {
+    "id": "213429964",
+    "name": "Edinburgh, United Kingdom",
+    "slug": "edinburgh-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#takeoff",
     "#plane",

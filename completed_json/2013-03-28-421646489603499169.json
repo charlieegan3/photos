@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XZ_T-Rm2Sh",
   "is_video": false,
   "caption": "Bouquet #flowers #bouquet #colors",
-  "location": null,
+  "location": {
+    "id": "5846994",
+    "name": "Nairn",
+    "slug": "nairn",
+    "has_public_page": true
+  },
   "tags": [
     "#flowers",
     "#bouquet",

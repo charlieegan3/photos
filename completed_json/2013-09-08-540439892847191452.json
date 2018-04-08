@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/eABzgbm2Wc",
   "is_video": false,
   "caption": "Expanse",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1016286366",
+    "name": "Gollanfield",
+    "slug": "gollanfield",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1378645477,
   "dimensions": {
     "height": 612,

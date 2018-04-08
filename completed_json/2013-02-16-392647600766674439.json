@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vy9umdm2YH",
   "is_video": false,
   "caption": "Blue Whale #whale #blue #painting #wall",
-  "location": null,
+  "location": {
+    "id": "242489432",
+    "name": "Findhorn",
+    "slug": "findhorn",
+    "has_public_page": true
+  },
   "tags": [
     "#whale",
     "#blue",

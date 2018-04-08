@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Z3nQZ1m2YY",
   "is_video": false,
   "caption": "'The River Below' #river #sky #Scotland #wilderness #wyvis #Munro",
-  "location": null,
+  "location": {
+    "id": "280000444",
+    "name": "Ben Wyvis",
+    "slug": "ben-wyvis",
+    "has_public_page": true
+  },
   "tags": [
     "#river",
     "#sky",

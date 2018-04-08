@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/d5KsiSm2fJ",
   "is_video": false,
   "caption": "Rural",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1378415257,
   "dimensions": {
     "height": 612,

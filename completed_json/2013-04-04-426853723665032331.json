@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XsfTM6G2SL",
   "is_video": false,
   "caption": "Boulder Beach #noeffect #sky #clouds #beach #boulders #rock #sea #Scotland #eathie #flare #Sun #blue #reflection #sand #bright",
-  "location": null,
+  "location": {
+    "id": "5910878",
+    "name": "Rosemarkie Beach",
+    "slug": "rosemarkie-beach",
+    "has_public_page": true
+  },
   "tags": [
     "#noeffect",
     "#sky",

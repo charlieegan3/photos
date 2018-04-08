@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XZ-gsNG2Rh",
   "is_video": false,
   "caption": "Sea Stripes #sea #stones #pebbles #sand #landscape #sky",
-  "location": null,
+  "location": {
+    "id": "490559189",
+    "name": "Nairn Beach",
+    "slug": "nairn-beach",
+    "has_public_page": true
+  },
   "tags": [
     "#sea",
     "#stones",

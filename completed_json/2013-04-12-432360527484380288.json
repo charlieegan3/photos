@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/YADZvnm2SA",
   "is_video": false,
   "caption": "Traditional Farm #farm #Scotland #old #b&w #Croft #rural #countryside",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#farm",
     "#Scotland",

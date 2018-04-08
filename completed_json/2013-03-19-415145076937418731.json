@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XC5D95G2fr",
   "is_video": false,
   "caption": "Thames #river",
-  "location": null,
+  "location": {
+    "id": "34199",
+    "name": "Battersea Bridge",
+    "slug": "battersea-bridge",
+    "has_public_page": true
+  },
   "tags": [
     "#river"
   ],

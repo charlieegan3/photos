@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/d5Kb9ZG2er",
   "is_video": false,
   "caption": "Juicy",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1378415122,
   "dimensions": {
     "height": 612,

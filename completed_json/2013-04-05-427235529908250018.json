@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Xt2HNrm2Wi",
   "is_video": false,
   "caption": "Plantation 2.#plantation #trees #heather #sun #flare #lightshaft",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#plantation",
     "#trees",

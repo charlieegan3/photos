@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/WouN-yG2ZF",
   "is_video": false,
   "caption": "Big Sky #bigsky #wood #typography #type #chalkboard #colored #chalk",
-  "location": null,
+  "location": {
+    "id": "104028229",
+    "name": "Big Sky Lodges",
+    "slug": "big-sky-lodges",
+    "has_public_page": true
+  },
   "tags": [
     "#bigsky",
     "#wood",

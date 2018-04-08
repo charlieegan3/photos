@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/WUkjoYm2e0",
   "is_video": false,
   "caption": "Bubbles #bubbles #liquid #orange #juice",
-  "location": null,
+  "location": {
+    "id": "261177520",
+    "name": "Crombie Halls - Aberdeen",
+    "slug": "crombie-halls-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#bubbles",
     "#liquid",

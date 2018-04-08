@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/YHb3yTG2WY",
   "is_video": false,
   "caption": "Window Shot #mountain #scotland",
-  "location": null,
+  "location": {
+    "id": "1018998995",
+    "name": "Slochd",
+    "slug": "slochd",
+    "has_public_page": true
+  },
   "tags": [
     "#mountain",
     "#scotland"

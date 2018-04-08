@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XAowxVm2ek",
   "is_video": false,
   "caption": "Snowed #streetlamp #light #lamp #snow #sky #blue #blur #blizzard",
-  "location": null,
+  "location": {
+    "id": "229733878",
+    "name": "Aberdeen Airport",
+    "slug": "aberdeen-airport",
+    "has_public_page": true
+  },
   "tags": [
     "#streetlamp",
     "#light",

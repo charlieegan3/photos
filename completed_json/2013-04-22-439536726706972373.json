@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/YZjFL9G2bV",
   "is_video": false,
   "caption": "INV #railway #Inverness #station #brickwork",
-  "location": null,
+  "location": {
+    "id": "236962395",
+    "name": "Inverness railway station",
+    "slug": "inverness-railway-station",
+    "has_public_page": true
+  },
   "tags": [
     "#railway",
     "#Inverness",

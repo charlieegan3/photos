@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/bBkjyjm2S_",
   "is_video": true,
   "caption": "Finn the Dog",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1372254802,
   "dimensions": {
     "height": 612,

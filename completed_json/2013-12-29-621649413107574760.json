@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/igitj7G2fo",
   "is_video": false,
   "caption": "Waves",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "490559189",
+    "name": "Nairn Beach",
+    "slug": "nairn-beach",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1388326406,
   "dimensions": {
     "height": 640,

@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XC5bGxG2QQ",
   "is_video": false,
   "caption": "Stacks #London",
-  "location": null,
+  "location": {
+    "id": "4724347",
+    "name": "Hotel Rafayel",
+    "slug": "hotel-rafayel",
+    "has_public_page": true
+  },
   "tags": [
     "#London"
   ],

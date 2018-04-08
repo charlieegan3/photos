@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/VystjMG2YN",
   "is_video": false,
   "caption": "Finn the Dog #pet #dog #beach #shadow",
-  "location": null,
+  "location": {
+    "id": "1024811590",
+    "name": "Findhorn Beach",
+    "slug": "findhorn-beach",
+    "has_public_page": true
+  },
   "tags": [
     "#pet",
     "#dog",

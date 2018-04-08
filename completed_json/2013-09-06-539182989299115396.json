@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/d7kBJyG2WE",
   "is_video": false,
   "caption": "Burning",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1378495642,
   "dimensions": {
     "height": 612,

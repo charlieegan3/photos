@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/dcLUKvG2ch",
   "is_video": false,
   "caption": "#edinburgh #rockstarnorth",
-  "location": null,
+  "location": {
+    "id": "213429964",
+    "name": "Edinburgh, United Kingdom",
+    "slug": "edinburgh-united-kingdom",
+    "has_public_page": true
+  },
   "tags": [
     "#edinburgh",
     "#rockstarnorth"

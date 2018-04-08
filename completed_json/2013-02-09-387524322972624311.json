@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vgw1GMm2W3",
   "is_video": false,
   "caption": "Asphalt Tiles #asphalt #moss #tiles #grunge #old",
-  "location": null,
+  "location": {
+    "id": "261177520",
+    "name": "Crombie Halls - Aberdeen",
+    "slug": "crombie-halls-aberdeen",
+    "has_public_page": true
+  },
   "tags": [
     "#asphalt",
     "#moss",

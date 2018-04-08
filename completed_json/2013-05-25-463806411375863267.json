@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/ZvxXlKm2Xj",
   "is_video": false,
   "caption": "Window Shot",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "229815996",
+    "name": "Moray",
+    "slug": "moray",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1369510054,
   "dimensions": {
     "height": 612,

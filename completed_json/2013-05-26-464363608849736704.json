@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/ZxwD3wG2QA",
   "is_video": false,
   "caption": "Daisies and Dandelions",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1369576477,
   "dimensions": {
     "height": 612,

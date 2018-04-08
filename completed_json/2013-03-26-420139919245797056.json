@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XUowfSm2bA",
   "is_video": false,
   "caption": "Scrap Sculpture #scrap #sculpture #amaro #sky #bike #crazy",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#scrap",
     "#sculpture",

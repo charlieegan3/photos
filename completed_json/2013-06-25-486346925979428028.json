@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/a_2fPQm2S8",
   "is_video": false,
   "caption": "#sunset #sunrise #sun #pretty #beautiful #red #orange #blue #sky #nature #clouds #horizon  #instagood #gorgeous #warm #view #night #morning #silhouette #instasky #all_sunsets",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#sunset",
     "#sunrise",

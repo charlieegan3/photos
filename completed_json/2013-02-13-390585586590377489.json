@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Vro4WHG2YR",
   "is_video": false,
   "caption": "Gothic #architecture",
-  "location": null,
+  "location": {
+    "id": "229744708",
+    "name": "Marischal College",
+    "slug": "marischal-college",
+    "has_public_page": true
+  },
   "tags": [
     "#architecture"
   ],

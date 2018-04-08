@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/VexILmm2Ru",
   "is_video": false,
   "caption": "Cathedral #cathedral #Salisbury #England",
-  "location": null,
+  "location": {
+    "id": "213636552",
+    "name": "Salisbury Cathedral",
+    "slug": "salisbury-cathedral",
+    "has_public_page": true
+  },
   "tags": [
     "#cathedral",
     "#Salisbury",

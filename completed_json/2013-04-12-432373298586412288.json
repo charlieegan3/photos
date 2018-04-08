@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/YAGTlom2UA",
   "is_video": false,
   "caption": "Skyline: Fence #Scotland #Croft #sky #fence #trees #silhouette #skyline",
-  "location": null,
+  "location": {
+    "id": "120837368316504",
+    "name": "Kilcoy Castle",
+    "slug": "kilcoy-castle",
+    "has_public_page": true
+  },
   "tags": [
     "#Scotland",
     "#Croft",

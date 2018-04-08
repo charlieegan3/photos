@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Z7p3tfm2Wf",
   "is_video": false,
   "caption": "'Downstream' #river #forest #trees #Scotland #countryside #summer",
-  "location": null,
+  "location": {
+    "id": "1022601794",
+    "name": "Orrin River",
+    "slug": "orrin-river",
+    "has_public_page": true
+  },
   "tags": [
     "#river",
     "#forest",

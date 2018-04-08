@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/fFAHknG2WZ",
   "is_video": false,
   "caption": "Tanker",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "678169468",
+    "name": "Aberdeen Beach - BoD end",
+    "slug": "aberdeen-beach-bod-end",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1380959848,
   "dimensions": {
     "height": 612,

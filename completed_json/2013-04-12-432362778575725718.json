@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/YAD6gHG2SW",
   "is_video": false,
   "caption": "Trees #field #trees #deciduous #farm #farmland #Croft #Scotland #mist",
-  "location": null,
+  "location": {
+    "id": "120837368316504",
+    "name": "Kilcoy Castle",
+    "slug": "kilcoy-castle",
+    "has_public_page": true
+  },
   "tags": [
     "#field",
     "#trees",

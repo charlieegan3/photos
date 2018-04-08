@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Wosobem2X9",
   "is_video": false,
   "caption": "Moss #wall #moss #overgrown #stone #green",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#wall",
     "#moss",

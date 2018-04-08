@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Woq90Zm2Wv",
   "is_video": false,
   "caption": "Danger #danger #sign #type",
-  "location": null,
+  "location": {
+    "id": "847544201",
+    "name": "Mulbuie",
+    "slug": "mulbuie",
+    "has_public_page": true
+  },
   "tags": [
     "#danger",
     "#sign",

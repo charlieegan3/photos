@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/Y4LzyPm2a-",
   "is_video": false,
   "caption": "Passkontroll #Sweden #airport #passport",
-  "location": null,
+  "location": {
+    "id": "213030855",
+    "name": "Stockholm Arlanda Airport",
+    "slug": "stockholm-arlanda-airport",
+    "has_public_page": true
+  },
   "tags": [
     "#Sweden",
     "#airport",

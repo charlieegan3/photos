@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/XApH-vm2e0",
   "is_video": false,
   "caption": "Cold #cold #blue #road #sky #winter #snow",
-  "location": null,
+  "location": {
+    "id": "229733878",
+    "name": "Aberdeen Airport",
+    "slug": "aberdeen-airport",
+    "has_public_page": true
+  },
   "tags": [
     "#cold",
     "#blue",

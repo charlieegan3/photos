@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/eXwu1nG2f0",
   "is_video": false,
   "caption": "Clocked",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "1472121582868807",
+    "name": "Big Ben Tower of London",
+    "slug": "big-ben-tower-of-london",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1379441832,
   "dimensions": {
     "height": 612,

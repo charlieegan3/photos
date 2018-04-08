@@ -6,7 +6,12 @@
   "post_url": "https://www.instagram.com/p/VuIUA0m2SV",
   "is_video": false,
   "caption": "Don't Board #train #sign #warning #travel #safety",
-  "location": null,
+  "location": {
+    "id": "251349954",
+    "name": "Aberdeen railway station",
+    "slug": "aberdeen-railway-station",
+    "has_public_page": true
+  },
   "tags": [
     "#train",
     "#sign",

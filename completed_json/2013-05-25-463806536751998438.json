@@ -6,10 +6,13 @@
   "post_url": "https://www.instagram.com/p/ZvxZZ7m2Xm",
   "is_video": false,
   "caption": "Blue sky",
-  "location": null,
-  "tags": [
-
-  ],
+  "location": {
+    "id": "229815996",
+    "name": "Moray",
+    "slug": "moray",
+    "has_public_page": true
+  },
+  "tags": [],
   "timestamp": 1369510069,
   "dimensions": {
     "height": 612,

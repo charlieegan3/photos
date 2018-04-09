@@ -1,0 +1,10 @@
+{{- if .post.Params.is_video -}}
+      <video class="lazyload w-100 {{ .opacity }}" data-src="{{ .video_source }}{{ .post.Params.file_reference }}.mp4" autoplay loop muted>
+            <source type="video/mp4" src="">
+            Video not supported
+      </video>
+{{- else -}}
+      <span role="img"
+            data-src="{{ .image_source }}{{ .post.Params.file_reference }}.jpg&w={{ .grid_image_size }}"
+            class="bg-center cover aspect-ratio--object lazyload {{ .opacity }}"></span>
+{{- end -}}

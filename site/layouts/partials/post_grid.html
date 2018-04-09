@@ -4,14 +4,8 @@
 	{{- range $.Scratch.Get "posts" -}}
 		<div class="fl w-third">
 			<a href="{{ .RelPermalink }}" class="db aspect-ratio aspect-ratio--1x1 dim">
-				{{- if .Params.is_video -}}
-					<video class="lazyload w-100" data-src="{{ $.Site.Params.video_source }}{{ .Params.file_reference }}.mp4" autoplay loop muted>
-						<source type="video/mp4" src="">
-						Video not supported
-					</video>
-				{{- else -}}
-					<span role="img" data-src="{{ $.Site.Params.image_source }}{{ .Params.file_reference }}.jpg&w={{ $size }}" class="bg-center cover aspect-ratio--object lazyload"></span>
-				{{- end -}}
+				{{ $post := . }}
+				{{- partial "post.html" (dict "image_source" $.Site.Params.image_source "video_source" $.Site.Params.video_source "grid_image_size" $.Site.Params.grid_image_size "post" $post "opacity" "") -}}
 			</a>
 		</div>
 	{{- end -}}

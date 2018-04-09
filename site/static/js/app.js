@@ -32,5 +32,8 @@ function lazyload() {
 }
 
 document.addEventListener("scroll", lazyload);
+document.addEventListener("turbolinks:render", lazyload);
+document.addEventListener("turbolinks:load", lazyload);
+document.addEventListener("load", lazyload);
 
 ready(lazyload);

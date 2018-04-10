@@ -7,10 +7,10 @@
   "is_video": false,
   "caption": "#beach #findhorn #pebbles",
   "location": {
-    "id": "239930611",
-    "has_public_page": true,
-    "name": "Findhorn Beach!",
-    "slug": "findhorn-beach"
+    "id": "1024811590",
+    "name": "Findhorn Beach",
+    "slug": "findhorn-beach",
+    "has_public_page": true
   },
   "tags": [
     "#beach",

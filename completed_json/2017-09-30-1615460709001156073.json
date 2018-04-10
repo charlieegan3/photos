@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "Budapest",
   "location": {
-    "id": "250507691",
-    "has_public_page": true,
-    "name": "St Stephans Cathedral, Budapest",
-    "slug": "st-stephans-cathedral-budapest"
+    "id": "147809388",
+    "name": "St. Stephen's Basilica",
+    "slug": "st-stephens-basilica",
+    "has_public_page": true
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1506797945,
   "dimensions": {
     "height": 1080,

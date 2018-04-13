@@ -80,6 +80,7 @@ hyper_cron:
 hyper_run:
 	hyper run \
 		--name charlieegan3-instagram-archive \
+		--rm \
 		-e GOOGLE_PROJECT="$$GOOGLE_PROJECT" \
 		-e GOOGLE_JSON="$$GOOGLE_JSON" \
 		-e AWS_ACCESS_KEY_ID="$$AWS_ACCESS_KEY_ID" \

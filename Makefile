@@ -1,5 +1,12 @@
 .PHONY: calendar
 
+all_or_report:
+	echo "Starting" > log 2>&1 && \
+	make download >> log 2>&1 && \
+	make sync >> log 2>&1 && \
+	make save >> log 2>&1 \
+	|| make notify
+
 download:
 	./bin/1_fetch_raw.rb
 	./bin/2_complete_json.rb
@@ -16,7 +23,7 @@ save:
 notify:
 	curl -s --form-string "token=$$PUSHOVER_TOKEN" \
 			--form-string "user=$$PUSHOVER_USER" \
-			--form-string "message=there was an error" \
+			--form-string "message=$$(cat log)" \
 			https://api.pushover.net/1/messages.json
 
 # adhoc tasks

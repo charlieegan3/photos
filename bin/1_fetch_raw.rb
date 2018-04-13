@@ -3,12 +3,15 @@
 require "json"
 require "open-uri"
 
-url = "https://www.instagram.com/charlieegan3/?__a=1"
+url = "https://www.instagram.com/charlieegan3"
 
 count = 0
 
-data = JSON.parse(open(url).read)
-data["graphql"]["user"]["edge_owner_to_timeline_media"]["edges"].each do |image|
+raw = open(url).read
+script = raw.scan(/<script type="text\/javascript">.*<\/script>/).select { |s| s.include?("graphql") }.first
+data = JSON.parse(script.scan(/\{.*\}/).first)
+
+data["entry_data"]["ProfilePage"].first["graphql"]["user"]["edge_owner_to_timeline_media"]["edges"].each do |image|
   image = image["node"]
   filename = Time.at(image["taken_at_timestamp"]).strftime("%Y-%m-%d") + "-" + image["id"] + ".json"
   image.merge!(scraper_version: "v2")

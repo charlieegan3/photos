@@ -7,10 +7,10 @@
   "is_video": false,
   "caption": "#night #house #street",
   "location": {
-    "id": "1018347499",
-    "has_public_page": true,
-    "name": "Собор Святого Махара",
-    "slug": ""
+    "id": "19850271",
+    "name": "Don Street",
+    "slug": "don-street",
+    "has_public_page": true
   },
   "tags": [
     "#night",

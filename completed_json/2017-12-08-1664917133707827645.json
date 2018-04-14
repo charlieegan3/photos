@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "Another late night, Christmas party...",
   "location": {
-    "id": "213650536",
-    "has_public_page": true,
-    "name": "Shoreditch",
-    "slug": "shoreditch"
+    "id": "8177971",
+    "name": "Elder Street",
+    "slug": "elder-street",
+    "has_public_page": true
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1512693610,
   "dimensions": {
     "height": 1080,

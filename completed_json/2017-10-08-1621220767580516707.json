@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "“Why would go to a _ruined_ bar?” I thought.",
   "location": {
-    "id": "213205633",
-    "has_public_page": true,
-    "name": "Budapest, Hungary",
-    "slug": "budapest-hungary"
+    "id": "150639",
+    "name": "Szimpla Kert",
+    "slug": "szimpla-kert",
+    "has_public_page": true
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1507484597,
   "dimensions": {
     "height": 1080,

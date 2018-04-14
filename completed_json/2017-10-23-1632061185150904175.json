@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "The Commuter - Budapest Edition",
   "location": {
-    "id": "213205633",
+    "id": "545059359",
     "has_public_page": true,
-    "name": "Budapest, Hungary",
-    "slug": "budapest-hungary"
+    "name": "Indó Kávézó - Keleti pályaudvar",
+    "slug": "indo-kavezo-keleti-palyaudvar"
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1508776876,
   "dimensions": {
     "height": 1080,

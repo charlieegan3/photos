@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "Folgate coming on Broadgate",
   "location": {
-    "id": "213650536",
-    "has_public_page": true,
-    "name": "Shoreditch",
-    "slug": "shoreditch"
+    "id": "112818396",
+    "name": "Folgate Street",
+    "slug": "folgate-street",
+    "has_public_page": true
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1506533774,
   "dimensions": {
     "height": 1080,

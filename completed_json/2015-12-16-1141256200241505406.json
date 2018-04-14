@@ -8,9 +8,9 @@
   "caption": "#contrail #sky #forest #tree #scotland",
   "location": {
     "id": "1016504063",
-    "has_public_page": true,
     "name": "Orrin Falls",
-    "slug": "orrin-falls"
+    "slug": "orrin-falls",
+    "has_public_page": true
   },
   "tags": [
     "#contrail",

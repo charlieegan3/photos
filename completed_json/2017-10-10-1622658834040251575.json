@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "Buda castle",
   "location": {
-    "id": "702792173244078",
+    "id": "69447902",
     "has_public_page": true,
-    "name": "Széchenyi Chain Bridge",
-    "slug": "szechenyi-chain-bridge"
+    "name": "Chain Bridge",
+    "slug": "chain-bridge"
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1507656028,
   "dimensions": {
     "height": 1080,

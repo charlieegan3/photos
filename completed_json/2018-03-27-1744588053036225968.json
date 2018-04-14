@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "On the start line",
   "location": {
-    "id": "502239540",
+    "id": "41873413",
     "has_public_page": true,
-    "name": "London Waterloo station",
+    "name": "London Waterloo Station",
     "slug": "london-waterloo-station"
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1522191124,
   "dimensions": {
     "height": 1080,

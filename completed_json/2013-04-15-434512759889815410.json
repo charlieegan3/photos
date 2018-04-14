@@ -7,10 +7,10 @@
   "is_video": false,
   "caption": "Edinburgh Castle #castle #Scotland",
   "location": {
-    "id": "213429964",
-    "name": "Edinburgh, United Kingdom",
-    "slug": "edinburgh-united-kingdom",
-    "has_public_page": true
+    "id": "330006",
+    "has_public_page": true,
+    "name": "Princes Street Gardens",
+    "slug": "princes-street-gardens"
   },
   "tags": [
     "#castle",

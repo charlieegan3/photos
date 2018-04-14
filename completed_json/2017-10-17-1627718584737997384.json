@@ -7,14 +7,12 @@
   "is_video": false,
   "caption": "Now that’s a nice bridge",
   "location": {
-    "id": "1681005745274455",
+    "id": "69447902",
     "has_public_page": true,
-    "name": "Chain bridge.Budapest",
-    "slug": "chain-bridgebudapest"
+    "name": "Chain Bridge",
+    "slug": "chain-bridge"
   },
-  "tags": [
-
-  ],
+  "tags": [],
   "timestamp": 1508259197,
   "dimensions": {
     "height": 1078,

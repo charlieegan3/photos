@@ -17,13 +17,13 @@
 
 	<div class="w-100 fl w-50-l center f7 f5-ns ph3 pt2 pt0-l">
 		{{- if (gt (len .Content) 0) -}}
-			<div class="content">
+			<div class="content mb2">
 				{{- .Content -}}
 			</div>
 		{{- end -}}
 
 		<div>
-			<p class="mid-gray">
+			<p class="mid-gray mt0">
 				{{- $archive := ($.Site.GetPage "taxonomyTerm" "archive" (.Date.Format "2006-01-02")) -}}
 
 				<a class="link gray dim" href="{{ $archive.Permalink }}">

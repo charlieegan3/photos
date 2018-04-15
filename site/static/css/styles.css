@@ -32,6 +32,9 @@ body {
 .leaflet-popup-close-button {
 	display: none;
 }
+.leaflet-marker-icon {
+	border: 1px solid rgba(242, 154, 0, 0.7);
+}
 
 div.content > p:first-child {
 	margin-top: 0px;

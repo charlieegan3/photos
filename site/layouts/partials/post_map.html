@@ -26,7 +26,7 @@
         <div id="photomap" style="width: 100%; height: {{ $.Scratch.Get "height" }};"></div>
         <script>
             L.mapbox.accessToken = 'pk.eyJ1IjoiY2hhcmxpZWVnYW4zIiwiYSI6ImNqZzB2MDdxZTFjNTAyeHRsemQwbjVsZXIifQ.NC-7ANrzAfu5RDfpCQIEMg';
-            var map = L.mapbox.map('photomap', 'mapbox.dark', { zoomControl: false, maxZoom: 11, minZoom: 3 });
+            var map = L.mapbox.map('photomap', 'mapbox.dark', { zoomControl: false, minZoom: 3 });
 
             var geoJson = {
                 type: 'FeatureCollection',
@@ -82,7 +82,7 @@
                     console.log(map.getZoom());
 
                     var newIconOptions = feature.properties.icon;
-                    var size = map.getZoom() * 3;
+                    var size = map.getZoom() * 3.5;
 
                     if (size > 50) { size = 50; }
                     if (size < 20) { size = 20; }
@@ -95,16 +95,9 @@
                 });
             });
 
-            map.on('fullscreenchange', function () {
-              if (map.isFullscreen()) {
-                  map.setMaxZoom(20);
-              } else {
-                  map.setMaxZoom(11);
-              }
-            });
-
             myLayer.setGeoJSON(geoJson);
             map.fitBounds(myLayer.getBounds());
+            if (map.getZoom() > 10) { map.setZoom(11) }
             L.control.fullscreen().addTo(map);
         </script>
     </div>

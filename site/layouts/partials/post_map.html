@@ -71,10 +71,12 @@
                     feature = marker.feature;
                     properties = feature.properties;
 
-                if (properties.postCount > 1) {
-                    marker.bindPopup("<p><strong>" + properties.title + "</strong><br><a href=\"" + properties.permalink + "\">View " + properties.postCount + " posts</a></p>");
-                } else {
-                    marker.bindPopup("<p><strong>" + properties.title + "</strong><br><a href=\"" + properties.permalink + "\">View post</a></p>");
+                if ({{ len $locations }} > 1) {
+                    if (properties.postCount > 1) {
+                        marker.bindPopup("<p><strong>" + properties.title + "</strong><br><a href=\"" + properties.permalink + "\">View " + properties.postCount + " posts</a></p>");
+                    } else {
+                        marker.bindPopup("<p><strong>" + properties.title + "</strong><br><a href=\"" + properties.permalink + "\">View post</a></p>");
+                    }
                 }
 
                 marker.setIcon(L.icon(feature.properties.icon));
@@ -96,7 +98,16 @@
 
             myLayer.setGeoJSON(geoJson);
             map.fitBounds(myLayer.getBounds());
-            if (map.getZoom() > 10) { map.setZoom(11) }
+            if (map.getZoom() > 12) { map.setZoom(12) }
+
+            if ({{ len $locations }} === 1) {
+                window.setInterval(function(){
+                    if (map.getZoom() > 6) {
+                        map.setZoom(map.getZoom() - 2)
+                    }
+                }, 500);
+            }
+
             L.control.fullscreen().addTo(map);
         </script>
     </div>

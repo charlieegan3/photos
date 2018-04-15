@@ -18,6 +18,11 @@ locations:
 <%= format_caption(@data["caption"]) %>
 ERB
 
+excluded_tags = File.readlines("excluded_tags").map(&:chomp).map(&:downcase)
+all_tags = Dir.glob("completed_json/*.json").map {|f| JSON.parse(File.read(f))["tags"]}.flatten.uniq.map {|t|t[1..-1]}
+reject_pattern = /insta|gram|shots|_|shotz|london|scotland|nature.|photography|filter/
+permitted_tags = (all_tags - excluded_tags).reject { |t| t.match(reject_pattern) }
+
 def format_caption(caption)
   if caption.split("\n").reject(&:empty?).length > 1
     caption = caption.split("\n").each_with_index.
@@ -48,7 +53,7 @@ def format_title(data)
 end
 
 def format_tags(tags)
-  tags.map { |t| t.gsub("#", "").strip.downcase }.uniq.uniq
+  tags.map { |t| t.gsub("#", "").strip.downcase }.uniq
 end
 
 def format_location_slug(id, slug)
@@ -95,7 +100,7 @@ archives = {}
 Dir.glob("completed_json/*").shuffle.each do |file|
   @file_reference = file.split("/").last.gsub(".json", "")
   @data = JSON.parse(File.read(file))
-  @data["tags"] = format_tags(@data["tags"])
+  @data["tags"] = (format_tags(@data["tags"]) & permitted_tags)
   @data["tags"] << "video" if @data["is_video"]
   @title = format_title(@data)
   if @data["location"]

@@ -12,7 +12,10 @@
     "name": "Indó Kávézó - Keleti pályaudvar",
     "slug": "indo-kavezo-keleti-palyaudvar"
   },
-  "tags": [],
+  "tags": [
+    "#commute",
+    "#commuter"
+  ],
   "timestamp": 1508776876,
   "dimensions": {
     "height": 1080,

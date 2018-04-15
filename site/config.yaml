@@ -23,7 +23,6 @@ disableKinds:
   - RSS
   - Sitemap
 params:
-  map_image_size: 200
   small_grid_image_size: 300
   grid_image_size: 400
   single_image_size: 1080

@@ -25,46 +25,87 @@
     <div class="mw7 center cf">
         <div id="photomap" style="width: 100%; height: {{ $.Scratch.Get "height" }};"></div>
         <script>
-            var mymap = L.map('photomap', { minZoom: 4, maxZoom: 14, zoomControl: false }).setView([{{ $centerLat }}, {{ $centerLong }}], {{ $.Scratch.Get "zoom" }});
+            L.mapbox.accessToken = 'pk.eyJ1IjoiY2hhcmxpZWVnYW4zIiwiYSI6ImNqZzB2MDdxZTFjNTAyeHRsemQwbjVsZXIifQ.NC-7ANrzAfu5RDfpCQIEMg';
+            var map = L.mapbox.map('photomap', 'mapbox.dark', { zoomControl: false, maxZoom: 11, minZoom: 3 });
 
-            L.Icon.Small = L.Icon.Default.extend({
-                options: {
-                    shadowSize:   [0, 0],
-                    shadowAnchor: [0, 0],
-                    iconAnchor: [ 6, 20 ],
-                    iconSize: [ 12, 20 ],
-                    popupAnchor: [ 0, -18 ],
+            var geoJson = {
+                type: 'FeatureCollection',
+                features: [
+                    {{ range $locations }}
+                        {{ $page := ($.Site.GetPage "taxonomyTerm" "locations" .) }}
+                        {{ $posts := intersect $page.Pages ($.Scratch.Get "posts") }}
+                        {{ $post := index $posts 0 }}
+
+                        {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [{{ $page.Params.long }}, {{ $page.Params.lat }}]
+                            },
+                            "properties": {
+                                "title": {{ $page.Params.name }},
+                                "postCount": {{ len $posts }},
+                                "permalink": {{ $page.Permalink }},
+                                "icon": {
+                                    {{ if $post.Params.is_video }}
+                                        "iconUrl": "/images/video_icon.png",
+                                    {{ else }}
+                                        "iconUrl": {{ $.Site.Params.image_source }} + {{ $post.Params.file_reference }} + ".jpg&w=50",
+                                    {{ end }}
+                                    "iconSize": [30, 30],
+                                    "iconAnchor": [25, 25],
+                                    "popupAnchor": [0, -25],
+                                    "className": "dot"
+                                }
+                            }
+                        },
+                    {{ end }}
+                ]
+            };
+
+            var myLayer = L.mapbox.featureLayer().addTo(map);
+
+            myLayer.on('layeradd', function(e) {
+                var marker = e.layer,
+                    feature = marker.feature;
+                    properties = feature.properties;
+
+                if (properties.postCount > 1) {
+                    marker.bindPopup("<p><strong>" + properties.title + "</strong><br><a href=\"" + properties.permalink + "\">View " + properties.postCount + " posts</a></p>");
+                } else {
+                    marker.bindPopup("<p><strong>" + properties.title + "</strong><br><a href=\"" + properties.permalink + "\">View post</a></p>");
                 }
+
+                marker.setIcon(L.icon(feature.properties.icon));
+
+                map.on("zoomend", function() {
+                    console.log(map.getZoom());
+
+                    var newIconOptions = feature.properties.icon;
+                    var size = map.getZoom() * 3;
+
+                    if (size > 50) { size = 50; }
+                    if (size < 20) { size = 20; }
+
+                    newIconOptions["iconSize"]    = [size, size];
+                    newIconOptions["iconAnchor"]  = [size/2, size/2];
+                    newIconOptions["popupAnchor"] = [0, size/2*-1];
+
+                    marker.setIcon(L.icon(newIconOptions));
+                });
             });
 
-            var smallIcon = new L.Icon.Small();
+            map.on('fullscreenchange', function () {
+              if (map.isFullscreen()) {
+                  map.setMaxZoom(20);
+              } else {
+                  map.setMaxZoom(11);
+              }
+            });
 
-            var markers = [
-                {{- range $locations -}}
-                    {{- $page := ($.Site.GetPage "taxonomyTerm" "locations" .) -}}
-                    {{- $posts := intersect $page.Pages ($.Scratch.Get "posts") -}}
-                    L.marker([{{ $page.Params.lat }}, {{ $page.Params.long }}])
-                        .setIcon(smallIcon)
-                        {{- if (gt (len $posts) 1) -}}
-                        .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">{{ len $posts }} posts</a>")
-                        {{- else -}}
-                        {{- $post := index $posts 0 -}}
-                            {{- if $post.Params.is_video -}}
-                                .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $page.Permalink }} + ">View posts</a>")
-                            {{- else -}}
-                                .bindPopup("<b>{{ $page.Params.name }}</b><br><a target=\"_blank\" href=" + {{ $post.Permalink }} + ">" + '<img class="br1" src="{{ $.Site.Params.image_source }}{{ $post.Params.file_reference }}.jpg&w={{ $.Site.Params.map_image_size }}">' + "</a>")
-                            {{- end -}}
-                        {{- end -}}
-                        .addTo(mymap),
-                {{- end -}}
-            ];
-
-            var group = new L.featureGroup(markers);
-            {{ if (not $single) }}
-                mymap.fitBounds(group.getBounds());
-            {{ end }}
-
-            var OpenStreetMap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mymap);
+            myLayer.setGeoJSON(geoJson);
+            map.fitBounds(myLayer.getBounds());
+            L.control.fullscreen().addTo(map);
         </script>
     </div>
 {{ end }}

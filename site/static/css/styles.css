@@ -21,18 +21,22 @@ body {
 	-webkit-border-radius: 0 !important;
 	-moz-border-radius: 0 !important;
 	border-radius: 0 !important;
-	padding: 5px 9px;
+	padding: 2px 3px;
 }
-.leaflet-popup-content {
+.leaflet-popup-content p {
 	margin: 0px;
 	padding: 0px;
+	font-size: 0.8rem;
+	text-align: center;
 }
 .leaflet-popup-close-button {
 	display: none;
 }
+
 div.content > p:first-child {
 	margin-top: 0px;
 }
+
 .calendar-year {
 	display: flex;
 	flex-direction: row;

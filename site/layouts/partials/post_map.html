@@ -26,7 +26,8 @@
         <div id="photomap" style="width: 100%; height: {{ $.Scratch.Get "height" }};"></div>
         <script>
             L.mapbox.accessToken = 'pk.eyJ1IjoiY2hhcmxpZWVnYW4zIiwiYSI6ImNqZzB2MDdxZTFjNTAyeHRsemQwbjVsZXIifQ.NC-7ANrzAfu5RDfpCQIEMg';
-            var map = L.mapbox.map('photomap', 'mapbox.dark', { zoomControl: false, minZoom: 3 });
+            var map = L.mapbox.map('photomap', 'mapbox.light', { zoomControl: false, minZoom: 3 });
+            L.mapbox.styleLayer('mapbox://styles/charlieegan3/cjg13skaf0o7c2spats0nxsfy').addTo(map);
 
             var geoJson = {
                 type: 'FeatureCollection',
@@ -79,10 +80,8 @@
                 marker.setIcon(L.icon(feature.properties.icon));
 
                 map.on("zoomend", function() {
-                    console.log(map.getZoom());
-
                     var newIconOptions = feature.properties.icon;
-                    var size = map.getZoom() * 3.5;
+                    var size = map.getZoom() * 4;
 
                     if (size > 50) { size = 50; }
                     if (size < 20) { size = 20; }

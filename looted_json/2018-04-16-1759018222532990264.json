@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1759018222532990264",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Putney's most ominous renovation\n.\n.\n.\n#light #red #scaffold #building #twilight #shotonmoment #teampixel #shotonpixel #nofilter #nofilterneeded #orange #buildings #shadow #yellow #weather #white #skyscraper #dusk #architexture #all_sunsets #pink #town #color #cities #dark #lines #archidaily #lookingup #day #lights"
+                }
+            }
+        ]
+    },
+    "shortcode": "BhpScDzhJU4",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1523911334,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-1.cdninstagram.com/vp/c535e3df2ae04292c0960f4786abe8d1/5B5FAAB4/t51.2885-15/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+    "edge_liked_by": {
+        "count": 18
+    },
+    "edge_media_preview_like": {
+        "count": 18
+    },
+    "gating_info": null,
+    "media_preview": "ACoqjopKR5FjG5v/ANdelsed6DyQoyeAKzLi6L/KvC/qf/rf5NRzXDS+yjt/nqahCluegrmnUvpHY6YU7ay3/IRcueOlSbV9f1pCwAwOlRb/AGH5Vjc21NxiwGVG4+lZLuZGyx598j8Patmq1xbCT5l4b+f/ANf3rqnFtafcctOSi9fvKKwMV34JUdx0phOeB+lbWn3gUeQ/ykcc9D7H3/nTL7TuDLCOByV7r9PUfyrh5rOzPR5E1dGMUc9j+VN2N6H8qkE7LxwfrT/tR9P1qtPMzs11X4/8E1qWiivSPMIJ7fzBlfvfz/z61FHqEkQ2kbscAnqPTPrjtV4VnXgHmL7gZrmqwTV2dVGpKL5ehSc7iSeCajp7dvpSZrl2Oq99T//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-1.cdninstagram.com/vp/fe25a138080cce6e55c04829a56c21c4/5B75DBD5/t51.2885-15/s640x640/sh0.08/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-1.cdninstagram.com/vp/3f21c0f170a32bbf1a53f67d5ad25d8f/5B676ED1/t51.2885-15/s150x150/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-1.cdninstagram.com/vp/d555bfad0987bf6d77b82295cd0616bd/5B5DF8EE/t51.2885-15/s240x240/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-1.cdninstagram.com/vp/13c2a7308cc7b612095bddd081959808/5B633B96/t51.2885-15/s320x320/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-1.cdninstagram.com/vp/959851d37c9091a55830d7a5ba3eb6a4/5B68A910/t51.2885-15/s480x480/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-1.cdninstagram.com/vp/fe25a138080cce6e55c04829a56c21c4/5B75DBD5/t51.2885-15/s640x640/sh0.08/e35/30604135_222393641649924_1593573458275467264_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

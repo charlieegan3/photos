@@ -101,9 +101,11 @@
             if (map.getZoom() > 12) { map.setZoom(12) }
 
             if ({{ len $locations }} === 1) {
-                window.setInterval(function(){
+                var interval = window.setInterval(function(){
                     if (map.getZoom() > 6) {
                         map.setZoom(map.getZoom() - 2)
+                    } else {
+                        clearInterval(interval);
                     }
                 }, 500);
             }

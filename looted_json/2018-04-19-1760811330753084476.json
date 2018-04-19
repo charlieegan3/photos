@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1760811330753084476",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Smoggy Putney morning\n.\n.\n.\n#smog #bridge #cityscape #bus #river #water #pollution #view #nofilter #shotonpixel #teampixel #shotonmoment"
+                }
+            }
+        ]
+    },
+    "shortcode": "BhvqJN-BTw8",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1524125089,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/90475556574a21dd56e5b083585f7042/5B6CFBCE/t51.2885-15/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoq3/NpjTVATUTNTESNIKYW9KhJpM0gJS2aZigGloAsMtVnkRTgsoPoSM1nyWD7SyyFsDoNxyfSsryH3AOCgJwWIPFAHTlageWOM4Zgp9CazjZpt4Yk+pJ/pVa4tERS6t07HmgZ0AGaXj1H51zFvF5oOX2kds0/7J70AdBu46fqR/KqTx5PQf5+tWQaU0CK3l/Sq01vvPtV81G1AymLROOxpfs49TVhqioA/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/d3bfc76c34c16a9f22876ca4fd621484/5B5654E4/t51.2885-15/s640x640/sh0.08/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/af17515be55ea82c6c389411655b9b98/5B512199/t51.2885-15/s150x150/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/7253afe979fbc0d66543cf1d20509783/5B523F0D/t51.2885-15/s240x240/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/47cec2bf94bcf839eb34a53c011ec200/5B6EB4A9/t51.2885-15/s320x320/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/d80f9939ccf0190783c9073506c493d3/5B5D10F1/t51.2885-15/s480x480/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/d3bfc76c34c16a9f22876ca4fd621484/5B5654E4/t51.2885-15/s640x640/sh0.08/e35/30079825_1808326289469640_3153542087404683264_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

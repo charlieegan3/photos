@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1764166218628317165",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "A more abstract image stacking example of a South West train.\n.\n.\n.\n#imagestack #train #blur #mobilephotography #teampixel #shotonpixel #nofilter #nofilterneeded #active #inshot #photographyeveryday #instahealth #nocrop #instaphotography #photoart"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bh7k9QyFb_t",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1524525023,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/db080674680cc49e2da755abebc803b1/5B6C455B/t51.2885-15/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoq3s0Zqr5qH0o81PWqMy1mjj1qmZ0Hek89PWgC3uHqKN49ap+bHSealMRn5HtRn6VW80etJ5q+tRqddvQtflRn6VW80etJ5i+tGoW9C1n6UZ+lVfMFHmD1pahb0IfKPtR5R9qt0VocxU8o+1J5Rq5SUAVfKNHlmreKSkM//9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/0a5d3f2ef60ffe43eea879970e42ba69/5B6B5D71/t51.2885-15/s640x640/sh0.08/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f48c22c602925d5e1596ff5d141de8a1/5B784B0C/t51.2885-15/s150x150/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/12a8e0730d5fbb9c6a99840493cd0a91/5B577C98/t51.2885-15/s240x240/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/43d45a0177406cad253bdf71071593eb/5B9A523C/t51.2885-15/s320x320/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/2c7bfaa1365bfe87bb533a9c180c4e79/5B770564/t51.2885-15/s480x480/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/0a5d3f2ef60ffe43eea879970e42ba69/5B6B5D71/t51.2885-15/s640x640/sh0.08/e35/30884637_2128726657355945_9219953646614085632_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

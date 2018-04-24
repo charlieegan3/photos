@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1764142431623084924",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "I made a tool to stack images from my phone using Hyper.sh over the weekend. It takes a video, converts it to frames, aligns the frames to avoid shake/drift and averages them to create an interesting smoothing effect.\n\nThis photo was based on a short video clip I took while running to work.\n\nPreviously I needed to use Photoshop to make these images up - I've made that accessible from my phone; in the spirit of mobile photography and the best camera is the one you have with you etc etc.\n\nI also wrote a blog post about this...\n.\n.\n.\n#imagestack #thames #river #church #houseboat #water #blur #city #teampixel #shotonpixel #nofilter #citylife #nofilterneeded #building #bridge #riverthames #buildings #cityscape #boat #town #riverside #waves #architecturelovers #reflection #londoncity"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bh7fjHaFnt8",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1524522187,
+    "dimensions": {
+        "height": 1081,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/bbfad2725c1be355b104148d021c398e/5B9BAB7B/t51.2885-15/e35/30590127_165160220837054_5663989053607903232_n.jpg",
+    "edge_liked_by": {
+        "count": 10
+    },
+    "edge_media_preview_like": {
+        "count": 10
+    },
+    "gating_info": null,
+    "media_preview": "ACoq2lfPakuJxAuSNxPRQcGpQAOlZmq9Ex64/UUAXYHaX7wABAIx79qdARKgf+9/jWEZWQlATgLnr+VWLe4kgiVCQMA4PXrzz/nvQBtbB70bBVKe6YL8pxxyRyc+gB4H15rO+2y+r/kKLgbTMI1LHt6Vg3d4ZcZxgHj2pHtJ2U5K4/H/AD9Kpywuo52/rUu4CibcxzzkY/CrazBtqkcdB+GB+NUotyk4wOPSkeZE4bkkduxznP8ATikl5gbM4JTHIHtxWTsb+6//AH1TReFj1GOgyD06f596UovqpqgOgLEisu7OBV8VSvOgoGUEJzUwiD8kZpqVci6UCI5YF29OlUSo9BWrP0rOoGf/2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/3a22c1e2f287ef84ae38288c6297ceb4/5B6E0CFF/t51.2885-15/s640x640/sh0.08/e35/c0.0.1080.1080/30590127_165160220837054_5663989053607903232_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/1e9dd5791b14e03fa9917dc89a6ba823/5B5A5BBC/t51.2885-15/s150x150/e35/c0.0.1080.1080/30590127_165160220837054_5663989053607903232_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/aaa355c92affe02d047cf14098fd458b/5B59D72A/t51.2885-15/s240x240/e35/c0.0.1080.1080/30590127_165160220837054_5663989053607903232_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/ddd6fcdf770236f1c8fb8014c1bae34c/5B6A87C2/t51.2885-15/s320x320/e35/c0.0.1080.1080/30590127_165160220837054_5663989053607903232_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/062deec06bcdd2cb4de0cdf3ff0f95fb/5B7A22EB/t51.2885-15/s480x480/e35/c0.0.1080.1080/30590127_165160220837054_5663989053607903232_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/3a22c1e2f287ef84ae38288c6297ceb4/5B6E0CFF/t51.2885-15/s640x640/sh0.08/e35/c0.0.1080.1080/30590127_165160220837054_5663989053607903232_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

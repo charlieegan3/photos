@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1765643292098663393",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "This is another image generated from stacked video frames using my new 'stackr' app. Read about stackr on my blog. More examples to follow.\n.\n.\n.\n#stackmode #imagestack #nophotoshop #thames #sunset #reflection #river #clouds #hdr #shotonpixel #teampixel #nofilter #nofilterneeded  #longexposure"
+                }
+            }
+        ]
+    },
+    "shortcode": "BiA0zgpl5Ph",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1524701104,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/cfe6c15684abfebbe081ceaa3b3e25e7/5B60625A/t51.2885-15/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+    "edge_liked_by": {
+        "count": 23
+    },
+    "edge_media_preview_like": {
+        "count": 23
+    },
+    "gating_info": null,
+    "media_preview": "ACoq6OMYFQXWCOuKZvbscj61U8p5CSxAH5n8qm47FRsk/Lz9KrNuJpGn2cD/AApyFicbCSR3z09eaBkJZs4HWjEvoasSReRh3GPxzUX9oy9jQIvTkjo2R2B/pUUU7Ywaz7Uy3EmGkCAZyxAIz6Af5FWp4HhUus6kr0GMEj9ef85pWHcFRnfOCR14FPmLs3QgnnA5qgssxG7zQCRnH+NV5LiZeC5I9jRqBrGOVh8/Cju3vxSnTmrHLy4zuJDe+ab5snqfz/8Ar07MR1doVzjA/IVZu0QpggYqtZdat3QytLoM5l0VT8vAppFEv36DQAMiim4X0FOao6AP/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/47cbd7054ce80b1ae657daed624098ce/5B768B3B/t51.2885-15/s640x640/sh0.08/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/88bdb34b7db44435866a9a5fd4df351d/5B98573F/t51.2885-15/s150x150/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/703aa790b4c33e3d7733b535e6bd43e1/5B5D4800/t51.2885-15/s240x240/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/db0342155f4810803a1fd6559bc86143/5B942278/t51.2885-15/s320x320/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/845ca77dd97abc41ec679a56bd1ec378/5B6949FE/t51.2885-15/s480x480/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/47cbd7054ce80b1ae657daed624098ce/5B768B3B/t51.2885-15/s640x640/sh0.08/e35/30603726_168365770511481_1836939701269823488_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

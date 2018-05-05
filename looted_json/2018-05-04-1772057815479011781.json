@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1772057815479011781",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "More mean stack mode blurring.\n.\n.\n.\n#imagestack #river #architecture #reflection #boats #cityscape #view"
+                }
+            }
+        ]
+    },
+    "shortcode": "BiXnTHFFMnF",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1525465774,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/a9d1defb3b91f53d8e99d3936315c606/5B92D67E/t51.2885-15/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+    "edge_liked_by": {
+        "count": 12
+    },
+    "edge_media_preview_like": {
+        "count": 12
+    },
+    "gating_info": null,
+    "media_preview": "ACoqS21H7OixuhIHfPIHpjvjt04xXQRSo6h1I2noa4rfgjsOOP8A65rSsrvyjsf/AFZP5H1Ht6/nVbknRPOo45P0qiQWOf5nNWjHVO6m8kbehI/KjYNxsjrGOSM+lVPtXsP++h/hVJ3BO/ueuc/5x7Dj9ajyP9n9ahyb2GkiqT82R04/Sm7ytOkkGMAf/rqa3tTJy4yvpnB/rVgSpqc/PzHG0Dt26Ee/qfSo/tQlbLk5PU+/9a3Q/lrtVFAA9f8A61Yd5Fubcq4z1waVrhcdG435PT0OT/jz+gq0rxgDlOno1Y4B79qmEp9B+tKwxMqvK4Y5wPb1rZs0LJk8Vj23UfjW/D90VQhZBgVmTGtKXpWVLQBSkRjkr09Kr7j61oR/epxjXPQfkKTGf//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/d95df811237618f6012aa5fd26458b1a/5B7D121F/t51.2885-15/s640x640/sh0.08/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/73c0f548d35749326173019868c577dc/5B97071B/t51.2885-15/s150x150/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/14510735846c5268dad69048237311c0/5B984F24/t51.2885-15/s240x240/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/59f9aa6f9494c1ac9e95d78d749259db/5B7E1E5C/t51.2885-15/s320x320/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/7eb926878fff2cc42459aec08ee5e4f8/5B9483DA/t51.2885-15/s480x480/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/d95df811237618f6012aa5fd26458b1a/5B7D121F/t51.2885-15/s640x640/sh0.08/e35/31166786_985550364943529_2389968701144170496_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

@@ -19,6 +19,7 @@ locations:
 ERB
 
 excluded_tags = File.readlines("excluded_tags").map(&:chomp).map(&:downcase)
+series = File.readlines("series").map(&:chomp).map(&:downcase)
 all_tags = Dir.glob("completed_json/*.json").map {|f| JSON.parse(File.read(f))["tags"]}.flatten.uniq.map {|t|t[1..-1]}
 reject_pattern = /insta|gram|shots|_|shotz|london|scotland|nature.|photography|filter/
 permitted_tags = (all_tags - excluded_tags).reject { |t| t.match(reject_pattern) }
@@ -106,6 +107,7 @@ Dir.glob("completed_json/*").shuffle.each do |file|
   if @data["location"]
     @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])
   end
+  @data["series"] = @data["tags"] & series
 
   year, month, month_string, day, week_day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %B %d %A").split(" ")
   archive = {

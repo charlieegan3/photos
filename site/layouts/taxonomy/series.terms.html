@@ -1,0 +1,30 @@
+{{ define "title" }}
+	{{- .Title }} - {{ $.Site.Title -}}
+{{ end }}
+
+{{ define "main" }}
+	{{ $path := .RelPermalink }}
+	<div class="mw7 center cf">
+		{{ $.Scratch.Add "used" (slice "") }}
+		{{ range $_, $series := .Data.Terms.ByCount }}
+      <div class="fl w-third">
+        <a href="{{ $path }}{{ lower $series.Name }}" class="db aspect-ratio aspect-ratio--1x1 dim">
+          {{- $availablePages := where $series.WeightedPages ".Params.id" "not in" ($.Scratch.Get "used") -}}
+          {{- if (eq (len $availablePages) 0) -}}
+            {{ $.Scratch.Set "page" (index (shuffle $series.WeightedPages) 0) -}}
+          {{- else -}}
+            {{- $.Scratch.Set "page" (index $availablePages 0) -}}
+            {{- $.Scratch.Add "used" (slice ($.Scratch.Get "page").Params.id) -}}
+          {{- end -}}
+          <div style="margin: auto; width: 100%; z-index: 1000; position: absolute; top: 50%; margin-top: -50px;">
+            <p class="tc f7 f5-ns near-white" style="overflow: hidden; text-overflow: ellipsis;">
+              {{ ($.Site.GetPage "taxonomy" "series" .Name).Params.name }}
+            </p>
+            <p class="tc f7 f6-ns silver">{{ len $series.WeightedPages }} posts</p>
+          </div>
+          {{- partial "post.html" (dict "image_source" $.Site.Params.image_source "video_source" $.Site.Params.video_source "grid_image_size" $.Site.Params.grid_image_size "post" ($.Scratch.Get "page") "opacity" "o-40") -}}
+        </a>
+      </div>
+		{{ end }}
+	</div>
+{{ end }}

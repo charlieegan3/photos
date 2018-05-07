@@ -1,0 +1,15 @@
+{{ define "title" }}
+	{{ .Params.name }} - {{ $.Site.Title }}
+{{ end }}
+
+{{ define "main" }}
+	<h1 class="display tc">{{ .Params.name }}</h1>
+
+	{{ $.Scratch.Set "posts" .Pages }}
+  <div class="mw7 center cf">
+    {{ .Content }}
+  </div>
+	{{ partial "post_grid.html" $ }}
+	<br>
+	{{ partial "post_map.html" $ }}
+{{ end }}

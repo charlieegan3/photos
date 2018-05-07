@@ -5,6 +5,7 @@ taxonomies:
   tag: "tags"
   location: "locations"
   archive: "archive"
+  series: "series"
 menu:
   main:
   - name: "Latest"

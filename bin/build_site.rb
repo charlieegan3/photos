@@ -98,7 +98,8 @@ plurals = {
 }
 
 archives = {}
-Dir.glob("completed_json/*").shuffle.each do |file|
+posts = Dir.glob("completed_json/*").sort
+posts.each_with_index do |file, index|
   @file_reference = file.split("/").last.gsub(".json", "")
   @data = JSON.parse(File.read(file))
   @data["tags"] = (format_tags(@data["tags"]) & permitted_tags)
@@ -107,7 +108,8 @@ Dir.glob("completed_json/*").shuffle.each do |file|
   if @data["location"]
     @location_slug = format_location_slug(@data["location"]["id"], @data["location"]["slug"])
   end
-  @data["series"] = @data["tags"] & series
+  @data["previous"] = index == 0 ? nil : posts[index-1].split("/").last.sub(".json", "")
+  @data["next"] = posts[index+1].split("/").last.sub(".json", "") rescue nil
 
   year, month, month_string, day, week_day = DateTime.strptime(@data["timestamp"].to_s,'%s').strftime("%Y %m %B %d %A").split(" ")
   archive = {

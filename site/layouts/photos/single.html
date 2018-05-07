@@ -11,7 +11,7 @@
 				Video not supported
 			</video>
 		{{- else -}}
-		<img class="w-100 mw6 mw9-ns" src="{{ $.Site.Params.image_source }}{{ .Params.file_reference }}.jpg&w={{ $.Site.Params.single_image_size }}">
+      <img class="w-100 mw6 mw9-ns" src="{{ $.Site.Params.image_source }}{{ .Params.file_reference }}.jpg&w={{ $.Site.Params.single_image_size }}">
 		{{- end -}}
 	</div>
 
@@ -86,6 +86,19 @@
 				<span class="mid-gray">View this post on</span>
 				Instagram
 			</a>
+		</p>
+		<p>
+      <span class="mid-gray">View</span>
+      {{ if .Params.previous }}
+        <a class="link dim silver" href="/photos/{{ .Params.previous }}">
+          &larr;Previous
+        </a>
+      {{ end }}
+      {{ if .Params.next }}
+        <a class="link dim silver" href="/photos/{{ .Params.next }}">
+          Next&rarr;
+        </a>
+      {{ end }}
 		</p>
 		<p>
 			<span class="mid-gray">Search on</span>

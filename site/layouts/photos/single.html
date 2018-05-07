@@ -92,10 +92,10 @@
 			<a class="link dim silver" target="_blank" href="https://photos.google.com/search/{{.Date.Format "2006-01-02"  }}">
 				Google Photos
 			</a>
-			<span class="mid-gray">or</span>
-			<a class="link dim silver" target="_blank" href="https://www.dropbox.com/search/personal?query={{.Date.Format "2006-01-02" }}&search_token=N7aC6pXgVxDT%2B5nVTjBlaEQ7hPnz5hLWsyfXAKGYVs4%3D">
-				Dropbox
-			</a>
+			<span class="mid-gray">or manually</span>
+			<span class="silver">
+				{{.Date.Format "2006-01-02" }}
+			</span>
 		</p>
 
 		{{ if (gt (len .Params.Tags) 0) }}

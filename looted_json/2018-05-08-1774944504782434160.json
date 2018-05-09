@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1774944504782434160",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Mean stack mode at Liverpool Street\n.\n.\n.\n#motion #blur #crowd #people #travel #blur #multipleexposure #walking #station #commute #shotonpixel #teampixel #nofilter #stackr #picoftheday #instagood"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bih3p9_lq9w",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1525809895,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/e3d7cf0f5b8e9345e31318c7bb78a941/5B8D62F8/t51.2885-15/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+    "edge_liked_by": {
+        "count": 6
+    },
+    "edge_media_preview_like": {
+        "count": 6
+    },
+    "gating_info": null,
+    "media_preview": "ACoqW6MMQQku/wA3vgDOT2x9KlYZk8zO1sYU8ncp65wD9O1Wb9RLBnuP1/z1qpo8zncjfwHIP17fTjimIckYRUycqmTuGc5JJwO+PqKmgaI/Nls4Pr398VMB++b1K4/lUkYEUeB6cfnQIzysYkxl8HBJ+br+Xp/WpMR/32/M/wCFXXY4DnqOfy6/pmq5uSeg47UAMmUkiHrz/Ppj9atiJYnJUcsAp+g6flmsze0zu687QTj2zjjHfGcVoWLN5eHJYgnr1weRn0+nagZVWQtcEfUH8OlXgoYZPYVRtQGlZh16/rWj7evX/CgCIAsCT2z+VVfMC8A9OKsO+FKjkmm/ZweeKAINMQiLcerYH5f/AF6vKoUMRgdSaqWn+rT6f1qyx+RvoaQGdaMVkP0/PnpV/wAwHp3PFZtr/rD9BVqLqfqf50xFoKByaTzVol6VXoGf/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/92ee2b7454e136ed4898c3a9a9522c2a/5B908AD2/t51.2885-15/s640x640/sh0.08/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/da0d67e822e58b96d5bbe95d19e1c677/5B876EAF/t51.2885-15/s150x150/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/bc84af30cc645e592c7fde733aa37016/5B92B13B/t51.2885-15/s240x240/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/9d393bfde84d8c85f28ee203304c89c4/5B85A09F/t51.2885-15/s320x320/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/48671dfac8ff9089d008aef734a65600/5B91C0C7/t51.2885-15/s480x480/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/92ee2b7454e136ed4898c3a9a9522c2a/5B908AD2/t51.2885-15/s640x640/sh0.08/e35/31571435_2041931002796799_1186197889014038528_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

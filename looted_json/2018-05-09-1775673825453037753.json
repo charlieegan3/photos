@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1775673825453037753",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "These people could spin every day\n.\n.\n.\n#architecture #swanky #metal #architecturelovers #art? #fisheye #nofilter #shotonmoment #shotonpixel #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bikde-zFli5",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1525896836,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/680ec9ec6c864ebc6dfd4c515d234962/5B925DC7/t51.2885-15/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+    "edge_liked_by": {
+        "count": 10
+    },
+    "edge_media_preview_like": {
+        "count": 10
+    },
+    "gating_info": null,
+    "media_preview": "ACoqlERpdlVm1HaPucjrk0631JJPvjaB1Pp6cY7/AFqroVi2Fo2Uourfs2fbB5/p+tNuL+OEKVw4YncOcgD06D86kY3bUoAp4VZ1EkZyrDP/AOv0I71UNzGDjd09jTQmZ2o4XgYOe4649CP61FBFmPPPzHuPTPQgNn8h9aqySFgAxz9e36c1bjnRABg8Y6Hj6nB//VUFkqwkYPp9PX3K/wAqW7jymRyVPP0qT7YWU7QcL1xk/wBarS3jYweMjg+1FxElpKVQ5+6cr1xx/wDWNL5i+o/Ws8llHfBoz/ssffmndg0h1ypikKHHy9Oh/X1/Wr40+MoJHJTcM7ep/p1/Kmamo8/oOVB/HmpIvuCgroRtboM47nJ5xwKebVSMHnHTk07YrEZAP1FTNwp+hpCKCgF8Z68Dvj/Papvsw/vN+lUV6/iKvHrSRUtz/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/bd31737843da238a7fd5ca853032d376/5B820DED/t51.2885-15/s640x640/sh0.08/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/06204b8d51fc265b703d4038e606cc35/5B892990/t51.2885-15/s150x150/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/e31185b79d4b24f7c47fe24e107881bb/5B920C04/t51.2885-15/s240x240/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/eeb56c05099369cf60929a3cdd857bf2/5B7C2AA0/t51.2885-15/s320x320/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/3469ee87725e91e252875ec003701245/5B99BBF8/t51.2885-15/s480x480/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/bd31737843da238a7fd5ca853032d376/5B820DED/t51.2885-15/s640x640/sh0.08/e35/31386869_1566031870161098_5307153537044578304_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

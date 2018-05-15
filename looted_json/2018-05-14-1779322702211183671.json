@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1779322702211183671",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "This train is being held at a red signal\n.\n.\n.\n#architecture #homes #railway #viewfromthetube #lookingup #track #commute #hometime #shotonpixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "BixbJIGFfQ3",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1526331816,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/67bbc84445c137881858863de0ea203e/5B7C8E53/t51.2885-15/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+    "edge_liked_by": {
+        "count": 11
+    },
+    "edge_media_preview_like": {
+        "count": 11
+    },
+    "gating_info": null,
+    "media_preview": "ACoqvpLC/Rhn34/nVjyqw2IIxnkD0xx71NbzEch8ZPHzY4A9D607isapjqBouah+1TrxndyeoB6fT2p0l66AMyr7nkfj370wHGOm+XUR1IEAqnJOOSOP5VY+2wep/KncVjFdmeXkjfnGewPQflirdvaFwJXAbJY9M5zx09KpGaE8dfz/AMOaaJkxwSPxP+RWd/Iu3mXJoTb8k4LnP4DrUlssd4pAyFz0z+RC9KoCROvXHqSf50omjHQEfQkUX8gt5iKxdyh4+bbkDpjjtQSQcYzj2NBmjJzj9aPPTuD/AN9GlfyHbzKjOCeOlLvXb71BmlqhEyMB1pC4Jz/WmU0daYiYyAim7vf9aiBpc0hn/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/b863b583a686f8ae4bb7804a13409c64/5B771B79/t51.2885-15/s640x640/sh0.08/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/e47fd17e75c2a371636fa8e3df8d8aa0/5B922304/t51.2885-15/s150x150/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/308789cd8cb5df12830c9d85cb1cafee/5B9AD890/t51.2885-15/s240x240/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/3b1142e3d044ebdc3d8d7c2565d81c29/5B8A3434/t51.2885-15/s320x320/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/4adc41e7864183c5cad0e23166b0d040/5B77706C/t51.2885-15/s480x480/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/b863b583a686f8ae4bb7804a13409c64/5B771B79/t51.2885-15/s640x640/sh0.08/e35/31557017_2060400454271273_8864196811087151104_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

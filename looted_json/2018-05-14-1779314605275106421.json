@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1779314605275106421",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Got to be careful to avoid construction site photos becoming my thing\n.\n.\n.\n#construction #architecture #detail #blue #summer #sun #heat #teampixel #visitlondon"
+                }
+            }
+        ]
+    },
+    "shortcode": "BixZTTPFkx1",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1526330851,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/ba4f331f0221571a1099fb12b92dcd8f/5B8A2763/t51.2885-15/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+    "edge_liked_by": {
+        "count": 12
+    },
+    "edge_media_preview_like": {
+        "count": 12
+    },
+    "gating_info": null,
+    "media_preview": "ACoqcxBQsAfkwT9Dg8fgarTyeaw9FPGOh9/xqU/6rnoyLuI9OVJqs7xnpgjg5AxnHr/n6Vo2Qkh6qsqfMDhWxwfX14PGR9PemO6gkrleejc/l1wKsKJAhUMELjjOCCvpnGOfzHpVdbIkbZCA2OPTn6VJa2fp+qHiQ7NoJ29xxzTtx9P/AB01EIimELDP+ff+lBEo43Lx/t//AFqOrG/hj8/zJnkYQ7hwuCMn0L5GB9KWKzXbknjgc/oQOhPsaofaMNjAwB15PB/wB7DtWgGe5hDKRlAVPXLfT0479afoQiA2jqPmdQo9W/mOtTwWKtnL7h14zjrnPv8ASqeyRv3XoM/MOoyOMnuP8fSr9tvjBU5OflwOQPqe1J+QyGWxeIjbg7+h7/jnP6VH/ZUh5LL+Tf8AxNWLiaQN8gxs5A/XH8+eaUauMcr+tTqW9kuxnRyqnzbCQDjPYn0zUtjIUDFerDoBnn0x1q3qahIIwowNw4HHas+D7p+jf1rVe9e/Yxl7uq7lkX028Z5XPI24BHfrzTp75lYoAF9+SfwHYfXtWYhJlXPPIq3/AAk989aVirjGZ5gdxbIBz6D04H/18VABjg7gR2xVqEfK34fzp5AzQ9NRrU//2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/a801a69498984bcd781f957f4d6fac50/5B921902/t51.2885-15/s640x640/sh0.08/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/5e8715a80c0e8dd6ca042b64340f52c9/5B983E06/t51.2885-15/s150x150/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/b08e97e0c8cd50de96c1283aa609692f/5B97FF39/t51.2885-15/s240x240/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/4031b86298f43044560768122f7f874f/5B7FEE41/t51.2885-15/s320x320/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/6a1bc6c660dc89e9453757433a8a5249/5B8771C7/t51.2885-15/s480x480/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a801a69498984bcd781f957f4d6fac50/5B921902/t51.2885-15/s640x640/sh0.08/e35/31686974_435762973534872_5890193114093584384_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

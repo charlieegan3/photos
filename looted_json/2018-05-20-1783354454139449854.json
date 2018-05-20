@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1783354454139449854",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Polarizer vs the mud .\n.\n.\n#mud #polarizer #cpl #shotonmoment #shotonpixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bi_v21rl7H-",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1526812439,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/efe67091c7e07efa80d925678e43d656/5B960B02/t51.2885-15/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+    "edge_liked_by": {
+        "count": 2
+    },
+    "edge_media_preview_like": {
+        "count": 2
+    },
+    "gating_info": null,
+    "media_preview": "ACoqSQjaAP4j+PHp7VEcipeM8846UHBrI0BDxjtTSpHSjH601mI4FACZxS7qaWPf9aXI9KAHZOSWO4HsOOfr6etISQM8ZJ6fTv8ASkIwOe9GcVIyRWwNx/CgkVEXJ3Fjyfbrz09v61IqcZ7etMBmc0zf7GpgoPWoyg/yTQIQcn9KMj9aZHSr/SkMf9fz/wA/5xSqd2GOeOMfT09KjP3TTh0H0P8AM0ASKxPA4Pp3/wA/SnZb0P5f/WqLrWc0rgn5j19TQM//2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/fee65d676914b3baaaa6f3d340227827/5B7FE263/t51.2885-15/s640x640/sh0.08/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/822e12dbe3f63a73b35c5561fd189ea1/5B8E4767/t51.2885-15/s150x150/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/4034430560d8a468c1409454ec5ba248/5B953F58/t51.2885-15/s240x240/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/2e177907f84a9fdcc78f88ca283170f2/5B827C20/t51.2885-15/s320x320/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/1c285b90653d3d746a0cc18a1a12e9ab/5BC4B1A6/t51.2885-15/s480x480/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/fee65d676914b3baaaa6f3d340227827/5B7FE263/t51.2885-15/s640x640/sh0.08/e35/32280102_382726342213621_8472808102238879744_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

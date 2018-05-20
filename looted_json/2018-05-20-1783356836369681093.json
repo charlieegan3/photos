@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1783356836369681093",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "More lines and colors\n.\n.\n.\n#green #leaves #foliage #bridge #lines #metal #walkway #abstract #lookingup #summer #shotonpixel #nofilter"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bi_wZgTlErF",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1526812723,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/6858664e9e18a573e3483859816dd6c9/5B7D2F94/t51.2885-15/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+    "edge_liked_by": {
+        "count": 7
+    },
+    "edge_media_preview_like": {
+        "count": 7
+    },
+    "gating_info": null,
+    "media_preview": "ACoqiAH8PQcf5+tIrkZbHXt69vT0qbqPm6Z+n58UuGyTjiuJ6EkL85Y9OuB/McUocMADnI/x/p+tSxfLxtJHof6elOdcDjIOfpU31sMZId7dOvHp1/x/Smeao4549z/jU6JuzkZz06daNy/5Ip/K4zAWQEgetKHA4xyKiB75qQMFJIOM+wNdoAz5HFO3j0/lTWfIIznpxgU/ec9f0H+FAAWzjGBzz0pfMHoPyFIXO4HPQHBx0/Snh8dz+Q/wpiNNrmMplF2sORnHHsOOSe5NR286eWwxhi2VJ7ZJJ/Lj8fas7JpMmpCxsJdx7CCMvjOexOen/s2euenSqzzqzx7vmKvuZsHBBA/HPb+VUgaTPFMLGyL8RgtjeW6j0H91sjB46EU83q9twHYZrDDH1pdx9TQFj//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/04dd78d33fac8e27f33f2fc7587a2065/5B7A07BE/t51.2885-15/s640x640/sh0.08/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/bf8eae9a722d66f06060eaf9308574f8/5BC42EC3/t51.2885-15/s150x150/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a1234b2b2d93fcb9649b7d9046882d61/5B8EF057/t51.2885-15/s240x240/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a8f4fc0a92e4f87f7e215b5032bb98ca/5B8548F3/t51.2885-15/s320x320/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/de8c25d8f66d6b4ad1e38b08e874ee74/5B9368AB/t51.2885-15/s480x480/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/04dd78d33fac8e27f33f2fc7587a2065/5B7A07BE/t51.2885-15/s640x640/sh0.08/e35/32203369_2075053702772696_7483984172592136192_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

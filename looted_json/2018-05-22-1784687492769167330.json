@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1784687492769167330",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Testing out my new graduated blue filter this morning. Don't know if it's worth it really, fell like the effect is easily added later...\n.\n.\n.\n#nofilter #realfilter #bridge #river #thames #morning #reflection #shotonpixel #shotonmoment"
+                }
+            }
+        ]
+    },
+    "shortcode": "BjEe9Gplrfi",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1526971349,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/9925a223b74b76d6c88029ccf6006c74/5B7AD532/t51.2885-15/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+    "edge_liked_by": {
+        "count": 13
+    },
+    "edge_media_preview_like": {
+        "count": 13
+    },
+    "gating_info": null,
+    "media_preview": "ACoqngsxMpIIyKpyQ7TirKMV6U1vmrsRylPZTSlWttJtqtBFQpTdlWylJsoAmFxCTgMKmXY/3SD9CDUFtpSHl2P4Y/8Ar0ySwiB+VmOPpXPzM25UXvKpfJqilvs53MT/ALx/oaDEzLhiT9S3+OKfMxWRcMVN8qqRhOMbmzjGdx/lmoTbj1P5mlzMdkbdpnHOPp1NQ3B+bsOuP89KktOn4iqs5OT9f61mWM30hfFRdqi9fpTuKxY83NM3ioe1Q5NK47H/2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/b114d4c6a487136a56b4e50e3a691c22/5B943818/t51.2885-15/s640x640/sh0.08/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a1cbeac3e08c49a78f43341489a547b6/5B80CF65/t51.2885-15/s150x150/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/5a984eeddcefc4368b0f91252c33bbdf/5BC405F1/t51.2885-15/s240x240/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/827e7c16d8937fec99d5bc1b23b38ec0/5B837555/t51.2885-15/s320x320/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/ee4c3e4465d00348778271169e707953/5B9EA20D/t51.2885-15/s480x480/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/b114d4c6a487136a56b4e50e3a691c22/5B943818/t51.2885-15/s640x640/sh0.08/e35/32135593_1516253508484708_5355179169858715648_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

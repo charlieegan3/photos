@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1787098263406986137",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "At Waterhouse square for lunch today .\n.\n.\n#architecture #old #windows #city #nofilter #teampixel #shotonpixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "BjNDGbxF0OZ",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1527258736,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/196d000ca5571f3b90c6790b56141598/5B81CFCB/t51.2885-15/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+    "edge_liked_by": {
+        "count": 10
+    },
+    "edge_media_preview_like": {
+        "count": 10
+    },
+    "gating_info": null,
+    "media_preview": "ACoqmjbygAQeST+BOc1OHyuQDkev1FUVZgBljnLf/W/LtUqTHa2WOQgOO45659TUamunn/SLglGOjZ+lNZyOcHGDkd/b+tVhcEn7xHK9+uR0/wA9aDP8qncfm3859Pw5/pQLT+vVD3YzqUAOTjHtyD/jUbSnJ+XuahaUlWwxyEUjn3Ht+vere0nnB5+n+NJlRsVZDuCszAFcgADPTjnBpIlQqRu4KbTkHpnr79e3fFRas/CqvAIJOO/SqVnKUEgz0UkfXijoGl9TQzGGA3HOVP3f7owOM5/xp7KqquG4Xdj5Tnnrn86rQ6eskRd2IdgrKc8DPY+vv+nvWmmZ7dATzlgffHSnZiTXYvRkKpdSCQo4I4IXpyTjvWkqpgfN2/vCsHTsuzRE/Kyn9MVqlYhwQp+tJjX3GfLDLdhfLUkKNp4+h/pT4tNmjLjacMuBnHJ/pXWdKSqM7nOLbXKxBABgAAjHuOhz19f0qCTTZmjVAmMOSQCOhrq6KYjkYrSSzkLsCFwRz3H4d6jI3HPzc812Q5o2L6D8qA3P/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/d332e9f4f43a600e8c2610581cb147d2/5B81BCE1/t51.2885-15/s640x640/sh0.08/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/32cdb763b77ac37b3983481dba3d049e/5B8A589C/t51.2885-15/s150x150/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/0c579c860f433b3776c22c19ade90d26/5B849708/t51.2885-15/s240x240/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/08f4f1267b14c1ffa61497ff39ef0ddf/5B91B0AC/t51.2885-15/s320x320/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/e45ef6d72283660279f60671c975ecbe/5BA2B0F4/t51.2885-15/s480x480/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/d332e9f4f43a600e8c2610581cb147d2/5B81BCE1/t51.2885-15/s640x640/sh0.08/e35/33226297_1915291658515994_3281870118161743872_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

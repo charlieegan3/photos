@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1789856624263255900",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Colorful ruins. .\n.\n.\n#colorful #architecture #ruin #rundown #derelict #old #reclaimed #growth #nature #nofilter #teampixel #interior #picoftheday #instagood"
+                }
+            }
+        ]
+    },
+    "shortcode": "BjW2R3gF1dc",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1527587558,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/4e1ec5fe5dbd432481cc96aece351e9e/5BA2B062/t51.2885-15/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+    "edge_liked_by": {
+        "count": 13
+    },
+    "edge_media_preview_like": {
+        "count": 13
+    },
+    "gating_info": null,
+    "media_preview": "ACoqxldgcjnFW4T5jbsEBRyc9z6e9QiLtUgVgMdqbpp/8APaNf8ABLkV05BVG+XGOcfnj27fmfeHiPkH/DP1Pc+1UZI8c9KkgUldx9e9Zum310NFUXbUe53nJGR6Dgfj3P6U3B9qn28496ZgVSilpuQ5N67DsBSdv3SOh7f56fStKKwLqGJI3AHgZHt3zWZtOR+Xua6QzBEAUg4AGR7cVU3a2pMVe7sc7dxGJih5xg5Hoen0qa1j3RjjPf8AUmmX0m+4cHtgY9eABWrYRYRBxnbzSTfUppdO34lWRGMRIRUAbbnOWJ9vxqgIJSAePzrWuflg+sjHPbIbjPtxWQbj1NZtu+hSiral0QyDDEDHXOen54pIpJEwoyRjnC5/H3+ueajuWJZeT9xj+Pr9amt5XKjLE8juahtyV5WfyLSS0RlHfHL5j55JOcfl+NbVg7YUnIwP8/4VKQCDnnFMbgsBxwf50N3+QbfMJpA9vt6Zfp0/iJI/Wsko+TyB7YNWnPyr9f6GqyMdo57CmhH/2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/1315b8470a139ff932d5bf8529470d36/5B886703/t51.2885-15/s640x640/sh0.08/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f2c5ef2ab4a5c8ae500d7340be1410fc/5BBB1707/t51.2885-15/s150x150/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/e6d9669d31fc00411e1171684ba8bdb2/5BA08F38/t51.2885-15/s240x240/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/465ef4b24d2ac019f0959245b7b27055/5BBA0A40/t51.2885-15/s320x320/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a8138d67980b681e2508ff72241c87fc/5B8EE6C6/t51.2885-15/s480x480/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/1315b8470a139ff932d5bf8529470d36/5B886703/t51.2885-15/s640x640/sh0.08/e35/32135607_608243052859726_3026298329731432448_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

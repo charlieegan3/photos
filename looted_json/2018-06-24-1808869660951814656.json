@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1808869660951814656",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Sorry, more polarizer... Reflections not welcome here.\n.\n.\n.\n#river #brown #green #polarizer #landscape #mountain #hills #munro #walking #trip #holiday #summer #stream #reflection"
+                }
+            }
+        ]
+    },
+    "shortcode": "BkaZV9yA6IA",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1529854088,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/ceafced83033a098d517c0c76ecc3165/5BE9D66A/t51.2885-15/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+    "edge_liked_by": {
+        "count": 10
+    },
+    "edge_media_preview_like": {
+        "count": 10
+    },
+    "gating_info": null,
+    "media_preview": "ACoqkjIYZFS4qgkhUbhz/n/Gp0ud67gBkEcfzH1pKqvtaP8AATj2LQFSqKAvfoOv4VDcXQhGEG4kZyOgH4Vq2lqSkWjhBljge9RG7iHGT+VUPMDj585AyAOce/1P8qnLL2AI9eef0rPmvsXYx4WXZ8vB7jP9P5d6ckoSQqehGT/WokJXP9P/AK+acF+bJ4rBpa+ZpZl6a8kEXHIOF6Dv71nM53ZJ9v8AOKsFspt4IrOckGtLdyTRWQgMRgZxjHPP48U0Sz+1VUlwCW6np1pPtDe35CoswJR71KOgJHWoxTxyOaRsKx29OlVWOeatDtUfervoRYqgMe2Rim7DV+PqfwpuKLi5T//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/8fd3a18ad559425ac15fb8c849d345aa/5BC8580B/t51.2885-15/s640x640/sh0.08/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a23c467e1a9f5afa9dd9c736b8a0fa90/5BA7780F/t51.2885-15/s150x150/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/9252f46f244de31b4a794261ff16bfad/5BC86B30/t51.2885-15/s240x240/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f2a08159810b96a15f7d75e942b82d74/5BC6E348/t51.2885-15/s320x320/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/7cdbe48576fbe5fd3d6c1ca14e70114c/5BC5F6CE/t51.2885-15/s480x480/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/8fd3a18ad559425ac15fb8c849d345aa/5BC8580B/t51.2885-15/s640x640/sh0.08/e35/35137306_490481851369947_2127111342509785088_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

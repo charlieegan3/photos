@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1808774308751911593",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "This is what a road looks like after you fill it's valley with a reservoir for a hydro scheme. Never seen it this dry in my life. .\n.\n.\n#landscape #reservior #hydro #highlands #road #track #trail #view #water #lake #loch #travel #valley #shotonmoment #teampixel #filter #nofilter #polarizer #cpl"
+                }
+            }
+        ]
+    },
+    "shortcode": "BkaDqaIAqqp",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1529842722,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/ae352406ff12e8489fbbad8397ff94d1/5BE8F53A/t51.2885-15/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+    "edge_liked_by": {
+        "count": 21
+    },
+    "edge_media_preview_like": {
+        "count": 21
+    },
+    "gating_info": null,
+    "media_preview": "ACoqppVpQKYpH+c1KjDtj9K0uujMiQJUgWlR1PcH8RU4WmBGFNO21KENG33H50xHMmfH+AFSKzt2I+oxU6oicqB9TzVtYNwyxOD0rk07HTYrraswycAnoDnn8untSI5I2ksCvVd3T/Parg4PHA7VXu4OfNTqeo/n/jTTBrsIFV+Oc+hY/wCIo+zp6D82/wAapOWX5uo9ab9sPqf0qrX2sK9tzSgiLfMeFH6//WomEjnA+Vfr+vr+FXP4fyqE1mWNxjHJP1qxHhuD+FQtUsH3h9aYFCdNhOc4PFZ+yM1r3n3j9f8ACmmNc9B+QovYR//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/c79565c71146b44ba38c6f868f9adecd/5BB04C5B/t51.2885-15/s640x640/sh0.08/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/b3e842705cf0507f167ade1f8a02a1f6/5BC6805F/t51.2885-15/s150x150/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/81d31ef59c57a9eafcfb94b5b9fc7268/5BB03360/t51.2885-15/s240x240/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/e1a12a19eb5d808d17cb9ef8e23b7c52/5BAC8918/t51.2885-15/s320x320/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/0c78fc9a5f1666874b23caf39857f243/5BE3D49E/t51.2885-15/s480x480/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/c79565c71146b44ba38c6f868f9adecd/5BB04C5B/t51.2885-15/s640x640/sh0.08/e35/35001744_209630066328847_1715886232715657216_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

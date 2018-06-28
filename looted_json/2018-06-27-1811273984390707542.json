@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1811273984390707542",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Another busy nighttime shop window\n.\n.\n.\n#nightshopwindows #night #dark #busy #series #colorful #shadows #closed #busy #quiet #teampixel #nofilter"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bki8Beeg7lW",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1530140706,
+    "dimensions": {
+        "height": 1066,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/24a6ea4e27c590f776b876dc56c12891/5BAAEDC8/t51.2885-15/e35/35459380_210052393050281_7342891864103583744_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACopyi5UkHtSiWq7qQeecdTUyIhHOeSB+dZWNbkyy4pfPqGFQ52nPTOB1ps2wfdDD61exO4j3LONoPHr3Pt7D9aZ5Y9/0pPlJOBwense/wCNGXH/AOumQOlHzHHc/l/jUgUqvcnoPr6/z5qOOYrweeP1/wD1UnmEnOc5qLPY0uiwjFcEfQk9gePx/pVdiHbHHX35607YUQ89faq6KWwB6irIJCMZx060ozioRk5Pp1qcSkDHFMRPceXGMBcN078fUevtWeTmrl7/AA/j/OqQ61K2GyTFSCQqVz0X/JpKa/3fxpgSvGC+EIO7n6d6bs9v8/lSx/60/j/Kp6BXP//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/4d9a50aa982dd59d6bdba26dd13ce636/5BEAC62F/t51.2885-15/s640x640/sh0.08/e35/c7.0.1066.1066/35459380_210052393050281_7342891864103583744_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/3db2e29782bdb28d064e032267abf398/5BCB136C/t51.2885-15/s150x150/e35/c7.0.1066.1066/35459380_210052393050281_7342891864103583744_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/bedf6c31fd42e7c34edbde2f73c2a594/5BCE06FA/t51.2885-15/s240x240/e35/c7.0.1066.1066/35459380_210052393050281_7342891864103583744_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/fc35f27484fda003721b81a04acfa97c/5BE38212/t51.2885-15/s320x320/e35/c7.0.1066.1066/35459380_210052393050281_7342891864103583744_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/6a739764a336489be4d0d9dfc5cb7f53/5BCF1F3B/t51.2885-15/s480x480/e35/c7.0.1066.1066/35459380_210052393050281_7342891864103583744_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/4d9a50aa982dd59d6bdba26dd13ce636/5BEAC62F/t51.2885-15/s640x640/sh0.08/e35/c7.0.1066.1066/35459380_210052393050281_7342891864103583744_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

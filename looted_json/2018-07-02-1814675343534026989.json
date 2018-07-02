@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1814675343534026989",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "St. Paul's bursting bubbles\n.\n.\n.\n#bubbles #summer #street #view #sunny #blue #sky #fence #nofilter #teampixel #instagood #noaim #picoftheday"
+                }
+            }
+        ]
+    },
+    "shortcode": "BkvBZxCAXDt",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1530546180,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/d74403425bf0dd59e2d1ef6b39f4be3d/5BE34422/t51.2885-15/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoqkZahYVcZarstdZzlYioyKnYVERQIjopaSkM3PlkXcPx9qgZaoqzQ5KYx3U+nfH+Har0U3nDJxg9AOo9Pr/n61nGfRmko9VsQEEVCRVxkPeoStamRWK03FTkVHtoAsDbKMjr3quwdW3JwV7evsKZAcNV2foD9f5VxLsdb7joLlZxzww/X/PpUjJWTHwARxxW0v3F+grog76MwkrbFVlqLbVtqirYzP//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/d08a1d48c76e0fce75a6a3cf14f36c25/5BDCAF08/t51.2885-15/s640x640/sh0.08/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/446bda81736af02ae12b2aac16ba2f89/5BE3CB75/t51.2885-15/s150x150/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/5d11ac020d9914e5b79049e29f0b4cf6/5BC856E1/t51.2885-15/s240x240/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/0cae69cc5213b72333513e2b40ef9b54/5BCD7145/t51.2885-15/s320x320/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/8d50abec7fd21db6fa235549a25d1c55/5BE7711D/t51.2885-15/s480x480/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/d08a1d48c76e0fce75a6a3cf14f36c25/5BDCAF08/t51.2885-15/s640x640/sh0.08/e35/35505529_1743730319052944_8751127450513047552_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

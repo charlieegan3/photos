@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1815590137795501227",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Depth of bamboo field .\n.\n.\n#dof #bamboo #plants #colorful #contrast #reflection #growing #leaves #blur #blue #lookingup #x100f #picoftheday"
+                }
+            }
+        ]
+    },
+    "shortcode": "BkyRZxlANyr",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1530655232,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/e307531b0e74964301b29b20da4e3de8/5BE6A44F/t51.2885-15/e35/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoqxc559Sf5VvW5CoCD0HzD0JPU+3H9awupUDuSf1rdtRlCxOBuPI7Yx27j1oXbz/X/AIA2tPl+n/BJJpDEAcb+QAD6nJ4A9uayyCxJXPzY6DIxnpycjBI5PXHOK0iQXUEElTlR7AHr6YyMd6gZCJAijGQTk8ZGf/rHpWc3rZb2FFaa9zNBJJzyeD9f/r1RYYJ+takYUSFW5xnBH1Iqky8mteiYurQqcuo9MVswuIoFOdu/c3PJ64/p+FZCD96B6Y/lWlO6SFFVQTsJXJxgfMfbrjPPHWs72t8/yLezGSXAkcAcnuT1Axz+ef0pkkoZiI/UEH0B4x+tUxOyuXKj5hnBHH4UCfccH0wMDHTn8arzf9f8Az6WW5MrrHLyM8f4etMO0moTLyH9iOfrTS+ea0i9AsSow8wn6/yp14xBVRxiNP5f/XNV4Ov5/wAqmvf9b/wFP/QRWXVfP9DR6oa8odFAH3RyfU84A9gKiiGWHbmojTlq7JIgk2cD6kU7aKR+h/3/APGmUJjP/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/06c17d1d2500b081959c1fd213cbdff4/5BEA05F5/t51.2885-15/sh0.08/e35/s640x640/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/8b3147c156bc68977e82a43413c63046/5BCBF970/t51.2885-15/e35/s150x150/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/35d57f5ddac33283cd86350ff8c3a13c/5BE1D376/t51.2885-15/e35/s240x240/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/883a327fdb7ca663091b7abf71ca4b32/5BEACF08/t51.2885-15/e35/s320x320/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/5f37873f827e8bcb513159b91b6867dc/5BE4F14F/t51.2885-15/e35/s480x480/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/06c17d1d2500b081959c1fd213cbdff4/5BEA05F5/t51.2885-15/sh0.08/e35/s640x640/36632014_1775528375819244_1955760242096603136_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

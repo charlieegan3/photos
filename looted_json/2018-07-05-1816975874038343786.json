@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1816975874038343786",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Balance\n.\n.\n.\n#skateboard #skating #graffiti #summer #evening #concrete #waterloo #southbank #hfr #stop #caughtinmotion #nofilter #x100f #shadows #instagood #picoftheday #nofilterneeded #skill"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bk3Me5Bgqhq",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1530820424,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/63fb56bb67e9b359696c794cce6f7c0f/5BE872FE/t51.2885-15/e35/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+    "edge_liked_by": {
+        "count": 16
+    },
+    "edge_media_preview_like": {
+        "count": 16
+    },
+    "gating_info": null,
+    "media_preview": "ACoqph93OM/iP8ab5nfH51RCgsBjGSARk1J5YYOWOwRnHqTknj3x/LNTYotB36rg/rU3nEDqrfTOf1FY6pgjoRkDg/5NXXQr14qlG5Ldiwbxk5Ab/Pr/APqpv23/AGf5VTfd0yfaofm9TQ423BO5bCS7g2OhBxjjikMD7i2PvE8H1PT9avWsxnlCPlFIPJHpz+taZt4exZj+OKVxnO/ZjuyOBnI+matyBpfvHH0BrYWONeQgJ/2j/wDronYsu3CgcHCj+tCYrGJ9kQ9WP5Gl+yQ/3j/n8K0Bleop+/2/n/hT1YaArCM/MfzqZ5Mjr/n8KqIM4zzVoADpSsMgOfcfWnBW9asio16UCIwrexpfm9qVqkA4pgf/2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/15e61a98a35ecf6c066a77326577cf1b/5BE2D11B/t51.2885-15/sh0.08/e35/s640x640/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/8cad034db250349788561f2b49a4839c/5BD29ABC/t51.2885-15/e35/s150x150/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/8463664e3ca6f805a4a9b462ad067e6f/5BD7F8F6/t51.2885-15/e35/s240x240/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/068208814589addbace50318a9278b8b/5BCAA44C/t51.2885-15/e35/s320x320/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f643acce1ab1935e08187cd234e9669c/5BDEDE16/t51.2885-15/e35/s480x480/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/15e61a98a35ecf6c066a77326577cf1b/5BE2D11B/t51.2885-15/sh0.08/e35/s640x640/34922479_191229711566488_5215630640120070144_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

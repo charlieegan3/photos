@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1817535874582304640",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Bins\n.\n.\n.\n#bridge #morning #southbank #view #thames #rubbish #architecture #nofilter  #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bk5Lz-LAdeA",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1530887182,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/cb545638aac20f8257af2a516f5c38e2/5BE2E115/t51.2885-15/e35/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+    "edge_liked_by": {
+        "count": 12
+    },
+    "edge_media_preview_like": {
+        "count": 12
+    },
+    "gating_info": null,
+    "media_preview": "ACoqz5IzGcZBBGQcUgLY4xVhAGHlnHP3SR09voe1VjwcEAEdeKQyUB/alPmD0qLK+g/WmOVA7D86LDuEjsoyVFKLfIzwM0kMJc59egP860xaD2piKJNXURZ08wjLLwQO/wD+vtTHhhD4WQEHpnt6DPc1YQpbE7mXt8vP1BoYIrMCB8sbfiP/AK9UCrSHJGBnpjGT6VtSyJMSUk2jq2O3v/8Arod7Z2XDBdo5J6Ejp+Pc/SlsG5WiXyxzwam872qZjCp2syhuvP8AP6UubPu5J78kVOo9DPkswSCDtx+P86jWxweWyB26frWjSCuiyMrsppbNHnYwAYYPHUen40fZOe30q6elMpBcrm2Z33u2eAOmOnA/KrgR/wC8P++F/wAKjXrUopgf/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/e449437b9bd5f2bec5bfb53234a46710/5BE35C66/t51.2885-15/sh0.08/e35/s640x640/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/b4155f16f22cf1b5e67a485cabc1b121/5BC56C87/t51.2885-15/e35/s150x150/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/241c9ec2e8bbfc6024e6e6bc8ab93fba/5BDDFD32/t51.2885-15/e35/s240x240/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/8383b4b0b71cd08c1a67e8404e26e4e8/5BCFD28A/t51.2885-15/e35/s320x320/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f8f50ebcdcecf32cdb2063068de16c70/5BC7E9D6/t51.2885-15/e35/s480x480/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/e449437b9bd5f2bec5bfb53234a46710/5BE35C66/t51.2885-15/sh0.08/e35/s640x640/35616438_263930414159413_483186079952797696_n.jpg?efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV9pZyJ9",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

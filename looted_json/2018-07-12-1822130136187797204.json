@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1822130136187797204",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Aldgate\n.\n.\n.\n#green #street #red #lines #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BlJgbRuAf7U",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1531434860,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/f62954f581f3d5d82e6948c028b105f3/5BCBB4A7/t51.2885-15/e35/36136069_2223477371208437_2980642904684363776_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoqgjcgEHGDxz/U1Vmtw0hIO0fp07fX0qxOSowM59uorMkdt+eRWUVrcGXUgLINuQ4bn3XGcjPQileXySc5O05DDuPr60lpcAbt2Tldv0BPJz+g49atx2aZPJPHQ+/fjqD+lNjTaLMconj3DrjJHT8R/Uf06YhiOeQ1aE/7jDLkHpgUnn56g5/3R/hSQNX2GnEh3t9716Z/HtUVxGcZ6r7849qt/ZnjyR8306/kaW3XLEsMbeefU/zx6U9hJvYzxm3yoHLEEqf7uOh9N2fwqWNWSTzF+Rf4cnPHTp6H+VXZbXcclvvNljjkDvz/AF5oiIkLZGEyFUH+6BgdaGy0hs4FxHuTO5f4RycntjuO4PUVlfP6N/49/jVzzdsuABj3yMYyeo5xz29KkZpySVcbc8fMenamiN3oaoUj7p/DqPyP9CKXn+JQ304P5Hj9aklAB444pFqiiF41cEA7CRjnjr9eD+BpkVq0XX5h2/z0/WrHfHaqzEpKFX5QT0HA/SpsO7tboZE8cwbO3bzwcep455Fa0dodox0wP5fStA0oOKdiVof/2Q==",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/28182171990f65da328455c9c0d4e673/5BCCB91D/t51.2885-15/sh0.08/e35/s640x640/36136069_2223477371208437_2980642904684363776_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/3193e38c2f33b0d71e5ec87fe319ed4b/5BEB5998/t51.2885-15/e35/s150x150/36136069_2223477371208437_2980642904684363776_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/18d979239369dfd458177df55b9e1c16/5BCC559E/t51.2885-15/e35/s240x240/36136069_2223477371208437_2980642904684363776_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/51af91233127dc070bea46b17d561cf2/5BEAA6E0/t51.2885-15/e35/s320x320/36136069_2223477371208437_2980642904684363776_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/7f2dd361f70b28dccdc7d44c71a58f92/5BC9B4A7/t51.2885-15/e35/s480x480/36136069_2223477371208437_2980642904684363776_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/28182171990f65da328455c9c0d4e673/5BCCB91D/t51.2885-15/sh0.08/e35/s640x640/36136069_2223477371208437_2980642904684363776_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

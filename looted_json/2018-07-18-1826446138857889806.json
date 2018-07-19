@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1826446138857889806",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "It's gonna be a bright... bright... black and white day #architecture #blackandwhite #x100f #construction"
+                }
+            }
+        ]
+    },
+    "shortcode": "BlY1xYcAiAO",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1531949368,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/eb9a1f854cbdac4aa4553785ed7d5a7a/5BE4C8B1/t51.2885-15/e35/37195706_1761379473940242_5920415759573450752_n.jpg",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "gating_info": null,
+    "media_preview": "ACoq2G4GRzipFOKyYro3kbxEj7vUDnrjkVrhNo+g/lQBiawwLqp7L/Mmsp3PIPI/mM//AF6u6jLvnYDoML+X/wBes/k5X2P88fzxQBHIh2f7v9aXOO9SLJg4b+Ncf8CBz/j+dJsoA0dMbash9QKu6hqJiwkRG7v37dP/ANfXp2NZdnIsYZW/jAAx64/Sq8vzSkkY2gA/Ud6AFyc88+vvTSAV9Ceh/X+dBpC2cD/PHP8ASgBrDLde27+n/wBelMwHHpQDzn3x+HWqhXnnrQBdXjGPVfb+GpJjmRz7j+VQnoP95f8A0EUhOWbPqKAFB/z/ACpucZPoMD+tKeo/Go/4R9aAHN93HqP5f/WpAyEZPXvSv1H4/wAqq0Af/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/2118be7876b31c63abf405e913720ae6/5BE8BC0B/t51.2885-15/sh0.08/e35/s640x640/37195706_1761379473940242_5920415759573450752_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/1b0ce94e84f13291571fa61ac2bafc65/5BE0058E/t51.2885-15/e35/s150x150/37195706_1761379473940242_5920415759573450752_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/5898663d0f893dc898bbf1ca50311634/5BD6E988/t51.2885-15/e35/s240x240/37195706_1761379473940242_5920415759573450752_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/9a3a195e27dfe1eed4117887797896f6/5BD179F6/t51.2885-15/e35/s320x320/37195706_1761379473940242_5920415759573450752_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/2853a6a00bcbdd00b43bd1e74e5e8b3e/5BE3ACB1/t51.2885-15/e35/s480x480/37195706_1761379473940242_5920415759573450752_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/2118be7876b31c63abf405e913720ae6/5BE8BC0B/t51.2885-15/sh0.08/e35/s640x640/37195706_1761379473940242_5920415759573450752_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

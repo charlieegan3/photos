@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1838096784795119009",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Final one from the Barbican #reflection #x100f #windows #blue"
+                }
+            }
+        ]
+    },
+    "shortcode": "BmCO0mAgC2h",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1533338233,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/bbd56403ce24fd8a6beb70b2f824bb74/5C13BD0B/t51.2885-15/e35/37401702_1989058711144158_6139642774535798784_n.jpg",
+    "edge_liked_by": {
+        "count": 2
+    },
+    "edge_media_preview_like": {
+        "count": 2
+    },
+    "gating_info": null,
+    "media_preview": "ACoql8rnG335NISEONqZ/OmC6SMnaCx46Zb/AAH14pq3ch6IeT1OF6fl0rS67XM7PvYmV5G4A/JTj8+lKokbuAPqP5AE/wAqqebNgDci9ep3f41GAx+87n2RTS5vJDt5s0kCqMuxP6fzI/lSgw+p/wC+qzBEOySv7ngVKc/88zUXKsMGo26jAQ/kP8aT+1YgOIz/AOO1WNvz96ED2xSraxZ+eWMfQUWHcsf2woGAn6j/AApv9ssBgIPzP+FMMFqMZlXp2FJ5VnkfvDgdeDRYLi/2xJ2Vf1qP+1ZfRf1/xpZEswRhmP0FSiG1PZ6AuHy5yLfn3PH8qcG54gAB/wA+lW880jsR0NTzDsVg79BAvGBj8fcU0yyKc+SoOPQkVaRjnqasx/fH0o5gsZpknBBMSjA4+U/1qwJpMcqufoanLEtyfWjJouFj/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/3732c99e4613fbb0cea758cd12d4d97d/5C10AAB1/t51.2885-15/sh0.08/e35/s640x640/37401702_1989058711144158_6139642774535798784_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/acef67a70946b3706939175b280a9879/5BF27034/t51.2885-15/e35/s150x150/37401702_1989058711144158_6139642774535798784_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/5be8484cfd50ab31329b59b6c45c131d/5C0B2E32/t51.2885-15/e35/s240x240/37401702_1989058711144158_6139642774535798784_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f1026178bce336ba4311dc2c4d127321/5C0AFF4C/t51.2885-15/e35/s320x320/37401702_1989058711144158_6139642774535798784_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/7554750795f336107feba2777412a03d/5C0B090B/t51.2885-15/e35/s480x480/37401702_1989058711144158_6139642774535798784_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/3732c99e4613fbb0cea758cd12d4d97d/5C10AAB1/t51.2885-15/sh0.08/e35/s640x640/37401702_1989058711144158_6139642774535798784_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

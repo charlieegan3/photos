@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1837953769690788687",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Harsh shadows and phone calls at the Barbican #shadows #blackandwhite #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BmBuTc0AnNP",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1533321184,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lax3-2.cdninstagram.com/vp/eb3b5376b871e57023194b0a0c48d797/5C050564/t51.2885-15/e35/37761544_872444499596009_5624371098448560128_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoqoaNIscryOcKsZJP4r/kCq93fNcuT0QAhV9AT39z3qkT+tIKANK0kaK2mZDg5QZHvkH9KzRV+H/j0l/3k/rWfQB0WgH96/wDuf1rqa4SyvJLJi6qDuAHzZ6dfUVp/2/L/AHE/76/+vQBzzHJ/wpNpxnsDj88/4Gug+323oP8Avmj+0bYds/8AAaAKlnA89rKkY3MWQ4/P1qtJp1xEpd0IUdTkf410GmXCzvIVGB8oHHoDVPWL7j7Oh/3z+PC/1P4D1oApy2Uz/MoypVTnI/ujPGc8dKz/ACJP7rfkf8KRZXX7rEY6YJq+NXuAMZB/CgCOTTpIsbigz/tiqTLtJBwcenIq/cD5vwrPPWgDRsbk20cjj73AX6nPP4daziSxyeSeSaKSgBRjPPSpNqf3v0NRUUAf/9k=",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-lax3-2.cdninstagram.com/vp/73e48fa40a3738cdab084b6ab9c8431d/5C048981/t51.2885-15/sh0.08/e35/s640x640/37761544_872444499596009_5624371098448560128_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/f94cf724609e3394e9b63a5e63f966ec/5C01FC26/t51.2885-15/e35/s150x150/37761544_872444499596009_5624371098448560128_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/6367dfc4945158eadf9f66f47ce56cf4/5BF77F6C/t51.2885-15/e35/s240x240/37761544_872444499596009_5624371098448560128_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/943a2a3e444ace172cd9e752be9f4946/5C0D12D6/t51.2885-15/e35/s320x320/37761544_872444499596009_5624371098448560128_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/a20901b30b3ede646f0162eeda11f05c/5BFD718C/t51.2885-15/e35/s480x480/37761544_872444499596009_5624371098448560128_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lax3-2.cdninstagram.com/vp/73e48fa40a3738cdab084b6ab9c8431d/5C048981/t51.2885-15/sh0.08/e35/s640x640/37761544_872444499596009_5624371098448560128_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

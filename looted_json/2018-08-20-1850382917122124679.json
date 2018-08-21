@@ -1,0 +1,65 @@
+{
+    "__typename": "GraphImage",
+    "id": "1850382917122124679",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "#lookingup or #lookingdown? Got lucky with this one - all the rest from today we're underwhelming at best. #cleaning #windows #sky #architecture #sky #skyscraper #city #construction"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bmt4XWZg-uH",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1534802854,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-sjc3-1.cdninstagram.com/vp/7bf7cae6f01f8763f6a8a04ca9561765/5C05E6FC/t51.2885-15/e35/38896302_541900459595223_8245322320432857088_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoqgaMpJuz8rDke/qP8+tS4471IcEen19f8/nSIc8HqKu5jYb+NQxvmQr0255/GrIpq/eP4/wA6AsA+vWpMfWgCn8Uh2Emg81lbONvJA/iPbNQLuAMhUr6g9frx6fr2q9S5p2C5mLKXjDg4y2Bx1GfT6U6SURPgjO7OMVceCN8ZH3TkY7H/AD26U8RqDnqc557duKLBcrGQB/LAyxGQP89u5NS/Zs9TzU4VQd2Bnpnvj0zTs0WC5FRmkpa2sZXFzS02losFx1FJRRYLn//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-sjc3-1.cdninstagram.com/vp/129487bd6f43955347a23e098357212c/5C058519/t51.2885-15/sh0.08/e35/s640x640/38896302_541900459595223_8245322320432857088_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-sjc3-1.cdninstagram.com/vp/92a1cfcc095ebbb8aefdc8036a7c6eef/5BF2F5BE/t51.2885-15/e35/s150x150/38896302_541900459595223_8245322320432857088_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-sjc3-1.cdninstagram.com/vp/208bc5c940b3b78e8a7b6ff9dc359c48/5C1652F4/t51.2885-15/e35/s240x240/38896302_541900459595223_8245322320432857088_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-sjc3-1.cdninstagram.com/vp/711fba73791ceeda8f01518cbab0f884/5BF3354E/t51.2885-15/e35/s320x320/38896302_541900459595223_8245322320432857088_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-sjc3-1.cdninstagram.com/vp/4f0a4575672bb87340846ed05b59390f/5C062F14/t51.2885-15/e35/s480x480/38896302_541900459595223_8245322320432857088_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-sjc3-1.cdninstagram.com/vp/129487bd6f43955347a23e098357212c/5C058519/t51.2885-15/sh0.08/e35/s640x640/38896302_541900459595223_8245322320432857088_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "scraper_version": "v2"
+}

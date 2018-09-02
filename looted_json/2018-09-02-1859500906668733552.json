@@ -1,0 +1,66 @@
+{
+    "__typename": "GraphImage",
+    "id": "1859500906668733552",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Automated teller machines. #graffiti #typography #night #twilight #blue #dark #church #steeple #city #bridge #sky #cloudy"
+                }
+            }
+        ]
+    },
+    "shortcode": "BnORjj5gbRw",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1535889803,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-sit4-1.cdninstagram.com/vp/5c46019893e00778b5b9974b7330deda/5C2E369E/t51.2885-15/e35/39763847_1921389171488217_2632384755638730752_n.jpg",
+    "edge_liked_by": {
+        "count": 11
+    },
+    "edge_media_preview_like": {
+        "count": 11
+    },
+    "gating_info": null,
+    "media_preview": "ACoq58U7FNAqRVrRCFC0pAFTBaQrWliLlcjNJtqYim1Nh3ALUoFVhIRUqy5oTQNMsU0molc8huKN2fw4quZCsDU2gtTM0mxkdPR2Q5U4plFYlkxuJG6nPIP4jpTZJWkxuxx6DFR0GlZdhhgjml/GkpKYj//Z",
+    "owner": {
+        "id": "302526752"
+    },
+    "thumbnail_src": "https://scontent-sit4-1.cdninstagram.com/vp/14e16bd967cdbc20c6038d8c3b6306db/5C3A4624/t51.2885-15/sh0.08/e35/s640x640/39763847_1921389171488217_2632384755638730752_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-sit4-1.cdninstagram.com/vp/2aa3744118cd17e66df45d7e24dea6f3/5C313EA1/t51.2885-15/e35/s150x150/39763847_1921389171488217_2632384755638730752_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-sit4-1.cdninstagram.com/vp/874f8586fbb7247bf9f4bd9f07bb9ff9/5C1600A7/t51.2885-15/e35/s240x240/39763847_1921389171488217_2632384755638730752_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-sit4-1.cdninstagram.com/vp/3e2c3afd3b1360799c1f63a863e58946/5C1EEDD9/t51.2885-15/e35/s320x320/39763847_1921389171488217_2632384755638730752_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-sit4-1.cdninstagram.com/vp/99e26c3df6f1b7fb987ccf6e84a953a1/5C19D69E/t51.2885-15/e35/s480x480/39763847_1921389171488217_2632384755638730752_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-sit4-1.cdninstagram.com/vp/14e16bd967cdbc20c6038d8c3b6306db/5C3A4624/t51.2885-15/sh0.08/e35/s640x640/39763847_1921389171488217_2632384755638730752_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

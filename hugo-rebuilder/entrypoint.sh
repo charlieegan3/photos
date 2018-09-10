@@ -9,9 +9,11 @@ set -xeo pipefail
 : ${DESTINATION?"DESTINATION must be set, e.g. /my/output/path"}
 : ${PRECOMMAND?"PRECOMMAND must be set, e.g. my_build_script.rb"}
 
+mkdir $DESTINATION || true
+
 while [ 1 ]; do
 	curl -LO https://github.com/$USER/$REPO/archive/master.zip
-	unzip master.zip && rm master.zip
+	unzip master.zip > /dev/null && rm master.zip
 
 	cd $REPO-master/ && eval $PRECOMMAND && cd -
 
@@ -19,8 +21,8 @@ while [ 1 ]; do
 		hugo && \
 		cd -
 
-	rm -rf $DESTINATION
-	mv $REPO-master/$SOURCE_DIR/public $DESTINATION
+	rm -rf $DESTINATION/*
+	mv $REPO-master/$SOURCE_DIR/public/* $DESTINATION/
 	rm -rf $REPO-master
 
 	echo "Sleeping for $INTERVAL seconds..." && sleep $INTERVAL

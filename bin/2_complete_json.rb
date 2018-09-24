@@ -17,25 +17,30 @@ Dir.glob("looted_json/*").shuffle.map do |file|
 
   doc = open("https://www.instagram.com/p/#{code}").read
   page_data = doc.scan(/\{[^\n]+\}/).map { |r| JSON.parse(r) rescue nil }.compact.first
-  graph_image = page_data.dig(*%w(entry_data PostPage)).first.dig(*%w(graphql shortcode_media))
 
-  caption = graph_image["edge_media_to_caption"]["edges"].first["node"]["text"] rescue ""
-  tags = caption.scan(/#\w+/).uniq
+  tags = page_data["caption"].scan(/#\w+/).uniq
+
+  location_url = page_data["contentLocation"]["mainEntityofPage"]["@id"].split("/").reject { |e| e.to_s.length == 0 }
+  location = {
+    "id" => location_url[-2],
+    "name" => page_data["contentLocation"]["name"],
+      "slug" => location_url.last,
+    "has_public_page" => true
+  }
 
   completed_data = {
     id: raw_data["id"],
     code: code,
-    display_url: graph_image["display_url"],
-    media_url: raw_data["is_video"] ? graph_image["video_url"] : graph_image["display_url"],
+    display_url: raw_data["display_url"],
+    media_url: raw_data["is_video"] ? raw_data["video_url"] : raw_data["display_url"],
     post_url: "https://www.instagram.com/p/#{code}",
     is_video: raw_data["is_video"] == true,
-    caption: caption,
-    location: graph_image["location"],
+    caption: page_data["caption"],
+    location: location,
     tags: tags,
     timestamp: timestamp,
     dimensions: raw_data["dimensions"]
   }
-
 
   File.write(completed_file_name, JSON.pretty_generate(completed_data))
 end

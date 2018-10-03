@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1879326211222566470",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Spot-metering, my one true love. Welcome to Grasmere. #fields #tree #contrast #spotmetering #farmland #landscape #view #x100f #hill #countryside"
+                }
+            }
+        ]
+    },
+    "shortcode": "BoUtTtlAHZG",
+    "edge_media_to_comment": {
+        "count": 2
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1538253164,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://instagram.flis3-1.fna.fbcdn.net/vp/06c658cd9059bda2d0299996e4a6475d/5C57D71D/t51.2885-15/e35/42002308_1025550390961789_5687759992489246720_n.jpg",
+    "edge_liked_by": {
+        "count": 27
+    },
+    "edge_media_preview_like": {
+        "count": 27
+    },
+    "gating_info": null,
+    "media_preview": "ACoqw80tNzQK2IHZopKM0AGaTNGaSkMeF96XY3YUwflVhJ3T7rHP55rJt9B8rItjDkggfSmsuKv/AG985YBsUyS6V+qYPsf/AK1Spy6r7mPlKO00VIXB6DFN3GtOYVh3lr65+n/16XymPTindBxxQCayuaWEMXqRTNmOc1I3Sm0CI8ZpNvvUhpmaYj//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://instagram.flis3-1.fna.fbcdn.net/vp/9353d9581bba80f674a76f5f09c24e88/5C41AFA7/t51.2885-15/sh0.08/e35/s640x640/42002308_1025550390961789_5687759992489246720_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://instagram.flis3-1.fna.fbcdn.net/vp/da8f1607ab4c2eaf8702a2614dad27f0/5C635122/t51.2885-15/e35/s150x150/42002308_1025550390961789_5687759992489246720_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://instagram.flis3-1.fna.fbcdn.net/vp/f2cdb1c591f3425642b06a1fac497d27/5C561024/t51.2885-15/e35/s240x240/42002308_1025550390961789_5687759992489246720_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://instagram.flis3-1.fna.fbcdn.net/vp/35fbaeb3edd1bc22e5eed18b6dc0db67/5C4C6F5A/t51.2885-15/e35/s320x320/42002308_1025550390961789_5687759992489246720_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://instagram.flis3-1.fna.fbcdn.net/vp/9b55abd2ecf00262d9dba58ca98fe37f/5C51081D/t51.2885-15/e35/s480x480/42002308_1025550390961789_5687759992489246720_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://instagram.flis3-1.fna.fbcdn.net/vp/9353d9581bba80f674a76f5f09c24e88/5C41AFA7/t51.2885-15/sh0.08/e35/s640x640/42002308_1025550390961789_5687759992489246720_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

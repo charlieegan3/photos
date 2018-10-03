@@ -14,7 +14,7 @@ end.uniq.compact.each do |location|
   next if locations_with_missing_data.include?(location["id"])
 
   html = open("https://www.instagram.com/explore/locations/#{location["id"]}").read
-  page_data = html.scan(/\{[^\n]+\}/).map { |r| JSON.parse(r) rescue nil }.compact.first
+  page_data = html.scan(/\{[^\n]+\}/).map { |r| JSON.parse(r) rescue nil }.compact.reject { |json| json["entry_data"].nil? }.first
 
   location_data = page_data.dig(*%w(entry_data LocationsPage)).first["location"] ||
     page_data["entry_data"]["LocationsPage"].first["graphql"]["location"]

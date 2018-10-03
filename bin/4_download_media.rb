@@ -6,7 +6,7 @@ require "fileutils"
 
 `mkdir -p media`
 
-files = `git status --porcelain | grep completed_json | awk '{ print $2 }'`.split("\n")
+files = `git ls-files --others --exclude-standard`.split("\n")
 
 files.shuffle.map do |file|
   data = JSON.parse(File.read(file))

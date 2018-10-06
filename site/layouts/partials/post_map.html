@@ -51,7 +51,7 @@
                                     {{ if $post.Params.is_video }}
                                         "iconUrl": "/images/video_icon.png",
                                     {{ else }}
-                                        "iconUrl": {{ $.Site.Params.image_source }} + {{ $post.Params.file_reference }} + ".jpg&w=50",
+                                        "iconUrl": {{ $.Site.Params.image_source }} + "{{ $post.Params.file_reference }}" + ".jpg&w=50",
                                     {{ end }}
                                     "iconSize": [30, 30],
                                     "iconAnchor": [25, 25],

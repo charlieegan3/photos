@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1890550343679410038",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Under the shadow of the dam #valley #benwyvis #munro #view #landscape #clouds #atmospheric #x100f #skyscape #sky"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bo8lYVhAP92",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539591185,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/f791241a6e49e6c72c4d15b66d823409/5C54550B/t51.2885-15/e35/42989400_300341333897104_3557555710885625856_n.jpg",
+    "edge_liked_by": {
+        "count": 16
+    },
+    "edge_media_preview_like": {
+        "count": 16
+    },
+    "gating_info": null,
+    "media_preview": "ACoqyxuHUU8MRWoFhBxnNTiGNuBx+VdDMlfsZIfPFWY0ZulXTZR54q1FbAd6i5VjP2kdabkVoyRgHnmqZiH9001qSYRnXPGce9PS5x6/99VUG3vUgRD1OKz5jTlNGK8bpwfqaurfhev6f/qrDKx44PPvxSHaByeaOa4WNr7dC5w5ZfpzR9rgH/LRvyNYJI9TTcr70cwuUizRmiikUBNGaeBSUANoxSmkoA//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/04a76ffde93526188085a7c18755e0d0/5C3CFEEE/t51.2885-15/sh0.08/e35/s640x640/42989400_300341333897104_3557555710885625856_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/7f3c583369f6533b1373ee731b45756f/5C57CE49/t51.2885-15/e35/s150x150/42989400_300341333897104_3557555710885625856_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/1e84252feccf39640bec4e1f8124b918/5C401503/t51.2885-15/e35/s240x240/42989400_300341333897104_3557555710885625856_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/45c2e5f46769883cf8a3566891dcf3da/5C553BB9/t51.2885-15/e35/s320x320/42989400_300341333897104_3557555710885625856_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/37fbe496c74e9efe17b4c9544208b3e8/5C55CCE3/t51.2885-15/e35/s480x480/42989400_300341333897104_3557555710885625856_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/04a76ffde93526188085a7c18755e0d0/5C3CFEEE/t51.2885-15/sh0.08/e35/s640x640/42989400_300341333897104_3557555710885625856_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

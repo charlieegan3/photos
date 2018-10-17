@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1891848483149795262",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Touching down in Washington D.C. we immediately found ourselves looking up. #lookingup #green #architecture #ceiling #octogon #pattern #arch #night #texture"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpBMiwHAU--",
+    "edge_media_to_comment": {
+        "count": 3
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539745935,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/6b70aa350c964870b4b6fd4e01c8117a/5C3E8FE6/t51.2885-15/e35/43914452_397783657427421_7491499360337788928_n.jpg",
+    "edge_liked_by": {
+        "count": 21
+    },
+    "edge_media_preview_like": {
+        "count": 21
+    },
+    "gating_info": null,
+    "media_preview": "ACoqywv86eEz+dSKpPP6mnAeppCIzH9OT/n8aaU/n2P+fyq3tU+v5mmGIHof6/zpDKTLSbD7/lU5Rh7j8qZu+o/OmBPkt1/+t/8AXPvT15P+FQg569P88VZjOeBSAmRSOcHt39vr/nvSsvGD7Dn9f85/CpFIqT/P+fwpAUimOfXn8O2M4/KofxH51oMnHy9e6/57j09feqhI7Bj7+v60xEHktsD9QSAB9fX6/pTwecZwo6n1P+fyqxbf6tP99/06flVWT/WH/eb+ZpXG0WBKi8fzIH6VOGwNy9uornxzV+2J2/iabVgNX7/IO0Yz+Xb8+fenfZIn+YkZPJ59fxqC15QZ/vD/ANBasGT7x+p/nR1sFtLn/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/bb212b4c5ba2e62144be32318d157d45/5C40F403/t51.2885-15/sh0.08/e35/s640x640/43914452_397783657427421_7491499360337788928_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/dfef7b467cb806928d788cf131626fea/5C4450A4/t51.2885-15/e35/s150x150/43914452_397783657427421_7491499360337788928_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/f1f600737ff8aa9f4efa6ddf523da004/5C4B16EE/t51.2885-15/e35/s240x240/43914452_397783657427421_7491499360337788928_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/fbee078ee262b702b758ca29c0d1603a/5C3F4E54/t51.2885-15/e35/s320x320/43914452_397783657427421_7491499360337788928_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/4e3bc35843d25d6f7e5a23b9085a5891/5C584A0E/t51.2885-15/e35/s480x480/43914452_397783657427421_7491499360337788928_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/bb212b4c5ba2e62144be32318d157d45/5C40F403/t51.2885-15/sh0.08/e35/s640x640/43914452_397783657427421_7491499360337788928_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

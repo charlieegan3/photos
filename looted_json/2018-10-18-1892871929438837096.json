@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1892871929438837096",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Full circle #sky #clouds #architecture #brutalism #brutalist #evening #blue #reflection #blue #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpE1P2vgplo",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539867939,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/0636ce877b4c409b5372866c6e14a286/5C45C920/t51.2885-15/e35/42933315_2228498060772962_7375696467828146176_n.jpg",
+    "edge_liked_by": {
+        "count": 26
+    },
+    "edge_media_preview_like": {
+        "count": 26
+    },
+    "gating_info": null,
+    "media_preview": "ACoqy/mbqAwOAEHT6+v0x+grTGnmMbnbZu6IP1yeOnUHrSWMAUGdhhmJA9gO/t6VdbJIL529c98e1aRinqzOUmtEVPsShPvtye/zdPr61E1uAAijaz4+dRgE9l/2fX0J64FaLDzMdFHYZ/U/X/8AVSM5KlWyfccfKeD9MdqHBPbcFJrfYzjYmZMtiOYd8/eA/j2jkEd+OaiKJnmZc/7rVZKojrJv2tC21iynkHoDjPBXjPtVhtN3ElTgE5H0rC7Rta5NphWSAJ/dbke3b860Gw3UAgYIrl7a6Nu5b+Fvv+x46fzB79eldDHIGT92wYfTkfhTuKw5lUtnjd1P4VDcOBhRnJ5IHH50uw53v8uf19M+mPQVHEuOeshztz9Op9qrmtqxWvoijclQr7wGTci/KQGBxyCcdRxjPFbSDCgZzwOvWsoIdwA5RSTMegLEc57EDoQOhxVZtSQk4MgHYADH4c9Kxu3saWsZ2/PsR19G9vTr26+lKrbCCNyHknHT/H+fWmsB+Z/pUaMdxGTjA4/KqA0Y7liMNI33SeF5785PSrkW7kqNisAS7H5iemM/QHpk85rMUkEEcHFM8xnaIsSx3Hkkn+MVD7f1+gzSknM2BajKlvnz344znohAOT3I9ak/siM8hpB7ADH4Z5x9as2SKqDAAyWzgdcHjP07ViyTSbj8zdT3PrU3tohn/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/ad27b7424080b372223e6f8a7a04158c/5C87D69A/t51.2885-15/sh0.08/e35/s640x640/42933315_2228498060772962_7375696467828146176_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/84f234f7e05dc237b3f38d8654bc1d0d/5C47271F/t51.2885-15/e35/s150x150/42933315_2228498060772962_7375696467828146176_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/4db366fed43ba5701d87ea52836a920b/5C3FB919/t51.2885-15/e35/s240x240/42933315_2228498060772962_7375696467828146176_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/446e664d1420765235e8ff74becf5e62/5C53DE67/t51.2885-15/e35/s320x320/42933315_2228498060772962_7375696467828146176_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/b9de3660875dd338bbdab3ec83bf00e2/5C470E20/t51.2885-15/e35/s480x480/42933315_2228498060772962_7375696467828146176_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/ad27b7424080b372223e6f8a7a04158c/5C87D69A/t51.2885-15/sh0.08/e35/s640x640/42933315_2228498060772962_7375696467828146176_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

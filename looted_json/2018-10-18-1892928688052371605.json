@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1892928688052371605",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "\"money makes money\" #threshold #escalator #down #lookingup #blackandwhite #architecture #lightandshadows #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpFCJzUggCV",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539874705,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/f0b3390e33f5cacd6dcf1dd431e604ae/5C3FACD9/t51.2885-15/e35/41977772_1922724427808983_1875141975078862848_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5wV2OiQ7Lfeeshz+A4H+P41yCIZGCr1YhR9TxXocUYiQIvRQAPwGKAJKrXFwIRgfM7cKo6k/4epp8swjHvjPsB6n+g6k8Cs9nW3Bup8hl4UHrgjoB/ebv2XGOgJIAPMuno0s/wA0r+n8Xoq+ir3/AD6nFYRu9Qf5l3gNyMLxg88cdPSldZdQbz5CAcExxnuFPIHoO2epPbFTHUICcncCeo54/WgCvokPm3IY9IwW/HoP55/CuuaTJKp1HU9h/ifb8/fkbOc2tuzqQC/fOGwMgAcHHOSfb061BHfyxhsHCyHJHB5+h7HofUDmgDpw6xgzSn90hLKT1c54Y+uOAg/HHTGFLK1+/nyYCJ9yM9G2kFgeepBznv0HArOuLya5/wBaxYDoOAPyAAqsST15oA2LidEBRCP3bboyOwbqnHpyPpiqRljY5I5PPSqdFADixIx2FNopaACkpaSgAooooA//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/cf5b17227a1649f9d2fc92e1338d08cd/5C518363/t51.2885-15/sh0.08/e35/s640x640/41977772_1922724427808983_1875141975078862848_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/c7e1bd35c404c9570887faa1da77a908/5C6636E6/t51.2885-15/e35/s150x150/41977772_1922724427808983_1875141975078862848_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/2dab5d2d8dbbd0dfa981353b6f132462/5C5E1FE0/t51.2885-15/e35/s240x240/41977772_1922724427808983_1875141975078862848_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/989984c59724da00159338dc50c27d4d/5C88729E/t51.2885-15/e35/s320x320/41977772_1922724427808983_1875141975078862848_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/8423c9abc685f41f03552916d95b1bd1/5C48ACD9/t51.2885-15/e35/s480x480/41977772_1922724427808983_1875141975078862848_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/cf5b17227a1649f9d2fc92e1338d08cd/5C518363/t51.2885-15/sh0.08/e35/s640x640/41977772_1922724427808983_1875141975078862848_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

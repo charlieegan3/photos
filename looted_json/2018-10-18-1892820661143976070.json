@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1892820661143976070",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Lighter than air #balloon #hotairballoon #museum #photo #photograph #light #window #pattern #silhouette #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpEplzbAbiG",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539861827,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/d28dedd33fcc1a624ccf206bee5fd57f/5C4C59C7/t51.2885-15/e35/43126956_177658399831601_5291490585885016064_n.jpg",
+    "edge_liked_by": {
+        "count": 4
+    },
+    "edge_media_preview_like": {
+        "count": 4
+    },
+    "gating_info": null,
+    "media_preview": "ACoq1EGFz7VJJdLboN47DAB5P4UR/cP0P8qxL4l5CSenGPYcCobsNalptaIPCDH1Of5VoW1+tzwgww6qTg/h6iuUYDNTRMUIkXqpyPw/x6Uarcbt0OicsWYEY59fYUzHvU7cux+n8hVfdW/RGPVk6cRn6Vj6jEySn+7nI/H/AOvmtdfuH6UmoRxSJulYKq9/TPH+FYmhzGYzwXww9Rx9M+v4VLbRtIwRf4jj/H9KzZQoc7Tlc1safdLFOoT5g+ByORn0Pt3zRt5j3N91w5H+7/KquKsSth2I9B/WqBc1sjJjPtj7SNo7fxH1HtSaq8k0BwgCqwLEHPAB9QP89qgUfL/wJf51cuPuMO2wnH4GuZNmpywFaGmDE4fAO0E4Jx7eh9fSs4Vas/8AWj6H+VaiOhkuCWPCrkDjJ7Z/2aq7/wDZ/X/61JL98f57moz1qeZoLH//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/7bc910f50e7b374f2f8839209c1e7e25/5C4DEC22/t51.2885-15/sh0.08/e35/s640x640/43126956_177658399831601_5291490585885016064_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/79b8c7e5bcba37790d8f1b4532c807e9/5C40C585/t51.2885-15/e35/s150x150/43126956_177658399831601_5291490585885016064_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/a0d7709b6eb860e91a6daccc3b282268/5C6606CF/t51.2885-15/e35/s240x240/43126956_177658399831601_5291490585885016064_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/43cde310216cc934e250acaf29fd8581/5C50FB75/t51.2885-15/e35/s320x320/43126956_177658399831601_5291490585885016064_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/0c90fd8dbabd51de7b50ef0bf2814b83/5C55AF2F/t51.2885-15/e35/s480x480/43126956_177658399831601_5291490585885016064_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/7bc910f50e7b374f2f8839209c1e7e25/5C4DEC22/t51.2885-15/sh0.08/e35/s640x640/43126956_177658399831601_5291490585885016064_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

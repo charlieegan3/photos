@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1893551815287624640",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Bridges all the way down #bridge #walkway #contrast #city #street #lightanddark #backlit #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpHP1fyA9PA",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539948988,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-2.cdninstagram.com/vp/84db897b86d2769c24f465bd721dceac/5C5D956C/t51.2885-15/e35/42992423_1791809460941500_4857490510060716032_n.jpg",
+    "edge_liked_by": {
+        "count": 1
+    },
+    "edge_media_preview_like": {
+        "count": 1
+    },
+    "gating_info": null,
+    "media_preview": "ACoqxN2VJHXJNJjYFHXOelTSZHDcdelQHBII6UxHV6T0c+4/lWtXEwSsmSGkj56qCVP15rSt9Rkzgzow/wBpSp/kP50AZd0f3r/77fzNU+ammYs7McZLEnHTr29vSq+aQyUvkHGSMcfWowelKjY4NOkkPTORTAtWzhFJ3Soc/wAHKn6+9WluRn/XBv8AfizVW1+0BSYs7Rydu3P5GrENxNu+dnAPrGDQIzZDlieOSenA69h2HtUWallOXY5z8x5xjPPXHb6VDSGOU+vpVieMgb/lAbHC5wMjtmqy1NIxK8mmIfC0YUhhJkjgqe/v7U0zlMbGcHvmpYGI3YJGVx+GagufvD/dX+VIZFknr3pMUCnUAf/Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-2.cdninstagram.com/vp/80efd379269c472e169d0160121e6e7f/5C5A42D6/t51.2885-15/sh0.08/e35/s640x640/42992423_1791809460941500_4857490510060716032_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/b658512620ef7bf5aaa0b8056786e875/5C582453/t51.2885-15/e35/s150x150/42992423_1791809460941500_4857490510060716032_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/8c1c86df2019497b7ff37dbade8cafea/5C5DC155/t51.2885-15/e35/s240x240/42992423_1791809460941500_4857490510060716032_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/95482f5edf7b6fae31c16dac9ea5bc79/5C425C2B/t51.2885-15/e35/s320x320/42992423_1791809460941500_4857490510060716032_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/6170f6b9596f3baa14866fac31e023e8/5C50AB6C/t51.2885-15/e35/s480x480/42992423_1791809460941500_4857490510060716032_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/80efd379269c472e169d0160121e6e7f/5C5A42D6/t51.2885-15/sh0.08/e35/s640x640/42992423_1791809460941500_4857490510060716032_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

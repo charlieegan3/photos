@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1893455832859973491",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Smile and wave #lightandshadows #mosaic #art #smile #hand #wave #blue #orange #wall #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpG6AxLgpdz",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1539937546,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-2.cdninstagram.com/vp/2b07f7e1ccda19f7c0886e1c0acb64f6/5C4CDFBD/t51.2885-15/e35/43817410_341799089714115_4818137094822035456_n.jpg",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "gating_info": null,
+    "media_preview": null,
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-2.cdninstagram.com/vp/8bbe4bf771247f4de9ab8b3b9a2813a9/5C5CEA58/t51.2885-15/sh0.08/e35/s640x640/43817410_341799089714115_4818137094822035456_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/a90d1a862cdbba4bccec0d3bb3cfe1ad/5C462DFF/t51.2885-15/e35/s150x150/43817410_341799089714115_4818137094822035456_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/fa3e23a81d75adf015737f3d7b4066ad/5C4283B5/t51.2885-15/e35/s240x240/43817410_341799089714115_4818137094822035456_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/51c233d0323b0d57805012f5c188e31d/5C44260F/t51.2885-15/e35/s320x320/43817410_341799089714115_4818137094822035456_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/ece2f94f0b879852d3631351e7c30e62/5C670A55/t51.2885-15/e35/s480x480/43817410_341799089714115_4818137094822035456_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/8bbe4bf771247f4de9ab8b3b9a2813a9/5C5CEA58/t51.2885-15/sh0.08/e35/s640x640/43817410_341799089714115_4818137094822035456_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

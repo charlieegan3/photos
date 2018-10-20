@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1894299814552865604",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Most stations are far harder to spot #subway #typography #signage #sign #street #color #colorful #lights #travel #city #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpJ56UYgwtE",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1540038156,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/6854ae6c854b44a131b9c9874f01b59b/5C5924C7/t51.2885-15/e35/43628350_761403017538428_6743707178571399168_n.jpg",
+    "edge_liked_by": {
+        "count": 22
+    },
+    "edge_media_preview_like": {
+        "count": 22
+    },
+    "gating_info": null,
+    "media_preview": "ACoqrXiedLGE6DAz9SP6mm3caCZljG1R8oA9en6mpgN7A9Bj+VWkhjB3YwwOQQT19aOfkbX9fM1cLmfPbCMhc5bHzDspx0z39/ehrR0IyOvOO/4jtmtWO3RTuUnd788+vPenJCVyQ2WPcg/4/rV+208/My5DJWyMjYYiMDnLcfkO/wDKmnT1Hdf++hW2yN14J7k8/kOn51XNuSc7Qf8AgQ/woVZPew+TsyG3iwBznrgj0zkVaRAoyOeOuMEc9x0NZMUr+ZF05yBjsMkH8xj6VcFwJLgZOAnAIPBznr2x/XFRzcrfVPX7uhpJc2zsaBIz7c/yFKqoD39Op780/dRuOM1m6ita2hPI97/gQSEA5XPbv3PSoDFz95vzFTySKSPY/kcVjS6iyOygHgkdB2P0qfi+BW7lxbh8Tv2JbhdjxFOQqnlefbJ+tVRG/n7uAOW/DPI6dc1ah4CgdMD+VPIAfA44H8zWrWrfkJbWJxK56E/rR+8P3mOPb/CkBNPBrDlRrcRgqkMzZxzgjHIrMcxsxJByST2qxdffUdirf0rHreCUV6mMndn/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/2dfdc645b537f7c07811e1b1b53c3598/5C47F422/t51.2885-15/sh0.08/e35/s640x640/43628350_761403017538428_6743707178571399168_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/5287631653aa551ea5c6894dce752ff9/5C526785/t51.2885-15/e35/s150x150/43628350_761403017538428_6743707178571399168_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/fc12cbd74ec262d9c5635a06b0ee6ee9/5C84F6CF/t51.2885-15/e35/s240x240/43628350_761403017538428_6743707178571399168_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/9e550411a22201e39d96c2a020452ec9/5C89AE75/t51.2885-15/e35/s320x320/43628350_761403017538428_6743707178571399168_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/54840c9b71bebf1c78a86a78201fa4e2/5C650A2F/t51.2885-15/e35/s480x480/43628350_761403017538428_6743707178571399168_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/2dfdc645b537f7c07811e1b1b53c3598/5C47F422/t51.2885-15/sh0.08/e35/s640x640/43628350_761403017538428_6743707178571399168_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

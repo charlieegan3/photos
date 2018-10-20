@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1894368463942647320",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Sleepy Staten Island Ferry #sleep #yellow #seats #benches #light #travel #sleeping #tired #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpKJhTHAP4Y",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1540046340,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/29f26c99777702f1d1813bc88202e886/5C67D49E/t51.2885-15/e35/42814933_251366982202392_8761744304726081536_n.jpg",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "gating_info": null,
+    "media_preview": "ACoqzowm4B87e+MZ/WtyC0tJfuncT2Jwfy4/SspIT5uOmPUGrbWw4O7JHYKf544rnLNU6ZARjaBkY46/nmsS4szASpww6qw7j0PoR+tTGM9Cxz6ZH+NMVI1Uq5YMSePl5/8ArVdl0/P/ADFcy2wBSZFSGPhjjnn+tW/K9qdgLQaNJjuHABODgnbnjv1x71K11bMyHYcDJOVHPGPXqDjrVMKpXA/76xk8d8/jVc2/H3mxz2FZc62/QvlNdb22Y5CA8kYwueP1pi3sKK/y5O4kcDgE8D8PbpWT8kPG/DdcheR+VSW9uxXfE5AbrkdatO+vT0ZNrf8ADksqlQy4OSTjAz1z396tiQVBJcAkjjPsag8wD1q4u9xNWEaViNo9OBVVrlypUggf59qnH3ahuuNo7YzisI2vaxvPa6KnFaMN4QoiA/2cjrj1Hvj8Kz6tWo+f8DXQ3ZN9kc61dhjJl8KCEB4+g7n3NWSRmkwBn6UtZqV2aSjY/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/5cb9569d26495325df4553a1adf2b640/5C422B7B/t51.2885-15/sh0.08/e35/s640x640/42814933_251366982202392_8761744304726081536_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/6d6050c76216df9f0e2de110c162af63/5C645BDC/t51.2885-15/e35/s150x150/42814933_251366982202392_8761744304726081536_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/1b01bcbc8dc1a749734dca5100236556/5C672996/t51.2885-15/e35/s240x240/42814933_251366982202392_8761744304726081536_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/ea15b43cac17f7f7357aea37762068cc/5C554B2C/t51.2885-15/e35/s320x320/42814933_251366982202392_8761744304726081536_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/a23c517c802f712bb2a0875bfcb543e9/5C424076/t51.2885-15/e35/s480x480/42814933_251366982202392_8761744304726081536_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/5cb9569d26495325df4553a1adf2b640/5C422B7B/t51.2885-15/sh0.08/e35/s640x640/42814933_251366982202392_8761744304726081536_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

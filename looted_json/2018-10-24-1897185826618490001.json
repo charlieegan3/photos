@@ -1,0 +1,67 @@
+{
+    "__typename": "GraphImage",
+    "id": "1897185826618490001",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "GrumpyMcGrumpFace #smoking #grumpy #sunglasses #denim #cigarette #smoker #smoke #expression #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BpUKHUkgDyR",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1540382196,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-2.cdninstagram.com/vp/79916a6e784204f75091b8f5796d5f00/5C838D30/t51.2885-15/e35/42984661_2080768628880631_8108764071479738368_n.jpg",
+    "edge_liked_by": {
+        "count": 2
+    },
+    "edge_media_preview_like": {
+        "count": 2
+    },
+    "gating_info": null,
+    "media_preview": "ACoq3sVj313NGWWPaoQAsW6nPYfgKitdSdE/eZkw2M+31/XJqO6Mc03mDkOqjDcDOcc/oePTrTfkJLXUZDdi4BOMMBkgeucZH5/WpYtxB53Y52+319RVGziKSsCRgZU9wcnsfwrXis2LcNjAzkfU44/DkexrGUL7AR20zO20c+meCMf0phLjoP1FXJLL5RuwTuz06/5NZZuOeSmfxq4rluLcpwTDBjbqzA1bRRA2CSwbseaZbEID5qk85XCj8cn+VW1RWfeOD1w3X0/D1rSw7khhDrmIgL6ev402crgK52Z7g4JGQQB0yM7h2p6xAHI4zx/+uoZoBc52nOxucnPThgPTIxx+XeiTtoJK5EbaNyU+bIGcnnj/ABqm8aKxGQMEj7i/4100cCKM7QCQOf8AP1NO8lPRP++az+ZYZI9MewrmtVz5uDwBkj8TXUr1rE18cR/8C/pTEVrfUHZ1UqMEgZGc81vyKqL+7jy3bgD8T3rkrT/Wx/7y/wAxXb0MCspfA+XHHqP6Zpfn9B+Z/wAKsUUDP//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-2.cdninstagram.com/vp/c720c2447e460f8e86c92069490087f3/5C4AF38A/t51.2885-15/sh0.08/e35/s640x640/42984661_2080768628880631_8108764071479738368_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/8154663642e6db03ac8831514e610c28/5C63EA0F/t51.2885-15/e35/s150x150/42984661_2080768628880631_8108764071479738368_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/deca34251deaa30aa5e0a610f773cb9b/5C841D09/t51.2885-15/e35/s240x240/42984661_2080768628880631_8108764071479738368_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/0496e00557452f79875f72c54dc9b9de/5C6B7877/t51.2885-15/e35/s320x320/42984661_2080768628880631_8108764071479738368_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/c7445c67d307bb5d60b244554d1b1a9d/5C6E5530/t51.2885-15/e35/s480x480/42984661_2080768628880631_8108764071479738368_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/c720c2447e460f8e86c92069490087f3/5C4AF38A/t51.2885-15/sh0.08/e35/s640x640/42984661_2080768628880631_8108764071479738368_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

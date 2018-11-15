@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1912762120378836466",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Masked figure #graffiti #art #paint #lights #blackandwhite #lookingup #teampixel #shotbypixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "BqLfwOlAOXy",
+    "edge_media_to_comment": {
+        "count": 2
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1542239035,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-sin2-2.cdninstagram.com/vp/3bfd6306365445c2377c959485cb3638/5C8774E0/t51.2885-15/e35/44518836_135394344010587_1738504518338871296_n.jpg",
+    "edge_liked_by": {
+        "count": 12
+    },
+    "edge_media_preview_like": {
+        "count": 12
+    },
+    "location": {
+        "id": "26056",
+        "has_public_page": true,
+        "name": "Leake Street Tunnel",
+        "slug": "leake-street-tunnel"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqyYwDuZuobP4Yz/hWyuBasBz8h5rKIBuCnYsv6CtuWLbbuR2U8fWgCnYQk25LnKlsY/Lp7d+nas+4wHKr2JwfoOmfb0rUslLQBRx8zMT6Dgfn2FZt9GEcFeARg/X/AOvSGQxAg/QD+pFKLfcM5680RI7DIHDHO48Advxq4GUcelICLhLkMfUfqK1NzCCRmDZ2nOfu/h6+2PxrJuVxJ9QpH5Y/pWw6KLVzycLgAnO0HHT/ADmqEV7TclsME53N/Tt1PvWfdyeaw9QOeMc544q5HIPswTGW3Nj2Pt7/AI1WfCMAfx75Pue5zgUhkr/LGq9BgD9Kq7l9f1FLdSMxwvCjj61GLdff8x/hSAt3afMh9v5H/wDVVsyN9lkU/wB3r7Uy6+6n1P8AKlH/AB6t/un+YpgV7dSlvkHOWPH+fzqtjLDHJJ/lzVpP+Pcf7x/nTrQfNn0T+ooAzJGzz0/Wk88jv/Op7tQG4AGRVCgD/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-sin2-2.cdninstagram.com/vp/0fe50a1c1ed79f30a1c0aab15c9297ba/5C7EDE05/t51.2885-15/sh0.08/e35/s640x640/44518836_135394344010587_1738504518338871296_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/7833572f26137f94f68fa768d7c5987d/5C869BA2/t51.2885-15/e35/s150x150/44518836_135394344010587_1738504518338871296_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/95b8b95ece8d85a170dcfe0e5e1d35e2/5C8343E8/t51.2885-15/e35/s240x240/44518836_135394344010587_1738504518338871296_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/47ea10abf99be7743f55e3b4e7680a4e/5C7BAA52/t51.2885-15/e35/s320x320/44518836_135394344010587_1738504518338871296_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/a64b805aba8a897f9e87a49f5ee06109/5C894D08/t51.2885-15/e35/s480x480/44518836_135394344010587_1738504518338871296_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/0fe50a1c1ed79f30a1c0aab15c9297ba/5C7EDE05/t51.2885-15/sh0.08/e35/s640x640/44518836_135394344010587_1738504518338871296_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

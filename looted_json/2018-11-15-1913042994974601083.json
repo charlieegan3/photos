@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1913042994974601083",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "We are an effective team #teamwork #scaffold #construction #destruction #work #skrwt #pixel2 #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "BqMfnfbgq97",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1542272518,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-sin2-2.cdninstagram.com/vp/a1c5bf95fd17d344fe8d86c918088f36/5C7594EC/t51.2885-15/e35/45748409_918545735007611_2112545725429579776_n.jpg",
+    "edge_liked_by": {
+        "count": 4
+    },
+    "edge_media_preview_like": {
+        "count": 4
+    },
+    "location": {
+        "id": "273681904",
+        "has_public_page": true,
+        "name": "Sampson House",
+        "slug": "sampson-house"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqxiDjt1Pf6UHdgcDOTxn/AOvVs7cdBx7fT/EU7aPQZzQMpkMAML1zx+VLhzj5R0/qav7T+NMckcDGe+fTmkBCFYN0XH4elR4b0H5irQH04xTcj0FADi0ePvD06H0X29qeZYzj5v0P+FV/swxj3o+zAjH1pgWTNF/e/Q/4Ux2RyMOOc54PPX2qL7IMAfXv9KBbDPPYH+tAbk6sijGR+X/1qZwf4h+R/wDiaZ9mwR+Hf2pPsg9f1osFyFcKD054/lRsG32zWngZprAUgKBUPyeOT/T/ADinDAwGIwAcfjVxeCPrT5QN4+lAyp5aqFIx+8HP4HHH5VD9nT1FaTfdH4/zooEf/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-sin2-2.cdninstagram.com/vp/adcee4c8801934f94cf6d5fe0581620f/5C78E409/t51.2885-15/sh0.08/e35/s640x640/45748409_918545735007611_2112545725429579776_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/bcd33747de1b2721764bddddffe1c498/5C64EAAE/t51.2885-15/e35/s150x150/45748409_918545735007611_2112545725429579776_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/8dc3d1f8db201f99a3b436e3c0475b03/5C7336E4/t51.2885-15/e35/s240x240/45748409_918545735007611_2112545725429579776_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/d00011cae5bc656584580ad0b9eb48e2/5C6D615E/t51.2885-15/e35/s320x320/45748409_918545735007611_2112545725429579776_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/af39effbebcbad62a9338303e8a58ce4/5C6E0004/t51.2885-15/e35/s480x480/45748409_918545735007611_2112545725429579776_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-sin2-2.cdninstagram.com/vp/adcee4c8801934f94cf6d5fe0581620f/5C78E409/t51.2885-15/sh0.08/e35/s640x640/45748409_918545735007611_2112545725429579776_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

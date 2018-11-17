@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1914706472709868409",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Dusty morning at Westminster station #haze #rays #light #lookingup #crowd #people #silhouette #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BqSZ2RzA0t5",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1542470820,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/680d9e272914eef4a9ea139d574cc409/5C8D208C/t51.2885-15/e35/44443958_2742412192439245_6748713684509392896_n.jpg",
+    "edge_liked_by": {
+        "count": 1
+    },
+    "edge_media_preview_like": {
+        "count": 1
+    },
+    "location": {
+        "id": "237833888",
+        "has_public_page": true,
+        "name": "Westminster tube station",
+        "slug": "westminster-tube-station"
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5urtnLbx5+0RmQHoQSCPbqBg0xbKZn8sL83PGR2xnnOOMikS0lkztXO04PI+nrz+FADrt4JGBgUxjHIJzz6jk/jVWtBdKuiMhP1X/Gnro9ywyFB/4EP8aYGZRV46bcBtm3k8dR/jVYwODgjkUAPgmaJgUJBGQPbPBx9auxyhRu/u4BHr1x7+tZgz1FJuoA6s3AltXeI87RnPbn5v/rfWqX29oolx6g1i+YQuwHC9SPen79y4PYcUAa8V4TOo7bh19Kou2WJ65JqE3H7wOBjAx1/WovMNAEWe1JRRQAue9ANJSUAPHNBFIOtFID//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/552eac6aaaa16379b8711e347f9c7716/5C73A036/t51.2885-15/sh0.08/e35/s640x640/44443958_2742412192439245_6748713684509392896_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/424e7b664b3346e0a4895ac612fdbb65/5C74FDB3/t51.2885-15/e35/s150x150/44443958_2742412192439245_6748713684509392896_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/b2dbff50c69da6f4a03336c99a7859f2/5C7D33B5/t51.2885-15/e35/s240x240/44443958_2742412192439245_6748713684509392896_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/4bf7e547df3d3e5b355cfc18ad448931/5C7E62CB/t51.2885-15/e35/s320x320/44443958_2742412192439245_6748713684509392896_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/a591b97d3cd09380cfde3fd12014b4a5/5C77D68C/t51.2885-15/e35/s480x480/44443958_2742412192439245_6748713684509392896_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/552eac6aaaa16379b8711e347f9c7716/5C73A036/t51.2885-15/sh0.08/e35/s640x640/44443958_2742412192439245_6748713684509392896_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

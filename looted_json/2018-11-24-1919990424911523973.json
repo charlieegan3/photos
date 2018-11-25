@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1919990424911523973",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "4k Skyrim #stonework #ornate #ceiling #shadows #cathederal #arch #architecture #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BqlLR5xALCF",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1543100716,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/fc3dc90987fb27bb3222b740848823c2/5C744111/t51.2885-15/e35/44687977_908282856226664_7069396520017068032_n.jpg",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "location": {
+        "id": "1184923968272679",
+        "has_public_page": true,
+        "name": "Hereford Cathedral",
+        "slug": "hereford-cathedral"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqw4Yd/LdPy/EnsPfv0FaJiVFBIG0ex/8AQev4sQfam2yZG/oq/wAx0474yAPc5rQljJj+YErznHUH3Ge3UHnHSobKSKYmiAx82PYIB+Awc+4zSeRHIfkwxHXAwfxXOG/A59BWa5ZCQeox/wDr/EVsWMR25xk9z0Ueg98e3frS2GZc1sByn5f4Z5z/ALJ5+tVK3LlGYFvvY6kdePXgYI7HqPoazCc/wg+/r71SZLRtQQ5AAP3Rlj7+v+Hvg0S6ggBWL5vfGc/yz/L2pk6yQQHIA3HnnIx2B/zz6ms1ZiVxtVT1zU2KuOdGkw4GcZzxjGORnsKu2mpoQI5Rs9x0/wAR+OR9KzEuZGBTIAI5/D+dVs5JPqaqxNzp512ndnKuOo6fX+h+grKNumeD/L/GrNi7zRNEBnaBtPYccZNVzax5+YuG7jAOD3571JRG99JOmJTuCjA7cn+I+p96qw/MTnspNV81IKsgktV3Pz6N/wCgmoBTn46UwUwLVvcyWxzGdpPB7/oe47VEzMxJJJJ5PNR0lIZ//9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/7e2d1832c56cfd877c3d46e2b2a7cee9/5C79DAF4/t51.2885-15/sh0.08/e35/s640x640/44687977_908282856226664_7069396520017068032_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/14ebfeccc51089c9e4e115fe64635026/5CA97353/t51.2885-15/e35/s150x150/44687977_908282856226664_7069396520017068032_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/0e31e272528b228fc00d87dbf2eb81ec/5C97FA19/t51.2885-15/e35/s240x240/44687977_908282856226664_7069396520017068032_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/1c8dfd6ac42e92dc6bce41fb34e48f6f/5CAE20A3/t51.2885-15/e35/s320x320/44687977_908282856226664_7069396520017068032_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/4f30d9a6d03522f7518de05b4419987a/5C744EF9/t51.2885-15/e35/s480x480/44687977_908282856226664_7069396520017068032_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/7e2d1832c56cfd877c3d46e2b2a7cee9/5C79DAF4/t51.2885-15/sh0.08/e35/s640x640/44687977_908282856226664_7069396520017068032_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

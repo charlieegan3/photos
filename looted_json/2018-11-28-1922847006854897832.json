@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1922847006854897832",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Good river that. Yes please. #longexposure #river #lights #night #rain #water #reflections #bridge #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BqvUypBAmCo",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1543441247,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/d2bd2ab0f8c546f0235eea06bf69afad/5C91A428/t51.2885-15/e35/45988092_1200925250060424_1793719574219194368_n.jpg",
+    "edge_liked_by": {
+        "count": 14
+    },
+    "edge_media_preview_like": {
+        "count": 14
+    },
+    "location": {
+        "id": "420196505",
+        "has_public_page": true,
+        "name": "Blackfriars Bridge",
+        "slug": "blackfriars-bridge"
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5/NJmnbaTFACZpaUKT0FLggZ7GgBKSpHQqcHvzkdCPUUwjnjmgC/JCiLuy3XH3Tj8+Py71XDxr78HqO/bv6fkadLM7JgknkGiCTGc0DRF5qspDE7uq46Z75GO47imyNHxsJ6DJPr3xW1KyGEfKvOewqoBGdmVHvx1+tK/kVYzGctyTnjH5UmTWjdRxeaNqhV7gVGY489P1P+NO4rFVm4pivimmkoJLhnJTFRiXp7VDSUh3LDyZbNN31FRQB//9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/12e9d56c708f04ab0a6d453ba5a83709/5CA98292/t51.2885-15/sh0.08/e35/s640x640/45988092_1200925250060424_1793719574219194368_n.jpg",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/541440bd43b85dd9dcf6baad7370535e/5C95BC17/t51.2885-15/e35/s150x150/45988092_1200925250060424_1793719574219194368_n.jpg",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/4539f642ccbccf7186e487b997dfe54e/5CAC1511/t51.2885-15/e35/s240x240/45988092_1200925250060424_1793719574219194368_n.jpg",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/e80044f50f01f722f78f1cde6b2a08b8/5CA4786F/t51.2885-15/e35/s320x320/45988092_1200925250060424_1793719574219194368_n.jpg",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/debb5874cf24b843e7bdae9034f69346/5C8EC628/t51.2885-15/e35/s480x480/45988092_1200925250060424_1793719574219194368_n.jpg",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/12e9d56c708f04ab0a6d453ba5a83709/5CA98292/t51.2885-15/sh0.08/e35/s640x640/45988092_1200925250060424_1793719574219194368_n.jpg",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": null,
+    "scraper_version": "v2"
+}

@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1932319954418467065",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Not my first arch #arch #pattern #red #colorful #gold #shadow #dark #lookingup #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BrQ-sK7gwD5",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1544570510,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/2b321dce079139a2ab281fac09f87947/5C8E58A6/t51.2885-15/e35/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 3
+    },
+    "edge_media_preview_like": {
+        "count": 3
+    },
+    "location": {
+        "id": "214670845",
+        "has_public_page": true,
+        "name": "Chinatown, Manchester",
+        "slug": "chinatown-manchester"
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5ulUbs4oAzwOtO3bflXqep/w/r/nKAHAB2jn1/w/ClKgcnp2z1//AF/y70sZ2g/3gM/5/r/Omfe5NAxpOTTtn0/OnpEz52j5R1J7fX/Cp/sn1P5UBuU1JHIqzFbPKwRRknnPoPXPp/8Aqq5Z2QI82bhBzg8Z9yfSrfnvNmOL5UJ+Z+hI9F9AB36/ypXAbDFFCxjX95IFJc9h049h/k+lQPpyq7F2xEvI/HnH0/U4qwzR2o8tQNzAgjuc92/DP9BVXyzcSqHJI5yM46f57c0/1BR3l2YnmNP+6gGxOmTx/nPfv9KlFpgYz+lTGVIz5UC+ZJ046L9T2/D8xVBruQEhpCCOo2jg+n4UW7/cv1He2xcIa4+eb5EH3Y+g/wCBH/P4VC10xXZAOccsPXHRf8/Qd6bqZIwO3p2pLs7I1C/LkduO1Tt8/wABeXZ/kLCU2sNp3MMhick+v0wew/E01uQM5HPOOuO/5iq0btzyeijr29PpVlvumrsax1i0W2zYMQnzRPglR1GOh+hHr1/AVUbUeT8idfRv/iqnJIt1PqOffg9axaVvyMj/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/486d08bd2ff985041c04d415340f19bd/5C96F943/t51.2885-15/sh0.08/e35/s640x640/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/336a4de6678c44e8c5c9f23ae51f4588/5C8CA1E4/t51.2885-15/e35/s150x150/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/bfaa3ad2d9c0b5c49bbffec6f090ccec/5CB226AE/t51.2885-15/e35/s240x240/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/84d26dd20d95c5feabace8128df8b777/5C9DDD14/t51.2885-15/e35/s320x320/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/2a68ddd23f117ffd99225abea9349861/5CA80F4E/t51.2885-15/e35/s480x480/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/486d08bd2ff985041c04d415340f19bd/5C96F943/t51.2885-15/sh0.08/e35/s640x640/45913051_568774013565751_8609584282127564800_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "No automatic alt text available.",
+    "scraper_version": "v2"
+}

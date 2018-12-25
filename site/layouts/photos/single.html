@@ -1,5 +1,5 @@
 {{ define "title" }}
-	{{- .Params.title -}} - {{- $.Site.Title -}}
+	{{- htmlUnescape .Params.title -}} - {{- $.Site.Title -}}
 {{ end }}
 
 {{ define "main" }}
@@ -66,7 +66,7 @@
 					{{ if (gt (len $location.Pages) 2) }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">
 							<span class="mid-gray">View {{ sub (len $location.Pages) 1 }} other posts near</span>
-							{{ $location.Params.name }}
+							{{ htmlUnescape $location.Params.name }}
 						</a>
 						{{ $.Scratch.Set "posts" (first 3 (where $location.Pages ".Params.id" "!=" $pageId)) }}
 						{{ $.Scratch.Set "size" $.Site.Params.small_grid_image_size }}
@@ -74,7 +74,7 @@
 					{{ else }}
 						<a class="link dim silver" href="{{ $location.Permalink }}">
 							<span class="mid-gray">View posts near</span>
-							{{ $location.Params.name }}
+							{{ htmlUnescape $location.Params.name }}
 						</a>
 					{{ end }}
 				</p>

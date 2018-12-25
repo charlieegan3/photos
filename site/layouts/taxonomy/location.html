@@ -1,9 +1,9 @@
 {{ define "title" }}
-	{{ replaceRE ",.*" "" .Params.name }} - {{ $.Site.Title }}
+	{{ htmlUnescape (replaceRE ",.*" "" .Params.name) }} - {{ $.Site.Title }}
 {{ end }}
 
 {{ define "main" }}
-	<h1 class="display tc">{{ replaceRE ",.*" "" .Params.name }}</h1>
+	<h1 class="display tc">{{ htmlUnescape (replaceRE ",.*" "" .Params.name) }}</h1>
 
 	{{ $.Scratch.Set "posts" .Pages }}
 	{{ partial "post_grid.html" . }}
@@ -14,7 +14,7 @@
 				{{ $location := index (where (where $.Site.Pages "Type" "locations") "Params.id" (index . "id")) 0 }}
 				<p>
 					<span class="dark-gray">Nearby posts from</span>
-					<a class="link gray dim" href="{{ $location.Permalink }}">{{ replaceRE ",.*" "" $location.Params.name }}</a>
+					<a class="link gray dim" href="{{ $location.Permalink }}">{{ htmlUnescape (replaceRE ",.*" "" $location.Params.name) }}</a>
 				</p>
 				{{ $.Scratch.Set "posts" $location.Pages }}
 				{{ partial "post_grid.html" $ }}

@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1980409338338097083",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "He be standing, and by he I mean statue #statue #silhouette #grey #concrete #night #dark #architecture #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bt708zxgje7",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1550303211,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-2.cdninstagram.com/vp/d55e032e306e13ccb9320e49a22ab013/5CE478BD/t51.2885-15/e35/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 14
+    },
+    "edge_media_preview_like": {
+        "count": 14
+    },
+    "location": {
+        "id": "1968305703249463",
+        "has_public_page": true,
+        "name": "Moorgate",
+        "slug": "moorgate"
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5wCnAUBaeOOtACBacIxShvQU8OKAGeXijB9vzqX6c0lADVJp8cIkkw2cd8enc5piU9v3bZzjcuf50ARsi+ZtjJKE8E8HHrinyACXYM4U4pIuZFxzVl4SHMh6ZoAjlQBSR8uOfr7VR4rRZfM+X1pn2MetAFVXFWzLF8pPJCgetUH600UAXjebfuDHuahMksx6k/y/wpijkVdb5SQOPpQARxSAgsenpj/P6Vb+f1H+fwphPIqSgD//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-2.cdninstagram.com/vp/caf30f77c14e2474d36b3ba1b84ce0a6/5CEDD858/t51.2885-15/sh0.08/e35/s640x640/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/2927efcea49ff2532089e02faa0dca42/5CF516FF/t51.2885-15/e35/s150x150/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/09702805a43cb72edc23733926f3c25f/5CE667B5/t51.2885-15/e35/s240x240/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/0d3694a777e6dc89c026be60986df09e/5CFAC60F/t51.2885-15/e35/s320x320/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/0b7bfff232befd3ce59e88ae56fd2e72/5CE67155/t51.2885-15/e35/s480x480/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/caf30f77c14e2474d36b3ba1b84ce0a6/5CEDD858/t51.2885-15/sh0.08/e35/s640x640/51969116_564863277251905_1641065675827795569_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: night",
+    "scraper_version": "v2"
+}

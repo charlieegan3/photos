@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1981211717677575668",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Not that special but I felt I needed to post a photo of something in the day time for once. #arch #lights #morning #tunnel #light #dark #architecture #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bt-rY9xA230",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1550398863,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/99ce4a17c01384c08295a88b003130bf/5CE87728/t51.2885-15/e35/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 4
+    },
+    "edge_media_preview_like": {
+        "count": 4
+    },
+    "location": {
+        "id": "224819531519429",
+        "has_public_page": true,
+        "name": "Digme Fitness",
+        "slug": "digme-fitness"
+    },
+    "gating_info": null,
+    "media_preview": "ACoq5uloFSAUxEeDSVPtPtTGXHXinYLkdFGMUUgFFTx8delMBx29P5VoWoVmUFCeR0579xTQmP8AsbkBiAMjIycEioJoSOCMEVvT5lbahyQORg5BznoecD3H0qr5iuWeRShUkANk/n6H0A4AqiTAdDjNRYNXpn+Qgep7f7VVj1qGWhvmY6e38qsQ3LIwOehziqdOWhOwWudH/aoHOME9arT6iZBxwf0P1rLplXzE8qHvLuUjp1/nmjGagajcfU1my0f/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/c68433d075f27ffb7b407606f6cce659/5CE9A05B/t51.2885-15/sh0.08/e35/s640x640/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/c5e050cd0399a023ed86fbeb66acb136/5CE46ABA/t51.2885-15/e35/s150x150/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/ab7a9085f42a55cea73ae3861836e0ae/5D26510F/t51.2885-15/e35/s240x240/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/f7c049a27272ef9bd380103faa1d5ad6/5D05CFB7/t51.2885-15/e35/s320x320/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/a58459eb808b610986f7629d2402fd3e/5D027CEB/t51.2885-15/e35/s480x480/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/c68433d075f27ffb7b407606f6cce659/5CE9A05B/t51.2885-15/sh0.08/e35/s640x640/51368285_451172835420987_393564852670861908_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: night and indoor",
+    "scraper_version": "v2"
+}

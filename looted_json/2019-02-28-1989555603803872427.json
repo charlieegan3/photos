@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "1989555603803872427",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Graffiti Brain, it's all in my head. #graffiti #streetart #murky #shadows #city #street #night #dark #x100f #colorful"
+                }
+            }
+        ]
+    },
+    "shortcode": "BucUkfRnhyr",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1551393531,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/30107ecb0a770e757e9f2db8e065e806/5D05E730/t51.2885-15/e35/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 12
+    },
+    "edge_media_preview_like": {
+        "count": 12
+    },
+    "location": {
+        "id": "26056",
+        "has_public_page": true,
+        "name": "Leake Street Tunnel",
+        "slug": "leake-street-tunnel"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqyDMrBX/iQ4PuPr16cY96qzDDnHIzTWGDxTnOQAKAI6KKKACkpaSgBQCelPwQCGyCO1NBIpwJc5Yk5oAUhSoI65wR/Wp/s2ELGhYl6g1LJJgbf4c8Gle49kM+zHkjg5AGe+c1KIIschifWpZDyuemePyHX34pwdSM5NKzl5CbSMWlFJSiqAsLipKrrUoqS1qOLsFwvbp6j/PNSrfKAAVyQPQVD3NNxTuJo//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/c131165eac1f11e76752ba45e44927ea/5D2404D5/t51.2885-15/sh0.08/e35/s640x640/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/e94f75fac9178c73921952ee3c38dbfa/5D250A72/t51.2885-15/e35/s150x150/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/0bc0386ee6e0da7ed56f995af2046b92/5D0DA538/t51.2885-15/e35/s240x240/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/d8608b793be31000500c400e76e72f33/5D18B182/t51.2885-15/e35/s320x320/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/3b86c7fc53bab0cb6fc9c24a55c2ae0d/5D0FC9D8/t51.2885-15/e35/s480x480/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/c131165eac1f11e76752ba45e44927ea/5D2404D5/t51.2885-15/sh0.08/e35/s640x640/51689373_147977716229029_4815986751543616923_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: outdoor and indoor",
+    "scraper_version": "v2"
+}

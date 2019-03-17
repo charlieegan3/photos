@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2001531752266370350",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Gnasher #dinosaur #skeleton #teeth #dark #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "BvG3oYsgI0u",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1552821199,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lga3-1.cdninstagram.com/vp/614fe4d811f2912c3434671fefa6c3b1/5D08A50D/t51.2885-15/e35/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 7
+    },
+    "edge_media_preview_like": {
+        "count": 7
+    },
+    "location": {
+        "id": "8721",
+        "has_public_page": true,
+        "name": "Kelvingrove Art Gallery & Museum",
+        "slug": "kelvingrove-art-gallery-museum"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqxI4zK4QdWOKsrZvuCjDN3HQD67uT+AI9CaLBgswc/dXqfTPH4/hV3U43MayuMMhKkDoQfut+nPvWfUsintJFAjVVyTuZgMAD8uFA9eWOT2FVJfKkby4htIOFJ43cc89ck8jP0yKntdQdV8p8MG/v9AuOcnuPz/HgVOs1sPnEYU846dB/FyeB6d80aoDKeJ4+WUqOnIplaV1Msi8MSp6Jjv8A3s9qzsU0wJj8qEDHuQQf8/X+ea3bScXURt5MF1Ax7jswPqO/4Vzz4bCr178Yx9Dnp/L3qQylJN6HaV6Y+np/SkwJr22MTnaDs7d8dMj25PFVMKeoz/ngfT/PFaE+oeegUp83c54/L+WelZ9AAKWkpaBk81uIiVzkHkdzj0/D1OB39qgPPNXZuufoP5VQXpSTugasLRRS0wEoopaAP//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-lga3-1.cdninstagram.com/vp/76f7e2eef9a0f1a511cde063fa630223/5D06C0B7/t51.2885-15/sh0.08/e35/s640x640/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lga3-1.cdninstagram.com/vp/e9279d219705beb508bf8d25276dae0a/5D11AA32/t51.2885-15/e35/s150x150/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lga3-1.cdninstagram.com/vp/0c58d22d6f4ac4937af316ecaa1ba6cf/5D4DD834/t51.2885-15/e35/s240x240/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lga3-1.cdninstagram.com/vp/51d51d410191382361124d4dc1fdb8bc/5D21644A/t51.2885-15/e35/s320x320/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lga3-1.cdninstagram.com/vp/08b51f79b0ae703718fb9259751ae16c/5D0C3B0D/t51.2885-15/e35/s480x480/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lga3-1.cdninstagram.com/vp/76f7e2eef9a0f1a511cde063fa630223/5D06C0B7/t51.2885-15/sh0.08/e35/s640x640/52768879_1153826084788608_3107106068404656706_n.jpg?_nc_ht=scontent-lga3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: night and shoes",
+    "scraper_version": "v2"
+}

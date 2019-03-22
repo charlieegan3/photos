@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2004659805528001741",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Is it a lighthouse? Is it a slide? It's a slide.#night #red #white #pattern #tower #colorful #lights #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "BvR-3jUAAzN",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1553194092,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/406ff2a130992d4bc8af91b7d624d647/5D1AA4C8/t51.2885-15/e35/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "location": {
+        "id": "5541075",
+        "has_public_page": true,
+        "name": "Bernie Spain Gardens",
+        "slug": "bernie-spain-gardens"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqy4CDSTzbTtzjjsM8/j0psbA8ng0MvnEso5OFx3J9cUr2HYnUhhkHNJSIqqo29T1/z+dFO4gopKSgCqhqzEVEeWGWJ6/jVNsgelO38YxipaLTs0zXnjQRxyj5d4IP1XtjHU+tVOR1FTxus9usQI3oxODxwSfz61NHaOoByMHI49e/XAqU7aDeruUN1JmtT7NkEMhH+0MZH4dKj/s4/wB4fk3+FCl3FYwh057VLGPNOD25qCnCrJLYjCtjp7+lX4riRgFLgBecnp+v69PrWQKcKzauWmbTzOvJYPnjjHfv/jUilwAN/wD48KwqKVguf//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/1cfe7c3ac5b9a1ad65f9e2d4bf78e81e/5D0F4E2D/t51.2885-15/sh0.08/e35/s640x640/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/7f511b33cd26be439e5863711e2b2b36/5D30948A/t51.2885-15/e35/s150x150/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/fd88a6fb6cf01d1ca176810c9f79db78/5D2D94C0/t51.2885-15/e35/s240x240/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/56dcb6dbf841e6c551fb522c353802a6/5D0FDD7A/t51.2885-15/e35/s320x320/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/7acf95cab242b27e511bfc87fbafabe6/5D14CB20/t51.2885-15/e35/s480x480/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/1cfe7c3ac5b9a1ad65f9e2d4bf78e81e/5D0F4E2D/t51.2885-15/sh0.08/e35/s640x640/54247610_124873201943108_7290260331100052552_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky, night and outdoor",
+    "scraper_version": "v2"
+}

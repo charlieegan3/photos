@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2011619163000281674",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Good vs evil #green #leaf #texture #stripes #ridges #plant #pattern #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "BvqtPiCABpK",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1554023712,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/b63cf49470f336f30522c3c757040692/5D4EBDAF/t51.2885-15/e35/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 14
+    },
+    "edge_media_preview_like": {
+        "count": 14
+    },
+    "location": {
+        "id": "21058",
+        "has_public_page": true,
+        "name": "Royal Botanic Garden Edinburgh",
+        "slug": "royal-botanic-garden-edinburgh"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqp4U9QR9MH+lIVTsSPwx/KneXJ6mk2P3rjv5mIgX0YEe//wBek2Ejp+Rp2xjxTfLPpR8/6/ABCp//AFj+opm0e36f4VMEbtnj3o2P7/nTuBbV0Y4PH16f1qcog7j9KzznPYY/z0qRWLdOf0odJdGzblROWjSgOh6D86gKL/8AWFPCk+wo9ku7Hyom3D1/IU7cvqfzqvgdqNtHsl3CwwIPrn/PWpQCev5CmH/Gp16VsUN2hf8AAUmC3t7f40o5zTzwnHpTAjPoOv8An/PtSeWKdH1P0pgApiP/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/0acb03a530932a2bf5090dafb5df057f/5D43CC4A/t51.2885-15/sh0.08/e35/s640x640/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/20bbdc9f58c843a6b1847cc933ad90ec/5D4174ED/t51.2885-15/e35/s150x150/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/7a594f8f21db5bdca1fd248f3cfa025a/5D316AA7/t51.2885-15/e35/s240x240/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/2ea14573d18bff6d738dcda8a78acfee/5D4E191D/t51.2885-15/e35/s320x320/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/110a50f3d9ea8e6317aebc0f210497ad/5D4CBA47/t51.2885-15/e35/s480x480/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/0acb03a530932a2bf5090dafb5df057f/5D43CC4A/t51.2885-15/sh0.08/e35/s640x640/54512848_306277883378668_7728128146009849755_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: outdoor and nature",
+    "scraper_version": "v2"
+}

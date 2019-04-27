@@ -58,4 +58,4 @@ hugo_build:
 	cd site; hugo; cd ..
 
 build_site:
-	./bin/build_site.rb
+	./hack/build_site.rb

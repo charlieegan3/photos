@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2032233282900391003",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Sunflower Cafe #cafe #sign #colorful #orange #door #blue #street #morning #warm #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bwz8WdQAPRb",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1556481107,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/68be5f7edd479f1128302b9db1e1e449/5D77600C/t51.2885-15/e35/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 10
+    },
+    "edge_media_preview_like": {
+        "count": 10
+    },
+    "location": {
+        "id": "32771",
+        "has_public_page": true,
+        "name": "Spitalfields",
+        "slug": "spitalfields"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqbICiM2ScDocf4VRM5cjacAjkcdfxzRd3Do+0jAxgqe4PPOMj6URwEcqCM9jg/wBazVt2Vr0JFBYAk5PJ6D3qONmLKCeoyeBUzRSHjGD06Af1piQS5yw+mP1701bX8A10IbjHmCqW+p585y2eaj3Gtleyt2Ie5IXJIdiWbnknnpwKvRvOy5BTjBNZSnceewNaa4AGOenr3/wrCWljWOo4STHJGw468Dt+NKbicHG0EgZ4X8u9PV8Lggcnn3z1z/jTi6GT5sH5QOfqaI6jk7bXMi43bgSc5GfpkniovMNS3LAt+A/magzWqZkSCFhVhd49eKrBj608MfU0rXHexNmTp2qRWO7OM8Aflmqm9s9T+dO3H1P50JW2Bu4142Jpnkt6VYVj60u4+ppiP//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/669bd5f6e9ac61f704d6e40ad73db6d9/5D5ECAE9/t51.2885-15/sh0.08/e35/s640x640/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/ff193197a8edb32e6ca4e6741b6c1216/5D59BE4E/t51.2885-15/e35/s150x150/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/65242053610c142d0d28460c851569d7/5D641104/t51.2885-15/e35/s240x240/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/e7335af28c1357c95a96922c8cac185f/5D5B92BE/t51.2885-15/e35/s320x320/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/fb67c49ee3cf4014cdaab0f00df60a07/5D6B8AE4/t51.2885-15/e35/s480x480/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/669bd5f6e9ac61f704d6e40ad73db6d9/5D5ECAE9/t51.2885-15/sh0.08/e35/s640x640/58410772_422091078582303_5336989322411056382_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: outdoor",
+    "scraper_version": "v2"
+}

@@ -1,4 +1,4 @@
-package cmd
+package debug
 
 import (
 	"encoding/json"
@@ -16,11 +16,11 @@ func TestRunDebug(t *testing.T) {
 	}
 	defer os.RemoveAll(dir)
 
-	command := createDebugCmd()
+	command := CreateDebugCmd()
 	command.Flags().Set("output", dir)
-	command.Flags().Set("source", "../test")
+	command.Flags().Set("source", "../../../test")
 
-	runDebug(command, []string{})
+	RunDebug(command, []string{})
 
 	content, err := ioutil.ReadFile(filepath.Join(dir, "index.json"))
 	if err != nil {
@@ -61,13 +61,31 @@ func TestMissingOutputFolder(t *testing.T) {
 	}
 	defer os.RemoveAll(dir)
 
-	command := createDebugCmd()
+	command := CreateDebugCmd()
 	command.Flags().Set("output", filepath.Join(dir, "missing_output"))
-	command.Flags().Set("source", "../test")
+	command.Flags().Set("source", "../../../test")
 
-	runDebug(command, []string{})
+	RunDebug(command, []string{})
 
 	if _, err := os.Stat(filepath.Join(dir, "missing_output/index.json")); os.IsNotExist(err) {
+		t.Error(err)
+	}
+}
+
+func TestCopiesStaticFiles(t *testing.T) {
+	dir, err := ioutil.TempDir(".", "test_output")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.RemoveAll(dir)
+
+	command := CreateDebugCmd()
+	command.Flags().Set("output", dir)
+	command.Flags().Set("source", "../../../test")
+
+	RunDebug(command, []string{})
+
+	if _, err := os.Stat(filepath.Join(dir, "index.html")); os.IsNotExist(err) {
 		t.Error(err)
 	}
 }

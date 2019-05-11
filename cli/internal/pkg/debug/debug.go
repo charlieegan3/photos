@@ -17,11 +17,6 @@ import (
 var source = ""
 var output = ""
 
-type siteIndexItem struct {
-	ID      string `json:"id"`
-	IsVideo bool   `json:"is_video"`
-}
-
 func CreateDebugCmd() *cobra.Command {
 	debugCmd := cobra.Command{
 		Use:   "debug",
@@ -43,9 +38,16 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var siteIndex []siteIndexItem
+	var siteIndex []struct {
+		ID      string `json:"id"`
+		IsVideo bool   `json:"is_video"`
+	}
 	for _, post := range posts {
-		siteIndex = append(siteIndex, siteIndexItem{ID: post.FullID(), IsVideo: post.IsVideo})
+		item := struct {
+			ID      string `json:"id"`
+			IsVideo bool   `json:"is_video"`
+		}{ID: post.FullID(), IsVideo: post.IsVideo}
+		siteIndex = append(siteIndex, item)
 	}
 	sort.SliceStable(siteIndex, func(i, j int) bool {
 		return siteIndex[j].ID < siteIndex[i].ID
@@ -65,7 +67,7 @@ func RunDebug(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	err = copyStatic(sourcePath, outputPath)
+	err = utils.CopyDir(filepath.Join(sourcePath, "static"), outputPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,8 +100,4 @@ func loadPostsFromSource(source string) ([]types.Post, error) {
 	}
 
 	return posts, nil
-}
-
-func copyStatic(sourcePath string, outputPath string) error {
-	return utils.CopyDir(filepath.Join(sourcePath, "static"), outputPath)
 }

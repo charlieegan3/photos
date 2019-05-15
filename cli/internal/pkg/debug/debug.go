@@ -2,7 +2,6 @@ package debug
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -43,8 +42,17 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	locations, err := loadLocationsFromSource(sourcePath)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	err = writePosts(outputPath, posts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = writeLocations(outputPath, locations)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,13 +115,26 @@ func writePosts(outputPath string, posts []types.Post) error {
 	return nil
 }
 
+func writeLocations(outputPath string, locations []types.Location) error {
+	if _, err := os.Stat(filepath.Join(outputPath, "locations")); os.IsNotExist(err) {
+		os.Mkdir(filepath.Join(outputPath, "locations"), os.ModePerm)
+	}
+	for _, v := range locations {
+		jsonLocation, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+
+		tmpfn := filepath.Join(outputPath, "locations/"+v.ID+".json")
+		if err := ioutil.WriteFile(tmpfn, jsonLocation, 0666); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func loadPostsFromSource(source string) ([]types.Post, error) {
 	var posts []types.Post
-	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(dir)
 	postsPath := filepath.Join(source, "completed_json")
 	files, err := ioutil.ReadDir(postsPath)
 	if err != nil {
@@ -134,4 +155,28 @@ func loadPostsFromSource(source string) ([]types.Post, error) {
 	}
 
 	return posts, nil
+}
+
+func loadLocationsFromSource(source string) ([]types.Location, error) {
+	var locations []types.Location
+	locationsPath := filepath.Join(source, "locations")
+	files, err := ioutil.ReadDir(locationsPath)
+	if err != nil {
+		return locations, err
+	}
+
+	for _, f := range files {
+		content, err := ioutil.ReadFile(filepath.Join(locationsPath, f.Name()))
+		if err != nil {
+			return locations, err
+		}
+		var location types.Location
+		err = json.Unmarshal(content, &location)
+		if err != nil {
+			return locations, err
+		}
+		locations = append(locations, location)
+	}
+
+	return locations, nil
 }

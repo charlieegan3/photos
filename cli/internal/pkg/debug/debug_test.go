@@ -36,11 +36,11 @@ func TestRunDebug(t *testing.T) {
 		t.Error(err)
 	}
 
+	// load an example post from the output
 	postContent, err := ioutil.ReadFile(filepath.Join(dir, "posts/2019-04-24-2029394066281649921.json"))
 	if err != nil {
 		t.Error(err)
 	}
-
 	var post struct {
 		Caption    string `json:"caption"`
 		Code       string `json:"code"`
@@ -67,7 +67,25 @@ func TestRunDebug(t *testing.T) {
 		t.Error(err)
 	}
 
+	// load an example location from the output
+	locationContent, err := ioutil.ReadFile(filepath.Join(dir, "locations/201068.json"))
+	if err != nil {
+		t.Error(err)
+	}
+	var location struct {
+		ID   string  `json:"id"`
+		Lat  float64 `json:"lat"`
+		Long float64 `json:"long"`
+		Name string  `json:"name"`
+		Slug string  `json:"slug"`
+	}
+	err = json.Unmarshal(locationContent, &location)
+	if err != nil {
+		t.Error(err)
+	}
+
 	// assertions
+	// check that the size of the index is correct
 	if len(index) != 5 {
 		t.Errorf("unexpected number of items %v", len(index))
 	}
@@ -78,13 +96,19 @@ func TestRunDebug(t *testing.T) {
 		"2017-03-25-1478214926051861624",
 		"2013-09-11-542730817640294126",
 	}
+	// assert the order of the index is correct
 	for i, v := range index {
 		if v.ID != expected[i] {
 			t.Errorf("unexpected id, got %v, want: %v", v.ID, expected[i])
 		}
 	}
+	// check that a post has been saved correctly
 	if post.ID != "2029394066281649921" {
-		t.Errorf("unexpected ID %v", post.ID)
+		t.Errorf("unexpected post ID %v", post.ID)
+	}
+	// check that a location has been saved too
+	if location.ID != "201068" {
+		t.Errorf("unexpected location ID %v", location.ID)
 	}
 }
 

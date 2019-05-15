@@ -17,6 +17,7 @@ import (
 var source = ""
 var output = ""
 
+// CreateDebugCmd initializes the command used by cobra
 func CreateDebugCmd() *cobra.Command {
 	debugCmd := cobra.Command{
 		Use:   "debug",
@@ -30,14 +31,36 @@ func CreateDebugCmd() *cobra.Command {
 	return &debugCmd
 }
 
+// RunDebug performs the writing of the debug site content
 func RunDebug(cmd *cobra.Command, args []string) {
 	sourcePath := cmd.Flag("source").Value.String()
 	outputPath := cmd.Flag("output").Value.String()
+	if _, err := os.Stat(outputPath); os.IsNotExist(err) {
+		os.Mkdir(outputPath, os.ModePerm)
+	}
 
 	posts, err := loadPostsFromSource(sourcePath)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	err = writePosts(outputPath, posts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = writeIndex(outputPath, posts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = utils.CopyDir(filepath.Join(sourcePath, "static"), outputPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func writeIndex(outputPath string, posts []types.Post) error {
 	var siteIndex []struct {
 		ID      string `json:"id"`
 		IsVideo bool   `json:"is_video"`
@@ -55,22 +78,33 @@ func RunDebug(cmd *cobra.Command, args []string) {
 
 	jsonIndex, err := json.Marshal(siteIndex)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	if _, err := os.Stat(outputPath); os.IsNotExist(err) {
-		os.Mkdir(outputPath, os.ModePerm)
+		return err
 	}
 
 	tmpfn := filepath.Join(outputPath, "index.json")
 	if err := ioutil.WriteFile(tmpfn, jsonIndex, 0666); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	err = utils.CopyDir(filepath.Join(sourcePath, "static"), outputPath)
-	if err != nil {
-		log.Fatal(err)
+	return nil
+}
+
+func writePosts(outputPath string, posts []types.Post) error {
+	if _, err := os.Stat(filepath.Join(outputPath, "posts")); os.IsNotExist(err) {
+		os.Mkdir(filepath.Join(outputPath, "posts"), os.ModePerm)
 	}
+	for _, v := range posts {
+		jsonPost, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+
+		tmpfn := filepath.Join(outputPath, "posts/"+v.FullID()+".json")
+		if err := ioutil.WriteFile(tmpfn, jsonPost, 0666); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func loadPostsFromSource(source string) ([]types.Post, error) {

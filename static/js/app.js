@@ -7,17 +7,14 @@ const axiosClient = axios.create({
   baseURL: '/', timeout: 1000
 });
 
-const Foo = { template: '<div>foo</div>' }
-const Bar = { template: '<div>bar</div>' }
-
 const routes = [
-  { path: '/', component: Foo },
-  { path: '/bar', component: Bar }
+  { path: '/', component: Homepage },
+  { name: 'posts.show', path: '/posts/:id', component: Post }
 ]
 
-
 var appConfig = {
-	router: new VueRouter({ routes: routes, mode: 'history' }),
+  // router: new VueRouter({ routes: routes, mode: 'history' }),
+  router: new VueRouter({ routes: routes }),
   el: '#app',
   data: {
     things: "charlie",

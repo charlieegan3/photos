@@ -6,6 +6,8 @@
 		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+		<script src="/js/post.js"></script>
+		<script src="/js/homepage.js"></script>
 		<script src="/js/app.js"></script>
 		<script>window.onload = init</script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.11.1/tachyons.min.css" />
@@ -13,10 +15,9 @@
 
 	<body>
 		<div id="app">
-			<h1>Hello App!</h1>
+			<h1>Photos</h1>
 			<p>
-				<router-link to="/">Go to Foo</router-link>
-				<router-link to="/bar">Go to Bar</router-link>
+				<router-link to="/">Home</router-link>
 			</p>
 			<router-view></router-view>
 		</div>

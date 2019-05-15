@@ -1,6 +1,13 @@
 const Post = {
   template: `
-    <span>{{ post.caption }}</span>
+    <div>
+      <div v-if="post">
+        <p>{{ post.caption }}</p>
+        <router-link :to="{ name: 'locations.show', params: { id: post.location.id }}">
+          <a>{{ post.location.id }}</a>
+        </router-link>
+      </div>
+    </div>
 `,
   data: function () {
     return {

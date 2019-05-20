@@ -42,7 +42,7 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	locations, err := loadLocationsFromSource(sourcePath)
+	locations, err := loadLocationsFromSource(sourcePath, posts)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -157,7 +157,7 @@ func loadPostsFromSource(source string) ([]types.Post, error) {
 	return posts, nil
 }
 
-func loadLocationsFromSource(source string) ([]types.Location, error) {
+func loadLocationsFromSource(source string, posts []types.Post) ([]types.Location, error) {
 	var locations []types.Location
 	locationsPath := filepath.Join(source, "locations")
 	files, err := ioutil.ReadDir(locationsPath)
@@ -175,6 +175,10 @@ func loadLocationsFromSource(source string) ([]types.Location, error) {
 		if err != nil {
 			return locations, err
 		}
+
+		// populate the location with the matching posts
+		location.SetPosts(posts)
+
 		locations = append(locations, location)
 	}
 

@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/charlieegan3/photos/internal/pkg/types"
 )
 
 func TestRunDebug(t *testing.T) {
@@ -68,17 +70,11 @@ func TestRunDebug(t *testing.T) {
 	}
 
 	// load an example location from the output
-	locationContent, err := ioutil.ReadFile(filepath.Join(dir, "locations/201068.json"))
+	locationContent, err := ioutil.ReadFile(filepath.Join(dir, "locations/1020946646.json"))
 	if err != nil {
 		t.Error(err)
 	}
-	var location struct {
-		ID   string  `json:"id"`
-		Lat  float64 `json:"lat"`
-		Long float64 `json:"long"`
-		Name string  `json:"name"`
-		Slug string  `json:"slug"`
-	}
+	var location types.Location
 	err = json.Unmarshal(locationContent, &location)
 	if err != nil {
 		t.Error(err)
@@ -107,8 +103,16 @@ func TestRunDebug(t *testing.T) {
 		t.Errorf("unexpected post ID %v", post.ID)
 	}
 	// check that a location has been saved too
-	if location.ID != "201068" {
+	if location.ID != "1020946646" {
 		t.Errorf("unexpected location ID %v", location.ID)
+	}
+	// check that the saved location has posts
+	if len(location.Posts) != 1 {
+		t.Errorf("Location has incorrect number of posts")
+	}
+	// check the post is the right one
+	if location.Posts[0].ID != "1501486602281729368" {
+		t.Errorf("Post has wrong ID, %v", location.Posts[0].ID)
 	}
 }
 

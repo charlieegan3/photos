@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2047411347150410596",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Arco de Triumfo #night #rain #station #escalator #steps #lookingdown #x100f #night #reflection #colorful"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bxp3cXIARNk",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1558290473,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-2.cdninstagram.com/vp/939869c582438f8ce39d40ca8e34c833/5D788F25/t51.2885-15/e35/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 7
+    },
+    "edge_media_preview_like": {
+        "count": 7
+    },
+    "location": {
+        "id": "97034266",
+        "has_public_page": true,
+        "name": "Arco de Triunfo de Barcelona",
+        "slug": "arco-de-triunfo-de-barcelona"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqwKWlVS3QZxycUlaCCgDNABJA9avT2Mlqu9wcHj25HsaTYEdo8ak+ZxkEA4zjj+vTPUdaqGlxRStrcd9LCg4NTKvytng9v071oDT9oLZU49W6/lSmHfGSAoxwOepbAA9D68HNTdAVUAUq7spORkAEkD9B+FbOp3UU0QUHkkMOM/560kVpbwYDLnIYFmPocHjHB7gc8D1qm9jIWYADCn1A46jHB68HoafMv8gszMwvQnpntmosCr/2SRcArkkZJDD1PQUv9nXHaPj3x/jU3XcpprdFNCzAsSCFxwT1zUn2iV+rDAwccAcHIx+VVR0P4UVVkSa9rdmVwJBuAzj2z3Hvz+XFXFKycNwUIwec4B4H4ZI+hx2rCUldpU4OD047mrSSuerE/iaxaKOoRY1XdgKAOPYUCeMcbqw5WPIycED+lXF6CsbGlrn/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-2.cdninstagram.com/vp/fd0807fb69d0361dad92955c48446478/5D9A95C0/t51.2885-15/sh0.08/e35/s640x640/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/8a27b221c57ffd62b804a8c7349cb1cb/5D9C9667/t51.2885-15/e35/s150x150/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/3746d1745677aba2d2f5734f7d6f4c1e/5D64022D/t51.2885-15/e35/s240x240/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/d6f56e29cd8284d75a19d0c63296a28f/5D61FF97/t51.2885-15/e35/s320x320/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/72c0dd5e831b210885b6192494111f66/5D9C1FCD/t51.2885-15/e35/s480x480/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/vp/fd0807fb69d0361dad92955c48446478/5D9A95C0/t51.2885-15/sh0.08/e35/s640x640/59618876_434850810626515_2323347916799736676_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: night",
+    "scraper_version": "v2"
+}

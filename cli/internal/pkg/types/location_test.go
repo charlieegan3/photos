@@ -42,3 +42,29 @@ func TestMatchingPosts(t *testing.T) {
 		t.Errorf("Unexpected post %v", location.Posts[0].ID)
 	}
 }
+
+func TestNearbyLocations(t *testing.T) {
+	location1 := Location{
+		ID:  "l1",
+		Lat: 57.5310428, Long: -4.4104024,
+	}
+	location2 := Location{
+		ID:  "l2",
+		Lat: 57.5327879, Long: -4.4013311,
+	}
+	location3 := Location{
+		ID:  "l3",
+		Lat: 57.4803603, Long: -4.2212256,
+	}
+	locations := []Location{location1, location2, location3}
+
+	location1.SetNearby(locations, 3)
+
+	if len(location1.Nearby) != 1 {
+		t.Error("Unexpected number of nearby locations")
+	}
+
+	if location1.Nearby[0].ID != "l2" {
+		t.Error("Unexpected nearby location")
+	}
+}

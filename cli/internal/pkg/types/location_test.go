@@ -54,14 +54,18 @@ func TestNearbyLocations(t *testing.T) {
 	}
 	location3 := Location{
 		ID:  "l3",
+		Lat: 57.5329999, Long: -4.4012000,
+	}
+	location4 := Location{
+		ID:  "l4",
 		Lat: 57.4803603, Long: -4.2212256,
 	}
-	locations := []Location{location1, location2, location3}
+	locations := []Location{location3, location2, location4, location1}
 
 	location1.SetNearby(locations, 3)
 
-	if len(location1.Nearby) != 1 {
-		t.Error("Unexpected number of nearby locations")
+	if len(location1.Nearby) != 2 {
+		t.Errorf("Unexpected number of nearby locations %v", len(location1.Nearby))
 	}
 
 	if location1.Nearby[0].ID != "l2" {

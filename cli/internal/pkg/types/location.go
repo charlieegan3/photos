@@ -2,6 +2,7 @@ package types
 
 import (
 	"math"
+	"sort"
 )
 
 // Location represents the Instgram location entity associated with a Post
@@ -29,20 +30,37 @@ func (l *Location) SetPosts(posts []Post) {
 // SetNearby takes a list of locations and selects the ones that are within the
 // distance to the location
 func (l *Location) SetNearby(locations []Location, kilometres int) {
+	var nearby []struct {
+		Distance float64
+		Location Location
+	}
+
 	for _, v := range locations {
-		if l.isNearby(v, kilometres) {
-			l.Nearby = append(l.Nearby, v)
+		if l.equals(v) {
+			continue
+		}
+		distance := l.distance(v)
+		if distance < float64(kilometres) {
+			item := struct {
+				Distance float64
+				Location Location
+			}{
+				Distance: distance, Location: v,
+			}
+			nearby = append(nearby, item)
 		}
 	}
-}
 
-func (l *Location) isNearby(location Location, kilometres int) bool {
-	if l.equals(location) {
-		return false
+	sort.SliceStable(nearby, func(i, j int) bool {
+		return nearby[j].Distance > nearby[i].Distance
+	})
+
+	for i, v := range nearby {
+		if i > 5 {
+			continue
+		}
+		l.Nearby = append(l.Nearby, v.Location)
 	}
-
-	d := l.distance(location)
-	return d < float64(kilometres)
 }
 
 func (l *Location) equals(location Location) bool {

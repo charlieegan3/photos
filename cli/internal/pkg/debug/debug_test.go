@@ -114,6 +114,14 @@ func TestRunDebug(t *testing.T) {
 	if location.Posts[0].ID != "1501486602281729368" {
 		t.Errorf("Post has wrong ID, %v", location.Posts[0].ID)
 	}
+	// check that the saved location has nearby locations
+	if len(location.Nearby) != 1 {
+		t.Errorf("Location has incorrect number of nearby locations")
+	}
+	// check the post is the right one
+	if location.Nearby[0].ID != "1234" {
+		t.Errorf("Location has wrong ID, %v", location.Nearby[0].ID)
+	}
 }
 
 func TestMissingOutputFolder(t *testing.T) {

@@ -182,5 +182,9 @@ func loadLocationsFromSource(source string, posts []types.Post) ([]types.Locatio
 		locations = append(locations, location)
 	}
 
+	for i, _ := range locations {
+		locations[i].SetNearby(locations, 5)
+	}
+
 	return locations, nil
 }

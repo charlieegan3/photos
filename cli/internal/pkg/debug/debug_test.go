@@ -141,21 +141,3 @@ func TestMissingOutputFolder(t *testing.T) {
 		t.Error(err)
 	}
 }
-
-func TestCopiesStaticFiles(t *testing.T) {
-	dir, err := ioutil.TempDir(".", "test_output")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer os.RemoveAll(dir)
-
-	command := CreateDebugCmd()
-	command.Flags().Set("output", dir)
-	command.Flags().Set("source", "../../../test")
-
-	RunDebug(command, []string{})
-
-	if _, err := os.Stat(filepath.Join(dir, "index.html")); os.IsNotExist(err) {
-		t.Error(err)
-	}
-}

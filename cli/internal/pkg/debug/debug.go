@@ -9,7 +9,6 @@ import (
 	"sort"
 
 	"github.com/charlieegan3/photos/internal/pkg/types"
-	"github.com/charlieegan3/photos/internal/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -58,11 +57,6 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	}
 
 	err = writeIndex(outputPath, posts)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = utils.CopyDir(filepath.Join(sourcePath, "static"), outputPath)
 	if err != nil {
 		log.Fatal(err)
 	}

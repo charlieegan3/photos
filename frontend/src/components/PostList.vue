@@ -1,8 +1,10 @@
 <template>
   <div class="list" >
     <div class="item" v-for="(item, $index) in list" :key="$index">
-      <VideoItem v-if="item.is_video" :post="item.id"/>
-      <PhotoItem v-else :post="item.id"/>
+      <router-link :to="'/posts/' + item.id">
+        <VideoItem v-if="item.is_video" :post="item.id"/>
+        <PhotoItem v-else :post="item.id"/>
+      </router-link>
     </div>
     <infinite-loading @infinite="infiniteHandler" spinner="spiral">
       <div slot="no-more"></div>

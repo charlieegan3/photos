@@ -1,7 +1,5 @@
 package types
 
-import "time"
-
 // Post represents a completed / downloaded post json file
 type Post struct {
 	Caption    string `json:"caption"`
@@ -23,10 +21,6 @@ type Post struct {
 	PostURL   string   `json:"post_url"`
 	Tags      []string `json:"tags"`
 	Timestamp int64    `json:"timestamp"`
-}
 
-// FullID computes the full id from the date and instagram ID
-func (c *Post) FullID() string {
-	time := time.Unix(c.Timestamp, 0)
-	return time.Format("2006-01-02") + "-" + c.ID
+	FullID string
 }

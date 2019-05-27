@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/charlieegan3/photos/internal/pkg/types"
 	"github.com/spf13/cobra"
@@ -71,7 +72,7 @@ func writeIndex(outputPath string, posts []types.Post) error {
 		item := struct {
 			ID      string `json:"id"`
 			IsVideo bool   `json:"is_video"`
-		}{ID: post.FullID(), IsVideo: post.IsVideo}
+		}{ID: post.FullID, IsVideo: post.IsVideo}
 		siteIndex = append(siteIndex, item)
 	}
 	sort.SliceStable(siteIndex, func(i, j int) bool {
@@ -101,7 +102,7 @@ func writePosts(outputPath string, posts []types.Post) error {
 			return err
 		}
 
-		tmpfn := filepath.Join(outputPath, "posts/"+v.FullID()+".json")
+		tmpfn := filepath.Join(outputPath, "posts/"+v.FullID+".json")
 		if err := ioutil.WriteFile(tmpfn, jsonPost, 0666); err != nil {
 			return err
 		}
@@ -145,6 +146,7 @@ func loadPostsFromSource(source string) ([]types.Post, error) {
 		if err != nil {
 			return posts, err
 		}
+		post.FullID = strings.Split(f.Name(), ".")[0]
 		posts = append(posts, post)
 	}
 

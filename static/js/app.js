@@ -1,4 +1,5 @@
 function init() {
+  Vue.use(VueLazyload)
   app = new Vue({
     // router: new VueRouter({ routes: routes, mode: 'history' }),
     router: new VueRouter({ routes: routes }),

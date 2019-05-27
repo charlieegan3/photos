@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Latest</h1>
     <div v-for="(item, $index) in list" :key="$index">
       {{ item }}
     </div>
@@ -12,14 +11,14 @@
 </template>
 
 <script>
-import axios from 'axios';
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
+  props: ["posts"],
   data() {
     return {
       list: [],
-      data: null,
+      remainingPosts: this.posts,
     };
   },
   components: {
@@ -27,19 +26,12 @@ export default {
   },
   methods: {
     infiniteHandler($state) {
-      if (this.data == null) {
-        axios.get("//localhost:8000/index.json").then(({ data }) => {
-          this.data = data;
-          $state.loaded();
-        });
+      if (this.remainingPosts.length > 0) {
+        this.list.push(...this.remainingPosts.slice(0,18));
+        this.remainingPosts = this.remainingPosts.slice(18);
+        $state.loaded();
       } else {
-        if (this.data.length > 0) {
-          this.list.push(...this.data.slice(0,18));
-          this.data = this.data.slice(18);
-          $state.loaded();
-        } else {
-          $state.complete();
-        }
+        $state.complete();
       }
     },
   },

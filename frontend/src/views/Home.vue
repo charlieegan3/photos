@@ -1,16 +1,29 @@
 <template>
   <div class="home">
-    <Latest/>
+    <PostList v-if="posts" :posts="posts"/>
   </div>
 </template>
 
 <script>
-import Latest from '@/components/Latest.vue'
+import PostList from '@/components/PostList.vue'
+import axios from 'axios';
 
 export default {
   name: 'home',
+  created() {
+    axios.get("//localhost:8000/index.json").then(({ data }) => {
+      this.posts = data;
+    }).catch(function (error) {
+      console.log(error);
+    })
+  },
+  data() {
+    return {
+      posts: false
+    }
+  },
   components: {
-    Latest
+    PostList
   }
 }
 </script>

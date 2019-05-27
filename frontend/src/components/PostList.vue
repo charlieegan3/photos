@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <div v-for="(item, $index) in list" :key="$index">
-      {{ item }}
+  <div class="list" >
+    <div class="item" v-for="(item, $index) in list" :key="$index">
+      <VideoItem v-if="item.is_video" :post="item.id"/>
+      <PhotoItem v-else :post="item.id"/>
     </div>
     <infinite-loading @infinite="infiniteHandler" spinner="spiral">
       <div slot="no-more"></div>
@@ -12,6 +13,8 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading';
+import PhotoItem from '@/components/PhotoItem.vue'
+import VideoItem from '@/components/VideoItem.vue'
 
 export default {
   props: ["posts"],
@@ -22,7 +25,7 @@ export default {
     };
   },
   components: {
-    InfiniteLoading,
+    InfiniteLoading, VideoItem, PhotoItem,
   },
   methods: {
     infiniteHandler($state) {
@@ -39,4 +42,21 @@ export default {
 </script>
 
 <style scoped>
+.list {
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+}
+.list::before {
+  content: '';
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+.list > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
 </style>

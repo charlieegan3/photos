@@ -12,7 +12,7 @@ export default {
   name: 'home',
   created() {
     axios.get("//localhost:8000/index.json").then(({ data }) => {
-      this.posts = data;
+      this.posts = data.slice(0,100);
     }).catch(function (error) {
       console.log(error);
     })

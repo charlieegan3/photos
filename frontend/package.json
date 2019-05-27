@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
+    "normalize.css": "^8.0.1",
     "vue": "^2.6.10",
     "vue-infinite-loading": "^2.4.4",
     "vue-router": "^3.0.3"

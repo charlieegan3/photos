@@ -65,3 +65,6 @@ vue_image:
 
 vue_serve:
 	docker run -it -v $$(pwd)/frontend:/app -p 8080:8080 charlieegan3/photos-vue yarn serve
+
+data_serve:
+	cd output && ran -p 8000 -cors=true

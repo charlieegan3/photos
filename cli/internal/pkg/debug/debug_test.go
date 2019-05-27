@@ -80,6 +80,17 @@ func TestRunDebug(t *testing.T) {
 		t.Error(err)
 	}
 
+	// load an example tag from the output
+	tagContent, err := ioutil.ReadFile(filepath.Join(dir, "tags/sunset.json"))
+	if err != nil {
+		t.Error(err)
+	}
+	var tag types.Tag
+	err = json.Unmarshal(tagContent, &tag)
+	if err != nil {
+		t.Error(err)
+	}
+
 	// assertions
 	// check that the size of the index is correct
 	if len(index) != 5 {
@@ -121,6 +132,17 @@ func TestRunDebug(t *testing.T) {
 	// check the post is the right one
 	if location.Nearby[0].ID != "1234" {
 		t.Errorf("Location has wrong ID, %v", location.Nearby[0].ID)
+	}
+	// check that the tag has the right name
+	if tag.Name != "sunset" {
+		t.Errorf("unexpected tag name %v", location.ID)
+	}
+	// check that the tag has the right posts
+	if len(tag.Posts) != 1 {
+		t.Errorf("unexpected number of posts %v", len(tag.Posts))
+	}
+	if tag.Posts[0].ID != "2029394066281649921" {
+		t.Errorf("unexpected tag post ID  %v", tag.Posts[0].ID)
 	}
 }
 

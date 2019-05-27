@@ -46,6 +46,10 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	tags, err := loadTagsFromPosts(posts)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	err = writePosts(outputPath, posts)
 	if err != nil {
@@ -53,6 +57,11 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	}
 
 	err = writeLocations(outputPath, locations)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = writeTags(outputPath, tags)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -128,6 +137,24 @@ func writeLocations(outputPath string, locations []types.Location) error {
 	return nil
 }
 
+func writeTags(outputPath string, tags []types.Tag) error {
+	if _, err := os.Stat(filepath.Join(outputPath, "tags")); os.IsNotExist(err) {
+		os.Mkdir(filepath.Join(outputPath, "tags"), os.ModePerm)
+	}
+	for _, v := range tags {
+		jsonTag, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+
+		tmpfn := filepath.Join(outputPath, "tags/"+v.Name+".json")
+		if err := ioutil.WriteFile(tmpfn, jsonTag, 0666); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func loadPostsFromSource(source string) ([]types.Post, error) {
 	var posts []types.Post
 	postsPath := filepath.Join(source, "completed_json")
@@ -183,4 +210,23 @@ func loadLocationsFromSource(source string, posts []types.Post) ([]types.Locatio
 	}
 
 	return locations, nil
+}
+
+func loadTagsFromPosts(posts []types.Post) ([]types.Tag, error) {
+	var tags []types.Tag
+	tagMap := make(map[string][]types.Post)
+	for _, v := range posts {
+		for _, stringTag := range v.Tags {
+			tagMap[stringTag] = append(tagMap[stringTag], v)
+		}
+	}
+
+	for tag, posts := range tagMap {
+		tags = append(tags, types.Tag{
+			Name:  tag[1:],
+			Posts: posts,
+		})
+	}
+
+	return tags, nil
 }

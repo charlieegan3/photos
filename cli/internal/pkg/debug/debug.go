@@ -123,6 +123,8 @@ func writeLocations(outputPath string, locations []types.Location) error {
 	if _, err := os.Stat(filepath.Join(outputPath, "locations")); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(outputPath, "locations"), os.ModePerm)
 	}
+
+	var locationsIndex []types.LocationIndexItem
 	for _, v := range locations {
 		jsonLocation, err := json.Marshal(v)
 		if err != nil {
@@ -133,7 +135,36 @@ func writeLocations(outputPath string, locations []types.Location) error {
 		if err := ioutil.WriteFile(tmpfn, jsonLocation, 0666); err != nil {
 			return err
 		}
+
+		var mostRecentPost types.Post
+		if len(v.Posts) > 0 {
+			mostRecentPost = v.Posts[0]
+		}
+
+		locationsIndex = append(locationsIndex, types.LocationIndexItem{
+			ID:             v.ID,
+			Name:           v.Name,
+			Lat:            v.Lat,
+			Long:           v.Long,
+			MostRecentPost: mostRecentPost.FullID,
+			Count:          len(v.Posts),
+		})
 	}
+
+	sort.SliceStable(locationsIndex, func(i, j int) bool {
+		return locationsIndex[j].Count < locationsIndex[i].Count
+	})
+
+	jsonLocationsIndex, err := json.Marshal(locationsIndex)
+	if err != nil {
+		return err
+	}
+
+	tmpfn := filepath.Join(outputPath, "locations.json")
+	if err := ioutil.WriteFile(tmpfn, jsonLocationsIndex, 0666); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -141,6 +172,8 @@ func writeTags(outputPath string, tags []types.Tag) error {
 	if _, err := os.Stat(filepath.Join(outputPath, "tags")); os.IsNotExist(err) {
 		os.Mkdir(filepath.Join(outputPath, "tags"), os.ModePerm)
 	}
+
+	var tagsIndex []types.TagIndexItem
 	for _, v := range tags {
 		jsonTag, err := json.Marshal(v)
 		if err != nil {
@@ -151,6 +184,31 @@ func writeTags(outputPath string, tags []types.Tag) error {
 		if err := ioutil.WriteFile(tmpfn, jsonTag, 0666); err != nil {
 			return err
 		}
+
+		var mostRecentPost types.Post
+		if len(v.Posts) > 0 {
+			mostRecentPost = v.Posts[0]
+		}
+
+		tagsIndex = append(tagsIndex, types.TagIndexItem{
+			Name:           v.Name,
+			MostRecentPost: mostRecentPost.FullID,
+			Count:          len(v.Posts),
+		})
+	}
+
+	sort.SliceStable(tagsIndex, func(i, j int) bool {
+		return tagsIndex[j].Count < tagsIndex[i].Count
+	})
+
+	jsonTagsIndex, err := json.Marshal(tagsIndex)
+	if err != nil {
+		return err
+	}
+
+	tmpfn := filepath.Join(outputPath, "tags.json")
+	if err := ioutil.WriteFile(tmpfn, jsonTagsIndex, 0666); err != nil {
+		return err
 	}
 	return nil
 }
@@ -221,12 +279,19 @@ func loadTagsFromPosts(posts []types.Post) ([]types.Tag, error) {
 		}
 	}
 
-	for tag, posts := range tagMap {
+	for tag, taggedPosts := range tagMap {
+		sort.SliceStable(taggedPosts, func(i, j int) bool {
+			return taggedPosts[j].FullID < taggedPosts[i].FullID
+		})
 		tags = append(tags, types.Tag{
 			Name:  tag[1:],
-			Posts: posts,
+			Posts: taggedPosts,
 		})
 	}
+
+	sort.SliceStable(tags, func(i, j int) bool {
+		return len(tags[j].Posts) < len(tags[i].Posts)
+	})
 
 	return tags, nil
 }

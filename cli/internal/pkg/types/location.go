@@ -5,6 +5,16 @@ import (
 	"sort"
 )
 
+// LocationIndexItem stores an item in a summary list of locations for the index page
+type LocationIndexItem struct {
+	ID             string  `json:"id"`
+	Lat            float64 `json:"lat"`
+	Long           float64 `json:"long"`
+	Name           string  `json:"name"`
+	MostRecentPost string  `json:"most_recent"`
+	Count          int     `json:"count"`
+}
+
 // Location represents the Instgram location entity associated with a Post
 type Location struct {
 	ID   string  `json:"id"`

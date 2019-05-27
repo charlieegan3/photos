@@ -91,6 +91,26 @@ func TestRunDebug(t *testing.T) {
 		t.Error(err)
 	}
 
+	locationIndexContent, err := ioutil.ReadFile(filepath.Join(dir, "locations.json"))
+	if err != nil {
+		t.Error(err)
+	}
+	var locationsIndex []types.LocationIndexItem
+	err = json.Unmarshal(locationIndexContent, &locationsIndex)
+	if err != nil {
+		t.Error(err)
+	}
+
+	tagIndexContent, err := ioutil.ReadFile(filepath.Join(dir, "tags.json"))
+	if err != nil {
+		t.Error(err)
+	}
+	var tagsIndex []types.TagIndexItem
+	err = json.Unmarshal(tagIndexContent, &tagsIndex)
+	if err != nil {
+		t.Error(err)
+	}
+
 	// assertions
 	// check that the size of the index is correct
 	if len(index) != 5 {
@@ -142,7 +162,28 @@ func TestRunDebug(t *testing.T) {
 		t.Errorf("unexpected number of posts %v", len(tag.Posts))
 	}
 	if tag.Posts[0].ID != "2029394066281649921" {
-		t.Errorf("unexpected tag post ID  %v", tag.Posts[0].ID)
+		t.Errorf("unexpected tag post ID %v", tag.Posts[0].ID)
+	}
+	// check the location index
+	if locationsIndex[0].Name != "1 Blossom Street" {
+		t.Errorf("unexpected location name in index %v", locationsIndex[0].Name)
+	}
+	if locationsIndex[0].Count != 1 {
+		t.Errorf("unexpected count in index %v", locationsIndex[0].Count)
+	}
+	if locationsIndex[0].MostRecentPost != "2017-04-26-1501486602281729368" {
+		t.Errorf("unexpected post in location index %v", locationsIndex[0].MostRecentPost)
+	}
+	if locationsIndex[1].Name != "example location" {
+		t.Errorf("unexpected location name in index %v", locationsIndex[1].Name)
+	}
+
+	// check the tag index
+	if tagsIndex[0].Name != "nofilter" {
+		t.Errorf("unexpected tag name in index %v", tagsIndex[0].Name)
+	}
+	if tagsIndex[0].MostRecentPost != "2018-04-26-1765647895489858959" {
+		t.Errorf("unexpected most recent post in index %v", tagsIndex[0].MostRecentPost)
 	}
 }
 

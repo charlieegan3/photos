@@ -12,7 +12,9 @@
     "slug": "mulbuie",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#nofilter"
+  ],
   "timestamp": 1378918576,
   "dimensions": {
     "height": 612,

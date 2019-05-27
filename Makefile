@@ -59,3 +59,9 @@ hugo_build:
 
 build_site:
 	./hack/build_site.rb
+
+vue_image:
+	docker build -t charlieegan3/photos-vue -f Dockerfile.vue .
+
+vue_serve:
+	docker run -it -v $$(pwd)/frontend:/app -p 8080:8080 charlieegan3/photos-vue yarn serve

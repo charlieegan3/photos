@@ -35,6 +35,10 @@ func (l *Location) SetPosts(posts []Post) {
 			l.Posts = append(l.Posts, v)
 		}
 	}
+
+	sort.SliceStable(l.Posts, func(i, j int) bool {
+		return l.Posts[j].FullID < l.Posts[i].FullID
+	})
 }
 
 // SetNearby takes a list of locations and selects the ones that are within the

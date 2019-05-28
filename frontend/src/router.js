@@ -29,8 +29,18 @@ export default new Router({
     },
     {
       path: '/posts/:id',
-      name: 'posts',
+      name: 'post',
       component: () => import(/* webpackChunkName: "posts.show" */ './views/Post.vue')
+    },
+    {
+      path: '/tags/:id',
+      name: 'tag',
+      component: () => import(/* webpackChunkName: "posts.show" */ './views/Tag.vue')
+    },
+    {
+      path: '/locations/:id',
+      name: 'location',
+      component: () => import(/* webpackChunkName: "posts.show" */ './views/Location.vue')
     },
   ]
 })

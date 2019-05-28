@@ -1,9 +1,9 @@
 <template>
   <div class="list" >
     <div class="item" v-for="(item, $index) in list" :key="$index">
-      <router-link :to="'/posts/' + item.id">
-        <VideoItem v-if="item.is_video" :post="item.id"/>
-        <PhotoItem v-else :post="item.id"/>
+      <router-link :to="item.link">
+        <VideoItem v-if="item.is_video" :post="item.post_id"/>
+        <PhotoItem v-else :post="item.post_id"/>
       </router-link>
     </div>
     <infinite-loading @infinite="infiniteHandler" spinner="spiral">
@@ -19,11 +19,11 @@ import PhotoItem from '@/components/PhotoItem.vue'
 import VideoItem from '@/components/VideoItem.vue'
 
 export default {
-  props: ["posts"],
+  props: ["items"],
   data() {
     return {
       list: [],
-      remainingPosts: this.posts,
+      remainingItems: this.items,
     };
   },
   components: {
@@ -31,9 +31,9 @@ export default {
   },
   methods: {
     infiniteHandler($state) {
-      if (this.remainingPosts.length > 0) {
-        this.list.push(...this.remainingPosts.slice(0,18));
-        this.remainingPosts = this.remainingPosts.slice(18);
+      if (this.remainingItems.length > 0) {
+        this.list.push(...this.remainingItems.slice(0,18));
+        this.remainingItems = this.remainingItems.slice(18);
         $state.loaded();
       } else {
         $state.complete();

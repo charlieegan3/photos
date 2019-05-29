@@ -30,6 +30,8 @@ export default {
 			items.push({
 				post_id: data[i].most_recent,
 				link: "/locations/" + data[i].id,
+				title: data[i].name,
+				subtitle: data[i].count + " posts",
 			})
 		}
 		this.items = items

@@ -1,6 +1,12 @@
 <template>
   <div class="list" >
     <div class="item" v-for="(item, $index) in list" :key="$index">
+      <router-link :to="item.link" v-if="item.title">
+        <div class="item-text" >
+          <p class="item-title">{{ item.title }}</p>
+          <p class="item-subtitle">{{ item.subtitle }}</p>
+        </div>
+      </router-link>
       <router-link :to="item.link">
         <VideoItem v-if="item.is_video" :post="item.post_id"/>
         <PhotoItem v-else :post="item.post_id"/>
@@ -60,5 +66,27 @@ export default {
 .list > *:first-child {
   grid-row: 1 / 1;
   grid-column: 1 / 1;
+}
+.item {
+  position: relative;
+}
+.item-text {
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1000;
+  height: 65%;
+  position: absolute;
+  width: 100%;
+  padding-top: 35%;
+  text-align: center;
+}
+.item-title {
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-subtitle {
+  color: rgba(255,255,255,0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

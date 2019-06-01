@@ -13,6 +13,7 @@
     "slug": "st-pauls-cathedral"
   },
   "tags": [
+    "#tagtoexclude",
     "#stackmode",
     "#stackedframes",
     "#blur",

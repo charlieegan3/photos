@@ -185,6 +185,15 @@ func TestRunDebug(t *testing.T) {
 	if tagsIndex[0].MostRecentPost != "2018-04-26-1765647895489858959" {
 		t.Errorf("unexpected most recent post in index %v", tagsIndex[0].MostRecentPost)
 	}
+	// check that some tags don't exist
+	for _, tag := range tagsIndex {
+		if tag.Name == "tagtoexclude" {
+			t.Error("excluded tag present in generated index")
+		}
+	}
+	if _, err := os.Stat(filepath.Join(dir, "tagtoexclude.json")); !os.IsNotExist(err) {
+		t.Error("excluded tag file was generated")
+	}
 }
 
 func TestMissingOutputFolder(t *testing.T) {

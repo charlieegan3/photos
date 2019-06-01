@@ -272,6 +272,14 @@ func loadLocationsFromSource(source string, posts []types.Post) ([]types.Locatio
 
 func loadTagsFromPosts(posts []types.Post) ([]types.Tag, error) {
 	var tags []types.Tag
+
+	excludedTagsPath := filepath.Join(source, "excluded_tags")
+	excludedTagsContent, err := ioutil.ReadFile(excludedTagsPath)
+	if err != nil {
+		return tags, err
+	}
+	excludedTags := strings.Split(string(excludedTagsContent), "\n")
+
 	tagMap := make(map[string][]types.Post)
 	for _, v := range posts {
 		for _, stringTag := range v.Tags {
@@ -283,10 +291,19 @@ func loadTagsFromPosts(posts []types.Post) ([]types.Tag, error) {
 		sort.SliceStable(taggedPosts, func(i, j int) bool {
 			return taggedPosts[j].FullID < taggedPosts[i].FullID
 		})
-		tags = append(tags, types.Tag{
-			Name:  tag[1:],
-			Posts: taggedPosts,
-		})
+		found := false
+		for _, excluded := range excludedTags {
+			if excluded == tag[1:] {
+				found = true
+				break
+			}
+		}
+		if !found {
+			tags = append(tags, types.Tag{
+				Name:  tag[1:],
+				Posts: taggedPosts,
+			})
+		}
 	}
 
 	sort.SliceStable(tags, func(i, j int) bool {

@@ -9,6 +9,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
+    "moment": "^2.24.0",
+    "moment-range": "^4.0.2",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.10",
     "vue-infinite-loading": "^2.4.4",

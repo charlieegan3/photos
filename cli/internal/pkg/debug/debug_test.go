@@ -111,6 +111,16 @@ func TestRunDebug(t *testing.T) {
 		t.Error(err)
 	}
 
+	calendarContent, err := ioutil.ReadFile(filepath.Join(dir, "calendar.json"))
+	if err != nil {
+		t.Error(err)
+	}
+	var calendar map[string]int
+	err = json.Unmarshal(calendarContent, &calendar)
+	if err != nil {
+		t.Error(err)
+	}
+
 	// assertions
 	// check that the size of the index is correct
 	if len(index) != 5 {
@@ -193,6 +203,11 @@ func TestRunDebug(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, "tagtoexclude.json")); !os.IsNotExist(err) {
 		t.Error("excluded tag file was generated")
+	}
+
+	// check the calendar date list
+	if calendar["2019-04-24"] != 1 {
+		t.Error("Incorrect count for date in calendar")
 	}
 }
 

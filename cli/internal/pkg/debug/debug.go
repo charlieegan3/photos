@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/charlieegan3/photos/internal/pkg/types"
 	"github.com/spf13/cobra"
@@ -50,6 +51,7 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	calendar := loadCalendarFromPosts(posts)
 
 	err = writePosts(outputPath, posts)
 	if err != nil {
@@ -67,6 +69,11 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	}
 
 	err = writeIndex(outputPath, posts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = writeCalendar(outputPath, calendar)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -213,6 +220,19 @@ func writeTags(outputPath string, tags []types.Tag) error {
 	return nil
 }
 
+func writeCalendar(outputPath string, calendar map[string]int) error {
+	calendarJSON, err := json.Marshal(calendar)
+	if err != nil {
+		return err
+	}
+
+	tmpfn := filepath.Join(outputPath, "calendar.json")
+	if err := ioutil.WriteFile(tmpfn, calendarJSON, 0666); err != nil {
+		return err
+	}
+	return nil
+}
+
 func loadPostsFromSource(source string) ([]types.Post, error) {
 	var posts []types.Post
 	postsPath := filepath.Join(source, "completed_json")
@@ -311,4 +331,14 @@ func loadTagsFromPosts(posts []types.Post) ([]types.Tag, error) {
 	})
 
 	return tags, nil
+}
+
+func loadCalendarFromPosts(posts []types.Post) map[string]int {
+	calendar := make(map[string]int)
+
+	for _, v := range posts {
+		calendar[time.Unix(v.Timestamp, 0).Format("2006-01-02")]++
+	}
+
+	return calendar
 }

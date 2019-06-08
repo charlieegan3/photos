@@ -42,5 +42,10 @@ export default new Router({
       name: 'location',
       component: () => import(/* webpackChunkName: "posts.show" */ './views/Location.vue')
     },
+    {
+      path: '/archive/',
+      name: 'archive',
+      component: () => import(/* webpackChunkName: "posts.show" */ './views/Archive.vue')
+    },
   ]
 })

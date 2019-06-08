@@ -1,11 +1,20 @@
 <template>
   <div>
     <div class="year" v-for="year in years">
-      <div class="yearLabel">{{ yearFormat(year[0][0]) }}</div>
+      <router-link class="link" :to="{ name: 'archive', query: { slug: year[0][0].substring(0,4), type: 'year' } }">
+        <div class="yearLabel">{{ yearFormat(year[0][0]) }}</div>
+      </router-link>
       <div class="month" v-for="month in year">
-        <div class="monthLabel">{{ monthFormat(month[0]) }}</div>
+        <router-link class="link" :to="{ name: 'archive', query: { slug: month[0].substring(0,7), type: 'month' } }">
+          <div class="monthLabel">{{ monthFormat(month[0]) }}</div>
+        </router-link>
         <div class="day" v-for="day in month">
-          <div class="dayLabel">
+          <router-link v-if="count(day)>0" class="link" :to="{ name: 'archive', query: { slug: day, type: 'day' } }">
+            <div class="dayLabel">
+              {{ dayFormat(day) }}
+            </div>
+          </router-link>
+          <div v-if="!count(day)" class="dayLabel empty">
             {{ dayFormat(day) }}
           </div>
           <div class="count" v-if="count(day)>0">{{ count(day) }}</div>
@@ -36,6 +45,12 @@
   text-align: center;
   padding: 0.2rem 0.3rem;
 }
+.empty {
+  opacity: 0.3;
+}
+.link .dayLabel:hover {
+  background-color: #ccc;
+}
 .yearLabel {
   font-size: 3rem;
   padding-left: 0.5rem;
@@ -45,15 +60,20 @@
   padding: 0.3rem;
 }
 
+.link, .link:visited {
+  text-decoration: none;
+  color: black;
+}
 .count{
   position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 0.8rem;
-  background-color: red;
+  top: -3px;
+  right: -3px;
+  font-size: 0.7rem;
+  background-color: Tomato;
   color: white;
   padding: 1px 3px;
   border-radius: 3px;
+  z-index: 100;
 }
 </style>
 

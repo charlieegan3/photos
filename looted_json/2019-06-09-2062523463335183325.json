@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2062523463335183325",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Yellow turbine thingy #yellow #turbine #pattern #shadow #shade #x100f #circle"
+                }
+            }
+        ]
+    },
+    "shortcode": "ByfjimFAIPd",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1560091978,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/41cc220937af7e426139ee612356d2a8/5D897D9B/t51.2885-15/e35/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 4
+    },
+    "edge_media_preview_like": {
+        "count": 4
+    },
+    "location": {
+        "id": "1027356932",
+        "has_public_page": true,
+        "name": "Sigmund-Thun Klamm",
+        "slug": "sigmund-thun-klamm"
+    },
+    "gating_info": null,
+    "media_preview": null,
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/86683a746c72248c2a02f345af41ecf3/5D7F9F7E/t51.2885-15/sh0.08/e35/s640x640/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/f8a37544880d77ec661a431d0a016c0f/5D83A5D9/t51.2885-15/e35/s150x150/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/6f9b9b3f4da0791393d6ecd856da2370/5D97FC93/t51.2885-15/e35/s240x240/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/1112699f3d184e3b54865c0443fda9c4/5D80A729/t51.2885-15/e35/s320x320/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/68b60559bace172bab44181916188837/5D8F5273/t51.2885-15/e35/s480x480/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/86683a746c72248c2a02f345af41ecf3/5D7F9F7E/t51.2885-15/sh0.08/e35/s640x640/61904810_123311615545273_3408831995666890953_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: indoor",
+    "scraper_version": "v2"
+}

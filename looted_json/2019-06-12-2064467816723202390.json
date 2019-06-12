@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2064467816723202390",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "AFA? #lake #reflection #mountain #view #landscape #building #x100f #beach"
+                }
+            }
+        ]
+    },
+    "shortcode": "BymdoqSA0FW",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1560323763,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/ea6334b4f0ae8a8c455dac0da269ed5f/5D7F383B/t51.2885-15/e35/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 16
+    },
+    "edge_media_preview_like": {
+        "count": 16
+    },
+    "location": {
+        "id": "361340221",
+        "has_public_page": true,
+        "name": "Lago del Predil",
+        "slug": "lago-del-predil"
+    },
+    "gating_info": null,
+    "media_preview": null,
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/17749324a2b8ae5d2678fba1886025c7/5D9593DE/t51.2885-15/sh0.08/e35/s640x640/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/24e306e7e61766678d271799f9814edb/5D8BF079/t51.2885-15/e35/s150x150/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/e608189b7eaf40f1bf3cca11270d1da4/5D946133/t51.2885-15/e35/s240x240/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/03944ef18fc1c50f0c8377f2bac73eb3/5D96E989/t51.2885-15/e35/s320x320/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/6e0dbb432df2cc5f61b3d817e0d09f3d/5D79B4D3/t51.2885-15/e35/s480x480/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/17749324a2b8ae5d2678fba1886025c7/5D9593DE/t51.2885-15/sh0.08/e35/s640x640/64391252_303603803673574_1523076490384147877_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: mountain, sky, cloud, outdoor and nature",
+    "scraper_version": "v2"
+}

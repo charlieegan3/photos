@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2064448883433655406",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Nice place to break the journey #reflection #island #trees #water #lake #green #clouds #sky #x100f #valley"
+                }
+            }
+        ]
+    },
+    "shortcode": "BymZVJSA8xu",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1560321506,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/98ac204c4a72fb3cd02baf51211bf370/5D98DDF7/t51.2885-15/e35/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 22
+    },
+    "edge_media_preview_like": {
+        "count": 22
+    },
+    "location": {
+        "id": "361340221",
+        "has_public_page": true,
+        "name": "Lago del Predil",
+        "slug": "lago-del-predil"
+    },
+    "gating_info": null,
+    "media_preview": null,
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/3bbb40307fa88307f22f67fc648e5341/5D9AE54D/t51.2885-15/sh0.08/e35/s640x640/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/ae27faddc16f4bc57e0b32f729e9c46e/5D93FAC8/t51.2885-15/e35/s150x150/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/f0d2d6c628cd22ca83facee14c25702e/5D8B0ECE/t51.2885-15/e35/s240x240/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/e48d8b838cf569f10d1d8f63c2c0056a/5D839EB0/t51.2885-15/e35/s320x320/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/ed5825cfdb105ceaac048bcb044f1884/5D95B1F7/t51.2885-15/e35/s480x480/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/3bbb40307fa88307f22f67fc648e5341/5D9AE54D/t51.2885-15/sh0.08/e35/s640x640/62026570_2277377345860627_2122941079318785020_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky, tree, outdoor and nature",
+    "scraper_version": "v2"
+}

@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2065909331949421889",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Good morning hen #chicken #hen #view #landscape #mountains #trees #green #bird #farmland #farm #countryside #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "ByrlZd9AoVB",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1560495605,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/1b8b52be156e21db89d3cfb643d0d0e2/5D7B75D8/t51.2885-15/e35/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 16
+    },
+    "edge_media_preview_like": {
+        "count": 16
+    },
+    "location": {
+        "id": "283096611",
+        "has_public_page": true,
+        "name": "Varna, Italy",
+        "slug": "varna-italy"
+    },
+    "gating_info": null,
+    "media_preview": null,
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/fe6bfa8229483bfbb6e45f3945bf77d6/5D9CEB3D/t51.2885-15/sh0.08/e35/s640x640/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/584543d80853a25c25aa1763c1c929b5/5DA1AD9A/t51.2885-15/e35/s150x150/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/6bafa4c9006190b7d650182537498ff0/5D86D0D0/t51.2885-15/e35/s240x240/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/66ea8df036eac92b6e406ffa2b2dff0a/5D92876A/t51.2885-15/e35/s320x320/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/b0e922496f97d0112ef3ec56cc31ebf5/5D9CB930/t51.2885-15/e35/s480x480/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/fe6bfa8229483bfbb6e45f3945bf77d6/5D9CEB3D/t51.2885-15/sh0.08/e35/s640x640/61420394_320605315538644_3363207757482340331_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky, cloud, mountain, outdoor and nature",
+    "scraper_version": "v2"
+}

@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2067344960419574341",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Night time alleys #cobbles #street #shadow #night #light #teampixel #lightanddark #teampixel #arch #architecture"
+                }
+            }
+        ]
+    },
+    "shortcode": "Bywr0nKALJF",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1560666745,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/a5ba1a96aaeafccc36647a38b5ff009f/5D8C73C5/t51.2885-15/e35/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 16
+    },
+    "edge_media_preview_like": {
+        "count": 16
+    },
+    "location": {
+        "id": "868777",
+        "has_public_page": true,
+        "name": "Ravello",
+        "slug": "ravello"
+    },
+    "gating_info": null,
+    "media_preview": null,
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/ee48026d70848826f945569f67d17ef4/5D90F5B6/t51.2885-15/sh0.08/e35/s640x640/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/971c279a99deb8d161226ab2ae9db15b/5D9AEB57/t51.2885-15/e35/s150x150/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/78f0e0e7aafa96ba4b5e9737b428a711/5D952DE2/t51.2885-15/e35/s240x240/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/1403e0807b0782414e499cb9e17c2a05/5D94B65A/t51.2885-15/e35/s320x320/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/1f973fbbe2a503400e8e36de05df25b6/5D88CE06/t51.2885-15/e35/s480x480/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/ee48026d70848826f945569f67d17ef4/5D90F5B6/t51.2885-15/sh0.08/e35/s640x640/62485681_463869254158254_882236051805244656_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: outdoor and water",
+    "scraper_version": "v2"
+}

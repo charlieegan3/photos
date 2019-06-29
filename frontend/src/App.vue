@@ -6,7 +6,7 @@
       <router-link to="/locations">Locations</router-link> |
       <router-link to="/calendar">Calendar</router-link>
     </div>
-    <router-view/>
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 

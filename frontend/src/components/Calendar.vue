@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="year" v-for="year in years">
-      <router-link class="link" :to="{ name: 'archive', query: { slug: year[0][0].substring(0,4), type: 'year' } }">
+      <router-link class="link" :to="{ name: 'archive', params: { id: year[0][0].substring(0,4), type: 'year' } }">
         <div class="yearLabel">{{ yearFormat(year[0][0]) }}</div>
       </router-link>
       <div class="month" v-for="month in year">
-        <router-link class="link" :to="{ name: 'archive', query: { slug: month[0].substring(0,7), type: 'month' } }">
+        <router-link class="link" :to="{ name: 'archive', params: { id: month[0].substring(0,7), type: 'month' } }">
           <div class="monthLabel">{{ monthFormat(month[0]) }}</div>
         </router-link>
         <div class="day" v-for="day in month">
-          <router-link v-if="count(day)>0" class="link" :to="{ name: 'archive', query: { slug: day, type: 'day' } }">
+          <router-link v-if="count(day)>0" class="link" :to="{ name: 'archive', params: { id: day, type: 'day' } }">
             <div class="dayLabel">
               {{ dayFormat(day) }}
             </div>
@@ -17,7 +17,7 @@
           <div v-if="!count(day)" class="dayLabel empty">
             {{ dayFormat(day) }}
           </div>
-          <div class="count" v-if="count(day)>0">{{ count(day) }}</div>
+          <div class="count" v-if="count(day)>1">{{ count(day) }}</div>
         </div>
       </div>
     </div>
@@ -69,8 +69,8 @@
   top: -3px;
   right: -3px;
   font-size: 0.7rem;
-  background-color: Tomato;
-  color: white;
+  background-color: #facc91;
+  color: black;
   padding: 1px 3px;
   border-radius: 3px;
   z-index: 100;
@@ -94,7 +94,9 @@ export default {
   computed: {
     years: function() {
       var dates = Object.keys(this.data).sort();
-      var range = moment.range(dates[0], dates[dates.length-1]);
+      var from = dates[0];
+      var to = dates[dates.length-1];
+      var range = moment.range(from, to);
       var years = [];
 
       for (let year of range.by("years")) {
@@ -102,6 +104,9 @@ export default {
         var yearRange = moment.range(year.startOf("year").toDate(), year.endOf("year").toDate());
 
         for (let month of yearRange.by("months")) {
+          if (month.isAfter(to) || month.isBefore(from)) {
+            continue
+          }
           var m = [];
           var monthRange = moment.range(month.startOf("month").toDate(), month.endOf("month").toDate());
 

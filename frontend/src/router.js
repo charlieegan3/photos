@@ -43,7 +43,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "posts.show" */ './views/Location.vue')
     },
     {
-      path: '/archive/',
+      path: '/archive/:type/:id',
       name: 'archive',
       component: () => import(/* webpackChunkName: "posts.show" */ './views/Archive.vue')
     },

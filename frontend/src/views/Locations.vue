@@ -32,7 +32,7 @@ export default {
         items.push({
           post_id: data[i].most_recent,
           link: "/locations/" + data[i].id,
-          title: data[i].name,
+          title: data[i].name.replace(/,.*$/, ""),
           subtitle: data[i].count + " posts",
           count: data[i].count,
           location: {

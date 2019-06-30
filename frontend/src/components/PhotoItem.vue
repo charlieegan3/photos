@@ -16,9 +16,13 @@ export default {
 <style>
 .image {
   width: 100%;
-  height: 100%;
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+.image:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
 }
 </style>

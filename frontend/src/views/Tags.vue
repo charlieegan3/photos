@@ -25,16 +25,16 @@ export default {
   },
   watch: {
     data: function(data) {
-		var items = [];
-		for (var i = 0; i < data.length; i++) {
-			items.push({
-				post_id: data[i].most_recent,
-				link: "/tags/" + data[i].name,
-				title: "#" + data[i].name,
-				subtitle: data[i].count + " posts",
-			})
-		}
-		this.items = items;
+      var items = [];
+      for (var i = 0; i < data.length; i++) {
+        items.push({
+          post_id: data[i].most_recent,
+          link: "/tags/" + data[i].name,
+          title: "#" + data[i].name,
+          subtitle: data[i].count + " posts",
+        })
+      }
+      this.items = items;
     }
   },
   components: {

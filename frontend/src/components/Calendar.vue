@@ -104,7 +104,7 @@ export default {
         var yearRange = moment.range(year.startOf("year").toDate(), year.endOf("year").toDate());
 
         for (let month of yearRange.by("months")) {
-          if (month.isAfter(to) || month.isBefore(from)) {
+          if (month.isAfter(to) || month.isBefore(moment(from).startOf("month"))) {
             continue
           }
           var m = [];

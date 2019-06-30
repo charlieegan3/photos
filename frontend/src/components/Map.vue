@@ -50,7 +50,7 @@ export default {
     var bounds = new Mapbox.LngLatBounds();
     markers.forEach(function(feature) { bounds.extend(feature.getLngLat()) });
 
-    map.fitBounds(bounds, { padding: 100, maxZoom: this.maxZoom, duration: 100 });
+    map.fitBounds(bounds, { padding: this.height / 4, maxZoom: this.maxZoom, duration: 100 });
   },
 
   methods: {

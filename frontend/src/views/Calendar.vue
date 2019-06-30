@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Calendar</h1>
-	<Calendar v-if="data" :data="data"/>
+    <Calendar v-if="data" :data="data"/>
   </div>
 </template>
 

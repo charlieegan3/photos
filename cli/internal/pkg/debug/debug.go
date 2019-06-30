@@ -94,6 +94,7 @@ func writeIndex(outputPath string, posts []types.Post) error {
 	var siteIndex []struct {
 		ID            string  `json:"id"`
 		IsVideo       bool    `json:"is_video"`
+		LocationName  string  `json:"location_name"`
 		LocationCount int     `json:"location_count"`
 		Lat           float64 `json:"lat"`
 		Long          float64 `json:"long"`
@@ -102,10 +103,11 @@ func writeIndex(outputPath string, posts []types.Post) error {
 		item := struct {
 			ID            string  `json:"id"`
 			IsVideo       bool    `json:"is_video"`
+			LocationName  string  `json:"location_name"`
 			LocationCount int     `json:"location_count"`
 			Lat           float64 `json:"lat"`
 			Long          float64 `json:"long"`
-		}{ID: post.FullID, IsVideo: post.IsVideo, LocationCount: post.LocationCount, Lat: post.Lat, Long: post.Long}
+		}{ID: post.FullID, IsVideo: post.IsVideo, LocationName: post.Location.Name, LocationCount: post.LocationCount, Lat: post.Lat, Long: post.Long}
 		siteIndex = append(siteIndex, item)
 	}
 	sort.SliceStable(siteIndex, func(i, j int) bool {

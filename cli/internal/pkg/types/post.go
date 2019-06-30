@@ -22,5 +22,8 @@ type Post struct {
 	Tags      []string `json:"tags"`
 	Timestamp int64    `json:"timestamp"`
 
-	FullID string
+	FullID        string
+	Lat           float64 `json:"lat"`
+	Long          float64 `json:"long"`
+	LocationCount int     `json:"location_count"`
 }

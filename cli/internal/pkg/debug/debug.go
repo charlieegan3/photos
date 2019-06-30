@@ -47,6 +47,17 @@ func RunDebug(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	locationLookup := make(map[string]types.Location)
+	for _, l := range locations {
+		locationLookup[l.ID] = l
+	}
+	for i, p := range posts {
+		l := locationLookup[p.Location.ID]
+		posts[i].LocationCount = len(l.Posts)
+		posts[i].Lat = l.Lat
+		posts[i].Long = l.Long
+	}
+
 	tags, err := loadTagsFromPosts(posts)
 	if err != nil {
 		log.Fatal(err)
@@ -81,14 +92,20 @@ func RunDebug(cmd *cobra.Command, args []string) {
 
 func writeIndex(outputPath string, posts []types.Post) error {
 	var siteIndex []struct {
-		ID      string `json:"id"`
-		IsVideo bool   `json:"is_video"`
+		ID            string  `json:"id"`
+		IsVideo       bool    `json:"is_video"`
+		LocationCount int     `json:"location_count"`
+		Lat           float64 `json:"lat"`
+		Long          float64 `json:"long"`
 	}
 	for _, post := range posts {
 		item := struct {
-			ID      string `json:"id"`
-			IsVideo bool   `json:"is_video"`
-		}{ID: post.FullID, IsVideo: post.IsVideo}
+			ID            string  `json:"id"`
+			IsVideo       bool    `json:"is_video"`
+			LocationCount int     `json:"location_count"`
+			Lat           float64 `json:"lat"`
+			Long          float64 `json:"long"`
+		}{ID: post.FullID, IsVideo: post.IsVideo, LocationCount: post.LocationCount, Lat: post.Lat, Long: post.Long}
 		siteIndex = append(siteIndex, item)
 	}
 	sort.SliceStable(siteIndex, func(i, j int) bool {

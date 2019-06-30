@@ -30,8 +30,11 @@ func TestRunDebug(t *testing.T) {
 	}
 
 	var index []struct {
-		ID      string
-		IsVideo bool
+		ID            string  `json:"id"`
+		IsVideo       bool    `json:"is_video"`
+		LocationCount int     `json:"location_count"`
+		Lat           float64 `json:"lat"`
+		Long          float64 `json:"long"`
 	}
 	err = json.Unmarshal(indexContent, &index)
 	if err != nil {
@@ -119,6 +122,9 @@ func TestRunDebug(t *testing.T) {
 			t.Errorf("unexpected id, got %v, want: %v", v.ID, expected[i])
 		}
 	}
+	if index[0].LocationCount != 1 {
+		t.Errorf("unexpected locationcount, got %v, want: %v", index[0].LocationCount, 1)
+	}
 	// check that a post has been saved correctly
 	if post.ID != "2029394066281649921" {
 		t.Errorf("unexpected post ID %v", post.ID)
@@ -151,6 +157,14 @@ func TestRunDebug(t *testing.T) {
 	if len(tag.Posts) != 1 {
 		t.Errorf("unexpected number of posts %v", len(tag.Posts))
 	}
+	// check that the tag's posts have lat lon
+	if tag.Posts[0].Lat != 123.45 {
+		t.Errorf("Incorrect Location Lat for tag post %v", tag.Posts[0].Lat)
+	}
+	// check that the tag's posts have a location count
+	if tag.Posts[0].LocationCount != 1 {
+		t.Errorf("Incorrect LocationCount for tag post %v", tag.Posts[0].LocationCount)
+	}
 	if tag.Posts[0].ID != "2029394066281649921" {
 		t.Errorf("unexpected tag post ID %v", tag.Posts[0].ID)
 	}
@@ -164,7 +178,7 @@ func TestRunDebug(t *testing.T) {
 	if locationsIndex[0].MostRecentPost != "2017-04-26-1501486602281729368" {
 		t.Errorf("unexpected post in location index %v", locationsIndex[0].MostRecentPost)
 	}
-	if locationsIndex[1].Name != "example location" {
+	if locationsIndex[1].Name != "Other Example Location" {
 		t.Errorf("unexpected location name in index %v", locationsIndex[1].Name)
 	}
 

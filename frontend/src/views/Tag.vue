@@ -1,13 +1,15 @@
 <template>
   <div>
-    <h1>{{ data.name }}</h1>
+    <h1>Tagged #{{ data.name }}</h1>
+    <Map v-if="items" :items="items" :height="500"/>
     <Grid v-if="items" :items="items"/>
   </div>
 </template>
 
 <script>
-import Grid from '@/components/Grid.vue'
 import axios from 'axios';
+import Grid from '@/components/Grid.vue'
+import Map from '@/components/Map.vue'
 
 export default {
   name: 'home',
@@ -18,16 +20,22 @@ export default {
       console.log(error);
     })
   },
-  components: { Grid },
+  components: { Grid, Map },
   watch: {
     data: function(data) {
-		this.items = [];
-		for (var i = 0; i < data.posts.length; i++) {
-			this.items.push({
-				post_id: data.posts[i].FullID,
-				link: "/posts/" + data.posts[i].FullID,
-			})
-		}
+      this.items = [];
+      for (var i = 0; i < data.posts.length; i++) {
+        var post = data.posts[i];
+        this.items.push({
+          post_id: post.FullID,
+          link: "/posts/" + post.FullID,
+          location: {
+            name: post.location.name,
+            lat: post.lat,
+            long: post.long,
+          }
+        })
+      }
     }
   },
   data() {

@@ -4,15 +4,16 @@
     <div>
       <router-link class="archive-link" v-for="archive in relatedArchives" v-bind:key="archive.slug+archive.type" :to="{ name: 'archive', params: { id: archive.slug, type: archive.type } }">{{ archive.text }}</router-link>
     </div>
+    <Map v-if="items" :items="items" :height="500"/>
     <Grid v-if="items" :items="items"/>
   </div>
 </template>
 
 <script>
-import Moment from 'moment';
 import axios from 'axios';
-
+import Moment from 'moment';
 import Grid from '@/components/Grid.vue'
+import Map from '@/components/Map.vue'
 
 export default {
   name: 'archive',
@@ -45,6 +46,11 @@ export default {
           this.items.push({
             post_id: this.data[i].id,
             link: "/posts/" + this.data[i].id,
+            location: {
+              name: this.data[i].location_name,
+              lat: this.data[i].lat,
+              long: this.data[i].long,
+            }
           })
         }
       }
@@ -157,9 +163,7 @@ export default {
       return archives;
     }
   },
-  components: {
-    Grid
-  }
+  components: { Grid, Map },
 }
 </script>
 

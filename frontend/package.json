@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
+    "mapbox-gl": "^1.0.0",
     "moment": "^2.24.0",
     "moment-range": "^4.0.2",
     "normalize.css": "^8.0.1",

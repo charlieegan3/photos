@@ -31,7 +31,7 @@ export default {
     this.geoJSON.features.forEach(function(feature) {
       var el = document.createElement('div');
       el.className = 'marker';
-      el.style.backgroundImage = "url(" + feature.properties.icon + ")";
+      el.setAttribute("data-icon", feature.properties.icon);
 
       var marker = new Mapbox.Marker(el)
         .setLngLat(feature.geometry.coordinates)
@@ -59,8 +59,12 @@ export default {
     if (scale < 10) { scale = 10 }
     if (scale > 40) { scale = 40 }
     this.markers.forEach(function(marker) {
-      marker.getElement().style.width = scale + "px";
-      marker.getElement().style.height = scale + "px";
+      var elem = marker.getElement();
+      if (scale > 15) {
+        elem.style.backgroundImage = "url(" + elem.getAttribute("data-icon") + ")";
+      }
+      elem.style.width = scale + "px";
+      elem.style.height = scale + "px";
     })
   }
   },

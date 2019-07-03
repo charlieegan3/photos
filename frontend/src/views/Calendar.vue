@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h1>Calendar</h1>
-    <Calendar v-if="data" :data="data"/>
-  </div>
+  <Calendar class="ph2" v-if="data" :data="data"/>
 </template>
 
 <script>

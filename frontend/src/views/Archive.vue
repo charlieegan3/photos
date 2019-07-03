@@ -1,10 +1,14 @@
 <template>
   <div>
-    <h1>{{ title }}</h1>
-    <div>
-      <router-link class="archive-link" v-for="archive in relatedArchives" v-bind:key="archive.slug+archive.type" :to="{ name: 'archive', params: { id: archive.slug, type: archive.type } }">{{ archive.text }}</router-link>
+    <h1 class="dark-gray">photos from <span class="gray">{{ title }}</span></h1>
+    <div class="mb2">
+      <span class="mid-gray mr1">Also try</span>
+      <span v-for="(archive, index) in relatedArchives">
+        <router-link class="gray no-underline" :to="{ name: 'archive', params: { id: archive.slug, type: archive.type } }">{{ archive.text }}</router-link>
+        <span class="gray" v-if="index+1 < relatedArchives.length">, </span>
+      </span>
     </div>
-    <Map v-if="items" :items="items" :height="500"/>
+    <Map v-if="items" :items="items" :height="400"/>
     <Grid v-if="items" :items="items"/>
   </div>
 </template>
@@ -166,10 +170,3 @@ export default {
   components: { Grid, Map },
 }
 </script>
-
-<style>
-.archive-link {
-  margin-right: 0.3rem;
-  color: black;
-}
-</style>

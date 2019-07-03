@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Map v-if="items" :items="items" :height="500"/>
+    <Map v-if="items" :items="items" :height="400"/>
     <Grid v-if="items" :items="items"/>
   </div>
 </template>

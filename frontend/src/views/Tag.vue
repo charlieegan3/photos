@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Tagged #{{ data.name }}</h1>
-    <Map v-if="items" :items="items" :height="500"/>
+    <h1 class="dark-gray">photos tagged <span class="gray">#{{ data.name }}</span></h1>
+    <Map v-if="items" :items="items" :height="400"/>
     <Grid v-if="items" :items="items"/>
   </div>
 </template>

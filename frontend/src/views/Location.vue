@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ data.name }}</h1>
+    <h1 class="dark-gray">photos taken in <span class="gray">{{ data.name }}</span></h1>
     <Grid v-if="items" :items="items"/>
   </div>
 </template>

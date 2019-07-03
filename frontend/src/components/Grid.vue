@@ -3,13 +3,13 @@
     <div class="item" v-for="(item, $index) in list" :key="$index">
       <router-link :to="item.link" v-if="item.title">
         <div class="item-text" >
-          <p class="item-title">{{ item.title }}</p>
-          <p class="item-subtitle">{{ item.subtitle }}</p>
+          <p class="item-title f6 f5-ns">{{ item.title }}</p>
+          <p class="item-subtitle f7 f5-ns">{{ item.subtitle }}</p>
         </div>
       </router-link>
       <router-link :to="item.link">
         <VideoItem v-if="item.is_video" :post="item.post_id"/>
-        <PhotoItem v-else :post="item.post_id"/>
+        <PhotoItem v-else :post="item.post_id" :page="'grid'"/>
       </router-link>
     </div>
     <infinite-loading @infinite="infiniteHandler" spinner="spiral">
@@ -73,7 +73,7 @@ export default {
 .item-text {
   background-color: rgba(0,0,0,0.5);
   z-index: 1000;
-  height: 65%;
+  height: 100%;
   position: absolute;
   width: 100%;
   padding-top: 35%;

@@ -2,19 +2,19 @@
   <div>
     <div class="year" v-for="year in years">
       <router-link class="link" :to="{ name: 'archive', params: { id: year[0][0].substring(0,4), type: 'year' } }">
-        <div class="yearLabel">{{ yearFormat(year[0][0]) }}</div>
+        <div class="yearLabel gray">{{ yearFormat(year[0][0]) }}</div>
       </router-link>
       <div class="month" v-for="month in year">
         <router-link class="link" :to="{ name: 'archive', params: { id: month[0].substring(0,7), type: 'month' } }">
-          <div class="monthLabel">{{ monthFormat(month[0]) }}</div>
+          <div class="monthLabel gray">{{ monthFormat(month[0]) }}</div>
         </router-link>
         <div class="day" v-for="day in month">
           <router-link v-if="count(day)>0" class="link" :to="{ name: 'archive', params: { id: day, type: 'day' } }">
-            <div class="dayLabel">
+            <div class="dayLabel gray">
               {{ dayFormat(day) }}
             </div>
           </router-link>
-          <div v-if="!count(day)" class="dayLabel empty">
+          <div v-if="!count(day)" class="dayLabel empty mid-gray">
             {{ dayFormat(day) }}
           </div>
           <div class="count" v-if="count(day)>1">{{ count(day) }}</div>
@@ -62,7 +62,6 @@
 
 .link, .link:visited {
   text-decoration: none;
-  color: black;
 }
 .count{
   position: absolute;
@@ -70,7 +69,6 @@
   right: -3px;
   font-size: 0.7rem;
   background-color: #facc91;
-  color: black;
   padding: 1px 3px;
   border-radius: 3px;
   z-index: 100;

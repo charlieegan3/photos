@@ -1,10 +1,11 @@
 <template>
-  <div class="image" :style="'background-image: url(' + url + ');'"></div>
+  <div v-if="page == 'post'" class="image" :style="'background-image: url(' + url + '?page=post);'"></div>
+  <div v-else class="image" :style="'background-image: url(' + url + ');'"></div>
 </template>
 
 <script>
 export default {
-  props: ["post"],
+  props: ["post", "page"],
   computed: {
     url: function() {
       return "http://storage.googleapis.com/charlieegan3-instagram-archive/current/" + this.post + ".jpg"

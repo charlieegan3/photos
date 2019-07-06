@@ -51,15 +51,6 @@ docker_run:
 						-e PUSHOVER_USER="$$PUSHOVER_USER" \
 						charlieegan3/photos:latest
 
-hugo_server:
-	cd site; hugo server; cd ..
-
-hugo_build:
-	cd site; hugo; cd ..
-
-build_site:
-	./hack/build_site.rb
-
 vue_image:
 	docker build -t charlieegan3/photos-vue -f Dockerfile.vue .
 

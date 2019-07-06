@@ -21,4 +21,3 @@ while [ 1 ]; do
 
 	echo "Sleeping for $INTERVAL seconds..." && sleep $INTERVAL
 done
-# docker build -t hugo-rebuilder . && docker run -it -e USER=charlieegan3 -e REPO=photos -e INTERVAL=30 -e DESTINATION=/output -e SOURCE_DIR="site" -e PRECOMMAND="./bin/build_site.rb" hugo-rebuilder

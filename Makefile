@@ -1,3 +1,5 @@
+TAG := $(shell tar -cf - . | md5sum | cut -f 1 -d " ")
+
 .PHONY: calendar
 
 all_or_report:
@@ -66,5 +68,9 @@ vue_build: vue_install
 data_serve:
 	cd output && ran -p 8000 -cors=true
 
-rebuilder_image:
-	docker build -t charlieegan3/photos-site -f rebuilder/Dockerfile .
+rebuilder_build:
+	docker build -t charlieegan3/photos-rebuilder:latest -t charlieegan3/photos-rebuilder:${TAG} -f rebuilder/Dockerfile .
+
+rebuilder_push: rebuilder_build
+	docker push charlieegan3/photos-rebuilder:latest
+	docker push charlieegan3/photos-rebuilder:${TAG}

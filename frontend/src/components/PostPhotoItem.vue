@@ -8,7 +8,7 @@ export default {
   props: ["post", "page"],
   computed: {
     url: function() {
-      return "http://storage.googleapis.com/charlieegan3-instagram-archive/current/" + this.post + ".jpg"
+      return "https://storage.googleapis.com/charlieegan3-instagram-archive/current/" + this.post + ".jpg"
     }
   }
 }

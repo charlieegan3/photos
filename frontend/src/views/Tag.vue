@@ -46,10 +46,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.post-container {
-  width: 300px;
-  height: 300px;
-}
-</style>

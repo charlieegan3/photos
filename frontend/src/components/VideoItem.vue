@@ -1,5 +1,5 @@
 <template>
-  <video style autoplay loop muted>
+  <video class="w-100" style autoplay loop muted>
     <source type="video/mp4" :src="url">
     Video not supported
   </video>

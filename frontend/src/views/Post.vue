@@ -16,18 +16,12 @@
         <Map v-if="mapItems" :items="mapItems" :height="200" :maxZoom="12" />
         <p v-if="data">View this post on <a class="no-underline silver" :href="'https://instagram.com/p/'+data.code">Instagram</a></p>
         <p v-if="data">View all from <router-link class="silver no-underline" :to="{ name: 'archive', params: { id: date.format('YYYY-MM-DD'), type: 'day' } }">{{ date.format("dddd Do MMMM, YYYY") }}</router-link>
-        <p>
-          <template v-for="tag in tagList" v-if="data">
-            <router-link class="silver no-underline f7 pr1" :to="'/tags/' + tag">#{{ tag }}</router-link>
-            &Tab;
-          </template>
-        </p>
         <div v-if="locationData">
           <div v-if="locationData.locations !== null">
-            <p v-if="locationData.posts.length > 0">
+            <p v-if="locationData.posts.length > 1">
               {{ locationData.posts.length - 1 }} nearby posts from {{ locationData.name.replace(/,.*$/, "") }}
             </p>
-            <Grid class="h4" :items="sameLocationItems"/>
+			<Grid class="h4" v-if="locationData.posts.length > 1" :items="sameLocationItems"/>
             <p>
               Browse nearby
               <router-link class="di silver no-underline" :to="'/locations/' + locationData.id">
@@ -46,6 +40,12 @@
             {{ locationData.name.replace(/,.*$/, "") }}
           </p>
         </div>
+        <p>
+          <template v-for="tag in tagList" v-if="data">
+            <router-link class="silver no-underline f7 pr1" :to="'/tags/' + tag">#{{ tag }}</router-link>
+            &Tab;
+          </template>
+        </p>
       </div>
     </div>
   </div>

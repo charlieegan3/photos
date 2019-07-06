@@ -52,9 +52,12 @@ docker_run:
 						charlieegan3/photos:latest
 
 vue_image:
-	docker build -t charlieegan3/photos-vue -f Dockerfile.vue .
+	docker build -t charlieegan3/photos-vue frontend
 
-vue_serve:
+vue_install: vue_image
+	docker run -it -v $$(pwd)/frontend:/app charlieegan3/photos-vue yarn install
+
+vue_serve: vue_install
 	docker run -it -v $$(pwd)/frontend:/app -p 8080:8080 charlieegan3/photos-vue yarn serve
 
 data_serve:

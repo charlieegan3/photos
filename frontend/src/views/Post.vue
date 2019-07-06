@@ -4,7 +4,7 @@
       <div>
         <div class="post-container">
           <VideoItem v-if="data.is_video" :post="this.$route.params.id"/>
-          <PhotoItem v-else :post="this.$route.params.id" :page="'post'"/>
+          <PostPhotoItem v-else :post="this.$route.params.id" :page="'post'"/>
         </div>
         <div v-if="index" class="pt1">
           <router-link class="fl silver no-underline" v-if="nextPost" :to="'/posts/' + nextPost">&larr;Next</router-link>
@@ -54,7 +54,7 @@
 <script>
 import axios from 'axios';
 import Moment from 'moment';
-import PhotoItem from '@/components/PhotoItem.vue'
+import PostPhotoItem from '@/components/PostPhotoItem.vue'
 import VideoItem from '@/components/VideoItem.vue'
 import Map from '@/components/Map.vue'
 import Grid from '@/components/Grid.vue'
@@ -81,7 +81,7 @@ export default {
       this.index = data;
     }).catch(function (error) { console.log(error); })
   },
-  components: { VideoItem, PhotoItem, Map, Grid },
+  components: { VideoItem, PostPhotoItem, Map, Grid },
   data() {
     return {
       data: false,

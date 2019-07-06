@@ -60,5 +60,11 @@ vue_install: vue_image
 vue_serve: vue_install
 	docker run -it -v $$(pwd)/frontend:/app -p 8080:8080 charlieegan3/photos-vue yarn serve
 
+vue_build: vue_install
+	docker run -it -v $$(pwd)/frontend:/app charlieegan3/photos-vue yarn build
+
 data_serve:
 	cd output && ran -p 8000 -cors=true
+
+rebuilder_image:
+	docker build -t charlieegan3/photos-site -f rebuilder/Dockerfile .

@@ -11,7 +11,7 @@ import axios from 'axios';
 export default {
   name: 'home',
   created() {
-    axios.get("//localhost:8000/tags.json").then(({ data }) => {
+    axios.get("/data/tags.json").then(({ data }) => {
       this.data = data;
     }).catch(function (error) {
       console.log(error);

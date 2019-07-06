@@ -13,7 +13,7 @@ import Calendar from '@/components/Calendar.vue'
 export default {
   name: 'calendar',
   created() {
-    axios.get("//localhost:8000/calendar.json").then(({ data }) => {
+    axios.get("/data/calendar.json").then(({ data }) => {
       this.data = data;
     }).catch(function (error) {
       console.log(error);

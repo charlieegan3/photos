@@ -62,7 +62,7 @@ import Grid from '@/components/Grid.vue'
 export default {
   name: 'home',
   created() {
-    axios.get("//localhost:8000/posts/" + this.$route.params.id + ".json").then(({ data }) => {
+    axios.get("/data/posts/" + this.$route.params.id + ".json").then(({ data }) => {
       this.data = data;
       this.mapItems = [
         {
@@ -72,12 +72,12 @@ export default {
           }
         }
       ];
-      axios.get("//localhost:8000/locations/" + this.data.location.id + ".json").then(({ data }) => {
+      axios.get("/data/locations/" + this.data.location.id + ".json").then(({ data }) => {
         this.locationData = data;
       }).catch(function (error) { console.log(error); })
     }).catch(function (error) { console.log(error); })
 
-    axios.get("//localhost:8000/index.json").then(({ data }) => {
+    axios.get("/data/index.json").then(({ data }) => {
       this.index = data;
     }).catch(function (error) { console.log(error); })
   },

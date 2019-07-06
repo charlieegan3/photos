@@ -14,7 +14,7 @@ import Map from '@/components/Map.vue'
 export default {
   name: 'home',
   created() {
-    axios.get("//localhost:8000/tags/" + this.$route.params.id + ".json").then(({ data }) => {
+    axios.get("/data/tags/" + this.$route.params.id + ".json").then(({ data }) => {
       this.data = data;
     }).catch(function (error) {
       console.log(error);

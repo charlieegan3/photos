@@ -13,7 +13,7 @@ import Map from '@/components/Map.vue'
 export default {
   name: 'home',
   created() {
-    axios.get("//localhost:8000/locations.json").then(({ data }) => {
+    axios.get("/data/locations.json").then(({ data }) => {
       this.data = data;
     }).catch(function (error) {
       console.log(error);

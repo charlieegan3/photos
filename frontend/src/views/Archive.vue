@@ -22,7 +22,7 @@ import Map from '@/components/Map.vue'
 export default {
   name: 'archive',
   created() {
-    axios.get("//localhost:8000/index.json").then(({ data }) => {
+    axios.get("/data/index.json").then(({ data }) => {
       this.data = data;
     }).catch(function (error) {
       console.log(error);

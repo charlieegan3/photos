@@ -12,7 +12,7 @@ import axios from 'axios';
 export default {
   name: 'home',
   created() {
-    axios.get("//localhost:8000/locations/" + this.$route.params.id + ".json").then(({ data }) => {
+    axios.get("/data/locations/" + this.$route.params.id + ".json").then(({ data }) => {
       this.data = data;
     }).catch(function (error) {
       console.log(error);

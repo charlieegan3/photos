@@ -6,7 +6,7 @@
           <VideoItem v-if="data.is_video" :post="this.$route.params.id"/>
           <PostPhotoItem v-else :post="this.$route.params.id" :page="'post'"/>
         </div>
-        <div v-if="index" class="pt1">
+        <div v-if="index" class="pt1 ph2">
           <router-link class="fl silver no-underline" v-if="nextPost" :to="'/posts/' + nextPost">&larr;Next</router-link>
           <router-link class="fr silver no-underline" v-if="prevPost" :to="'/posts/' + prevPost">Previous&rarr;</router-link>
         </div>
@@ -152,10 +152,10 @@ export default {
 <style>
 .post-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 .post-container {
-  max-width: 75vw;
+  max-width: 500px;
   margin: 0 auto;
 }
 </style>

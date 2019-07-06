@@ -47,5 +47,16 @@ export default new Router({
       name: 'archive',
       component: () => import(/* webpackChunkName: "posts.show" */ './views/Archive.vue')
     },
+
+    { path: '/photos/:id',
+      redirect: to => {
+        const { hash, params, query } = to
+        if (params.id) {
+          return '/posts/:id'
+        } else {
+          return '/'
+        }
+      }
+},
   ]
 })

@@ -41,17 +41,7 @@ docker_image:
 	docker push "charlieegan3/photos:$$(cat Dockerfile entrypoint.sh | shasum | awk '{ print $$1 }')"
 
 docker_run:
-	docker run --rm -it -e GOOGLE_PROJECT="$$GOOGLE_PROJECT" \
-						-e GOOGLE_JSON="$$GOOGLE_JSON" \
-						-e AWS_ACCESS_KEY_ID="$$AWS_ACCESS_KEY_ID" \
-						-e AWS_REGION="$$AWS_REGION" \
-						-e AWS_SECRET_ACCESS_KEY="$$AWS_SECRET_ACCESS_KEY" \
-						-e B2_ACCOUNT_ID="$$B2_ACCOUNT_ID" \
-						-e B2_ACCOUNT_KEY="$$B2_ACCOUNT_KEY" \
-						-e GITHUB_TOKEN="$$GITHUB_TOKEN" \
-						-e PUSHOVER_TOKEN="$$PUSHOVER_TOKEN" \
-						-e PUSHOVER_USER="$$PUSHOVER_USER" \
-						charlieegan3/photos:latest
+	docker run --rm -it --env-file=.envrc charlieegan3/photos:latest
 
 vue_image:
 	docker build -t charlieegan3/photos-vue frontend

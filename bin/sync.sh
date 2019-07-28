@@ -8,7 +8,6 @@ if [ -z "$(ls -A media)" ]; then
 fi
 
 b2 authorize_account "$B2_ACCOUNT_ID" "$B2_ACCOUNT_KEY"
-echo $GOOGLE_JSON > /tmp/account.json && gcloud auth activate-service-account --key-file /tmp/account.json
 
 bucket="charlieegan3-instagram-archive"
 folder="current"

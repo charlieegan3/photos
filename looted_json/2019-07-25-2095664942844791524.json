@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2095664942844791524",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "A world without advertising #stone #interior #station #grey #reflection #commuter #teampixel"
+                }
+            }
+        ]
+    },
+    "shortcode": "B0VTCmGgMrk",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1564042750,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/0091832c6b9d30b9182157cfe0cba268/5DD561E6/t51.2885-15/e35/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "location": {
+        "id": "242813649",
+        "has_public_page": true,
+        "name": "Angel, London",
+        "slug": "angel-london"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqbFcBhtGDnvjn8+1KSw7/AMqhgtmJ3kgYx2Gau4PPPT2X/DmoLKnOd3enhmH/AOoVPINrhc8sMj5VP9P8mniFuuR/3yv4duKBFaS4AGDtGPYAn6+tVvtQ9/ypssZDbjjnd2GeOtM2N/d/SgC7K7ZAQZIAwKbvuc/cAPoCP5ZpvnDzQV524z+daG7nOMk+tAzLaebfsK4YkHqO3bPTv+NTb7jjavIOTyOfY81eJyc4H+fwoB/ixyPQ9f0oEZSs7vtYY5JP171pBsDoKppIN5LcZzj86sZoGQWkOXHoDx7+5q+6kNioIetWm60CEmXauRToU3Lnio5elLb9KAKFxEASe3f/ABFVxHJ2dcdvmx+nar0neszFAz//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/93cf43b3c0779ae3b4e6f2e779b51cc8/5DDF9E03/t51.2885-15/sh0.08/e35/s640x640/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/769397bb439b9cf1875f5f29c4e13860/5DEC04A4/t51.2885-15/e35/s150x150/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/c82bf5b1f38c518821a2ffaa4362c3e0/5DE22FEE/t51.2885-15/e35/s240x240/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/5a4149ae661f5ccea19dd28a5c00e57b/5DB5DC54/t51.2885-15/e35/s320x320/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/32041305cd5a66b0afacd69b2fb571d5/5DB0D40E/t51.2885-15/e35/s480x480/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/93cf43b3c0779ae3b4e6f2e779b51cc8/5DDF9E03/t51.2885-15/sh0.08/e35/s640x640/67245751_118294056128650_5195356137684868547_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: one or more people and indoor",
+    "scraper_version": "v2"
+}

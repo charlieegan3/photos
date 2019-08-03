@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2102215117784537303",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Weston Rise #architecture #brutalist #sky #contrast #lookingup #x100f #blue #clouds"
+                }
+            }
+        ]
+    },
+    "shortcode": "B0skYL5ANjX",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1564823592,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/11ababeaaec04bde48126887aedf7353/5DED135D/t51.2885-15/e35/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "location": {
+        "id": "632825573523616",
+        "has_public_page": true,
+        "name": "Weston Rise Estate Management Association",
+        "slug": "weston-rise-estate-management-association"
+    },
+    "gating_info": null,
+    "media_preview": "ACoqyF56VdVYgNpZd/cE464wPT+dV/tSFsKCdx+g5Pt/UVdbTkcBnYhjyT2P0yMfrTv2EJJDgFh0H457daaik01LLyTuU5A7dM9uxI+gNW4yFxj5ie2Kd+4Eb/ux83eq34n8hVsBZTl8fe7cdRx+HB/GsxiQTg8ZrSOuxD0JUZEPyYLAE4UDsCewPA/3+1RGK4Q5XzAe+3P9CafbRLEfN3EgDrtIGDwcE8k+2KuCW2Lbw65znnep6++RWJoUw80gMbsSCOcgZ456kA9cdxV2MMFUuckcZHXg/TORn60rY2N5cgY4OAJATn6HBqKGR3j+cbWBI6Y7fofYUgLKHaWAOBjOT/snP8ic9DUmU+v41EWw6l+hxkjjhhgn170oklUYCAgcdaQzK/eXMZKjowHUsTwTyST0x2xUK2sjc/L+JANWrL/VN/20/wDQBVGHp+IqhFmGEoC7r8qdeM9eOh4Pr1HHQitCGRWQ7DkAjjOSPz5A9iWHoaz7Z22kZOCG7/7BoszgYHfr+dJgX2xsG0849c4IJ/L/AAq8FEnz4I3c42+vPrVIgbAfXNSRMdi8noP5Uhn/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/ccfc0c4fa36d1f180286babaa1c6a2b0/5DC957B8/t51.2885-15/sh0.08/e35/s640x640/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/72f10b6edbecfa6692f028d06a4ed7a7/5DEE641F/t51.2885-15/e35/s150x150/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/5da058a6f3201c72d6ce2fe8369ab429/5DDFE655/t51.2885-15/e35/s240x240/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/c745fff3f09ba2a9fb1f524d00f99f0a/5DD585EF/t51.2885-15/e35/s320x320/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/05da39bfb0ed5141970b71081249a649/5DCB4BB5/t51.2885-15/e35/s480x480/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/ccfc0c4fa36d1f180286babaa1c6a2b0/5DC957B8/t51.2885-15/sh0.08/e35/s640x640/66446097_562791867588505_1033973724562653222_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky and outdoor",
+    "scraper_version": "v2"
+}

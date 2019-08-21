@@ -13,14 +13,15 @@ end.uniq.compact.each do |location|
   next if File.exists?(location_file_name)
   next if locations_with_missing_data.include?(location["id"])
 
-  html = open("https://www.instagram.com/explore/locations/#{location["id"]}").read
-  page_data = html.scan(/\{[^\n]+\}/).map { |r| JSON.parse(r) rescue nil }.compact.reject { |json| json["entry_data"].nil? }.first
+  html = open("https://facebook.com/pages/locations/#{location["id"]}").read
+  center = html.scan(/;center=[\-\d\.]+%2C[\-\d\.]+/).first
 
-  location_data = page_data.dig(*%w(entry_data LocationsPage)).first["location"] ||
-    page_data["entry_data"]["LocationsPage"].first["graphql"]["location"]
+  raise "Failed to get location #{location["id"]}" if center.nil?
+
+  lat, long = center.split(/=|%2C/)[1..2]
 
   begin
-    location.merge!(lat: location_data["lat"], long: location_data["lng"])
+    location.merge!(lat: lat, long: long)
     location.delete("has_public_page")
     File.write(location_file_name, JSON.pretty_generate(location))
   rescue

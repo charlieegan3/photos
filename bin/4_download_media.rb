@@ -9,6 +9,8 @@ require "fileutils"
 files = `git ls-files --others --exclude-standard`.split("\n")
 
 files.shuffle.map do |file|
+  next unless file.start_with? "completed_json"
+
   data = JSON.parse(File.read(file))
 
   format = data["is_video"] == true ? "mp4" : "jpg"

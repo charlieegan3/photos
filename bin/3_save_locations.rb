@@ -21,7 +21,7 @@ end.uniq.compact.each do |location|
   lat, long = center.split(/=|%2C/)[1..2]
 
   begin
-    location.merge!(lat: lat, long: long)
+    location.merge!(lat: lat.to_f, long: long.to_f)
     location.delete("has_public_page")
     File.write(location_file_name, JSON.pretty_generate(location))
   rescue

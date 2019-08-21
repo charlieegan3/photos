@@ -1,0 +1,73 @@
+{
+    "__typename": "GraphImage",
+    "id": "2113302733883888827",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Hereford Cathedral gleaming #lightanddark #bright #reflection #cathedral #church #book #x100f #shadow"
+                }
+            }
+        ]
+    },
+    "shortcode": "B1T9aPEAtS7",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1566145339,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/7bc1b18f149c7391d6489964d900cf34/5E0D6DDB/t51.2885-15/e35/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "edge_liked_by": {
+        "count": 4
+    },
+    "edge_media_preview_like": {
+        "count": 4
+    },
+    "location": {
+        "id": "1184923968272679",
+        "has_public_page": true,
+        "name": "Hereford Cathedral",
+        "slug": "hereford-cathedral"
+    },
+    "gating_info": null,
+    "media_preview": "ACoq59+30pFGSAO9K/b6Vatbp4BtQIcnOWAJz+J4FA3uPuQBMmG3AhDnI459vSn6o26QchvlPIOf4j7n61Tmmadt7denHQAdAPaoSMUrCNfTwTE2G2/MP6f5/Cs9lGT9agq4RzSehpFXK78Y+lNR9jBsBsdj0p7MWwe6/wAvf8atTGSUbmycf7CoMfXPPtxTRL30KhiYAf7VRk1vWVmbgZJX5eApPzAepGO/b+dTvoqufv7W9MZpcwWObAzVurU+lzQcjkD+7yPyrO+b0FD1Lj7pGrlc478Gug06ztZ0BdSXxzkn+XFYMP3q1Iidy/WiRMVdG4unxRtuQcjocnP0JB5Hv17HNT+fH91uCPXt+NVoHYr1P51Jac7s92rLcdt79BZLkRY2neGOMZ5FHJ58of8AjtNvEULuAAI6HHI/Go1dsDk/nQP+v62P/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/a4f71981d0b5c942fda8c5e3bd0040aa/5DF3243E/t51.2885-15/sh0.08/e35/s640x640/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/8d75d9ce2bd9642595320264536bc3e8/5DD80199/t51.2885-15/e35/s150x150/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/618b4c5ffa353f06dffe031abd00ccc7/5E1229D3/t51.2885-15/e35/s240x240/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/b4cc4ecf1323e50c61d554974a237833/5DF0E169/t51.2885-15/e35/s320x320/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/0d9cd3e72a55b7316c41356ab7ef19e8/5DD7FA33/t51.2885-15/e35/s480x480/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/a4f71981d0b5c942fda8c5e3bd0040aa/5DF3243E/t51.2885-15/sh0.08/e35/s640x640/67830568_143174046900875_1335194382702832758_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: one or more people, people sitting and indoor",
+    "scraper_version": "v2"
+}

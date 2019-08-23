@@ -14,11 +14,11 @@ end.uniq.compact.each do |location|
   next if locations_with_missing_data.include?(location["id"])
 
   html = open("https://facebook.com/pages/locations/#{location["id"]}").read
-  center = html.scan(/;center=[\-\d\.]+%2C[\-\d\.]+/).first
+  center = html.scan(/(;|&)(center|markers)(=)([\-\d\.]+)(%2C|\u00252C)([\-\d\.]+)/).first
 
   raise "Failed to get location #{location["id"]}" if center.nil?
 
-  lat, long = center.split(/=|%2C/)[1..2]
+  lat, long = center[3], center[5]
 
   begin
     location.merge!(lat: lat.to_f, long: long.to_f)

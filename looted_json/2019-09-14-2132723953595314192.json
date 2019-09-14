@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2132723953595314192",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Eyes wonder #lookingup #screen #history #museum #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "B2Y9SLaA_AQ",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1568460529,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-iad3-1.cdninstagram.com/vp/db6e0a934319db2a15ccebcf70085c08/5E1A6C98/t51.2885-15/e35/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+    "edge_liked_by": {
+        "count": 1
+    },
+    "edge_media_preview_like": {
+        "count": 1
+    },
+    "location": {
+        "id": "218109131",
+        "has_public_page": true,
+        "name": "Tokyo National Museum",
+        "slug": "tokyo-national-museum"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqybaIyPgcYBNaH2WQdDn6io9NX5mb0AH5n/61bQxTAylR1OGA5B96jnbb2/KtO6Qldw42g/0qpFFuTcxznis7Pm8rF6cvmVLdPObceg6Vq4UVXiUR5xUm0nvWhmVbFTGvPVua0A1Z8bVOsgYZB6HH5UAWXbKn6GoIHBTj1pDIMc/rVWOU8gDjj2qepXRlrPNUDenJxjHb6U24mwNvQn+VUM1RJe87HA61Ha7tpGeP1pBwOKhQkRHHqaQy/wCfHEctyfzP/wBaqclyx+78uaqU5ugpDWzQFietJmkopiP/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-iad3-1.cdninstagram.com/vp/ef9a8f6a6c3e457818e9a1b444540456/5E0EA17D/t51.2885-15/sh0.08/e35/s640x640/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/c7a277d8f83f3fe3c0a04da5ad45f47d/5E1923DA/t51.2885-15/e35/s150x150/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/4a2b588a8d6b32ae3a06f9f02cc2418e/5DFF6690/t51.2885-15/e35/s240x240/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/f64266359274c9503e8916cd9856af1b/5DFEB32A/t51.2885-15/e35/s320x320/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/c207395159e42a47a38289b7ee6c5648/5DFEC570/t51.2885-15/e35/s480x480/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-iad3-1.cdninstagram.com/vp/ef9a8f6a6c3e457818e9a1b444540456/5E0EA17D/t51.2885-15/sh0.08/e35/s640x640/69439905_410475799604607_8623196126034841674_n.jpg?_nc_ht=scontent-iad3-1.cdninstagram.com&_nc_cat=103",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: one or more people",
+    "scraper_version": "v2"
+}

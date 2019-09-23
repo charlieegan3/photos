@@ -22,9 +22,9 @@ Dir.glob("looted_json/*").shuffle.map do |file|
 
   location_url = page_data["contentLocation"]["mainEntityofPage"]["@id"].split("/").reject { |e| e.to_s.length == 0 }
   location = {
-    "id" => location_url[-2],
+    "id" => location_url[4],
     "name" => page_data["contentLocation"]["name"],
-      "slug" => location_url.last,
+    "slug" => location_url.last,
     "has_public_page" => true
   }
 

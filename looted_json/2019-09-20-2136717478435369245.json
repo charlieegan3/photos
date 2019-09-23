@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2136717478435369245",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Album Cover Photo ✔️ #bullettrain #shinkansen #speed #train #temple #x100f #motionblur"
+                }
+            }
+        ]
+    },
+    "shortcode": "B2nJTnPgjEd",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1568936594,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr3-1.cdninstagram.com/vp/0ddcb1ed3a710d281b6f520134db66ea/5E1EC5BA/t51.2885-15/e35/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "location": {
+        "id": "234731535",
+        "has_public_page": true,
+        "name": "Kyoto Railway Museum",
+        "slug": "kyoto-railway-museum"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoq0sUu2oftUfrTxOh7igB+KMUzz09aT7THu27hn07/AJdaAJcCjApnnJ60vmr60AZiplvmUAld3BLDP93p39qeqBiQVC4GSRkYPYEdgaga+VuvGOnUY47cfr+VQG4QgjecH/aH9f5dKAJFaRTghG545/PvTRAfMMnQ+3I/rU0U0LAIxAUdSdhJPqc9Pwp7ISCV2SDH8LqDj36/mO1AFZo5P9hGPIySD+px+VPzP/s/mB+nalSXDDftYc/L2HoeByQOnNWQbcDlwT3yOfx96AMvy/MGf0yf8DQtuo6/r/8AXxV140WN8ADkdAP89qyJgB0FAFsxQ9WOT7Ef0GKePKCnYCOnoefz47+5rKB6UuTg/Uf1oA0hKR8oJH0H/wBeq7RDJ69fT/61UwTTixz1NAH/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-lhr3-1.cdninstagram.com/vp/446b19b7c0c2d444f672b02ea8b96fd6/5E26345F/t51.2885-15/sh0.08/e35/s640x640/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/c912c0f510829cee33a69d53763d1934/5E2123F8/t51.2885-15/e35/s150x150/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/435c75c26d660725e0760f7fda8c7923/5E2290B2/t51.2885-15/e35/s240x240/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/17b6961dc5c75b41f6d53ae275632f44/5E1F3C08/t51.2885-15/e35/s320x320/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/38f1f502158eb27ed1dc564d221452fa/5E00C852/t51.2885-15/e35/s480x480/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/446b19b7c0c2d444f672b02ea8b96fd6/5E26345F/t51.2885-15/sh0.08/e35/s640x640/70779537_380520389505777_1443491476743814283_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=109",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky and outdoor",
+    "scraper_version": "v2"
+}

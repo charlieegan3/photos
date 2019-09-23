@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2137850969378114827",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Brutalist Nara #brutalist #architecture #sky #clouds #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "B2rLCE8gc0L",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1569071716,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr3-1.cdninstagram.com/vp/6df4ff59f8b43fe430d4574ea802c779/5E18A383/t51.2885-15/e35/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+    "edge_liked_by": {
+        "count": 2
+    },
+    "edge_media_preview_like": {
+        "count": 2
+    },
+    "location": {
+        "id": "567422080383951",
+        "has_public_page": true,
+        "name": "鳥",
+        "slug": ""
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoq1ZcoDVaKRsgDn2q68fmCsWe4kgb92QCCVORnOCOfb+tAG7uOORTWwwwayF1WUYDKjD15H+fardrem4k2FdnBxyCCR6fhQAjLt4P50zZWg0YNJ5K0Ac6msFcfeB79D+Xtn1/Wq7XcMhLOpLE5J7n/AD6VH5cn91T+Df0ppjYdUH6/1oAm82A92H41JHIiMHSTafXAz/KqRj9UP5j/AApPLX+6R+I/+tQB1UeoR4AY84GTx+f41N9ti9a43y19G/L/AOvRt93/ACNADtsXqR+BpwMQ/iP/AI9RuPqf8mlJOP8APrQAbk7O35t/hS71/wCejfm3/wATSbj6/wCc03cfWgB4cf8APQ/r/wDE0u8f89D+X/2NMLHHU/5zTd7ep/OgD//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-lhr3-1.cdninstagram.com/vp/de3a222ece40c813987d13a21ae19036/5E043466/t51.2885-15/sh0.08/e35/s640x640/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/7173fddd3871ec5096f9af5e90f8be08/5DFFE3C1/t51.2885-15/e35/s150x150/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/4cbb797de1cadba9c072b2e707b5e44d/5E21098B/t51.2885-15/e35/s240x240/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/be629f262df0710d81ae79c5001362fb/5E22AD31/t51.2885-15/e35/s320x320/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/a7966609a80998da88f945e09309e0db/5E171C6B/t51.2885-15/e35/s480x480/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/de3a222ece40c813987d13a21ae19036/5E043466/t51.2885-15/sh0.08/e35/s640x640/71712836_363195784586036_5865359849122986947_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: cloud, sky and outdoor",
+    "scraper_version": "v2"
+}

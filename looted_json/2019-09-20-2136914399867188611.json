@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2136914399867188611",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Peaceful palace trip & goodbye Kyoto 👋 #orange #glow #light #woodwork #shadow #contrast #pattern #history #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "B2n2FMngDWD",
+    "edge_media_to_comment": {
+        "count": 1
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1568960069,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr3-1.cdninstagram.com/vp/980a3ad40044f39d6f9dff2ab105096a/5E30CF82/t51.2885-15/e35/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+    "edge_liked_by": {
+        "count": 7
+    },
+    "edge_media_preview_like": {
+        "count": 7
+    },
+    "location": {
+        "id": "214048251",
+        "has_public_page": true,
+        "name": "Kyoto Imperial Palace",
+        "slug": "kyoto-imperial-palace"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqg3kdML34wP8AP06e9J5o9en4/wCfp+RqssinopNSqJT91D+v+FcnL/Wh6F/61JRMB90H8vX+an0PI7Unmv8AwrjGcZPT29wfTr1oEFy3Rcfh/jTXtLjoQfw/z/8AqqrP+rkNp/0v8yNnk/vBccjHbPXHt6jtUJUk/ep7Wrscd+/anfYG9V/76H+NWvX8CHfqvxLiyiLGAB6Ntz+tSG7fdty3PpiqsEeFwc9cjPTFTeXtYEY6dD0+orFuztdm1k9bL5ljczdS3500qT6n6mnZYcEgGjLf3h+lK68xa9Lf18inLlVJHUVB5p9quSrlD3qqIZiOF47dKqNmtUOTfc03XBCjooApY0JJPB7c0h+8fqf51fs/un61FuebXr+Bm3yxv6fiVEiyc4Bx65qbYf7qVag+7+JqXArSNPRO/wCCMnN3MOZeCOnXpT4n+RfoP5Utz95vqarIflH0FOOjZq9Uj//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-lhr3-1.cdninstagram.com/vp/9889d096a3c3daaa2f835a59ef858210/5E208467/t51.2885-15/sh0.08/e35/s640x640/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/96461b51acee13cc4d25a79f9165e0c4/5E2ECDC0/t51.2885-15/e35/s150x150/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/de2a7e6fd98ccbf5acfb515884f619ac/5E31768A/t51.2885-15/e35/s240x240/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/9889a20b8f22632ba45e6b482fef0c0d/5E39ED30/t51.2885-15/e35/s320x320/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/3ef14385a140de3ea28dc1ad18c445f5/5E33586A/t51.2885-15/e35/s480x480/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lhr3-1.cdninstagram.com/vp/9889d096a3c3daaa2f835a59ef858210/5E208467/t51.2885-15/sh0.08/e35/s640x640/69334811_180408693007897_2319288337413356998_n.jpg?_nc_ht=scontent-lhr3-1.cdninstagram.com&_nc_cat=101",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: indoor",
+    "scraper_version": "v2"
+}

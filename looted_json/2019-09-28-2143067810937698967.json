@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2143067810937698967",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Great mix #glass #architecture #blackandwhite #x100f #city"
+                }
+            }
+        ]
+    },
+    "shortcode": "B29tNHQg_qX",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1569693612,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/ac4ed00b4953cdfd5f66a784cb8e4ad0/5E3BB5D4/t51.2885-15/e35/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+    "edge_liked_by": {
+        "count": 7
+    },
+    "edge_media_preview_like": {
+        "count": 7
+    },
+    "location": {
+        "id": "1035170548",
+        "has_public_page": true,
+        "name": "Warsaw Supreme Court",
+        "slug": "warsaw-supreme-court"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoq5minKpY4AJPtVpNPuHGRG2PcY/nigCnRWnZaXLeAspVVHrnP4ACtRPDyKMySEj/ZGP5k/wAqAOYortY9EtU6gv8A7zH+mKs/2bbf881/KgDlItWnjG1dvHfH88YzU1vrDxqUly+Q2DxnJ9faslRmnhCYy3HBGemefTuff0oA1rG4aCPILLknkAEcAHlT1+oIrZj1MfdkwSThSuQTjrlW6fmc1gQk7FAxjLf+yD+tMml+dcgcc/XOKAOzS4RztB+b0PB/I4NTVyAvUU4Abb7DI/Kro1YY6t/3yaAOYWplwV25OCemagagUAb9p5ATy3UMc5yRk/n6VfWytX/g/Uj+tc1GSK04WOOtAG2thajog/M/41P9kg/uj9ap2xJIzWvigD//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/56c953a309791d8825d78efee6dcfb02/5E2E2631/t51.2885-15/sh0.08/e35/s640x640/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/c461b7f31814eb0c1e3e456e0eb199ea/5E373396/t51.2885-15/e35/s150x150/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/91ada612e6bba711f3508c7da510bccf/5E2916DC/t51.2885-15/e35/s240x240/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/c8c021ed21d2bd6618b1925a3777bffc/5E326B66/t51.2885-15/e35/s320x320/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/1984f40a1ace2db5ae62e58bc3aee72c/5E3BAC3C/t51.2885-15/e35/s480x480/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/56c953a309791d8825d78efee6dcfb02/5E2E2631/t51.2885-15/sh0.08/e35/s640x640/69640734_479083426154786_8108197778072598014_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky and outdoor",
+    "scraper_version": "v2"
+}

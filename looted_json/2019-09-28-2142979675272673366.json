@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2142979675272673366",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Propaganda Machine #loudspeaker #reflection #teampixel #history #orange"
+                }
+            }
+        ]
+    },
+    "shortcode": "B29ZKkhgnhW",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1569683106,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/f95dfc7f4565a669caf58ed5d194edad/5E379151/t51.2885-15/e35/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "location": {
+        "id": "220013248",
+        "has_public_page": true,
+        "name": "Muzeum Historii Żydów Polskich POLIN",
+        "slug": "muzeum-historii-zydow-polskich-polin"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqwgiAZY59B0/OmhunYf8A16cIGPcYHfP+TRGoJ28N6f5NG47NFiSMxAk4JUj8c055zLggZKjt29//ANVSXO2OLaQQxI4+nNQQO0jYGePSi1iU09WTSK7JgH5WUSEe4yPr3/SqPNW4yQGPLEgr16Z6H86o5xUmqJVameX83AyKkVcnIGKJhgjHp/WqI8hOTy3P45P09qmRxGdygDIxznr7VVVWJx1zwMVdmiyAoPPXkc/Q1Om5au3y2u30YRNtGwc5YMexyO34+uahNq5OcVehjiJBB+Yduoxjn8fSpKxc7Oy/E6qdJTTctPQgtodwJOB9c/zHSs+ZvMf5eQOBWjMcIccVTPCnHoa6WcC3uRAFBng49D0/z7VIJWlbJPPqOwpq9qnjA3n/AHTUdbG1tObzsWYbZoTuPRhkfj2PvU2KaGJDZJOCP5Uorjbb1Z6NNcsdOp//2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/0971a551b72751480fce5ed24f0868fc/5E259BB4/t51.2885-15/sh0.08/e35/s640x640/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/8a1ba5059a732793eae02b5f95fbe104/5E25DE13/t51.2885-15/e35/s150x150/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/f7113dd16e8044c7464f978de671d045/5E375559/t51.2885-15/e35/s240x240/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/5c31dd860f4a120f4b627fd1141f3f21/5E220CE3/t51.2885-15/e35/s320x320/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/1a668e4913176e67a6f244a6299ce47c/5E3CA5B9/t51.2885-15/e35/s480x480/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/0971a551b72751480fce5ed24f0868fc/5E259BB4/t51.2885-15/sh0.08/e35/s640x640/69662624_183247396047278_5543631593400603903_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: shoes",
+    "scraper_version": "v2"
+}

@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2143495634316016328",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Very pleasing building #sculpture #stone #rock #architecture #glass #red #green #interior #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "B2_Oew1AbrI",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1569744613,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/8529b74eb123bb61c16622a6b5471d08/5E1E35F4/t51.2885-15/e35/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+    "edge_liked_by": {
+        "count": 6
+    },
+    "edge_media_preview_like": {
+        "count": 6
+    },
+    "location": {
+        "id": "2088076387909566",
+        "has_public_page": true,
+        "name": "Polin Museum of the History of Polish Jews",
+        "slug": "polin-museum-of-the-history-of-polish-jews"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqYHKxAqejH6HjpU0kPQjvz/WqWcwhR1DFvqP/AK2Oa2oSHyvpj9VrNrm9SU7GPJHVdkxWxNBuyvQdM1UeLHFZbaM13Mw9cUmKtulV9tXcQm75Rz+tXIHOd2ePfvzVldNIHLcHt6c+uKuLZgZ5/HAouRykQulVsSdPUfzx6VLhZRxwR27042KkjPPr/n09qiIeFvlQsBxnPUfSpbvuaRi27K3zdvzK8keKq+UPStqWMEbh3qjsFRcdi/vX1H404Sj1FZtSirEXvNWmmdRVImmE0MEXWuKol+aYxqKoKP/Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/a03bd761f0cfa20b52a05e1422bd6ef1/5E1D2E11/t51.2885-15/sh0.08/e35/s640x640/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/d19596ce2f3f1db763dce618fbde196d/5E3405B6/t51.2885-15/e35/s150x150/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/c9b02fb704486da2301e494eda8cd606/5E287FFC/t51.2885-15/e35/s240x240/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/8651b926a2941ee205afed6aad4e8acc/5E3BCD46/t51.2885-15/e35/s320x320/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/d0a7cf62abd0042fd7eafa838e6b3f4c/5E22421C/t51.2885-15/e35/s480x480/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/a03bd761f0cfa20b52a05e1422bd6ef1/5E1D2E11/t51.2885-15/sh0.08/e35/s640x640/69493942_103485537657956_2906188199539752136_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=108",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: outdoor",
+    "scraper_version": "v2"
+}

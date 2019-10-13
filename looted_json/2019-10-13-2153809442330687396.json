@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2153809442330687396",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Industrial Pride #architecture #reflection #blue #cold #glass #flag #pride #ShotOniPhone #lookingup"
+                }
+            }
+        ]
+    },
+    "shortcode": "B3j3kbEALek",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1570974115,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/vp/0e11e34793087ddb6b94e37491887d84/5E3644F2/t51.2885-15/e35/s1080x1080/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+    "edge_liked_by": {
+        "count": 4
+    },
+    "edge_media_preview_like": {
+        "count": 4
+    },
+    "location": {
+        "id": "228080744",
+        "has_public_page": true,
+        "name": "Lloyd's building",
+        "slug": "lloyds-building"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqfaai7jMq8dyowB6d+fethhkZ65rmGutjhRg7Tz3XjsMYyO+ePQ1opqDcGXAVj6dAen/16oho0NpHNNz6is+S7LOyo3A4GPp/jxT0nL4GeQOPequIvoNx9KscVTjkHU/n/j/j0qfB9KBHGRLk89PbH9auPJ8yjoASecDoPr/hVQfQU9OGzgjavO3Gfr6Y9ak0JQ/7zjnPHBA6+/NWyufvAqD0O7JB79Bx69D3rNkO4555HfH9KnSSEDhGDdiB0P50xGjhWOe464PJ/AYI/IVc8xPf/P41nJOGUEtg/wC2NwH4/eX88dDiphgj+H8G4/D2oRLMTPqR+X/1qARzk4PbHAPtx2709QKYo+Vj6EVJYmc9/wBakjn8sAc5FRUqDk/hTAsx3Pz5HBPPPr/9ccH8KtGZD/yyj/z+FUmA2n6VdVQQCR2oEf/Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/vp/b2e8c34b18214f3a1598144988ef57a5/5E1FCD45/t51.2885-15/sh0.08/e35/s640x640/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/929f47e7fd2cb7cd3c31d2c6f3204e3a/5E3E3EE2/t51.2885-15/e35/s150x150/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/555480e8235de7e6ddcbed0c83faa58d/5E29EFA8/t51.2885-15/e35/s240x240/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/f9e64a9c9c3b4f869f4ffe341fc722df/5E21DC12/t51.2885-15/e35/s320x320/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/3d1182e29a1d3fb74ff38a82d211b114/5E339648/t51.2885-15/e35/s480x480/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/vp/b2e8c34b18214f3a1598144988ef57a5/5E1FCD45/t51.2885-15/sh0.08/e35/s640x640/69653769_440924066858076_3810849959718972040_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: sky, cloud, skyscraper and outdoor",
+    "scraper_version": "v2"
+}

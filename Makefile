@@ -2,13 +2,6 @@ TAG := $(shell tar -cf - . | md5sum | cut -f 1 -d " ")
 
 .PHONY: calendar
 
-all_or_report:
-	echo "Starting" > log 2>&1 && \
-	make download >> log 2>&1 && \
-	make sync >> log 2>&1 && \
-	make save >> log 2>&1 \
-	|| make notify
-
 download:
 	./bin/1_fetch_raw.rb
 	./bin/2_complete_json.rb
@@ -21,12 +14,6 @@ sync:
 
 save:
 	./bin/save.sh
-
-notify:
-	curl -s --form-string "token=$$PUSHOVER_TOKEN" \
-			--form-string "user=$$PUSHOVER_USER" \
-			--form-string "message=$$(cat log)" \
-			https://api.pushover.net/1/messages.json
 
 # adhoc tasks
 archive:
@@ -43,6 +30,10 @@ docker_image:
 docker_run:
 	docker run --rm -it --env-file=.envrc charlieegan3/photos:latest
 
+###############################################
+# frontend
+###############################################
+
 vue_image:
 	docker build -t charlieegan3/photos-vue frontend
 
@@ -57,6 +48,10 @@ vue_build: vue_install
 
 data_serve:
 	cd output && ran -p 8000 -cors=true
+
+###############################################
+# rebuilder
+###############################################
 
 rebuilder_build:
 	docker build -t charlieegan3/photos-rebuilder:latest -t charlieegan3/photos-rebuilder:${TAG} -f rebuilder/Dockerfile .

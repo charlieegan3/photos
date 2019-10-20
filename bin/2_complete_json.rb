@@ -20,6 +20,10 @@ Dir.glob("looted_json/*").shuffle.map do |file|
 
   tags = page_data["caption"].scan(/#\w+/).uniq
 
+  if page_data["contentLocation"].nil?
+    raise "post is missing location"
+  end
+
   location_url = page_data["contentLocation"]["mainEntityofPage"]["@id"].split("/").reject { |e| e.to_s.length == 0 }
   location = {
     "id" => location_url[4],

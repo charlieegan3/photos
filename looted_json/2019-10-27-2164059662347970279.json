@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2164059662347970279",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Aldgate gloom #shadow #sun #contrast #platform #train #dark #x100f"
+                }
+            }
+        ]
+    },
+    "shortcode": "B4ISMwXAKbn",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1572196036,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/3416b4865ecba56d2a5825eee6e703c6/5E5E290E/t51.2885-15/e35/s1080x1080/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+    "edge_liked_by": {
+        "count": 3
+    },
+    "edge_media_preview_like": {
+        "count": 3
+    },
+    "location": {
+        "id": "228332776",
+        "has_public_page": true,
+        "name": "Archway Station",
+        "slug": "archway-station"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqxBC5/H3pxtXPJx+fNaE4guTlSAx6kfKfxHQ/kDWbLaSR8j5h+v5f4ZqmIWaMx7e4Yfj/AF/ClWykcfKC34H8qiglMZx29DyM9OlaUN0+4WzgBdwDdfUd8nv3qVoMzJoTFwww3cVBVy+bdKx9z/OqdMCbcSTzzmrEc7Lj2P8Ang8fpVRvvH61Iq5UknHpUjLt7EoXzAACW4x3HY4qnE5aQbjxkZJ7896Gd5QF7KMfqTTYxtIJ7f55pgLL1P1qCpHOefU1HQIfjJqeNC+B0X+eOv0A7n+tQf4mtAcB/YqPw9Pp7UAPSFWGf4e3v7/4D0qOe3VVyOtWe1R3PSui1tDK99TLY8D15/pTKcabWD3NEf/Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/fc0cbba74f41408ed1342d4c243dfc1b/5E4CF0B9/t51.2885-15/sh0.08/e35/s640x640/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/1341a6678b47a3f65cefe019495b9309/5E4DA11E/t51.2885-15/e35/s150x150/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/9acee7229afb6d9009d5270bab9a8468/5E4EDB54/t51.2885-15/e35/s240x240/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/7b9f745824d66f3e78e0efbab3f57b97/5E429AEE/t51.2885-15/e35/s320x320/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/7f00112e8a5d47b372c71404c0d21b25/5E4D9CB4/t51.2885-15/e35/s480x480/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/fc0cbba74f41408ed1342d4c243dfc1b/5E4CF0B9/t51.2885-15/sh0.08/e35/s640x640/72910671_160009958532684_2908158818543785091_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=100",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: indoor",
+    "scraper_version": "v2"
+}

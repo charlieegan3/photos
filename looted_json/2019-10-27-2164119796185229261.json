@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "id": "2164119796185229261",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Dry riser inlet #shopping #texture #pattern #wall #shadows #shotoniphone"
+                }
+            }
+        ]
+    },
+    "shortcode": "B4If30XAufN",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1572203205,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-1.cdninstagram.com/vp/6a9f94037eefb5ee05ca7c0bdbd09859/5E655B89/t51.2885-15/e35/s1080x1080/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+    "edge_liked_by": {
+        "count": 7
+    },
+    "edge_media_preview_like": {
+        "count": 7
+    },
+    "location": {
+        "id": "227411680",
+        "has_public_page": true,
+        "name": "Aldgate East, London",
+        "slug": "aldgate-east-london"
+    },
+    "gating_info": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqijwi7cf0qdYww9zTcIRuU9RnB6g+g9fapEkCjOM/Tk/ypuxI1lCDNPQDGfWhpMngfX8P8/lTVY5zjvn/AD+VSMSRQGBHAIqtk/WtBPmx6D+f/wBapN2O36U7CuUrc/J9P8PapwrE+m7kflUdorqrLIjISewPIx7VOHCLlgyhc4yG/Dtxx+f0p3HYjGd2G/Co7h9gA5/CoJtSGOBlh2YECq7XYlxvwgPoM47Aj6e/T3o3FsXIn3g7G+72PXnpjjmpQ7+p/L/61ZkD/ZsOxxzggdxng+hGOK1xex44LAem2kMtPMyctG231GD+PBzUC6lCSQSUx3IJz/n3qSxYmM5JNWCoI5ANIZkXCw3LE7wDjrgkH+oP4VlTWpUkIwYe2f8A9ddf5KY+6v5CqTRpuPA/IUwMaOMsFzyw42kbsg+me2eaV7afcdsXGTjk9O38VXJwF6cc9qp+Y/qfzNTZrqVe6tY//9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-1.cdninstagram.com/vp/b5469a93e1b46c258a6a24261a2524d0/5E5C044D/t51.2885-15/sh0.08/e35/s640x640/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/0f5a41074d252a4d221a59c9c3483b9d/5E64DFC8/t51.2885-15/e35/s150x150/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/ac44abd9ddd2b6192c915b96e891d700/5E4FB1CE/t51.2885-15/e35/s240x240/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/f7d1a142561bf77277f5042b49045ab2/5E52F8B0/t51.2885-15/e35/s320x320/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/bb360b7ce591e2b5ce48ebeb6eddd27c/5E405CF7/t51.2885-15/e35/s480x480/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-1.cdninstagram.com/vp/b5469a93e1b46c258a6a24261a2524d0/5E5C044D/t51.2885-15/sh0.08/e35/s640x640/73115159_1410764769074500_4255551460660691938_n.jpg?_nc_ht=scontent-mia3-1.cdninstagram.com&_nc_cat=104",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "No photo description available.",
+    "scraper_version": "v2"
+}

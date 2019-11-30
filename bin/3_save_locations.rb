@@ -13,9 +13,9 @@ end.uniq.compact.each do |location|
   next if File.exists?(location_file_name)
   next if locations_with_missing_data.include?(location["id"])
 
-  puts "https://hotsta.org/geo/#{location["id"]}"
-  html = open("http://hotsta.org/geo/#{location["id"]}").read
-  lat, long = html.scan(/(google.com\/maps)\S+q=(\S+)"/).first.last.split(",").map(&:to_f)
+  puts url = "https://www.instahu.net/location/#{location["id"]}/#{location["slug"]}"
+  html = open(url).read
+  lat, long = html.scan(/L\.marker\(\[(.*)\]\)/).flatten.first.split(", ")
 
   begin
     location.merge!(lat: lat.to_f, long: long.to_f)

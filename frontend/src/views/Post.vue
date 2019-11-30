@@ -45,8 +45,7 @@
         </div>
         <p>
           <template v-for="tag in tagList" v-if="data">
-            <router-link class="silver no-underline f7 pr1" :to="'/tags/' + tag">#{{ tag }}</router-link>
-            &Tab;
+            <router-link class="dib silver no-underline f7 pr1" :to="'/tags/' + tag">#{{ tag }}</router-link>
           </template>
         </p>
       </div>

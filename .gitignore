@@ -1,4 +1,5 @@
-media
+!media/.keep
+media/*
 calendar/*
 site/content/photos
 site/content/locations

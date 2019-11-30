@@ -13,15 +13,18 @@
       </div>
       <div class="f7 f5-ns ph3 pt2 pt0-l gray">
         <p class="mt0 silver">{{ caption }}</p>
-        <Map v-if="mapItems" :items="mapItems" :height="200" :maxZoom="12" />
+        <Map v-if="mapItems.length > 0" :items="mapItems" :height="200" :maxZoom="12" :location="locationData.id" />
         <p v-if="data">View this post on <a class="no-underline silver" :href="'https://instagram.com/p/'+data.code">Instagram</a></p>
         <p v-if="data">View all from <router-link class="silver no-underline" :to="{ name: 'archive', params: { id: date.format('YYYY-MM-DD'), type: 'day' } }">{{ date.format("dddd Do MMMM, YYYY") }}</router-link>
         <div v-if="locationData">
           <div v-if="locationData.locations !== null">
             <p v-if="locationData.posts.length > 1">
-              {{ locationData.posts.length - 1 }} nearby posts from {{ locationData.name.replace(/,.*$/, "") }}
+              {{ locationData.posts.length - 1 }} nearby posts from
+              <router-link class="silver no-underline" :to="{ name: 'location', params: { id: locationData.id, type: 'locations' } }">
+                {{ locationData.name.replace(/,.*$/, "") }}
+              </router-link>
             </p>
-			<Grid class="h4" v-if="locationData.posts.length > 1" :items="sameLocationItems"/>
+            <Grid class="h4" v-if="locationData.posts.length > 1" :items="sameLocationItems"/>
             <p>
               Browse nearby
               <router-link class="di silver no-underline" :to="'/locations/' + locationData.id">
@@ -87,7 +90,7 @@ export default {
       data: false,
       locationData: false,
       index: false,
-      mapItems: false
+      mapItems: []
     }
   },
   computed: {

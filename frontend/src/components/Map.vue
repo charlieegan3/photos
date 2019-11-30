@@ -1,12 +1,12 @@
 <template>
-  <div :style="style" id="map"></div>
+  <div :style="style" id="map" data-location="location"></div>
 </template>
 
 <script>
 import Mapbox from "mapbox-gl";
 
 export default {
-    props: {"height": Number, "items":{ required: true }, "maxZoom": { default: 12 } },
+	props: {"height": Number, "items":{ required: true }, "maxZoom": { default: 12 }, "location": {} },
 
   data() {
     return {

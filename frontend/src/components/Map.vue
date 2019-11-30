@@ -1,5 +1,5 @@
 <template>
-  <div :style="style" id="map" data-location="location"></div>
+  <div :style="style" id="map"></div>
 </template>
 
 <script>
@@ -16,18 +16,26 @@ export default {
     }
   },
 
-  watch: {
-    items: function() {
-      Mapbox.accessToken = this.accessToken;
-      this.map = new Mapbox.Map({
-        container: 'map',
-        style: this.mapStyle,
-      });
-      var map = this.map;
-      map.scrollZoom.disable();
-      map.addControl(new Mapbox.NavigationControl());
-      map.addControl(new Mapbox.FullscreenControl());
+  mounted() {
+    Mapbox.accessToken = this.accessToken;
+    this.map = new Mapbox.Map({
+      container: 'map',
+      style: this.mapStyle,
+    });
+    this.map.scrollZoom.disable();
+    this.map.addControl(new Mapbox.NavigationControl());
+    this.map.addControl(new Mapbox.FullscreenControl());
+    // this shouldn't happen but it seem to sometimes
+    if (this.items.length > 0) { this.drawItems() }
+  },
 
+  watch: {
+    items: function() { this.drawItems() }
+  },
+
+  methods: {
+    drawItems: function() {
+      var app = this;
       var markers = this.markers;
       this.geoJSON.features.forEach(function(feature) {
         var el = document.createElement('div');
@@ -41,34 +49,31 @@ export default {
           marker.setPopup(new Mapbox.Popup({offset: 25}).setHTML('<a href="' + feature.properties.link + '">' + feature.properties.title + '</a>'));
         }
 
-        marker.addTo(map);
+        marker.addTo(app.map);
         markers.push(marker);
       });
 
-      this.setMarkerSize();
-      map.on('zoom', this.setMarkerSize);
+      app.setMarkerSize();
+      app.map.on('zoom', this.setMarkerSize);
 
       var bounds = new Mapbox.LngLatBounds();
       markers.forEach(function(feature) { bounds.extend(feature.getLngLat()) });
 
-      map.fitBounds(bounds, { padding: this.height / 4, maxZoom: this.maxZoom, duration: 100 });
+      app.map.fitBounds(bounds, { padding: this.height / 4, maxZoom: this.maxZoom, duration: 100 });
+    },
+    setMarkerSize: function() {
+      var scale = Math.pow(this.map.getZoom(), 2) / 2;
+      if (scale < 10) { scale = 10 }
+      if (scale > 40) { scale = 40 }
+      this.markers.forEach(function(marker) {
+        var elem = marker.getElement();
+        if (scale > 15) {
+          elem.style.backgroundImage = "url(" + elem.getAttribute("data-icon") + ")";
+        }
+        elem.style.width = scale + "px";
+        elem.style.height = scale + "px";
+      })
     }
-  },
-
-  methods: {
-  setMarkerSize: function() {
-    var scale = Math.pow(this.map.getZoom(), 2) / 2;
-    if (scale < 10) { scale = 10 }
-    if (scale > 40) { scale = 40 }
-    this.markers.forEach(function(marker) {
-      var elem = marker.getElement();
-      if (scale > 15) {
-        elem.style.backgroundImage = "url(" + elem.getAttribute("data-icon") + ")";
-      }
-      elem.style.width = scale + "px";
-      elem.style.height = scale + "px";
-    })
-  }
   },
 
   computed: {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -exo pipefail
 
 if [ -z "$(git status --porcelain)" ]; then
   echo "Nothing to commit"

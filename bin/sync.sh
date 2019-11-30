@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -exo pipefail
 
 if [ -z "$(ls -A media)" ]; then
   echo "Nothing to sync"

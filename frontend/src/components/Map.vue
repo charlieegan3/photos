@@ -6,7 +6,7 @@
 import Mapbox from "mapbox-gl";
 
 export default {
-	props: {"height": Number, "items":{ required: true }, "maxZoom": { default: 12 }, "location": {} },
+  props: {"height": Number, "items":{ required: true }, "maxZoom": { default: 12 }, "location": {} },
 
   data() {
     return {
@@ -16,41 +16,43 @@ export default {
     }
   },
 
-  mounted() {
-    Mapbox.accessToken = this.accessToken;
-    this.map = new Mapbox.Map({
-      container: 'map',
-      style: this.mapStyle,
-    });
-    var map = this.map;
-    map.scrollZoom.disable();
-    map.addControl(new Mapbox.NavigationControl());
-    map.addControl(new Mapbox.FullscreenControl());
+  watch: {
+    items: function() {
+      Mapbox.accessToken = this.accessToken;
+      this.map = new Mapbox.Map({
+        container: 'map',
+        style: this.mapStyle,
+      });
+      var map = this.map;
+      map.scrollZoom.disable();
+      map.addControl(new Mapbox.NavigationControl());
+      map.addControl(new Mapbox.FullscreenControl());
 
-    var markers = this.markers;
-    this.geoJSON.features.forEach(function(feature) {
-      var el = document.createElement('div');
-      el.className = 'marker';
-      el.setAttribute("data-icon", feature.properties.icon);
+      var markers = this.markers;
+      this.geoJSON.features.forEach(function(feature) {
+        var el = document.createElement('div');
+        el.className = 'marker';
+        el.setAttribute("data-icon", feature.properties.icon);
 
-      var marker = new Mapbox.Marker(el)
-        .setLngLat(feature.geometry.coordinates)
+        var marker = new Mapbox.Marker(el)
+          .setLngLat(feature.geometry.coordinates)
 
-      if (feature.properties.link) {
-        marker.setPopup(new Mapbox.Popup({offset: 25}).setHTML('<a href="' + feature.properties.link + '">' + feature.properties.title + '</a>'));
-      }
+        if (feature.properties.link) {
+          marker.setPopup(new Mapbox.Popup({offset: 25}).setHTML('<a href="' + feature.properties.link + '">' + feature.properties.title + '</a>'));
+        }
 
-      marker.addTo(map);
-      markers.push(marker);
-    });
+        marker.addTo(map);
+        markers.push(marker);
+      });
 
-    this.setMarkerSize();
-    map.on('zoom', this.setMarkerSize);
+      this.setMarkerSize();
+      map.on('zoom', this.setMarkerSize);
 
-    var bounds = new Mapbox.LngLatBounds();
-    markers.forEach(function(feature) { bounds.extend(feature.getLngLat()) });
+      var bounds = new Mapbox.LngLatBounds();
+      markers.forEach(function(feature) { bounds.extend(feature.getLngLat()) });
 
-    map.fitBounds(bounds, { padding: this.height / 4, maxZoom: this.maxZoom, duration: 100 });
+      map.fitBounds(bounds, { padding: this.height / 4, maxZoom: this.maxZoom, duration: 100 });
+    }
   },
 
   methods: {

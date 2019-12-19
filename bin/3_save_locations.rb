@@ -13,9 +13,11 @@ end.uniq.compact.each do |location|
   next if File.exists?(location_file_name)
   next if locations_with_missing_data.include?(location["id"])
 
-  puts url = "https://www.instahu.net/location/#{location["id"]}/#{location["slug"]}"
+
+  puts url = "https://finalgram.com/location/#{location['slug']}/#{location["id"]}"
   html = open(url).read
-  lat, long = html.scan(/L\.marker\(\[(.*)\]\)/).flatten.first.split(", ")
+
+  lat, long = html.scan(/yandexMap\(([^\)]*)\)/).flatten.first.split(",").take(2)
 
   begin
     location.merge!(lat: lat.to_f, long: long.to_f)

@@ -1,0 +1,75 @@
+{
+    "__typename": "GraphImage",
+    "id": "2255340390871881755",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "15:39 to Patrick #train #blur #motionblur #shotoniphone #colorful"
+                }
+            }
+        ]
+    },
+    "shortcode": "B9MlCLdglgb",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1583077547,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=2b2f9d1e2d08a98513df27b900bad7ef&oe=5E97AC0C",
+    "edge_liked_by": {
+        "count": 3
+    },
+    "edge_media_preview_like": {
+        "count": 3
+    },
+    "location": {
+        "id": "216895733",
+        "has_public_page": true,
+        "name": "Glasgow Queen Street railway station",
+        "slug": "glasgow-queen-street-railway-station"
+    },
+    "gating_info": null,
+    "fact_check_overall_rating": null,
+    "fact_check_information": null,
+    "media_preview": "ACoqjKuPT86AG9B+dM3St3oAk9az18jS5Jh/QfmKXY/XC/mKb+8P8VSAy/3v5VLb7r8RibX/ALo/Om/P/dH51JmX+9/Km7H/AL38qV/T8RlVH46gUocdyOacoUdx+VODY7j/AL5rd3IuhuVz1HNPDL6j8v8A61OD+4/75qRJfof+A1Dv/TQXItyZxx+X/wBak3L7flUjOM5pPN9jS/rdB/WxUFSDPtUAqUGrYloPw3t+dSJu/wBmoQTSgmoY7Ez7j0xUeG9qcpOfwNJk1Nyj/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=f3cc8c27323d3de391de3866ddab29e4&oe=5E9921BB",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/e35/s150x150/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=0aef34e1aa597c9e0e05f4ec5c495b65&oe=5E8F001C",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/e35/s240x240/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=6756344efb24ea11c0438c54ba0ea456&oe=5E98AE56",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/e35/s320x320/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=8b684c9269ad41534a8d430b825d89a3&oe=5E9A30EC",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/e35/s480x480/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=271c417e676b3ab385bb5fcfdd117c8a&oe=5E982FB6",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-mia3-2.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/83908437_234769360894821_7385613454653556254_n.jpg?_nc_ht=scontent-mia3-2.cdninstagram.com&_nc_cat=109&_nc_ohc=7USOm7ET3ywAX9iPOJo&oh=f3cc8c27323d3de391de3866ddab29e4&oe=5E9921BB",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Photo by Charlie in Glasgow Queen Street railway station.",
+    "scraper_version": "v2"
+}

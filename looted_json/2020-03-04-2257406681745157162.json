@@ -1,0 +1,75 @@
+{
+    "__typename": "GraphImage",
+    "id": "2257406681745157162",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "how Pleasant #flats #building #architecture #lookingup #shotoniphone #sign #typography #text #advert #dull"
+                }
+            }
+        ]
+    },
+    "shortcode": "B9T62qzA2wq",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1583323868,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=9072cd1f36b98a225d5d6fa3b4016eff&oe=5E95AA6C",
+    "edge_liked_by": {
+        "count": 0
+    },
+    "edge_media_preview_like": {
+        "count": 0
+    },
+    "location": {
+        "id": "220272601",
+        "has_public_page": true,
+        "name": "Clerkenwell",
+        "slug": "clerkenwell"
+    },
+    "gating_info": null,
+    "fact_check_overall_rating": null,
+    "fact_check_information": null,
+    "media_preview": "ACoq1woFZ3VmJGfcfXr+GMfnWmxwM1koy4JyfYe/OR645/nQDG2gIPTaCDwfvHjr7CoYLd5BwML6nj8vX8KfZldxK5YkHLn6dBWsJSu1eCBGDj8O/OQOOwP4Ug2M25tRbKpByWJB9PXiqfFaV45liBPG1/5jiscv70mUjpJ22oSOuKzdx8tiVxwc/UDj8+efer1wjSqUXqapOkmwgna3IwPUnhv8+lMkZbb85fCjso+nX1q55oDID/zzH45X/POPXntVC2RUflg8nrnJxj8v1rUiC7VOPmKLz+HamgKk6Mtsdx6YI9eo9ecViZNdBOhZG4/hPfNYGD/kUmNG5d5bAUlSD1H0NQSnzIsSNyQAxPHfP8v85qPUnKuu0kdehx6Ut1zFzzkr/MUxC2vlq2yP5uck846Hua1Iv9WnU/IvAGe1ZNkMBcdy1VrqaQKqhmAwOMnHT0oA3t6oCHITOR8xA6+1czg0IByaeetSykf/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=165968eccdde735308d5734e45fb7c95&oe=5E901DDB",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s150x150/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=693dabe8a3663a20a5f221c20a8e7f07&oe=5E94467C",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s240x240/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=09fdaae896d78c6a8e027e370374c99d&oe=5E8E3B36",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s320x320/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=179cfcc7382fb25639b6f29740de5929&oe=5E97EE8C",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s480x480/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=6a833ba014177f75b27e855ce5a0e339&oe=5E95AFD6",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/89117985_530000321265436_5590457645235992119_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=RHZytmI_KqEAX8Tr-YX&oh=165968eccdde735308d5734e45fb7c95&oe=5E901DDB",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Image may contain: outdoor",
+    "scraper_version": "v2"
+}

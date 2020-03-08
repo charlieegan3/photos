@@ -3,6 +3,8 @@
 require "json"
 require "open-uri"
 
+# TODO https://www.instagram.com/explore/locations/1024355506/?__a=1
+
 locations_with_missing_data = %w()
 
 Dir.glob("completed_json/*").map do |file|

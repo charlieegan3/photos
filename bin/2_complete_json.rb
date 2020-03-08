@@ -4,6 +4,8 @@ require "json"
 require "date"
 require "open-uri"
 
+# TODO https://www.instagram.com/explore/locations/1024355506/?__a=1
+
 Dir.glob("looted_json/*").shuffle.map do |file|
   completed_file_name = "completed_json/#{file.split("/").last}"
 

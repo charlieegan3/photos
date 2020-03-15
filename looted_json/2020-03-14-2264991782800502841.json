@@ -1,0 +1,75 @@
+{
+    "__typename": "GraphImage",
+    "id": "2264991782800502841",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Crescent 🌙 #stainedglass #window #church #cathedral #x100f #lookingup"
+                }
+            }
+        ]
+    },
+    "shortcode": "B9u3gapALA5",
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1584228082,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=cbb77770daea14504200630404bcd103&oe=5EA03789",
+    "edge_liked_by": {
+        "count": 1
+    },
+    "edge_media_preview_like": {
+        "count": 1
+    },
+    "location": {
+        "id": "317069",
+        "has_public_page": true,
+        "name": "Liverpool Metropolitan Cathedral",
+        "slug": "liverpool-metropolitan-cathedral"
+    },
+    "gating_info": null,
+    "fact_check_overall_rating": null,
+    "fact_check_information": null,
+    "media_preview": "ACoq5mlwcZ7UAZOB3rdlsf8ARgV+8h6evqf60DRg0U4jFJQISitOKxJjLSfKSAV/Hp+BOPpnNZlG+wDlO0g+hzXXRyKqE5Jz0/4F0b8c4rj60bW7Xb5cvGAQrc8Z6g46j09KY07Dri1y2V/iIx+NaFhYoj7n5IOMHp/npUGxzjaQwySGGCOcAfTvVlmkJYNhEOcMxAx3B9evXHWiUW1/XmXdO9izcyBSEPITLH/dUZGfboPeuSPPNaV5eh18uMlgfvORjd6ADsoPPPJPWsylsZhRS0lOwDskdKQknk80ppKbWtgEopaSk9AP/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "thumbnail_src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=949caae8843b2ff89f768db6fd4d81d3&oe=5EA4883E",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s150x150/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=60b6a3a73c2ee7b2833081c40537af12&oe=5E9D2E99",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s240x240/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=46f8cc461e9e482dc22e2f12a29465f6&oe=5EA5C2D3",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s320x320/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=9d1f610a8059358c400d35540f5c9052&oe=5EA54969",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/e35/s480x480/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=4b4c6c328220794f2aea90fda1012972&oe=5EA63933",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-atl3-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/89991127_865661020538738_8314994086222078634_n.jpg?_nc_ht=scontent-atl3-1.cdninstagram.com&_nc_cat=102&_nc_ohc=TKpVqz1bXZgAX9oI1vJ&oh=949caae8843b2ff89f768db6fd4d81d3&oe=5EA4883E",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "is_video": false,
+    "accessibility_caption": "Photo by Charlie in Liverpool Metropolitan Cathedral.",
+    "scraper_version": "v2"
+}

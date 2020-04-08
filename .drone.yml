@@ -33,7 +33,7 @@ steps:
 - name: set-tags
   image: busybox
   commands:
-  - echo -n "amd64-$DRONE_COMMIT" > .tags
+  - echo -n "arm-$DRONE_COMMIT" > .tags
 - name: deploy
   image: plugins/docker
   settings:

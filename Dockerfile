@@ -1,15 +1,9 @@
-FROM ubuntu:18.04
+FROM ruby:2.7-alpine
 
-RUN apt-get update
-RUN apt-get install -y software-properties-common curl
-RUN apt-add-repository ppa:brightbox/ruby-ng
+RUN apk add curl python3 git bash
+RUN curl -sSL https://sdk.cloud.google.com | bash
+ENV PATH $PATH:/root/google-cloud-sdk/bin
 
-RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
-		echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-		curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-
-RUN apt-get update
-RUN apt-get install -y ruby google-cloud-sdk build-essential python3-pip git
 RUN pip3 install awscli b2
 
 WORKDIR /app

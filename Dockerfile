@@ -1,7 +1,7 @@
 # last armv
 FROM ruby:2.6.6-alpine
 
-RUN apk add curl python3 git bash
+RUN apk add curl python2 python3 git bash
 RUN curl -sSL https://sdk.cloud.google.com | bash
 ENV PATH $PATH:/root/google-cloud-sdk/bin
 

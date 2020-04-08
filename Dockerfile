@@ -9,7 +9,7 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
 		curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
 RUN apt-get update
-RUN apt-get install -y ruby2.4 google-cloud-sdk build-essential python3-pip git
+RUN apt-get install -y ruby google-cloud-sdk build-essential python3-pip git
 RUN pip3 install awscli b2
 
 WORKDIR /app

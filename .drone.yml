@@ -26,8 +26,9 @@ steps:
 kind: pipeline
 name: rebuilder-arm
 
-platform:
-  arch: arm
+# this should work but using go cross compile instead
+# platform:
+#   arch: arm
 
 steps:
 - name: set-tags

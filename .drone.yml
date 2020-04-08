@@ -18,7 +18,8 @@ steps:
     password:
       from_secret: DOCKER_PASSWORD
     dockerfile: rebuilder/Dockerfile
-    context: rebuilder
+    # build from root
+    # context: rebuilder
     build_args:
     - go_arch=amd64
 ---
@@ -41,6 +42,7 @@ steps:
     password:
       from_secret: DOCKER_PASSWORD
     dockerfile: rebuilder/Dockerfile
-    context: rebuilder
+    # build from root
+    # context: rebuilder
     build_args:
     - go_arch=arm

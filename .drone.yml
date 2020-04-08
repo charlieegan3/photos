@@ -46,3 +46,47 @@ steps:
     # context: rebuilder
     build_args:
     - go_arch=arm
+---
+kind: pipeline
+name: nginx-amd64
+
+platform:
+  arch: amd64
+
+steps:
+- name: set-tags
+  image: busybox
+  commands:
+  - echo -n "amd64-$DRONE_COMMIT" > .tags
+- name: deploy
+  image: plugins/docker
+  settings:
+    repo: charlieegan3/photos-nginx-template
+    username: charlieegan3
+    password:
+      from_secret: DOCKER_PASSWORD
+    dockerfile: nginx-template/Dockerfile
+    context: nginx-template
+
+---
+kind: pipeline
+type: docker
+name: nginx-arm
+
+platform:
+  arch: arm
+
+steps:
+- name: set-tags
+  image: busybox
+  commands:
+  - echo -n "arm-$DRONE_COMMIT" > .tags
+- name: deploy
+  image: plugins/docker
+  settings:
+    repo: charlieegan3/photos-nginx-template
+    username: charlieegan3
+    password:
+      from_secret: DOCKER_PASSWORD
+    dockerfile: nginx-template/Dockerfile
+    context: nginx-template

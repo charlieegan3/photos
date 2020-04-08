@@ -48,14 +48,3 @@ vue_build: vue_install
 
 data_serve:
 	photos site debug --output data && ran -p 8000 -cors=true
-
-###############################################
-# rebuilder
-###############################################
-
-rebuilder_build:
-	docker build -t charlieegan3/photos-rebuilder:latest -t charlieegan3/photos-rebuilder:${TAG} -f rebuilder/Dockerfile .
-
-rebuilder_push: rebuilder_build
-	docker push charlieegan3/photos-rebuilder:latest
-	docker push charlieegan3/photos-rebuilder:${TAG}

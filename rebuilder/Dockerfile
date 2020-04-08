@@ -1,7 +1,9 @@
-FROM golang:1.13-rc-alpine as build-cli
+FROM golang:1.14 as build-cli
+
 WORKDIR /app
 COPY cli .
-RUN go build
+ARG go_arch
+RUN GOARCH=${go_arch} GOOS=linux go build .
 
 FROM node:8-jessie as build-frontend
 WORKDIR /app

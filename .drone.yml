@@ -1,0 +1,46 @@
+---
+kind: pipeline
+name: rebuilder-amd64
+
+platform:
+  arch: amd64
+
+steps:
+- name: set-tags
+  image: busybox
+  commands:
+  - echo -n "amd64-$DRONE_COMMIT" > .tags
+- name: deploy
+  image: plugins/docker
+  settings:
+    repo: charlieegan3/photos-rebuilder
+    username: charlieegan3
+    password:
+      from_secret: DOCKER_PASSWORD
+    dockerfile: rebuilder/Dockerfile
+    context: rebuilder
+    build_args:
+    - go_arch=amd64
+---
+kind: pipeline
+name: rebuilder-arm
+
+platform:
+  arch: arm
+
+steps:
+- name: set-tags
+  image: busybox
+  commands:
+  - echo -n "amd64-$DRONE_COMMIT" > .tags
+- name: deploy
+  image: plugins/docker
+  settings:
+    repo: charlieegan3/photos-rebuilder
+    username: charlieegan3
+    password:
+      from_secret: DOCKER_PASSWORD
+    dockerfile: rebuilder/Dockerfile
+    context: rebuilder
+    build_args:
+    - go_arch=arm

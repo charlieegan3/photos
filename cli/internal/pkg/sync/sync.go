@@ -1,13 +1,10 @@
 package sync
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
+	"os"
 
-	"github.com/charlieegan3/photos/internal/pkg/proxy"
-	"github.com/charlieegan3/photos/internal/types"
+	"github.com/charlieegan3/photos/internal/pkg/git"
 	"github.com/spf13/cobra"
 )
 
@@ -27,21 +24,29 @@ func CreateSyncCmd() *cobra.Command {
 
 // RunSync clones or pulls a repo into the path
 func RunSync(cmd *cobra.Command, args []string) {
-	resp, err := proxy.GetURLViaProxy("https://www.instagram.com/charlieegan3/?__a=1")
+	files, err := git.ListFiles()
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
-	fmt.Println(resp)
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-
-	var profile types.Profile
-	if err := json.Unmarshal(body, &profile); err != nil {
-		log.Fatal(err)
+	for _, v := range files {
+		fmt.Println(v)
 	}
-
-	for _, v := range profile.Graphql.User.EdgeOwnerToTimelineMedia.Edges {
-		fmt.Println(v.Node.ID)
-	}
+	// resp, err := proxy.GetURLViaProxy("https://www.instagram.com/charlieegan3/?__a=1")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println(resp)
+	// defer resp.Body.Close()
+	// body, err := ioutil.ReadAll(resp.Body)
+	//
+	// var profile types.Profile
+	// if err := json.Unmarshal(body, &profile); err != nil {
+	// 	log.Fatal(err)
+	// }
+	//
+	// for _, v := range profile.Graphql.User.EdgeOwnerToTimelineMedia.Edges {
+	// 	fmt.Println(v.Node.ID)
+	// }
 }

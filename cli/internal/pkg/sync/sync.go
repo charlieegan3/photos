@@ -1,11 +1,13 @@
 package sync
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/charlieegan3/photos/internal/pkg/git"
 	"github.com/charlieegan3/photos/internal/pkg/instagram"
@@ -40,10 +42,24 @@ func RunSync(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
+	files := make(map[string]string)
 	for _, v := range latestPosts {
 		if !stringArrayContains(existing, v.ID) {
 			fmt.Println(v.ID + " is new")
+			dateString := time.Unix(v.TakenAtTimestamp, 0).Format("2006-01-02")
+			bytes, err := json.MarshalIndent(v, "", "  ")
+			if err != nil {
+				log.Fatalf("failed to generate json for post: %v", err)
+				os.Exit(1)
+			}
+			files["looted_json/"+dateString+"-"+v.ID+".json"] = string(bytes)
 		}
+	}
+
+	err = git.WriteToPaths(files)
+	if err != nil {
+		log.Fatalf("failed to write new data to git: %v", err)
+		os.Exit(1)
 	}
 }
 

@@ -27,6 +27,7 @@ func ListFiles() ([]string, error) {
 	if err != nil {
 		return []string{}, errors.Wrap(err, "failed to clone repo")
 	}
+	// fs.Remove("looted_json/2020-04-09-2283745206165792307.json")
 
 	files, err := recursiveList(fs, "/")
 	if err != nil {

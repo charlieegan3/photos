@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
 
+	"github.com/charlieegan3/photos/internal/pkg/proxy"
 	"github.com/charlieegan3/photos/internal/types"
 	"github.com/spf13/cobra"
 )
@@ -27,10 +27,12 @@ func CreateSyncCmd() *cobra.Command {
 
 // RunSync clones or pulls a repo into the path
 func RunSync(cmd *cobra.Command, args []string) {
-	resp, err := http.Get("https://www.instagram.com/charlieegan3/?__a=1")
+	resp, err := proxy.GetURLViaProxy("https://www.instagram.com/charlieegan3/?__a=1")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
+	fmt.Println(resp)
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 

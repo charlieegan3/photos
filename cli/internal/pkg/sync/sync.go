@@ -37,9 +37,21 @@ func RunSync(cmd *cobra.Command, args []string) {
 
 	var updateCount int
 
-	updates, err := lootedUpdates(&fs)
+	updates, err := lootedUpdates(fs)
 	if err != nil {
 		log.Fatalf("failed to get looted json: %v", err)
+		os.Exit(1)
+	}
+	updateCount += len(updates)
+	err = git.WriteToPaths(r, fs, updates)
+	if err != nil {
+		log.Fatalf("failed to write new data to git: %v", err)
+		os.Exit(1)
+	}
+
+	updates, err = completedUpdates(fs)
+	if err != nil {
+		log.Fatalf("failed to get completed json: %v", err)
 		os.Exit(1)
 	}
 	updateCount += len(updates)

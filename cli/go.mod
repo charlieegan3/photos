@@ -14,6 +14,7 @@ require (
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/viper v1.3.2
 	github.com/urfave/cli v1.20.0 // indirect
+	github.com/weaveworks/common v0.0.0-20200310113808-2708ba4e60a4
 	google.golang.org/appengine v1.6.5
 	gopkg.in/src-d/go-billy.v4 v4.3.2
 	gopkg.in/src-d/go-git.v4 v4.13.1

@@ -14,18 +14,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-func lootedUpdates(fs *billy.Filesystem) (map[string]string, error) {
+func lootedUpdates(fs billy.Filesystem) (map[string]string, error) {
 	log.Println("starting fetching of looted updates")
 
 	updates := make(map[string]string)
 
-	existing, err := existingLootedIDs(fs)
+	existing, err := existingIDs(fs, "looted_json")
 	if err != nil {
-		return updates, errors.Wrap(err, "failed to get existing ids")
+		return updates, errors.Wrap(err, "failed to get looted ids")
 	}
 	latestPosts, err := instagram.LatestPosts()
 	if err != nil {
-		return updates, errors.Wrap(err, "failed to get existing ids")
+		return updates, errors.Wrap(err, "failed to get latest posts from instagram")
 	}
 
 	for _, v := range latestPosts {
@@ -45,7 +45,7 @@ func lootedUpdates(fs *billy.Filesystem) (map[string]string, error) {
 	return updates, nil
 }
 
-func existingLootedIDs(fs *billy.Filesystem) ([]string, error) {
+func existingIDs(fs billy.Filesystem, dir string) ([]string, error) {
 	files, err := git.ListFiles(fs)
 	if err != nil {
 		return []string{}, errors.Wrap(err, "failed to list files in repo")
@@ -54,7 +54,7 @@ func existingLootedIDs(fs *billy.Filesystem) ([]string, error) {
 	var lootedIDs []string
 	var rgx = regexp.MustCompile(`-([^\-]+).json$`)
 	for _, v := range files {
-		if strings.Contains(v, "looted_json") {
+		if strings.Contains(v, dir) {
 			matches := rgx.FindStringSubmatch(v)
 			if len(matches) < 2 {
 				return []string{}, errors.Errorf("%v is not a valided looted json path", v)

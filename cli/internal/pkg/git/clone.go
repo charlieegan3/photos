@@ -30,7 +30,10 @@ func Clone() (git.Repository, billy.Filesystem, error) {
 		return *r, fs, errors.Wrap(err, "failed to clone repo")
 	}
 
-	log.Println("competed git clone of")
+	fs.Remove("looted_json/2020-04-09-2283745206165792307.json")
+	fs.Remove("completed_json/2020-04-09-2283745206165792307.json")
+
+	log.Println("completed git clone")
 
 	return *r, fs, nil
 }

@@ -8,10 +8,8 @@ import (
 )
 
 // ListFiles will list all files in the git repo
-func ListFiles(fs *billy.Filesystem) ([]string, error) {
-	// fs.Remove("looted_json/2020-04-09-2283745206165792307.json")
-
-	files, err := recursiveList(*fs, "/")
+func ListFiles(fs billy.Filesystem) ([]string, error) {
+	files, err := recursiveList(fs, "/")
 	if err != nil {
 		return []string{}, errors.Wrap(err, "failed to recursively list files")
 	}

@@ -47,7 +47,7 @@ func RunSync(cmd *cobra.Command, args []string) {
 		if !stringArrayContains(existing, v.ID) {
 			fmt.Println(v.ID + " is new")
 			dateString := time.Unix(v.TakenAtTimestamp, 0).Format("2006-01-02")
-			bytes, err := json.MarshalIndent(v, "", "  ")
+			bytes, err := json.MarshalIndent(v, "", "    ")
 			if err != nil {
 				log.Fatalf("failed to generate json for post: %v", err)
 				os.Exit(1)

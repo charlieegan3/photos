@@ -52,7 +52,7 @@ func RunSync(cmd *cobra.Command, args []string) {
 				log.Fatalf("failed to generate json for post: %v", err)
 				os.Exit(1)
 			}
-			files["looted_json/"+dateString+"-"+v.ID+".json"] = string(bytes)
+			files["looted_json/"+dateString+"-"+v.ID+".json"] = string(bytes) + "\n"
 		}
 	}
 

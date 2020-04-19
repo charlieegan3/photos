@@ -35,24 +35,24 @@ func RunSync(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	var updates []fileSystemUpdate
+	var updateCount int
 
-	lUpdates, err := lootedUpdates(&fs)
+	updates, err := lootedUpdates(&fs)
 	if err != nil {
 		log.Fatalf("failed to get looted json: %v", err)
 		os.Exit(1)
 	}
-	updates = append(updates, lUpdates...)
-
-	updatesMap := make(map[string]string)
-	for _, v := range updates {
-		updatesMap[v.Path] = v.Content
+	updateCount += len(updates)
+	err = git.WriteToPaths(r, fs, updates)
+	if err != nil {
+		log.Fatalf("failed to write new data to git: %v", err)
+		os.Exit(1)
 	}
 
-	if len(updates) > 0 {
-		err = git.WriteToPaths(r, fs, updatesMap)
+	if updateCount > 0 {
+		err = git.CommitAndUpdate(r)
 		if err != nil {
-			log.Fatalf("failed to write new data to git: %v", err)
+			log.Fatalf("failed update git state: %v", err)
 			os.Exit(1)
 		}
 	} else {

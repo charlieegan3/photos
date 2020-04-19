@@ -14,10 +14,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-func lootedUpdates(fs *billy.Filesystem) ([]fileSystemUpdate, error) {
+func lootedUpdates(fs *billy.Filesystem) (map[string]string, error) {
 	log.Println("starting fetching of looted updates")
 
-	var updates []fileSystemUpdate
+	updates := make(map[string]string)
 
 	existing, err := existingLootedIDs(fs)
 	if err != nil {
@@ -36,11 +36,7 @@ func lootedUpdates(fs *billy.Filesystem) ([]fileSystemUpdate, error) {
 			if err != nil {
 				return updates, errors.Wrap(err, "failed to generate json for post")
 			}
-			updates = append(updates,
-				fileSystemUpdate{
-					Path:    "looted_json/" + dateString + "-" + v.ID + ".json",
-					Content: string(bytes) + "\n",
-				})
+			updates["looted_json/"+dateString+"-"+v.ID+".json"] = string(bytes) + "\n"
 		}
 	}
 

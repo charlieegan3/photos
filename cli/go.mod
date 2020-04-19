@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/go-git/go-billy v4.2.0+incompatible
 	github.com/go-git/go-billy/v5 v5.0.0
+	github.com/go-git/go-git v4.7.0+incompatible
 	github.com/go-git/go-git/v5 v5.0.0
 	github.com/google/martian v2.1.0+incompatible
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect

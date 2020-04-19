@@ -6,31 +6,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-git/go-billy/v5/memfs"
+	"github.com/go-git/go-billy/v5"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
-	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/pkg/errors"
 )
 
 // WriteToPaths will write file content to paths in a given repo
-func WriteToPaths(files map[string]string) error {
-	fs := memfs.New()
-
-	// clone repo with credentials
-	r, err := git.Clone(memory.NewStorage(), fs, &git.CloneOptions{
-		URL:   repoURL,
-		Depth: 1,
-		Auth: &http.BasicAuth{
-			Username: username,
-			Password: accessToken,
-		},
-	})
-	if err != nil {
-		return errors.Wrap(err, "failed to clone repo")
-	}
-
+func WriteToPaths(r git.Repository, fs billy.Filesystem, files map[string]string) error {
 	wt, err := r.Worktree()
 	if err != nil {
 		return errors.Wrap(err, "failed load repo worktree")

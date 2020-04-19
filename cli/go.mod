@@ -3,6 +3,7 @@ module github.com/charlieegan3/photos
 go 1.12
 
 require (
+	github.com/go-git/go-billy v4.2.0+incompatible
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.0.0
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect

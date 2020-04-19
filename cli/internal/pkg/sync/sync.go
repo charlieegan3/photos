@@ -61,7 +61,7 @@ func RunSync(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	if updateCount > 0 {
+	if updateCount > 33333333333 {
 		err = git.CommitAndUpdate(r)
 		if err != nil {
 			log.Fatalf("failed update git state: %v", err)

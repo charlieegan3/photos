@@ -1,6 +1,8 @@
 package proxy
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -35,7 +37,8 @@ func init() {
 
 // GetURLViaProxy will make a get request using a simple-proxy endpoint
 // and forward the result
-func GetURLViaProxy(requestURL string) (*http.Response, error) {
+func GetURLViaProxy(requestURL string) (int, []byte, error) {
+	fmt.Println(requestURL)
 	response := &http.Response{}
 
 	q := proxyURL.Query()
@@ -44,16 +47,20 @@ func GetURLViaProxy(requestURL string) (*http.Response, error) {
 
 	req, err := http.NewRequest("GET", proxyURL.String(), nil)
 	if err != nil {
-		return response, errors.Wrap(err, "failed to create proxy request")
+		return 0, []byte{}, errors.Wrap(err, "failed to create proxy request")
 	}
 
 	client := &http.Client{}
 
 	req.Header.Add("Authorization", "bearer "+proxyToken)
-	resp, err := client.Do(req)
+	response, err = client.Do(req)
 	if err != nil {
-		return response, errors.Wrap(err, "failed to get via proxy")
+		return 0, []byte{}, errors.Wrap(err, "failed to get via proxy")
 	}
+	defer response.Body.Close()
+	body, err := ioutil.ReadAll(response.Body)
+	// TODO this is always a profile page
+	fmt.Println(string(body))
 
-	return resp, nil
+	return response.StatusCode, body, nil
 }

@@ -2,9 +2,9 @@ package types
 
 import "regexp"
 
-// Post represents the full struct that comes back from the Graphql endpoint
+// RawPost represents the full struct that comes back from the Graphql endpoint
 // curl https://www.instagram.com/p/B-xfipLA2Yz/?__a=1 | gojson
-type Post struct {
+type RawPost struct {
 	Graphql struct {
 		ShortcodeMedia struct {
 			Typename                    string `json:"__typename"`
@@ -107,7 +107,7 @@ type Post struct {
 }
 
 // ToCompletedPost returns a formatted post to persist
-func (p *Post) ToCompletedPost() CompletedPost {
+func (p *RawPost) ToCompletedPost() CompletedPost {
 	scm := p.Graphql.ShortcodeMedia
 
 	caption := ""

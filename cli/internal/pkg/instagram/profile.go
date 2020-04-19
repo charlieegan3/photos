@@ -2,7 +2,6 @@ package instagram
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -26,12 +25,10 @@ func init() {
 func LatestPosts() ([]types.LatestPost, error) {
 	var posts []types.LatestPost
 
-	resp, err := proxy.GetURLViaProxy("https://www.instagram.com/" + username + "/?__a=1")
+	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/" + username + "/?__a=1")
 	if err != nil {
 		return posts, errors.Wrap(err, "failed to get url via proxy")
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
 
 	var profile types.Profile
 	if err := json.Unmarshal(body, &profile); err != nil {

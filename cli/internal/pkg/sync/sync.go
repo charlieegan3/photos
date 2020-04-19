@@ -55,5 +55,7 @@ func RunSync(cmd *cobra.Command, args []string) {
 			log.Fatalf("failed to write new data to git: %v", err)
 			os.Exit(1)
 		}
+	} else {
+		log.Println("skipping sync, there were no updates")
 	}
 }

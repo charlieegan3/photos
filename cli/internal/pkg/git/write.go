@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 	"io"
+	"log"
 	"strings"
 	"time"
 
@@ -14,13 +15,15 @@ import (
 )
 
 // WriteToPaths will write file content to paths in a given repo
-func WriteToPaths(r git.Repository, fs billy.Filesystem, files map[string]string) error {
+func WriteToPaths(r git.Repository, fs billy.Filesystem, updates map[string]string) error {
+	log.Printf("started writing of %d updates to repo\n", len(updates))
+
 	wt, err := r.Worktree()
 	if err != nil {
 		return errors.Wrap(err, "failed load repo worktree")
 	}
 
-	for k, v := range files {
+	for k, v := range updates {
 		file, err := fs.Create(k)
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("failed to create file: %v", k))
@@ -52,6 +55,8 @@ func WriteToPaths(r git.Repository, fs billy.Filesystem, files map[string]string
 	if err != nil {
 		return errors.Wrap(err, "failed to push changes")
 	}
+
+	log.Printf("%d updates written to repo\n", len(updates))
 
 	return nil
 }

@@ -3,6 +3,7 @@ package sync
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 	"time"
@@ -14,6 +15,8 @@ import (
 )
 
 func lootedUpdates(fs *billy.Filesystem) ([]fileSystemUpdate, error) {
+	log.Println("starting fetching of looted updates")
+
 	var updates []fileSystemUpdate
 
 	existing, err := existingLootedIDs(fs)
@@ -40,6 +43,8 @@ func lootedUpdates(fs *billy.Filesystem) ([]fileSystemUpdate, error) {
 				})
 		}
 	}
+
+	log.Println("completed fetching of looted updates")
 
 	return updates, nil
 }

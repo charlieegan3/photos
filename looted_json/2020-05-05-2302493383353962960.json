@@ -1,0 +1,75 @@
+{
+    "__typename": "GraphImage",
+    "id": "2302493383353962960",
+    "shortcode": "B_0GYh0gBHQ",
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=4a868dc9822fa9ea10e559a13fc2d3e9&oe=5EFFDDD0",
+    "gating_info": null,
+    "fact_check_overall_rating": null,
+    "fact_check_information": null,
+    "media_preview": "ACoq06M0gOTilFACd6cBTRilFACuflNc43U10T/dP0rnW6mgDfQ9qfTV607bxQA0MM4JGfSnjOKzLpNjbh+VWILpWwDwaALL9D9K51up+tdI4yD9K5thyfrQBri9QUG/j/yKwxS0AaE8qScrmq/So1qQ9KALsN4EXa+TWezgkn3ppplAH//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "is_video": false,
+    "accessibility_caption": "Photo by Charlie in Archway, London.",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Inquisitive pigeon #pigeon #bird #silhouette #shotoniphone"
+                }
+            }
+        ]
+    },
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1588698622,
+    "edge_liked_by": {
+        "count": 6
+    },
+    "edge_media_preview_like": {
+        "count": 6
+    },
+    "location": {
+        "id": "222039596",
+        "has_public_page": true,
+        "name": "Archway, London",
+        "slug": "archway-london"
+    },
+    "thumbnail_src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=8eb48e9240930007121f018c92b81b71&oe=5EFF5DF9",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s150x150/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=f48a8c2c58d3097897666110b899e4f7&oe=5EFEE860",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s240x240/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=cfe806ee7fd927555f8651d2eaf0b382&oe=5F001396",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s320x320/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=143891218a511dab27d96494393721d8&oe=5EFD7DB0",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s480x480/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=b5acd55cd2d2cbdd1863571be6605eee&oe=5EFFE376",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/95980434_718712915603246_1269707408338564130_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com&_nc_cat=102&_nc_ohc=Yl4PKSh-7dwAX98ftQ8&oh=8eb48e9240930007121f018c92b81b71&oe=5EFF5DF9",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "scraper_version": "v2"
+}

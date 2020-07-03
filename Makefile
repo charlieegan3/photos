@@ -28,7 +28,12 @@ docker_image:
 	docker push "charlieegan3/photos:$$(cat Dockerfile entrypoint.sh | shasum | awk '{ print $$1 }')"
 
 docker_run:
-	docker run --rm -it --env-file=.envrc -v $(PWD)/.envrc:/etc/config/env -v $(PWD)/google.json:/etc/config/google charlieegan3/photos:latest
+	docker run --rm -it \
+		--env-file=.envrc \
+		-e ENV_PATH=/etc/config/env \
+		-v $(PWD)/.envrc:/etc/config/env \
+		-v $(PWD)/google.json:/etc/config/google \
+		charlieegan3/photos:latest
 
 ###############################################
 # frontend

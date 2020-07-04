@@ -1,0 +1,76 @@
+{
+    "__typename": "GraphImage",
+    "id": "2345281859992282605",
+    "shortcode": "CCMHW0DAeXt",
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=f6a32c44f9715fce00fdd5574278e706&oe=5F2BD42B",
+    "gating_info": null,
+    "fact_check_overall_rating": null,
+    "fact_check_information": null,
+    "media_overlay_info": null,
+    "media_preview": "ACoqtqyv32qByTzj0HFQNcwqSVDN6H/H2/X3pzN8vIAAxwVBC/l1b3OMelV/JBPY/wDAgDj1OePwzQBJ9pckbEAGTxySfqOOPp+NLJP5nDAHHZemfbPLH2HHvSZ46EgYySpBP4jhV9upqAuTz19O+B7Z6fzoAaZFyEbj35IB69OMk9PQU7Z7N+Mq/wBBTTHntz9P6Uzyh6n8/wD69AE4YD2x35H496ectwM4J5GFPX8sn0z0qD7n3uMenX06f4/zqaKdCNpAYnhSevuOB+Z//VQBKsbSc42AZ5Axz9QcE+p5qeOGFAC+Dk843HJ9u5x3J49KpiRWAPyndwoKkAkdzk8Ivp/EeSKHGTuALBu8Zwzt6KD0UewFAEVzOucxJkE9WzyemBjB4/Gq4uJhx6ewq00xUnOGYcbWH+rHoM4Jb1IFVdv+wf8AvsUATPIX5+YHHoo49fqe3oPWhNzddwHfG3oOg+p9P/HTUGBuP1X+VTMo8snAzvAz7elAE5JU/OzqMZbK9F7IMdM9P4R7VXlfAziPJ4+X+BfTjjJ9csafbE+YU/hyTjtkDg46Z96S7H7pG/iYnJ7n6nvQBBuzgZwB6j/63JP0p20DsP8Avof40yLnGec5/QcVDmgD/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "is_video": false,
+    "accessibility_caption": "Photo by Charlie in Archway, London. Image may contain: outdoor",
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Waste paper #pattern #texture #shotoniphone #blackandwhite"
+                }
+            }
+        ]
+    },
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "comments_disabled": false,
+    "taken_at_timestamp": 1593799406,
+    "edge_liked_by": {
+        "count": 5
+    },
+    "edge_media_preview_like": {
+        "count": 5
+    },
+    "location": {
+        "id": "222039596",
+        "has_public_page": true,
+        "name": "Archway, London",
+        "slug": "archway-london"
+    },
+    "thumbnail_src": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=c4b9343edf597158906846934653bd4e&oe=5F29F46F",
+    "thumbnail_resources": [
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/e35/s150x150/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=f8fa4cab1f3ab4f60121b912c14ffcb0&oe=5F2A386C",
+            "config_width": 150,
+            "config_height": 150
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/e35/s240x240/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=936ae82628d7fd1f494d499091695eda&oe=5F2ACEEE",
+            "config_width": 240,
+            "config_height": 240
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/e35/s320x320/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=3cbbf36e20f249f2c810fd9bc21157fb&oe=5F2B5614",
+            "config_width": 320,
+            "config_height": 320
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/e35/s480x480/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=606677ab0d9f74472d31cd18f53d0e6c&oe=5F2C1855",
+            "config_width": 480,
+            "config_height": 480
+        },
+        {
+            "src": "https://scontent-lht6-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/106353156_572624533290653_8212586249318678868_n.jpg?_nc_ht=scontent-lht6-1.cdninstagram.com&_nc_cat=105&_nc_ohc=HFNyt6y8_lMAX8u1JdB&oh=c4b9343edf597158906846934653bd4e&oe=5F29F46F",
+            "config_width": 640,
+            "config_height": 640
+        }
+    ],
+    "scraper_version": "v2"
+}

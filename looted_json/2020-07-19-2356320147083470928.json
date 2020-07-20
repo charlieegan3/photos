@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "accessibility_caption": "Photo by Charlie in Gasholder. Image may contain: 1 person, night, plant, tree, sky and outdoor",
+    "comments_disabled": false,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=3215ceceb9c216bba628f1a3bbd7503b\u0026oe=5F3E5E83",
+    "edge_liked_by": {
+        "count": 9
+    },
+    "edge_media_preview_like": {
+        "count": 9
+    },
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "There’s lots going on here. #mirror #architecture #x100f #construction #lookingup #glass #leaves #green"
+                }
+            }
+        ]
+    },
+    "edge_media_to_comment": {
+        "count": 2
+    },
+    "fact_check_information": null,
+    "fact_check_overall_rating": null,
+    "gating_info": null,
+    "id": "2356320147083470928",
+    "is_video": false,
+    "location": {
+        "has_public_page": true,
+        "id": "431492882",
+        "name": "Gasholder",
+        "slug": "gasholder"
+    },
+    "media_preview": "ACoqwHmY/jSR8uPrmo+etOj4bPsf5GgB67R2JqQS46CmAelO21NwB5c446Gn+d7UyRcD6HmncUXAiZ1xxRAu5sHpg05mR1JOQR0wB+p6kenei3GX9Mj8OopoBAQc4HSrcVmZCMNt/wD1A/1qGQAHp149R16fh61etpAMEkDBP6BR/SmkhFOe2dHMYO4jbz0zu9PfJ/rVcyY4I6Vr5Y3Q9AUJ9x0/nWLMMSMPRj/Om0hLUNxxjtT4ZCjZwPTnp+NQ09Oh+lIonbOR/Q8//q9KImOcY7npUf8ACp/z1qe3GWGeeTQMnYsJwzfLjaT9Nw/z71XuIcyuR0LN/M1NdnEpxxx/WqDdT9aBH//Z",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "shortcode": "CCzVLCAAahQ",
+    "taken_at_timestamp": 1595115272,
+    "thumbnail_resources": [
+        {
+            "config_height": 150,
+            "config_width": 150,
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s150x150/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=0ddad2ca262687b044d57f145d10f938\u0026oe=5F3FE59F"
+        },
+        {
+            "config_height": 240,
+            "config_width": 240,
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s240x240/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=624825fbeaa9be5359d4feebf65dc293\u0026oe=5F400557"
+        },
+        {
+            "config_height": 320,
+            "config_width": 320,
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s320x320/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=8111436afaaa195acd7662c991a9fec4\u0026oe=5F3EF08A"
+        },
+        {
+            "config_height": 480,
+            "config_width": 480,
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/e35/s480x480/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=219aaca98cce4900a4a25ce77b47e7e1\u0026oe=5F3FBC4C"
+        },
+        {
+            "config_height": 640,
+            "config_width": 640,
+            "src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=58c61c9f6840a56eb445250304ec87e3\u0026oe=5F40F7EC"
+        }
+    ],
+    "thumbnail_src": "https://scontent-lhr8-1.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/109755155_1502980913206060_4848415102578027524_n.jpg?_nc_ht=scontent-lhr8-1.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=0E0RITvTXxUAX_enc0J\u0026oh=58c61c9f6840a56eb445250304ec87e3\u0026oe=5F40F7EC"
+}

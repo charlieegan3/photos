@@ -4,14 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 
 	"cloud.google.com/go/storage"
+	"github.com/charlieegan3/photos/internal/pkg/git"
+	"github.com/charlieegan3/photos/internal/pkg/instagram"
 	"github.com/charlieegan3/photos/internal/types"
-	"github.com/go-git/go-billy/osfs"
 	"github.com/go-git/go-billy/v5"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -61,41 +64,36 @@ func CreateSyncCmd() *cobra.Command {
 
 // RunSync downloads the latest data and checks that all repo images are in GCS
 func RunSync(cmd *cobra.Command, args []string) {
-	// ctx := context.Background()
-	// client, err := storage.NewClient(ctx)
-	// if err != nil {
-	// 	log.Fatalf("failed to init GCS storage client: %s", err)
-	// }
-	// bkt := client.Bucket(bucket)
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		log.Fatalf("failed to init GCS storage client: %s", err)
+	}
+	bkt := client.Bucket(bucket)
 
-	// fs := osfs.New("../")
-	//
-	// completedPosts, err := listCompletedPosts(fs)
-	// if err != nil {
-	// 	log.Fatalf("failed to list all completed post jsons: %s", err)
-	// }
-	//
-	// media, err := listAllMedia(ctx, bkt)
-	// if err != nil {
-	// 	log.Fatalf("failed to list all current images: %s", err)
-	// }
-	//
-	// log.Printf("found data for  %d posts", len(completedPosts))
-	// log.Printf("found media for %d posts", len(media))
-
-	missing := []string{
-		"2020-07-14-2353286799696139549",
-		"2020-07-19-2356320147083470928",
-		"2020-07-19-2356572732247851630",
-		"2020-07-19-2356650898144376574",
-		"2020-07-19-2356726266012516573",
-		"2020-07-19-2356932250588919820",
+	_, fs, err := git.Clone()
+	if err != nil {
+		log.Fatalf("failed to clone into filesystem: %v", err)
+		os.Exit(1)
 	}
 
-	fs := osfs.New("../")
+	completedPosts, err := listCompletedPosts(fs)
+	if err != nil {
+		log.Fatalf("failed to list all completed post jsons: %s", err)
+	}
 
-	for _, v := range missing {
-		file, err := fs.Open(fmt.Sprintf("completed_json/%s.json", v))
+	media, err := listAllMedia(ctx, bkt)
+	if err != nil {
+		log.Fatalf("failed to list all current images: %s", err)
+	}
+
+	log.Printf("found data for  %d posts", len(completedPosts))
+	log.Printf("found media for %d posts", len(media))
+
+	missing := findMissingMedia(completedPosts, media)
+
+	for _, imageIdentifier := range missing {
+		file, err := fs.Open(fmt.Sprintf("completed_json/%s.json", imageIdentifier))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -109,7 +107,50 @@ func RunSync(cmd *cobra.Command, args []string) {
 			log.Fatal(err)
 		}
 
-		fmt.Println(completedPost)
+		// refresh the data before fetching
+		completedPost, err = instagram.Post(completedPost.Code)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// set the object filename
+		filename := fmt.Sprintf("%s.jpg", imageIdentifier)
+		if completedPost.IsVideo {
+			filename = fmt.Sprintf("%s.mp4", imageIdentifier)
+		}
+
+		// fetch image
+		resp, err := http.Get(completedPost.MediaURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer resp.Body.Close()
+
+		// upload to gcs
+		obj := bkt.Object(fmt.Sprintf("current/%s", filename))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Printf("uploading %s to GCS", filename)
+
+		wc := obj.NewWriter(ctx)
+		defer wc.Close()
+		_, err = io.Copy(wc, resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = wc.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// all images are public
+		err = obj.ACL().Set(ctx, storage.AllUsers, storage.RoleReader)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

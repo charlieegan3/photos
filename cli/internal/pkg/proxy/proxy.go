@@ -37,7 +37,7 @@ func init() {
 
 // GetURLViaProxy will make a get request using a simple-proxy endpoint
 // and forward the result
-func GetURLViaProxy(requestURL string) (int, []byte, error) {
+func GetURLViaProxy(requestURL string, headers map[string]string) (int, []byte, error) {
 	fmt.Println(requestURL)
 	response := &http.Response{}
 
@@ -53,14 +53,17 @@ func GetURLViaProxy(requestURL string) (int, []byte, error) {
 	client := &http.Client{}
 
 	req.Header.Add("Authorization", "bearer "+proxyToken)
+
+	for k, v := range headers {
+		req.Header.Add(k, v)
+	}
+
 	response, err = client.Do(req)
 	if err != nil {
 		return 0, []byte{}, errors.Wrap(err, "failed to get via proxy")
 	}
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
-	// TODO this is always a profile page
-	fmt.Println(string(body))
 
 	return response.StatusCode, body, nil
 }

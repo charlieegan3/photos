@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var username string
+var username, cookie string
 
 func init() {
 	username = os.Getenv("INSTAGRAM_USERNAME")
@@ -19,13 +19,24 @@ func init() {
 		log.Fatal("INSTAGRAM_USERNAME must be set")
 		os.Exit(1)
 	}
+
+	cookie = os.Getenv("INSTAGRAM_COOKIE_STRING")
+
+	if cookie == "" {
+		log.Fatal("INSTAGRAM_COOKIE_STRING must be set (contains session id)")
+		os.Exit(1)
+	}
 }
 
 // LatestPosts returns the latest posts on the profile
 func LatestPosts() ([]types.LatestPost, error) {
 	var posts []types.LatestPost
 
-	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/" + username + "/?__a=1")
+	headers := map[string]string{
+		"Cookie": cookie,
+	}
+
+	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/"+username+"/?__a=1", headers)
 	if err != nil {
 		return posts, errors.Wrap(err, "failed to get url via proxy")
 	}

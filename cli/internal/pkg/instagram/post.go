@@ -10,7 +10,11 @@ import (
 
 // Post returns the latest posts on the profile
 func Post(shortcode string) (types.CompletedPost, error) {
-	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/p/" + shortcode + "/?__a=1")
+	headers := map[string]string{
+		"Cookie": cookie,
+	}
+
+	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/p/"+shortcode+"/?__a=1", headers)
 	if err != nil {
 		return types.CompletedPost{}, errors.Wrap(err, "failed to get url via proxy")
 	}

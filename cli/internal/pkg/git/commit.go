@@ -25,7 +25,7 @@ func CommitAndUpdate(r git.Repository) error {
 		return errors.Wrap(err, fmt.Sprintf("failed to stage addition for files"))
 	}
 
-	_, err = wt.Commit("add file", &git.CommitOptions{
+	_, err = wt.Commit("Add files", &git.CommitOptions{
 		Author: &object.Signature{Name: "Robot", Email: "robot@charlieegan3.com", When: time.Now()},
 	})
 	if err != nil {

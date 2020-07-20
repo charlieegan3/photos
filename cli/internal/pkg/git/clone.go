@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/go-git/go-billy/v5"
-	"github.com/go-git/go-billy/v5/memfs"
+	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/storage/memory"
@@ -15,7 +15,7 @@ import (
 func Clone() (git.Repository, billy.Filesystem, error) {
 	log.Printf("starting git clone of %v\n", repoURL)
 
-	fs := memfs.New()
+	fs := osfs.New("temp")
 
 	r, err := git.Clone(memory.NewStorage(), fs, &git.CloneOptions{
 		URL:   repoURL,

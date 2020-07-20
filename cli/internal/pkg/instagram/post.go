@@ -20,9 +20,14 @@ func Post(shortcode string) (types.CompletedPost, error) {
 	}
 
 	var post types.RawPost
-	if err := json.Unmarshal(body, &post); err != nil {
+	err = json.Unmarshal(body, &post)
+	if err != nil {
 		return types.CompletedPost{}, errors.Wrap(err, "failed to parse response")
 	}
+	completed, err := post.ToCompletedPost()
+	if err != nil {
+		return types.CompletedPost{}, errors.Wrap(err, "failed to format as completed post")
+	}
 
-	return post.ToCompletedPost(), nil
+	return completed, nil
 }

@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,20 +10,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-var proxyURL *url.URL
+var proxyURLRaw string
 var proxyToken string
 
 func init() {
-	rawURL := os.Getenv("PROXY_URL")
-	if rawURL == "" {
+	proxyURLRaw = os.Getenv("PROXY_URL")
+	if proxyURLRaw == "" {
 		log.Fatal("PROXY_URL is not set")
 		os.Exit(1)
 	}
 
 	var err error
-	proxyURL, err = url.Parse(rawURL)
+	_, err = url.Parse(proxyURLRaw)
 	if err != nil {
-		log.Fatalf("failed to parse proxy url (%s): %s", rawURL, err)
+		log.Fatalf("failed to parse proxy url (%s): %s", proxyURLRaw, err)
 		os.Exit(1)
 	}
 
@@ -38,8 +37,14 @@ func init() {
 // GetURLViaProxy will make a get request using a simple-proxy endpoint
 // and forward the result
 func GetURLViaProxy(requestURL string, headers map[string]string) (int, []byte, error) {
-	fmt.Println(requestURL)
+	log.Printf("fetching via proxy: %s", requestURL)
 	response := &http.Response{}
+
+	// need a fresh copy of the url since we change the RawQuery each request
+	proxyURL, err := url.Parse(proxyURLRaw)
+	if err != nil {
+		return 0, []byte{}, errors.Wrap(err, "failed to parse raw proxy url")
+	}
 
 	q := proxyURL.Query()
 	q.Add("url", requestURL)

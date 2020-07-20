@@ -1,6 +1,9 @@
 package types
 
-import "regexp"
+import (
+	"errors"
+	"regexp"
+)
 
 // RawPost represents the full struct that comes back from the Graphql endpoint
 // curl https://www.instagram.com/p/B-xfipLA2Yz/?__a=1 | gojson
@@ -23,8 +26,26 @@ type RawPost struct {
 			} `json:"display_resources"`
 			DisplayURL              string `json:"display_url"`
 			EdgeMediaPreviewComment struct {
-				Count int64         `json:"count"`
-				Edges []interface{} `json:"edges"`
+				Count int64 `json:"count"`
+				Edges []struct {
+					Node struct {
+						CreatedAt       int64 `json:"created_at"`
+						DidReportAsSpam bool  `json:"did_report_as_spam"`
+						EdgeLikedBy     struct {
+							Count int64 `json:"count"`
+						} `json:"edge_liked_by"`
+						ID                  string `json:"id"`
+						IsRestrictedPending bool   `json:"is_restricted_pending"`
+						Owner               struct {
+							ID            string `json:"id"`
+							IsVerified    bool   `json:"is_verified"`
+							ProfilePicURL string `json:"profile_pic_url"`
+							Username      string `json:"username"`
+						} `json:"owner"`
+						Text           string `json:"text"`
+						ViewerHasLiked bool   `json:"viewer_has_liked"`
+					} `json:"node"`
+				} `json:"edges"`
 			} `json:"edge_media_preview_comment"`
 			EdgeMediaPreviewLike struct {
 				Count int64         `json:"count"`
@@ -41,8 +62,34 @@ type RawPost struct {
 				Edges []interface{} `json:"edges"`
 			} `json:"edge_media_to_hoisted_comment"`
 			EdgeMediaToParentComment struct {
-				Count    int64         `json:"count"`
-				Edges    []interface{} `json:"edges"`
+				Count int64 `json:"count"`
+				Edges []struct {
+					Node struct {
+						CreatedAt       int64 `json:"created_at"`
+						DidReportAsSpam bool  `json:"did_report_as_spam"`
+						EdgeLikedBy     struct {
+							Count int64 `json:"count"`
+						} `json:"edge_liked_by"`
+						EdgeThreadedComments struct {
+							Count    int64         `json:"count"`
+							Edges    []interface{} `json:"edges"`
+							PageInfo struct {
+								EndCursor   interface{} `json:"end_cursor"`
+								HasNextPage bool        `json:"has_next_page"`
+							} `json:"page_info"`
+						} `json:"edge_threaded_comments"`
+						ID                  string `json:"id"`
+						IsRestrictedPending bool   `json:"is_restricted_pending"`
+						Owner               struct {
+							ID            string `json:"id"`
+							IsVerified    bool   `json:"is_verified"`
+							ProfilePicURL string `json:"profile_pic_url"`
+							Username      string `json:"username"`
+						} `json:"owner"`
+						Text           string `json:"text"`
+						ViewerHasLiked bool   `json:"viewer_has_liked"`
+					} `json:"node"`
+				} `json:"edges"`
 				PageInfo struct {
 					EndCursor   interface{} `json:"end_cursor"`
 					HasNextPage bool        `json:"has_next_page"`
@@ -77,7 +124,10 @@ type RawPost struct {
 			MediaOverlayInfo interface{} `json:"media_overlay_info"`
 			MediaPreview     string      `json:"media_preview"`
 			Owner            struct {
-				BlockedByViewer          bool `json:"blocked_by_viewer"`
+				BlockedByViewer bool `json:"blocked_by_viewer"`
+				EdgeFollowedBy  struct {
+					Count int64 `json:"count"`
+				} `json:"edge_followed_by"`
 				EdgeOwnerToTimelineMedia struct {
 					Count int64 `json:"count"`
 				} `json:"edge_owner_to_timeline_media"`
@@ -107,7 +157,7 @@ type RawPost struct {
 }
 
 // ToCompletedPost returns a formatted post to persist
-func (p *RawPost) ToCompletedPost() CompletedPost {
+func (p *RawPost) ToCompletedPost() (CompletedPost, error) {
 	scm := p.Graphql.ShortcodeMedia
 
 	caption := ""
@@ -122,6 +172,10 @@ func (p *RawPost) ToCompletedPost() CompletedPost {
 		tags = append(tags, match)
 	}
 
+	if scm.ID == "" {
+		return CompletedPost{}, errors.New("shortcode media was missing ID after fomatting as CompletedPost from raw post")
+	}
+
 	return CompletedPost{
 		Caption:    caption,
 		Code:       scm.Shortcode,
@@ -134,5 +188,5 @@ func (p *RawPost) ToCompletedPost() CompletedPost {
 		PostURL:    "https://instagram.com/p/" + scm.Shortcode,
 		Tags:       tags,
 		Timestamp:  scm.TakenAtTimestamp,
-	}
+	}, nil
 }

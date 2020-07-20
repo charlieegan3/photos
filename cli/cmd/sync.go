@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/charlieegan3/photos/internal/pkg/data"
 	"github.com/charlieegan3/photos/internal/pkg/media"
-	"github.com/charlieegan3/photos/internal/pkg/sync"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,7 @@ func init() {
 		Short: "Refreshes and saves profile data",
 	}
 
-	syncCmd.AddCommand(sync.CreateSyncCmd())
+	syncCmd.AddCommand(data.CreateSyncCmd())
 	syncCmd.AddCommand(media.CreateSyncCmd())
 
 	rootCmd.AddCommand(&syncCmd)

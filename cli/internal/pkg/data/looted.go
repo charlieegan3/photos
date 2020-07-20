@@ -1,4 +1,4 @@
-package sync
+package data
 
 import (
 	"encoding/json"

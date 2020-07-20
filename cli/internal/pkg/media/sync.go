@@ -14,7 +14,7 @@ import (
 	"cloud.google.com/go/storage"
 	"github.com/charlieegan3/photos/internal/pkg/git"
 	"github.com/charlieegan3/photos/internal/pkg/instagram"
-	"github.com/charlieegan3/photos/internal/types"
+	"github.com/charlieegan3/photos/internal/pkg/types"
 	"github.com/go-git/go-billy/v5"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"

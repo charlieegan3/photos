@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/charlieegan3/photos/internal/pkg/proxy"
-	"github.com/charlieegan3/photos/internal/types"
+	"github.com/charlieegan3/photos/internal/pkg/types"
 	"github.com/pkg/errors"
 )
 

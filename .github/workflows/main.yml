@@ -1,0 +1,27 @@
+name: Refresh
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  refresh:
+    name: Refresh
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run
+      env:
+        ENV_FILE: ${{ secrets.ENV_FILE }}
+      run: |
+        cd cli
+        docker build -t photos:latest .
+
+        echo -e $ENV_FILE >> env
+
+        docker run --env-file=env photos:latest sync data
+        docker run --env-file=env photos:latest sync locations
+        docker run --env-file=env photos:latest sync media

@@ -90,6 +90,11 @@ func RunSync(cmd *cobra.Command, args []string) {
 	log.Printf("found data for  %d posts", len(completedPosts))
 	log.Printf("found media for %d posts", len(media))
 
+	if len(media) != len(completedPosts) {
+		log.Printf("completedPosts - media: %v", arrayDifference(completedPosts, media))
+		log.Printf("media - completedPosts: %v", arrayDifference(media, completedPosts))
+	}
+
 	missing := findMissingMedia(completedPosts, media)
 
 	for _, imageIdentifier := range missing {
@@ -214,4 +219,20 @@ func listCompletedPosts(fs billy.Filesystem) ([]string, error) {
 	}
 
 	return posts, nil
+}
+
+func arrayDifference(a, b []string) []string {
+	target := map[string]bool{}
+	for _, x := range b {
+		target[x] = true
+	}
+
+	result := []string{}
+	for _, x := range a {
+		if _, ok := target[x]; !ok {
+			result = append(result, x)
+		}
+	}
+
+	return result
 }

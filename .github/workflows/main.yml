@@ -31,6 +31,8 @@ jobs:
 
         make binary
 
-        photos sync data
-        photos sync locations
-        photos sync media
+        ls -al
+
+        ./photos sync data
+        ./photos sync locations
+        ./photos sync media

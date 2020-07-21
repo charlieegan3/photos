@@ -32,6 +32,8 @@ func CreateSyncCmd() *cobra.Command {
 
 // RunSync downloads the latest data and checks that all repo images are in GCS
 func RunSync(cmd *cobra.Command, args []string) {
+	log.Println("starting sync of locations")
+
 	r, fs, err := git.Clone()
 	if err != nil {
 		log.Fatalf("failed to clone into filesystem: %v", err)

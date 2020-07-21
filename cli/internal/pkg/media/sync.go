@@ -64,6 +64,8 @@ func CreateSyncCmd() *cobra.Command {
 
 // RunSync downloads the latest data and checks that all repo images are in GCS
 func RunSync(cmd *cobra.Command, args []string) {
+	log.Println("starting sync of media")
+
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {

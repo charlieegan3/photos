@@ -1,8 +1,8 @@
 name: Refresh
 
 on:
-  push:
-    branches: [master]
+  schedule:
+    - cron: "*/33 * * * *"
 
 jobs:
   refresh:

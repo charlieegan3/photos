@@ -29,6 +29,8 @@ func CreateSyncCmd() *cobra.Command {
 
 // RunSync clones or pulls a repo into the path
 func RunSync(cmd *cobra.Command, args []string) {
+	log.Println("starting sync of data")
+
 	r, fs, err := git.Clone()
 	if err != nil {
 		log.Fatalf("failed to clone into filesystem: %v", err)

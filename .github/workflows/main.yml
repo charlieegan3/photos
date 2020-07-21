@@ -23,7 +23,8 @@ jobs:
         PROXY_TOKEN: ${{ secrets.PROXY_TOKEN }}
         GIT_REPO_URL: ${{ secrets.GIT_REPO_URL }}
         GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
-        GIT_ACCESS_TOKEN: ${{ secrets.GIT_ACCESS_TOKEN }}
+        # source temp github token
+        GIT_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         INSTAGRAM_USERNAME: ${{ secrets.INSTAGRAM_USERNAME }}
         INSTAGRAM_COOKIE_STRING: ${{ secrets.INSTAGRAM_COOKIE_STRING }}
       run: |

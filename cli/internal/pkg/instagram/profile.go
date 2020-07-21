@@ -1,6 +1,7 @@
 package instagram
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"os"
@@ -26,6 +27,12 @@ func init() {
 		log.Fatal("INSTAGRAM_COOKIE_STRING must be set (contains session id)")
 		os.Exit(1)
 	}
+
+	bytes, err := base64.StdEncoding.DecodeString(cookie)
+	if err != nil {
+		log.Fatal("INSTAGRAM_COOKIE_STRING must be b64")
+	}
+	cookie = string(bytes)
 }
 
 // LatestPosts returns the latest posts on the profile

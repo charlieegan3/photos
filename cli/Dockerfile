@@ -2,10 +2,13 @@ FROM golang:1.13 as build
 
 WORKDIR /build
 
-COPY . .
+COPY go.mod go.sum ./
+RUN go mod download
 
+COPY . .
 RUN go build
 
-FROM gcr.io/distroless/base-debian10
-COPY --from=build /build/photos /opt/photos
-ENTRYPOINT ["/opt/photos"]
+FROM scratch
+COPY --from=build /build/photos /photos
+ENTRYPOINT ["/photos"]
+CMD [""]

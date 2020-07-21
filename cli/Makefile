@@ -9,3 +9,8 @@ clear:
 
 install:
 	go install
+
+binary:
+	docker build -t photos:latest . && \
+		id=$$(docker create photos:latest) && \
+	docker cp $$id:/photos ./photos

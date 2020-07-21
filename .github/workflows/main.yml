@@ -18,10 +18,12 @@ jobs:
         ENV_FILE: ${{ secrets.ENV_FILE }}
       run: |
         cd cli
-        docker build -t photos:latest .
 
-        echo -e $ENV_FILE >> env
+        make binary
 
-        docker run --env-file=env photos:latest sync data
-        docker run --env-file=env photos:latest sync locations
-        docker run --env-file=env photos:latest sync media
+        echo -e $ENV_FILE > env
+        source env
+
+        photos sync data
+        photos sync locations
+        photos sync media

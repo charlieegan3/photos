@@ -27,6 +27,9 @@ jobs:
         GIT_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         INSTAGRAM_USERNAME: ${{ secrets.INSTAGRAM_USERNAME }}
         INSTAGRAM_COOKIE_STRING: ${{ secrets.INSTAGRAM_COOKIE_STRING }}
+        # needed for makefile...
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         cd cli
 

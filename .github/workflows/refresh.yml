@@ -30,9 +30,7 @@ jobs:
       run: |
         cd cli
 
-        make binary
-
-        ls -al
+        make get-binary
 
         ./photos sync data
         ./photos sync locations

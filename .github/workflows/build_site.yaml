@@ -6,7 +6,7 @@ on:
 
 jobs:
   refresh:
-    name: build-image
+    name: build-site
     runs-on: ubuntu-latest
     steps:
 

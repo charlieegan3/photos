@@ -2,7 +2,7 @@ name: Refresh
 
 on:
   schedule:
-    - cron: "*/33 * * * *"
+    - cron: "*/33 */2 * * *"
 
 jobs:
   refresh:

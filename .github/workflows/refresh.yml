@@ -3,6 +3,8 @@ name: Refresh
 on:
   schedule:
     - cron: "*/33 */2 * * *"
+  workflow_dispatch:
+    inputs: {}
 
 jobs:
   refresh:

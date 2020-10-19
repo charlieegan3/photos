@@ -5,7 +5,7 @@ on:
     # note to review when proxy running again
     #- cron: "*/33 */2 * * *"
     - cron: "1 1 */7 * *"
-workflow_dispatch:
+  workflow_dispatch:
     inputs: {}
 
 jobs:

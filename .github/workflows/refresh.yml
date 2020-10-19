@@ -2,8 +2,10 @@ name: Refresh
 
 on:
   schedule:
-    - cron: "*/33 */2 * * *"
-  workflow_dispatch:
+    # note to review when proxy running again
+    #- cron: "*/33 */2 * * *"
+    - cron: "1 1 */7 * *"
+workflow_dispatch:
     inputs: {}
 
 jobs:

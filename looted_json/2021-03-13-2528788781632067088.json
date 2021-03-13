@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "accessibility_caption": "Photo by Charlie in Hampstead Heath. May be an image of outdoors and brick wall.",
+    "comments_disabled": false,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=10a52473d9e7623bc907def5522b65ec\u0026oe=6077E6A2",
+    "edge_liked_by": {
+        "count": 1
+    },
+    "edge_media_preview_like": {
+        "count": 1
+    },
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "Fourth time lucky #slime #graffiti #shadows #trees #wall #shotoniphone"
+                }
+            }
+        ]
+    },
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "fact_check_information": null,
+    "fact_check_overall_rating": null,
+    "gating_info": null,
+    "id": "2528788781632067088",
+    "is_video": false,
+    "location": {
+        "has_public_page": true,
+        "id": "51054",
+        "name": "Hampstead Heath",
+        "slug": "hampstead-heath"
+    },
+    "media_preview": "ACoqLdlEjtwAwOPzzTJm3dhxUMkDM77CFVeP1ojVgfmIbNc9upp5FsSbFy+FXP51ajuIscYx6/09agnjLpgYyG/GqgtZAexHPfn6mkknuPU1N6yZC4J/GojCPan2qlc54B9SD/QVbwPaltsMxYtshZ2JG48frTxEIyu3oT3FS6eo2bj1P8qmveFBHrTb1sIsqAQc+ppjMq8EgVTaRgCCcc+uPr2xTFdAN2ck8fMR/n+lTYZbYgj5TRn3qCKRQNq4PrUmxfUfnQMylnK/Khxj0oZnYZc5PXB6VHAOTTJOpraxmPUFjg5Ip4jyc0JxUq8UDABU579gOtN8pzUsAzJV7FJ6D3P/2Q==",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "shortcode": "CMYD_-xLBYQ",
+    "taken_at_timestamp": 1615675135,
+    "thumbnail_resources": [
+        {
+            "config_height": 150,
+            "config_width": 150,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s150x150/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=357f1a4c23a9a2b5b79fd09a5f94ded9\u0026oe=6076BDE1"
+        },
+        {
+            "config_height": 240,
+            "config_width": 240,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s240x240/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=3279564829d6f1337ce6c86e826fb274\u0026oe=607545E7"
+        },
+        {
+            "config_height": 320,
+            "config_width": 320,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s320x320/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=2030b84efd9ed59d6182c4f2b8ce551f\u0026oe=6077C399"
+        },
+        {
+            "config_height": 480,
+            "config_width": 480,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s480x480/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=3c9868551e7ab5a4d0c2d1246bf6818f\u0026oe=607731E0"
+        },
+        {
+            "config_height": 640,
+            "config_width": 640,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=48371098f15b852de597e1759ebd0795\u0026oe=607595E6"
+        }
+    ],
+    "thumbnail_src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/159108453_471619977365068_6134428672139721246_n.jpg?tp=1\u0026_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=rP8I2fKGh7kAX8yF0Yi\u0026oh=48371098f15b852de597e1759ebd0795\u0026oe=607595E6"
+}

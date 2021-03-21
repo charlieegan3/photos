@@ -22,6 +22,12 @@ jobs:
         # this is needed to make force pushing retain history
         fetch-depth: 0
 
+    - name: Download binary
+      uses: actions/download-artifact@v2
+      with:
+        name: photos
+        path: cli/photos
+
     - name: Run
       env:
         # TODO remove the need for these as able to use local dir alone for site cmds

@@ -5,8 +5,6 @@ def run(command)
   fail unless system(command)
 end
 
-# build the cli
-run("make -C cli get-binary")
 # build the frontend app
 run("make -C frontend vue_build")
 

@@ -18,6 +18,12 @@ jobs:
         # this is needed to make force pushing retain history
         fetch-depth: 0
 
+    - name: Download binary
+      uses: actions/download-artifact@v2
+      with:
+        name: photos
+        path: cli/photos
+
     - name: Run
       env:
         ENV_FILE: ${{ secrets.ENV_FILE }}
@@ -35,8 +41,6 @@ jobs:
         INSTAGRAM_COOKIE_STRING: ${{ secrets.INSTAGRAM_COOKIE_STRING }}
       run: |
         cd cli
-
-        make get-binary
 
         ./photos sync data
         ./photos sync locations

@@ -1,11 +1,7 @@
 name: Build Binary
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-    - 'cli/**'
-    - '.github/workflows/build.yaml'
+  release: {}
   workflow_dispatch:
     inputs: {}
 

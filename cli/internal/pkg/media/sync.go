@@ -10,8 +10,10 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/cenkalti/backoff"
 	"github.com/charlieegan3/photos/internal/pkg/git"
 	"github.com/charlieegan3/photos/internal/pkg/instagram"
 	"github.com/charlieegan3/photos/internal/pkg/types"
@@ -51,42 +53,54 @@ func init() {
 	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", tmpfile.Name())
 }
 
-// CreateSyncCmd builds a command to check all image files have been saved to GCS
+// CreateSyncCmd builds a command to check all image files have been saved to
+// GCS
 func CreateSyncCmd() *cobra.Command {
+	backoffConfig := backoff.NewExponentialBackOff()
+	backoffConfig.MaxElapsedTime = 3 * time.Minute
+
+	run := func(cmd *cobra.Command, args []string) {
+		err := backoff.Retry(func() error {
+			return RunSync(cmd, args)
+		}, backoffConfig)
+
+		if err != nil {
+			log.Fatalf("failed after backoff: %s", err)
+		}
+	}
 	syncCmd := cobra.Command{
 		Use:   "media",
 		Short: "Ensures images present in GCS",
-		Run:   RunSync,
+		Run:   run,
 	}
 
 	return &syncCmd
 }
 
 // RunSync downloads the latest data and checks that all repo images are in GCS
-func RunSync(cmd *cobra.Command, args []string) {
+func RunSync(cmd *cobra.Command, args []string) error {
 	log.Println("starting sync of media")
 
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		log.Fatalf("failed to init GCS storage client: %s", err)
+		return fmt.Errorf("failed to init GCS storage client: %s", err)
 	}
 	bkt := client.Bucket(bucket)
 
 	_, fs, err := git.Clone()
 	if err != nil {
-		log.Fatalf("failed to clone into filesystem: %v", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to clone into filesystem: %v", err)
 	}
 
 	completedPosts, err := listCompletedPosts(fs)
 	if err != nil {
-		log.Fatalf("failed to list all completed post jsons: %s", err)
+		return fmt.Errorf("failed to list all completed post jsons: %s", err)
 	}
 
 	media, err := listAllMedia(ctx, bkt)
 	if err != nil {
-		log.Fatalf("failed to list all current images: %s", err)
+		return fmt.Errorf("failed to list all current images: %s", err)
 	}
 
 	log.Printf("found data for  %d posts", len(completedPosts))
@@ -102,7 +116,7 @@ func RunSync(cmd *cobra.Command, args []string) {
 	for _, imageIdentifier := range missing {
 		file, err := fs.Open(fmt.Sprintf("completed_json/%s.json", imageIdentifier))
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to read %s: %s", imageIdentifier, err)
 		}
 		defer file.Close()
 
@@ -111,13 +125,13 @@ func RunSync(cmd *cobra.Command, args []string) {
 		var completedPost types.CompletedPost
 		err = json.Unmarshal(b, &completedPost)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to unmarshal %s: %s", imageIdentifier, err)
 		}
 
 		// refresh the data before fetching
 		completedPost, err = instagram.Post(completedPost.Code)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to refresh data for %s: %s", imageIdentifier, err)
 		}
 
 		// set the object filename
@@ -129,36 +143,34 @@ func RunSync(cmd *cobra.Command, args []string) {
 		// fetch image
 		resp, err := http.Get(completedPost.MediaURL)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to fetch image for %s: %s", imageIdentifier, err)
 		}
 		defer resp.Body.Close()
 
 		// upload to gcs
 		obj := bkt.Object(fmt.Sprintf("current/%s", filename))
-		if err != nil {
-			log.Fatal(err)
-		}
-
 		log.Printf("uploading %s to GCS", filename)
 
 		wc := obj.NewWriter(ctx)
 		defer wc.Close()
 		_, err = io.Copy(wc, resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to complete GCS upload %s: %s", imageIdentifier, err)
 		}
 
 		err = wc.Close()
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to complete GCS upload, conn close failed %s: %s", imageIdentifier, err)
 		}
 
 		// all images are public
 		err = obj.ACL().Set(ctx, storage.AllUsers, storage.RoleReader)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("failed to set GCS ACL %s: %s", imageIdentifier, err)
 		}
 	}
+
+	return nil
 }
 
 func findMissingMedia(completedPosts, media []string) []string {

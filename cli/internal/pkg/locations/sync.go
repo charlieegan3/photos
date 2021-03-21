@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"strings"
+	"time"
 
+	"github.com/cenkalti/backoff"
 	"github.com/charlieegan3/photos/internal/pkg/git"
 	"github.com/charlieegan3/photos/internal/pkg/instagram"
 	"github.com/charlieegan3/photos/internal/pkg/types"
@@ -19,47 +20,59 @@ import (
 func init() {
 }
 
-// CreateSyncCmd builds a command to check all image files have been saved to GCS
+// CreateSyncCmd builds a command to check all image files have been saved to
+// GCS
 func CreateSyncCmd() *cobra.Command {
+	backoffConfig := backoff.NewExponentialBackOff()
+	backoffConfig.MaxElapsedTime = 3 * time.Minute
+
+	run := func(cmd *cobra.Command, args []string) {
+		err := backoff.Retry(func() error {
+			return RunSync(cmd, args)
+		}, backoffConfig)
+
+		if err != nil {
+			log.Fatalf("failed after backoff: %s", err)
+		}
+	}
 	syncCmd := cobra.Command{
 		Use:   "locations",
 		Short: "Ensures locations are present in repo",
-		Run:   RunSync,
+		Run:   run,
 	}
 
 	return &syncCmd
 }
 
 // RunSync downloads the latest data and checks that all repo images are in GCS
-func RunSync(cmd *cobra.Command, args []string) {
+func RunSync(cmd *cobra.Command, args []string) error {
 	log.Println("starting sync of locations")
 
 	r, fs, err := git.Clone()
 	if err != nil {
-		log.Fatalf("failed to clone into filesystem: %v", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to clone into filesystem: %v", err)
 	}
 
 	updates, err := locationUpdates(fs)
 	if err != nil {
-		log.Fatalf("failed to get updated locations: %s", err)
+		return fmt.Errorf("failed to get updated locations: %s", err)
 	}
 
 	err = git.WriteToPaths(r, fs, updates)
 	if err != nil {
-		log.Fatalf("failed to write new data to git: %v", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to write new data to git: %v", err)
 	}
 
 	if len(updates) > 0 {
 		err = git.CommitAndUpdate(r)
 		if err != nil {
-			log.Fatalf("failed update git state: %v", err)
-			os.Exit(1)
+			return fmt.Errorf("failed update git state: %v", err)
 		}
 	} else {
 		log.Println("skipping sync, there were no updates")
 	}
+
+	return nil
 }
 
 func locationUpdates(fs billy.Filesystem) (map[string]string, error) {

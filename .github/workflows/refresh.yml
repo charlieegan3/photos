@@ -41,6 +41,7 @@ jobs:
         INSTAGRAM_COOKIE_STRING: ${{ secrets.INSTAGRAM_COOKIE_STRING }}
       run: |
         cd cli
+        sudo chmod +x photos
 
         ./photos sync data
         ./photos sync locations

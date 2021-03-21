@@ -5,10 +5,6 @@ def run(command)
   fail unless system(command)
 end
 
-# generate the site data
-run("sudo chmod +x ./cli/photos")
-run("./cli/photos site debug --output public/data")
-
 # build the frontend app
 run("make -C frontend vue_build")
 
@@ -16,8 +12,12 @@ run("make -C frontend vue_build")
 run("rm -rf public")
 run("mkdir -p public")
 run("cp -r frontend/dist/* public")
-# make the output dir
+
+# make the output data dir
 run("mkdir -p public/data")
+# generate the site data
+run("sudo chmod +x ./cli/photos")
+run("./cli/photos site debug --output public/data")
 
 # commit the result
 email = `git config --global user.email`.chomp

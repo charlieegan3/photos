@@ -1,7 +1,9 @@
 name: Build Binary
 
 on:
-  release: {}
+  release:
+    types:
+    - published
   workflow_dispatch:
     inputs: {}
 
@@ -18,9 +20,9 @@ jobs:
       run: |
         make -C cli get-binary
 
-    - name: Upload the artifacts
-      uses: skx/github-action-publish-binaries@master
+    - name: Upload release binaries
+      uses: alexellis/upload-assets@0.2.2
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        args: 'cli/photos'
+        asset_paths: '["cli/photos"]'

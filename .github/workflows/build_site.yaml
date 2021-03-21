@@ -3,6 +3,10 @@ name: Build Site
 on:
   push:
     branches: [ master ]
+    paths:
+    - '!.github/**'
+    - '!cli/**'
+    - '!hack/**'
   workflow_dispatch:
     inputs: {}
 

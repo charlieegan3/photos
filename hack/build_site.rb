@@ -6,7 +6,7 @@ def run(command)
 end
 
 # generate the site data
-run("chmod +x ./cli/photos")
+run("sudo chmod +x ./cli/photos")
 run("./cli/photos site debug --output public/data")
 
 # build the frontend app

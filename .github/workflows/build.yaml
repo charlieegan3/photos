@@ -3,6 +3,8 @@ name: Build Binary
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'cli/**'
   workflow_dispatch:
     inputs: {}
 

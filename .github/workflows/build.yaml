@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths:
     - 'cli/**'
+    - '.github/workflows/build.yaml'
   workflow_dispatch:
     inputs: {}
 
@@ -21,9 +22,9 @@ jobs:
       run: |
         make -C cli get-binary
 
-    - name: Upload
-      uses: actions/upload-artifact@v2
+    - name: Upload the artifacts
+      uses: skx/github-action-publish-binaries@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: photos
-        path: cli/photos
-        if-no-files-found: error
+        args: 'cli/photos'

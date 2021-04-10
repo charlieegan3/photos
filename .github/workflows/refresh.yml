@@ -12,17 +12,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Download binary
+      uses: charlieegan3/fetch-gh-release-asset@master
+      with:
+        file: "photos"
+        target: "/usr/local/bin/photos"
+        chmod_x: true
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
         # this is needed to make force pushing retain history
         fetch-depth: 0
-
-    - name: Download binary
-      uses: dsaltares/fetch-gh-release-asset@master
-      with:
-        file: "photos"
-        target: "cli/photos"
 
     - name: Run
       env:
@@ -41,8 +42,7 @@ jobs:
         INSTAGRAM_COOKIE_STRING: ${{ secrets.INSTAGRAM_COOKIE_STRING }}
       run: |
         cd cli
-        sudo chmod +x photos
 
-        ./photos sync data
-        ./photos sync locations
-        ./photos sync media
+        photos sync data
+        photos sync locations
+        photos sync media

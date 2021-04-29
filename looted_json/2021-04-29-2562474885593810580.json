@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "accessibility_caption": "Photo by Charlie in Dartmouth Park. May be a closeup.",
+    "comments_disabled": false,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/e35/s1080x1080/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=b5db892cdfb5334c655fb3958d6ceb4c\u0026oe=60AF793B\u0026_nc_sid=7bff83",
+    "edge_liked_by": {
+        "count": 1
+    },
+    "edge_media_preview_like": {
+        "count": 1
+    },
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "A brief moment of sun #shotoniphone #sunglasses #lightanddark #shadow #tile #blackandwhite"
+                }
+            }
+        ]
+    },
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "fact_check_information": null,
+    "fact_check_overall_rating": null,
+    "gating_info": null,
+    "id": "2562474885593810580",
+    "is_video": false,
+    "location": {
+        "has_public_page": true,
+        "id": "220567145",
+        "name": "Dartmouth Park",
+        "slug": "dartmouth-park"
+    },
+    "media_preview": "ACoq5oCpAtNWrccZNAEGymlK1o7CSTopx6nj+dXo9HJ++2PYc0AcwRTa3NT04W4Dx5K9Dnsf/r1i4oAcldTo5QxHIG5WxnHPNcqprSsrxrYnHIYYwc/nQB2RNV5bmOL77AVzUuoSyfxYHoOKotITQBuXmpxOjRgFtwxnoPr68da5qns1R0AIKeGqOloAl3UhNMooACaSikoA/9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "shortcode": "COPvVT1rcaU",
+    "taken_at_timestamp": 1619690832,
+    "thumbnail_resources": [
+        {
+            "config_height": 150,
+            "config_width": 150,
+            "src": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/e35/s150x150/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=0644c339d0498b621707a1f729e8d349\u0026oe=60AEB567\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 240,
+            "config_width": 240,
+            "src": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/e35/s240x240/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=abb5c949fafcd1d2e58120035abd29d6\u0026oe=60B1ACAF\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 320,
+            "config_width": 320,
+            "src": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/e35/s320x320/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=dd7a210e8488037949d30390c8c95c42\u0026oe=60AE81F2\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 480,
+            "config_width": 480,
+            "src": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/e35/s480x480/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=09d478af32c0f18254d5d9184824bc40\u0026oe=60AFCBB4\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 640,
+            "config_width": 640,
+            "src": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/s640x640/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=efd9f397ae7a0437f28577c3a87c5082\u0026oe=60AF7ED4\u0026_nc_sid=7bff83"
+        }
+    ],
+    "thumbnail_src": "https://instagram.flhr3-3.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/s640x640/178417896_1166191397180573_7740888474028837373_n.jpg?tp=1\u0026_nc_ht=instagram.flhr3-3.fna.fbcdn.net\u0026_nc_cat=105\u0026_nc_ohc=gklj445Vhb4AX8rp1bV\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=efd9f397ae7a0437f28577c3a87c5082\u0026oe=60AF7ED4\u0026_nc_sid=7bff83"
+}

@@ -1,7 +1,8 @@
 package types
 
 import (
-	"errors"
+	"encoding/json"
+	"fmt"
 )
 
 // RawLocation contains the raw data that comes back from the gql endpoint
@@ -140,7 +141,11 @@ func (l *RawLocation) ToLocation() (Location, error) {
 	location := l.Graphql.Location
 
 	if location.ID == "" {
-		return Location{}, errors.New("location in gql response was missing ID")
+		bytes, err := json.MarshalIndent(l, "", "    ")
+		if err != nil {
+			return Location{}, fmt.Errorf("failed to unmarshal json for error message: %s", err)
+		}
+		return Location{}, fmt.Errorf("location in gql response was missing ID: %s", string(bytes))
 	}
 
 	return Location{

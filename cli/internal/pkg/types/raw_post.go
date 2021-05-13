@@ -1,7 +1,8 @@
 package types
 
 import (
-	"errors"
+	"encoding/json"
+	"fmt"
 	"regexp"
 )
 
@@ -173,7 +174,11 @@ func (p *RawPost) ToCompletedPost() (CompletedPost, error) {
 	}
 
 	if scm.ID == "" {
-		return CompletedPost{}, errors.New("shortcode media was missing ID after fomatting as CompletedPost from raw post")
+		bytes, err := json.MarshalIndent(p, "", "    ")
+		if err != nil {
+			return CompletedPost{}, fmt.Errorf("failed to unmarshal json for error message: %s", err)
+		}
+		return CompletedPost{}, fmt.Errorf("shortcode media was missing ID after fomatting as CompletedPost from raw post: %s", string(bytes))
 	}
 
 	return CompletedPost{

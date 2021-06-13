@@ -1,10 +1,12 @@
 package instagram
 
 import (
-	"encoding/json"
+	"fmt"
 
+	"github.com/Jeffail/gabs/v2"
 	"github.com/charlieegan3/photos/internal/pkg/proxy"
 	"github.com/charlieegan3/photos/internal/pkg/types"
+	"github.com/gosimple/slug"
 	"github.com/pkg/errors"
 )
 
@@ -19,15 +21,33 @@ func Location(id string) (types.Location, error) {
 		return types.Location{}, errors.Wrap(err, "failed to get url via proxy")
 	}
 
-	var rawLocation types.RawLocation
-	err = json.Unmarshal(body, &rawLocation)
+	jsonParsed, err := gabs.ParseJSON(body)
 	if err != nil {
-		return types.Location{}, errors.Wrap(err, "failed to parse response")
-	}
-	location, err := rawLocation.ToLocation()
-	if err != nil {
-		return types.Location{}, errors.Wrap(err, "failed to format as location")
+		return types.Location{}, errors.Wrap(err, "failed to parse json for location")
 	}
 
-	return location, nil
+	idValue, ok := jsonParsed.Path("native_location_data.location_info.location_id").Data().(string)
+	if !ok {
+		return types.Location{}, fmt.Errorf("failed to get id value from response")
+	}
+	nameValue, ok := jsonParsed.Path("native_location_data.location_info.name").Data().(string)
+	if !ok {
+		return types.Location{}, fmt.Errorf("failed to get name value from response")
+	}
+	latValue, ok := jsonParsed.Path("native_location_data.location_info.lat").Data().(float64)
+	if !ok {
+		return types.Location{}, fmt.Errorf("failed to get lat value from response")
+	}
+	longValue, ok := jsonParsed.Path("native_location_data.location_info.lng").Data().(float64)
+	if !ok {
+		return types.Location{}, fmt.Errorf("failed to get lng value from response")
+	}
+
+	return types.Location{
+		ID:   idValue,
+		Name: nameValue,
+		Slug: slug.Make(fmt.Sprintf("%s-%s", nameValue, idValue)),
+		Lat:  latValue,
+		Long: longValue,
+	}, nil
 }

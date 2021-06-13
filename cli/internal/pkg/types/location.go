@@ -23,8 +23,8 @@ type Location struct {
 	Name string  `json:"name"`
 	Slug string  `json:"slug"`
 
-	Posts  []Post     `json:"posts"`
-	Nearby []Location `json:"locations"`
+	Posts  []Post     `json:"posts,omitempty"`
+	Nearby []Location `json:"locations,omitempty"`
 }
 
 // SetPosts takes a list of posts and stores the ones with matching location on

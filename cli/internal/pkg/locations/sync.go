@@ -13,12 +13,12 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/instagram"
 	"github.com/charlieegan3/photos/internal/pkg/types"
 	"github.com/go-git/go-billy/v5"
+	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-func init() {
-}
+var syncLocal bool
 
 // CreateSyncCmd builds a command to check all image files have been saved to
 // GCS
@@ -27,12 +27,17 @@ func CreateSyncCmd() *cobra.Command {
 	backoffConfig.MaxElapsedTime = 3 * time.Minute
 
 	run := func(cmd *cobra.Command, args []string) {
-		err := backoff.Retry(func() error {
-			return RunSync(cmd, args)
-		}, backoffConfig)
+		var err error
+		if syncLocal {
+			err = RunSyncLocal(cmd, args)
+		} else {
+			err = backoff.Retry(func() error {
+				return RunSync(cmd, args)
+			}, backoffConfig)
+		}
 
 		if err != nil {
-			log.Fatalf("failed after backoff: %s", err)
+			log.Fatalf("failed to sync locations: %s", err)
 		}
 	}
 	syncCmd := cobra.Command{
@@ -40,8 +45,33 @@ func CreateSyncCmd() *cobra.Command {
 		Short: "Ensures locations are present in repo",
 		Run:   run,
 	}
+	syncCmd.Flags().BoolVarP(&syncLocal, "local", "l", false, "if set, only sync using the local dir")
 
 	return &syncCmd
+}
+
+// RunSyncLocal uses the local directory and updates locations based on that
+func RunSyncLocal(cmd *cobra.Command, args []string) error {
+	log.Println("starting sync of locations")
+
+	var rootPath = ".."
+
+	fs := osfs.New(rootPath)
+	updates, err := locationUpdates(fs)
+	if err != nil {
+		return fmt.Errorf("failed to get updated locations: %s", err)
+	}
+
+	if len(updates) > 0 {
+		for path, v := range updates {
+			ioutil.WriteFile(fmt.Sprintf("%s/%s", rootPath, path), []byte(v), 0644)
+		}
+		log.Println("there are updates to commit")
+	} else {
+		log.Println("there are no updates")
+	}
+
+	return nil
 }
 
 // RunSync downloads the latest data and checks that all repo images are in GCS

@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -70,8 +69,6 @@ func GetURLViaProxy(requestURL string, headers map[string]string) (int, []byte, 
 	}
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
-
-	fmt.Println(string(body))
 
 	return response.StatusCode, body, nil
 }

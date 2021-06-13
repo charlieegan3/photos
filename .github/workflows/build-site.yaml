@@ -23,10 +23,11 @@ jobs:
         fetch-depth: 0
 
     - name: Download binary
-      uses: dsaltares/fetch-gh-release-asset@master
+      uses: charlieegan3/fetch-gh-release-asset@master
       with:
         file: "photos"
-        target: "cli/photos"
+        target: "/usr/local/bin/photos"
+        chmod_x: true
 
     - name: Run
       env:

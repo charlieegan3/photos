@@ -3,6 +3,10 @@ name: Build Site
 on:
   push:
     branches: [ master ]
+    paths:
+    - completed_json
+    - locations
+    - frontend
   workflow_dispatch:
     inputs: {}
 

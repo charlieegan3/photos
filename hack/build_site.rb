@@ -16,8 +16,7 @@ run("cp -r frontend/dist/* public")
 # make the output data dir
 run("mkdir -p public/data")
 # generate the site data
-run("sudo chmod +x ./cli/photos")
-run("./cli/photos site debug --output public/data")
+run("photos site debug --output public/data")
 
 # commit the result
 email = `git config --global user.email`.chomp

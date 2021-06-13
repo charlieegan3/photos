@@ -26,7 +26,7 @@ func Location(id string) (types.Location, error) {
 	}
 	location, err := rawLocation.ToLocation()
 	if err != nil {
-		return types.Location{}, errors.Wrap(err, "failed to format as completed post")
+		return types.Location{}, errors.Wrap(err, "failed to format as location")
 	}
 
 	return location, nil

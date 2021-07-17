@@ -3,6 +3,7 @@ package instagram
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -47,6 +48,8 @@ func LatestPosts() ([]types.LatestPost, error) {
 	if err != nil {
 		return posts, errors.Wrap(err, "failed to get url via proxy")
 	}
+
+	fmt.Println(string(body))
 
 	var profile types.Profile
 	if err := json.Unmarshal(body, &profile); err != nil {

@@ -1,0 +1,5 @@
+database:
+  connection_string: postgresql://user@localhost
+  params:
+    dbname: database_name
+    sslmode: disable

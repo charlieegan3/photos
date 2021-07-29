@@ -4,6 +4,10 @@ import (
 	"database/sql"
 	"testing"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 )
@@ -26,10 +30,10 @@ func (suite *DatabaseSuite) SetupSuite() {
 		suite.T().Fatalf("failed to load test config: %s", err)
 	}
 
-	// initialize the database connection
+	// initialize a database connection to init the db
 	params := viper.GetStringMapString("database.params")
 	connectionString := viper.GetString("database.connection_string")
-	suite.DB, err = Init(connectionString, params, "postgres", true)
+	db, err := Init(connectionString, params, "postgres", true)
 	if err != nil {
 		suite.T().Fatalf("failed to init DB: %s", err)
 	}
@@ -43,22 +47,53 @@ func (suite *DatabaseSuite) SetupSuite() {
 	// if the database exists, then we drop it to give a clean test state
 	// this happens at the start of the test suite so that the state is there
 	// after a test run to inspect if need be
-	exists, err := Exists(suite.DB, dbname)
+	exists, err := Exists(db, dbname)
 	if err != nil {
 		suite.T().Fatalf("failed to check if test DB exists: %s", err)
 	}
 	if exists {
 		// drop existing test db
-		err = Drop(suite.DB, dbname)
+		err = Drop(db, dbname)
 		if err != nil {
 			suite.T().Fatalf("failed to drop test database: %s", err)
 		}
 	}
 
 	// create the test db for this test run
-	err = Create(suite.DB, dbname)
+	err = Create(db, dbname)
 	if err != nil {
 		suite.T().Fatalf("failed to create test database: %s", err)
+	}
+
+	// init the db for the test suite with the name of the new db
+	suite.DB, err = Init(connectionString, params, dbname, true)
+	if err != nil {
+		suite.T().Fatalf("failed to init DB: %s", err)
+	}
+
+	// prepare to run the migrations
+	driver, err := postgres.WithInstance(suite.DB, &postgres.Config{})
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://../../../migrations",
+		"postgres",
+		driver,
+	)
+	if err != nil {
+		suite.T().Fatalf("failed to load migrations: %s", err)
+	}
+
+	// migrate up, down and up again to test that both directions work
+	err = m.Up()
+	if err != nil {
+		suite.T().Fatalf("failed to Up migrate: %s", err)
+	}
+	err = m.Down()
+	if err != nil {
+		suite.T().Fatalf("failed to Down migrate: %s", err)
+	}
+	err = m.Up()
+	if err != nil {
+		suite.T().Fatalf("failed to re Up migrate: %s", err)
 	}
 }
 

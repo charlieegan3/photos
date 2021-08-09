@@ -95,7 +95,7 @@ export default {
           "properties": {
                   "title": this.items[i].location.name,
                   "link": this.items[i].link,
-                  "icon": "https://images.weserv.nl/?url=storage.googleapis.com/charlieegan3-instagram-archive/current/" + this.items[i].post_id + ".jpg&w=50",
+                  "icon": "https://images.weserv.nl/?url=storage.googleapis.com/charlieegan3-photos/current/" + this.items[i].post_id + ".jpg&w=50",
                   "postCount":  this.items[i].location.count,
           }
         });

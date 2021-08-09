@@ -10,7 +10,7 @@ export default {
   props: ["post"],
   computed: {
     url: function() {
-      return "https://storage.googleapis.com/charlieegan3-instagram-archive/current/" + this.post + ".mp4"
+      return "https://storage.googleapis.com/charlieegan3-photos/current/" + this.post + ".mp4"
     }
   }
 }

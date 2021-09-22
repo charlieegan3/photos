@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/storage v1.6.0
 	github.com/Jeffail/gabs/v2 v2.6.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible
+	github.com/go-git/go-billy v4.2.0+incompatible // indirect
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.0.0
 	github.com/gosimple/slug v1.9.0 // indirect
@@ -16,4 +17,5 @@ require (
 	github.com/spf13/viper v1.3.2
 	go.opencensus.io v0.22.4 // indirect
 	google.golang.org/api v0.29.0
+	gopkg.in/src-d/go-billy.v4 v4.3.2 // indirect
 )

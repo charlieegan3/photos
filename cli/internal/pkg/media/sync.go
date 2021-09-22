@@ -17,13 +17,15 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/git"
 	"github.com/charlieegan3/photos/internal/pkg/instagram"
 	"github.com/charlieegan3/photos/internal/pkg/types"
-	"github.com/go-git/go-billy/v5"
+	billy "github.com/go-git/go-billy/v5"
+	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"google.golang.org/api/iterator"
 )
 
 var bucket string
+var syncLocal bool
 
 func init() {
 	bucket = os.Getenv("GOOGLE_BUCKET")
@@ -60,14 +62,19 @@ func CreateSyncCmd() *cobra.Command {
 	backoffConfig.MaxElapsedTime = 3 * time.Minute
 
 	run := func(cmd *cobra.Command, args []string) {
-		err := backoff.Retry(func() error {
-			err := RunSync(cmd, args)
-			if err != nil {
-				log.Printf("retrying due to error: %s", err)
-			}
+		var err error
+		if syncLocal {
+			err = RunSyncLocal(cmd, args)
+		} else {
+			err = backoff.Retry(func() error {
+				err := RunSync(cmd, args)
+				if err != nil {
+					log.Printf("retrying due to error: %s", err)
+				}
 
-			return err
-		}, backoffConfig)
+				return err
+			}, backoffConfig)
+		}
 
 		if err != nil {
 			log.Fatalf("failed after backoff: %s", err)
@@ -78,12 +85,27 @@ func CreateSyncCmd() *cobra.Command {
 		Short: "Ensures images present in GCS",
 		Run:   run,
 	}
+	syncCmd.Flags().BoolVarP(&syncLocal, "local", "l", false, "if set, only sync using the local dir")
 
 	return &syncCmd
 }
 
 // RunSync downloads the latest data and checks that all repo images are in GCS
 func RunSync(cmd *cobra.Command, args []string) error {
+	_, fs, err := git.Clone()
+	if err != nil {
+		return fmt.Errorf("failed to clone into filesystem: %v", err)
+	}
+
+	return runSyncWithFS(fs)
+}
+
+// RunSyncLocal syncs media using only the local directory
+func RunSyncLocal(cmd *cobra.Command, args []string) error {
+	return runSyncWithFS(osfs.New(".."))
+}
+
+func runSyncWithFS(fs billy.Filesystem) (err error) {
 	log.Println("starting sync of media")
 
 	ctx := context.Background()
@@ -92,11 +114,6 @@ func RunSync(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to init GCS storage client: %s", err)
 	}
 	bkt := client.Bucket(bucket)
-
-	_, fs, err := git.Clone()
-	if err != nil {
-		return fmt.Errorf("failed to clone into filesystem: %v", err)
-	}
 
 	completedPosts, err := listCompletedPosts(fs)
 	if err != nil {

@@ -2,6 +2,7 @@ package instagram
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/charlieegan3/photos/internal/pkg/proxy"
 	"github.com/charlieegan3/photos/internal/pkg/types"
@@ -16,7 +17,7 @@ func Post(shortcode string) (types.CompletedPost, error) {
 
 	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/p/"+shortcode+"/?__a=1", headers)
 	if err != nil {
-		return types.CompletedPost{}, errors.Wrap(err, "failed to get url via proxy")
+		return types.CompletedPost{}, errors.Wrap(err, fmt.Sprintf("failed to get url via proxy: %s", string(body)))
 	}
 
 	var post types.RawPost

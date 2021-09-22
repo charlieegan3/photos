@@ -18,7 +18,7 @@ func Location(id string) (types.Location, error) {
 
 	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/explore/locations/"+id+"/?__a=1", headers)
 	if err != nil {
-		return types.Location{}, errors.Wrap(err, "failed to get url via proxy")
+		return types.Location{}, errors.Wrap(err, fmt.Sprintf("failed to get url via proxy: %s", string(body)))
 	}
 
 	jsonParsed, err := gabs.ParseJSON(body)

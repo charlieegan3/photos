@@ -33,7 +33,12 @@ func CreateSyncCmd() *cobra.Command {
 			err = RunSyncLocal(cmd, args)
 		} else {
 			err = backoff.Retry(func() error {
-				return RunSync(cmd, args)
+				err := RunSync(cmd, args)
+				if err != nil {
+					log.Printf("retrying due to error: %s", err)
+				}
+
+				return err
 			}, backoffConfig)
 		}
 

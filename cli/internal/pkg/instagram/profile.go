@@ -46,10 +46,8 @@ func LatestPosts() ([]types.LatestPost, error) {
 
 	_, body, err := proxy.GetURLViaProxy("https://www.instagram.com/"+username+"/?__a=1", headers)
 	if err != nil {
-		return posts, errors.Wrap(err, "failed to get url via proxy")
+		return posts, errors.Wrap(err, fmt.Sprintf("failed to get url via proxy: %s", string(body)))
 	}
-
-	fmt.Println(string(body))
 
 	var profile types.Profile
 	if err := json.Unmarshal(body, &profile); err != nil {

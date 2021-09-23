@@ -2,10 +2,10 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
+	"time"
 
 	"github.com/charlieegan3/cms/internal/pkg/models"
-	"github.com/jmoiron/sqlx"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
 )
 
@@ -13,59 +13,62 @@ type dbDevice struct {
 	ID      int    `db:"id"`
 	Name    string `db:"name"`
 	IconURL string `db:"icon_url"`
+
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
+}
+
+func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
+	record := goqu.Record{
+		"name":     d.Name,
+		"icon_url": d.IconURL,
+	}
+
+	if includeID {
+		record["id"] = d.ID
+	}
+
+	return record
 }
 
 func newDevice(device dbDevice) models.Device {
 	return models.Device{
-		ID:      device.ID,
-		Name:    device.Name,
-		IconURL: device.IconURL,
+		ID:        device.ID,
+		Name:      device.Name,
+		IconURL:   device.IconURL,
+		CreatedAt: device.CreatedAt,
+		UpdatedAt: device.UpdatedAt,
 	}
 }
 
 func newDBDevice(device models.Device) dbDevice {
 	return dbDevice{
-		ID:      device.ID,
-		Name:    device.Name,
-		IconURL: device.IconURL,
+		ID:        device.ID,
+		Name:      device.Name,
+		IconURL:   device.IconURL,
+		CreatedAt: device.CreatedAt,
+		UpdatedAt: device.UpdatedAt,
 	}
 }
 
-func CreateDevices(db *sql.DB, devices []models.Device) ([]models.Device, error) {
-	sqlxDB := sqlx.NewDb(db, "postgres")
-	dbDevices := []dbDevice{}
+func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device, err error) {
+	records := []goqu.Record{}
 	for _, v := range devices {
-		dbDevices = append(dbDevices, newDBDevice(v))
+		d := newDBDevice(v)
+		records = append(records, d.ToRecord(false))
 	}
 
-	query, args, err := sqlx.Named(
-		`INSERT INTO devices (name, icon_url)
-		VALUES (:name, :icon_url)
-		RETURNING *;`,
-		dbDevices)
-	if err != nil {
-		return []models.Device{}, errors.Wrap(err, "failed to build named sql query")
-	}
-	fmt.Println(query)
-	fmt.Println(args)
+	var dbDevices []dbDevice
 
-	tx := sqlxDB.MustBegin()
-	things, err := tx.QueryRowx(query, args...).SliceScan()
-	if err != nil {
-		tx.Rollback()
-		return nil, errors.Wrap(err, "insert address error")
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.Insert("devices").Returning(goqu.Star()).Rows(records).Executor()
+	if err := insert.ScanStructs(&dbDevices); err != nil {
+		return results, errors.Wrap(err, "failed to insert devices")
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, errors.Wrap(err, "tx.Commit()")
+	for _, v := range dbDevices {
+		results = append(results, newDevice(v))
 	}
 
-	returnDevices := []models.Device{}
-	for _, v := range things {
-		fmt.Println(v)
-		// returnDevices = append(returnDevices, newDevice(v))
-	}
-
-	return returnDevices, nil
+	return results, nil
 }

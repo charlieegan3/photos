@@ -119,3 +119,13 @@ func Exists(db *sql.DB, databaseName string) (bool, error) {
 	// only return true if there was a matching row with 1 set for a name match
 	return result == 1, nil
 }
+
+// Truncate the table with tableName
+func Truncate(db *sql.DB, tableName string) error {
+	_, err := db.Exec(fmt.Sprintf(`TRUNCATE %s;`, tableName))
+	if err != nil {
+		return fmt.Errorf("failed to truncate table: %s", err)
+	}
+
+	return nil
+}

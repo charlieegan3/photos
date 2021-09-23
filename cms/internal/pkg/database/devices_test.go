@@ -1,8 +1,9 @@
 package database
 
 import (
+	"database/sql"
+
 	"github.com/charlieegan3/cms/internal/pkg/models"
-	"github.com/jmoiron/sqlx"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/suite"
 )
@@ -11,7 +12,7 @@ import (
 // storing devices
 type DevicesSuite struct {
 	suite.Suite
-	DB *sqlx.DB
+	DB *sql.DB
 }
 
 func (s *DevicesSuite) SetupSuite() {

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/charlieegan3/cms/internal/pkg/models"
@@ -30,7 +31,8 @@ func newDBDevice(device models.Device) dbDevice {
 	}
 }
 
-func CreateDevices(db *sqlx.DB, devices []models.Device) ([]models.Device, error) {
+func CreateDevices(db *sql.DB, devices []models.Device) ([]models.Device, error) {
+	sqlxDB := sqlx.NewDb(db, "postgres")
 	dbDevices := []dbDevice{}
 	for _, v := range devices {
 		dbDevices = append(dbDevices, newDBDevice(v))
@@ -47,7 +49,7 @@ func CreateDevices(db *sqlx.DB, devices []models.Device) ([]models.Device, error
 	fmt.Println(query)
 	fmt.Println(args)
 
-	tx := db.MustBegin()
+	tx := sqlxDB.MustBegin()
 	things, err := tx.QueryRowx(query, args...).SliceScan()
 	if err != nil {
 		tx.Rollback()

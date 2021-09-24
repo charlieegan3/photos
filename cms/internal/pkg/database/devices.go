@@ -72,3 +72,19 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 
 	return results, nil
 }
+
+func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err error) {
+	var dbDevices []dbDevice
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("devices").Select("*").Where(goqu.Ex{"name": name}).Executor()
+	if err := insert.ScanStructs(&dbDevices); err != nil {
+		return results, errors.Wrap(err, "failed to select devices by name")
+	}
+
+	for _, v := range dbDevices {
+		results = append(results, newDevice(v))
+	}
+
+	return results, nil
+}

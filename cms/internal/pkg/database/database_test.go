@@ -12,6 +12,10 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+func TestDatabaseSuite(t *testing.T) {
+	suite.Run(t, new(DatabaseSuite))
+}
+
 // DatabaseSuite is the top of the test suite hierarchy for all tests that use
 // the database.
 type DatabaseSuite struct {
@@ -97,16 +101,17 @@ func (s *DatabaseSuite) SetupSuite() {
 	}
 }
 
-func (s *DatabaseSuite) TestExample() {
+func (s *DatabaseSuite) TestPing() {
 	// example test, check that the connection is ok
 	err := Ping(s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to ping database: %s", err)
 	}
-
-	suite.Run(s.T(), &DevicesSuite{DB: s.DB})
 }
 
-func TestDatabaseSuite(t *testing.T) {
-	suite.Run(t, new(DatabaseSuite))
+//  Tests for dependent suites which use the database from the DatabaseSuite
+//  follow
+
+func (s *DatabaseSuite) TestDevicesSuite() {
+	suite.Run(s.T(), &DevicesSuite{DB: s.DB})
 }

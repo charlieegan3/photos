@@ -3,9 +3,10 @@ package database
 import (
 	"database/sql"
 
-	"github.com/charlieegan3/cms/internal/pkg/models"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 )
 
 // DevicesSuite is a number of tests to define the database integration for

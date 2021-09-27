@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/charlieegan3/cms/cmd"
+import "github.com/charlieegan3/photos/cms/cmd"
 
 func main() {
 	cmd.Execute()

@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/charlieegan3/cms/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 )
 
 type dbDevice struct {

@@ -1,10 +1,11 @@
-module github.com/charlieegan3/cms
+module github.com/charlieegan3/photos/cms
 
 go 1.17
 
 require (
 	github.com/doug-martin/goqu/v9 v9.16.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
+	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.10.2
 	github.com/maxatome/go-testdeep v1.10.0
 	github.com/pkg/errors v0.9.1

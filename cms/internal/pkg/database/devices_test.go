@@ -68,7 +68,7 @@ func (s *DevicesSuite) TestCreateDevices() {
 	td.Cmp(s.T(), returnedDevices, expectedResult)
 }
 
-func (s *DevicesSuite) TestGetDevices() {
+func (s *DevicesSuite) TestFindDevicesByName() {
 	devices := []models.Device{
 		{
 			Name:    "iPhone",
@@ -94,6 +94,57 @@ func (s *DevicesSuite) TestGetDevices() {
 		[]models.Device{},
 		td.ArrayEntries{
 			0: td.SStruct(
+				models.Device{
+					Name:    "X100F",
+					IconURL: "https://example.com/image2.jpg",
+				},
+				td.StructFields{
+					"ID":        td.Ignore(),
+					"CreatedAt": td.Ignore(),
+					"UpdatedAt": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedDevices, expectedResult)
+}
+
+func (s *DevicesSuite) TestAllDevices() {
+	devices := []models.Device{
+		{
+			Name:    "iPhone",
+			IconURL: "https://example.com/image.jpg",
+		},
+		{
+			Name:    "X100F",
+			IconURL: "https://example.com/image2.jpg",
+		},
+	}
+
+	_, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices needed for test: %s", err)
+	}
+
+	returnedDevices, err := AllDevices(s.DB)
+	if err != nil {
+		s.T().Fatalf("failed get devices: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Device{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Device{
+					Name:    "iPhone",
+					IconURL: "https://example.com/image.jpg",
+				},
+				td.StructFields{
+					"ID":        td.Ignore(),
+					"CreatedAt": td.Ignore(),
+					"UpdatedAt": td.Ignore(),
+				}),
+			1: td.SStruct(
 				models.Device{
 					Name:    "X100F",
 					IconURL: "https://example.com/image2.jpg",

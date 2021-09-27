@@ -89,6 +89,22 @@ func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err er
 	return results, nil
 }
 
+func AllDevices(db *sql.DB) (results []models.Device, err error) {
+	var dbDevices []dbDevice
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("devices").Select("*").Executor()
+	if err := insert.ScanStructs(&dbDevices); err != nil {
+		return results, errors.Wrap(err, "failed to select devices")
+	}
+
+	for _, v := range dbDevices {
+		results = append(results, newDevice(v))
+	}
+
+	return results, nil
+}
+
 // UpdateDevices is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
 func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device, err error) {

@@ -88,3 +88,42 @@ func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err er
 
 	return results, nil
 }
+
+// UpdateDevices is not implemented as a single SQL query since update many in
+// place is not supported by goqu and it wasn't worth the work (TODO)
+func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device, err error) {
+	records := []goqu.Record{}
+	for _, v := range devices {
+		d := newDBDevice(v)
+		records = append(records, d.ToRecord(true))
+	}
+
+	goquDB := goqu.New("postgres", db)
+	tx, err := goquDB.Begin()
+	if err != nil {
+		return results, errors.Wrap(err, "failed to open tx for updating devices")
+	}
+
+	for _, record := range records {
+		var result dbDevice
+		update := tx.From("devices").
+			Where(goqu.Ex{"id": record["id"]}).
+			Update().
+			Set(record).
+			Returning(goqu.Star()).
+			Executor()
+		if _, err = update.ScanStruct(&result); err != nil {
+			if rErr := tx.Rollback(); rErr != nil {
+				return results, errors.Wrap(err, "failed to rollback")
+			}
+			return results, errors.Wrap(err, "failed to update, rolled back")
+		}
+
+		results = append(results, newDevice(result))
+	}
+	if err = tx.Commit(); err != nil {
+		return results, errors.Wrap(err, "failed to commit transaction")
+	}
+
+	return results, nil
+}

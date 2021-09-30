@@ -5,15 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/charlieegan3/photos/cms/internal/constants"
+	"github.com/charlieegan3/photos/cms/internal/pkg/constants"
 )
 
 func InitMiddlewareAuth(username, password string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			u, p, ok := r.BasicAuth()
-			fmt.Println(u, username)
-			fmt.Println(p, password)
 			if !ok ||
 				subtle.ConstantTimeCompare([]byte(username), []byte(u)) != 1 ||
 				subtle.ConstantTimeCompare([]byte(password), []byte(p)) != 1 {

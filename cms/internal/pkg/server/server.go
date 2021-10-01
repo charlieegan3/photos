@@ -1,27 +1,23 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"time"
 
+	devices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 	"github.com/gorilla/mux"
 )
 
-func Serve(addr, port, adminUsername, adminPassword string) {
+func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	r := mux.NewRouter()
 
 	adminRouter := r.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 
-	r.HandleFunc("/public", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "public")
-	})
-	adminRouter.HandleFunc("/secret", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "secret")
-	})
+	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db))
 
 	srv := &http.Server{
 		Handler:      r,

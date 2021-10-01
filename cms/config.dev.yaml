@@ -3,3 +3,8 @@ server:
   port: "3000"
   adminUsername: "username"
   adminPassword: "password"
+database:
+  connection_string: postgresql://postgres:postgres@localhost:5432
+  params:
+    dbname: cms_test
+    sslmode: disable

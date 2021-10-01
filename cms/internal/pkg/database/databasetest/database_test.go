@@ -1,9 +1,11 @@
-package database
+package databasetest
 
 import (
 	"database/sql"
 	"testing"
 
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -28,7 +30,7 @@ type DatabaseSuite struct {
 func (s *DatabaseSuite) SetupSuite() {
 	// use viper as we do in commands to load in the config, this time, the
 	// config is hardcoded to the test config file
-	viper.SetConfigFile("../../../config.test.yaml")
+	viper.SetConfigFile("../../../../config.test.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
 		s.T().Fatalf("failed to load test config: %s", err)
@@ -37,7 +39,7 @@ func (s *DatabaseSuite) SetupSuite() {
 	// initialize a database connection to init the db
 	params := viper.GetStringMapString("database.params")
 	connectionString := viper.GetString("database.connection_string")
-	db, err := Init(connectionString, params, "postgres", true)
+	db, err := database.Init(connectionString, params, "postgres", true)
 	if err != nil {
 		s.T().Fatalf("failed to init DB: %s", err)
 	}
@@ -51,26 +53,26 @@ func (s *DatabaseSuite) SetupSuite() {
 	// if the database exists, then we drop it to give a clean test state
 	// this happens at the start of the test suite so that the state is there
 	// after a test run to inspect if need be
-	exists, err := Exists(db, dbname)
+	exists, err := database.Exists(db, dbname)
 	if err != nil {
 		s.T().Fatalf("failed to check if test DB exists: %s", err)
 	}
 	if exists {
 		// drop existing test db
-		err = Drop(db, dbname)
+		err = database.Drop(db, dbname)
 		if err != nil {
 			s.T().Fatalf("failed to drop test database: %s", err)
 		}
 	}
 
 	// create the test db for this test run
-	err = Create(db, dbname)
+	err = database.Create(db, dbname)
 	if err != nil {
 		s.T().Fatalf("failed to create test database: %s", err)
 	}
 
 	// init the db for the test suite with the name of the new db
-	s.DB, err = Init(connectionString, params, dbname, true)
+	s.DB, err = database.Init(connectionString, params, dbname, true)
 	if err != nil {
 		s.T().Fatalf("failed to init DB: %s", err)
 	}
@@ -78,7 +80,7 @@ func (s *DatabaseSuite) SetupSuite() {
 	// prepare to run the migrations
 	driver, err := postgres.WithInstance(s.DB, &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://../../../migrations",
+		"file://../../../../migrations",
 		"postgres",
 		driver,
 	)
@@ -103,7 +105,7 @@ func (s *DatabaseSuite) SetupSuite() {
 
 func (s *DatabaseSuite) TestPing() {
 	// example test, check that the connection is ok
-	err := Ping(s.DB)
+	err := database.Ping(s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to ping database: %s", err)
 	}
@@ -113,5 +115,9 @@ func (s *DatabaseSuite) TestPing() {
 //  follow
 
 func (s *DatabaseSuite) TestDevicesSuite() {
-	suite.Run(s.T(), &DevicesSuite{DB: s.DB})
+	suite.Run(s.T(), &database.DevicesSuite{DB: s.DB})
+}
+
+func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
+	suite.Run(s.T(), &handlers.EndpointsDevicesSuite{DB: s.DB})
 }

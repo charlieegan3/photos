@@ -16,9 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server"
 )
 
@@ -27,11 +30,19 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "start cms server",
 	Run: func(cmd *cobra.Command, args []string) {
+		params := viper.GetStringMapString("database.params")
+		connectionString := viper.GetString("database.connection_string")
+		db, err := database.Init(connectionString, params, "postgres", true)
+		if err != nil {
+			log.Fatalf("failed to init DB: %s", err)
+		}
+
 		server.Serve(
 			viper.GetString("server.address"),
 			viper.GetString("server.port"),
 			viper.GetString("server.adminUsername"),
 			viper.GetString("server.adminPassword"),
+			db,
 		)
 	},
 }

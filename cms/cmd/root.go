@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -46,8 +45,8 @@ func initConfig() {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed using config file:", viper.ConfigFileUsed())
+		log.Fatalf("Failed using config file: %s", viper.ConfigFileUsed())
 		return
 	}
-	fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	log.Printf("Using config file: %s", viper.ConfigFileUsed())
 }

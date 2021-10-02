@@ -6,5 +6,5 @@ server:
 database:
   connection_string: postgresql://postgres:postgres@localhost:5432
   params:
-    dbname: cms_test
+    dbname: cms_dev
     sslmode: disable

@@ -5,10 +5,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"strings"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/gorilla/mux"
+	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -57,4 +60,71 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 
 	assert.Contains(s.T(), string(body), "iPhone")
 	assert.Contains(s.T(), string(body), "X100F")
+}
+
+func (s *EndpointsDevicesSuite) TestNewDevice() {
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/devices/new", BuildNewHandler()).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/admin/devices/new", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	require.Equal(s.T(), http.StatusOK, rr.Code)
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), "Name")
+}
+
+func (s *EndpointsDevicesSuite) TestCreateDevice() {
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB)).Methods("POST")
+
+	form := url.Values{}
+	form.Add("Name", "iPhone")
+	form.Add("IconURL", "https://example.com/image.jpg")
+
+	req, err := http.NewRequest(
+		"POST",
+		"/admin/devices",
+		strings.NewReader(form.Encode()),
+	)
+	require.NoError(s.T(), err)
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	// check that we get a see other to the right location
+	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices"})
+
+	// check that the database content is also correct
+	returnedDevices, err := database.AllDevices(s.DB)
+	if err != nil {
+		s.T().Fatalf("failed to list devices: %s", err)
+	}
+
+	expectedDevices := td.Slice(
+		[]models.Device{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Device{
+					Name:    "iPhone",
+					IconURL: "https://example.com/image.jpg",
+				},
+				td.StructFields{
+					"ID":        td.Ignore(),
+					"CreatedAt": td.Ignore(),
+					"UpdatedAt": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedDevices, expectedDevices)
 }

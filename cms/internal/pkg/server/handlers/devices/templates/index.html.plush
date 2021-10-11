@@ -1,0 +1,5 @@
+<ul>
+<%= for (device) in devices { %>
+  <li><%= device.Name %></li>
+<% } %>
+</ul>

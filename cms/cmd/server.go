@@ -18,6 +18,10 @@ package cmd
 import (
 	"log"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -35,6 +39,21 @@ var serverCmd = &cobra.Command{
 		db, err := database.Init(connectionString, params, "postgres", true)
 		if err != nil {
 			log.Fatalf("failed to init DB: %s", err)
+		}
+
+		driver, err := postgres.WithInstance(db, &postgres.Config{})
+		m, err := migrate.NewWithDatabaseInstance(
+			"file://migrations",
+			"postgres",
+			driver,
+		)
+		if err != nil {
+			log.Fatalf("failed to load migrations: %s", err)
+		}
+
+		err = m.Up()
+		if err != nil && err != migrate.ErrNoChange {
+			log.Fatalf("failed to migrate up: %s", err)
 		}
 
 		server.Serve(

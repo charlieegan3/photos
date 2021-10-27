@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -60,6 +61,36 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 
 	assert.Contains(s.T(), string(body), "iPhone")
 	assert.Contains(s.T(), string(body), "X100F")
+}
+
+func (s *EndpointsDevicesSuite) TestGetDevice() {
+	testData := []models.Device{
+		{
+			Name:    "iPhone",
+			IconURL: "https://example.com/image.jpg",
+		},
+	}
+
+	persistedDevices, err := database.CreateDevices(s.DB, testData)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/devices/{deviceName}", BuildGetHandler(s.DB)).Methods("GET")
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name), nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	require.Equal(s.T(), http.StatusOK, rr.Code)
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), "iPhone")
 }
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {

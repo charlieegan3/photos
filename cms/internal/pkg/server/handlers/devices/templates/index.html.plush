@@ -1,5 +1,9 @@
 <ul>
 <%= for (device) in devices { %>
-  <li><%= device.Name %></li>
+  <li>
+    <a href="/admin/devices/<%= device.Name %>">
+      <%= device.Name %>
+    </a>
+  </li>
 <% } %>
 </ul>

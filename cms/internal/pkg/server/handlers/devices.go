@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gobuffalo/plush"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
@@ -19,6 +20,9 @@ var indexTemplate string
 
 //go:embed devices/templates/new.html.plush
 var newTemplate string
+
+//go:embed devices/templates/show.html.plush
+var showTemplate string
 
 // gorilla decoder can be safely shared and caches data on structs used
 var decoder = schema.NewDecoder()
@@ -70,6 +74,50 @@ func BuildNewHandler() func(http.ResponseWriter, *http.Request) {
 		}
 
 		w.WriteHeader(http.StatusOK)
+
+		body, err := templating.RenderPage(s)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		fmt.Fprintf(w, body)
+	}
+}
+
+func BuildGetHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		name, ok := mux.Vars(r)["deviceName"]
+		if !ok {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("device name is required"))
+			return
+		}
+
+		devices, err := database.FindDevicesByName(db, name)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(devices) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("device", devices[0])
+
+		s, err := plush.Render(showTemplate, ctx)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 
 		body, err := templating.RenderPage(s)
 		if err != nil {

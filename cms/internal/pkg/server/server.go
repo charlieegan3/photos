@@ -22,6 +22,7 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db)).Methods("GET")
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler()).Methods("GET")
+	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildGetHandler(db)).Methods("GET")
 
 	srv := &http.Server{
 		Handler:      router,

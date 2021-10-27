@@ -36,11 +36,14 @@ func init() {
 		"",
 		"config file (default is $HOME/.cms.yaml)",
 	)
-	rootCmd.MarkPersistentFlagRequired("config")
 }
 
 // initConfig reads in config file and errors if fails
 func initConfig() {
+	if cfgFile == "" {
+		cfgFile = "$HOME/.cms.yaml"
+	}
+
 	viper.SetConfigFile(cfgFile)
 
 	err := viper.ReadInConfig()

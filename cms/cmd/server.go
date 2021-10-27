@@ -56,6 +56,8 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to migrate up: %s", err)
 		}
 
+		log.Println("Listening on", viper.GetString("server.port"))
+
 		server.Serve(
 			viper.GetString("server.address"),
 			viper.GetString("server.port"),

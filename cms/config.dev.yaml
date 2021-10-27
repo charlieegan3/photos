@@ -4,7 +4,7 @@ server:
   adminUsername: "username"
   adminPassword: "password"
 database:
-  connection_string: postgresql://postgres:postgres@localhost:5432
+  connection_string: postgresql://postgres:password@localhost:5432
   params:
     dbname: cms_dev
     sslmode: disable

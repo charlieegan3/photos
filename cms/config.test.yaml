@@ -1,6 +1,6 @@
 test: "`1"
 database:
-  connection_string: postgresql://postgres:postgres@localhost:5432
+  connection_string: postgresql://postgres:password@localhost:5432
   params:
     dbname: cms_test
     sslmode: disable

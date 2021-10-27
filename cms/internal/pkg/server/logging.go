@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -14,7 +13,6 @@ type loggingResponseWriter struct {
 }
 
 func (lw *loggingResponseWriter) WriteHeader(code int) {
-	fmt.Println(code)
 	lw.statusCode = code
 	lw.ResponseWriter.WriteHeader(code)
 }

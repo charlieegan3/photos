@@ -11,6 +11,7 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 //go:embed devices/templates/index.html.plush
@@ -43,7 +44,14 @@ func BuildIndexHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		fmt.Fprintf(w, s)
+		body, err := templating.RenderPage(s)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		fmt.Fprintf(w, body)
 	}
 }
 
@@ -63,7 +71,14 @@ func BuildNewHandler() func(http.ResponseWriter, *http.Request) {
 
 		w.WriteHeader(http.StatusOK)
 
-		fmt.Fprintf(w, s)
+		body, err := templating.RenderPage(s)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		fmt.Fprintf(w, body)
 	}
 }
 

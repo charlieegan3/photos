@@ -93,6 +93,66 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	assert.Contains(s.T(), string(body), "iPhone")
 }
 
+func (s *EndpointsDevicesSuite) TestPutDevice() {
+	testData := []models.Device{
+		{
+			Name:    "iPhone",
+			IconURL: "https://example.com/image.jpg",
+		},
+	}
+
+	persistedDevices, err := database.CreateDevices(s.DB, testData)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/devices/{deviceName}", BuildPutHandler(s.DB)).Methods("POST")
+
+	form := url.Values{}
+	form.Add("_method", "PUT")
+	form.Add("Name", "iPad")
+	form.Add("IconURL", "https://example.com/image.jpg")
+
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name),
+		strings.NewReader(form.Encode()),
+	)
+	require.NoError(s.T(), err)
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+
+	// check that the database content is also correct
+	returnedDevices, err := database.AllDevices(s.DB)
+	if err != nil {
+		s.T().Fatalf("failed to list devices: %s", err)
+	}
+	expectedDevices := td.Slice(
+		[]models.Device{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Device{
+					ID:      persistedDevices[0].ID,
+					Name:    "iPad",
+					IconURL: "https://example.com/image.jpg",
+				},
+				td.StructFields{
+					"CreatedAt": td.Ignore(),
+					"UpdatedAt": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedDevices, expectedDevices)
+}
+
 func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/devices/new", BuildNewHandler()).Methods("GET")

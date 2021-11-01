@@ -134,6 +134,12 @@ func BuildCreateHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
+		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Content-Type must be 'x-www-form-urlencoded'"))
+			return
+		}
+
 		err := r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -158,5 +164,76 @@ func BuildCreateHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		http.Redirect(w, r, "/admin/devices", http.StatusSeeOther)
+	}
+}
+
+func BuildPutHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Content-Type must be 'x-www-form-urlencoded'"))
+			return
+		}
+
+		err := r.ParseForm()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if r.PostForm.Get("_method") != "PUT" {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("expected _method to be PUT in form"))
+			return
+		}
+
+		name, ok := mux.Vars(r)["deviceName"]
+		if !ok {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("device name is required"))
+			return
+		}
+
+		devices, err := database.FindDevicesByName(db, name)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(devices) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		device := devices[0]
+
+		err = decoder.Decode(&device, r.PostForm)
+		if err != nil {
+			// all keys are processed and then the errors all returned, so a
+			// single error of this type is ok for _method
+			if _, ok := err.(*schema.UnknownKeyError); ok {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+		}
+
+		_, err = database.UpdateDevices(db, []models.Device{device})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		http.Redirect(
+			w,
+			r,
+			fmt.Sprintf("/admin/devices/%s", device.Name),
+			http.StatusSeeOther,
+		)
 	}
 }

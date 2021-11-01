@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
 	devices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 )
@@ -23,6 +24,9 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler()).Methods("GET")
 	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildGetHandler(db)).Methods("GET")
+	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildPutHandler(db)).Methods("POST")
+
+	router.NotFoundHandler = http.HandlerFunc(notFound)
 
 	srv := &http.Server{
 		Handler:      router,
@@ -32,4 +36,10 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	}
 
 	log.Fatal(srv.ListenAndServe())
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	logger := logrus.New()
+	entry := logrus.NewEntry(logger)
+	entry.Info("not found", r.URL.Path)
 }

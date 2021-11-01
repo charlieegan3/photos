@@ -1,1 +1,13 @@
 <p><%= device.Name %></p>
+<%= form_for(device, {action:"/admin/devices/"+device.Name, method: "PUT"}) { %>
+  <div class="row">
+    <div>
+      <%= f.InputTag("Name") %>
+    </div>
+    <div>
+      <%= f.InputTag("IconURL") %>
+    </div>
+  </div>
+
+  <%= f.SubmitTag("Update Device") %>
+<% } %>

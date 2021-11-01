@@ -16,6 +16,7 @@ import (
 func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
+	router.Use(InitMiddleware404())
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))

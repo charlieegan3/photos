@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -33,11 +34,22 @@ func InitMiddlewareLogging() func(http.Handler) http.Handler {
 
 			lw := &loggingResponseWriter{w, http.StatusOK, []byte{}}
 
+			method := r.Method
+			if val, ok := r.Header["Content-Type"]; ok && val[0] == "application/x-www-form-urlencoded" {
+				err := r.ParseForm()
+				if err == nil {
+					if formMethod := r.PostForm.Get("_method"); formMethod != "" {
+						method = fmt.Sprintf("%s (%s)", formMethod, r.Method)
+					}
+				}
+			}
+
 			next.ServeHTTP(lw, r)
 
 			entry = entry.WithFields(logrus.Fields{
 				"status": lw.statusCode,
 				"path":   r.URL.Path,
+				"method": method,
 			})
 
 			switch {

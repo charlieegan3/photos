@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -99,11 +100,35 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 		return results, errors.Wrap(err, "failed to select devices")
 	}
 
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	results = []models.Device{}
 	for _, v := range dbDevices {
 		results = append(results, newDevice(v))
 	}
 
 	return results, nil
+}
+
+func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
+	var ids []int
+	for _, d := range devices {
+		ids = append(ids, d.ID)
+	}
+
+	goquDB := goqu.New("postgres", db)
+	del, _, err := goquDB.Delete("devices").Where(
+		goqu.Ex{"id": ids},
+	).ToSQL()
+	if err != nil {
+		return fmt.Errorf("failed to build devices delete query: %s", err)
+	}
+	_, err = db.Exec(del)
+	if err != nil {
+		return fmt.Errorf("failed to delete devices: %s", err)
+	}
+
+	return nil
 }
 
 // UpdateDevices is not implemented as a single SQL query since update many in

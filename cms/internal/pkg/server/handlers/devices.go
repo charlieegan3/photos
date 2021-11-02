@@ -167,26 +167,13 @@ func BuildCreateHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func BuildPutHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Content-Type must be 'x-www-form-urlencoded'"))
-			return
-		}
-
-		err := r.ParseForm()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		if r.PostForm.Get("_method") != "PUT" {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT in form"))
 			return
 		}
 
@@ -210,6 +197,31 @@ func BuildPutHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		device := devices[0]
+
+		err = r.ParseForm()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if r.PostForm.Get("_method") == "DELETE" {
+			err = database.DeleteDevices(db, []models.Device{device})
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			http.Redirect(w, r, "/admin/devices", http.StatusSeeOther)
+			return
+		}
+
+		if r.PostForm.Get("_method") != "PUT" {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			return
+		}
 
 		err = decoder.Decode(&device, r.PostForm)
 		if err != nil {

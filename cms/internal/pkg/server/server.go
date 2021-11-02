@@ -25,7 +25,8 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler()).Methods("GET")
 	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildGetHandler(db)).Methods("GET")
-	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildPutHandler(db)).Methods("POST")
+	// handles update and delete
+	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildFormHandler(db)).Methods("POST")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 

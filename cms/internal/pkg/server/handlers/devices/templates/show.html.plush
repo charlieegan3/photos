@@ -1,4 +1,5 @@
 <p><%= device.Name %></p>
+<p>ID: <%= device.ID %></p>
 <%= form_for(device, {action:"/admin/devices/"+device.Name, method: "PUT"}) { %>
   <div class="row">
     <div>
@@ -10,4 +11,8 @@
   </div>
 
   <%= f.SubmitTag("Update Device") %>
+<% } %>
+
+<%= form_for(device, {action:"/admin/devices/"+device.Name, method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete Device") %>
 <% } %>

@@ -93,7 +93,7 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	assert.Contains(s.T(), string(body), "iPhone")
 }
 
-func (s *EndpointsDevicesSuite) TestPutDevice() {
+func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	testData := []models.Device{
 		{
 			Name:    "iPhone",
@@ -107,7 +107,7 @@ func (s *EndpointsDevicesSuite) TestPutDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceName}", BuildPutHandler(s.DB)).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB)).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "PUT")
@@ -151,6 +151,52 @@ func (s *EndpointsDevicesSuite) TestPutDevice() {
 	)
 
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
+}
+
+func (s *EndpointsDevicesSuite) TestDeleteDevice() {
+	fmt.Println("------start")
+	testData := []models.Device{
+		{
+			Name:    "iPhone",
+			IconURL: "https://example.com/image.jpg",
+		},
+	}
+
+	persistedDevices, err := database.CreateDevices(s.DB, testData)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB)).Methods("POST")
+
+	form := url.Values{}
+	form.Add("_method", "DELETE")
+
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name),
+		strings.NewReader(form.Encode()),
+	)
+	require.NoError(s.T(), err)
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+
+	// check that the database content is also correct
+	returnedDevices, err := database.AllDevices(s.DB)
+	if err != nil {
+		s.T().Fatalf("failed to list devices: %s", err)
+	}
+
+	expectedDevices := []models.Device{}
+	td.Cmp(s.T(), returnedDevices, expectedDevices)
+	fmt.Println("------------end")
 }
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {

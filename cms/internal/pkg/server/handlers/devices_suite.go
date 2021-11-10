@@ -1,12 +1,18 @@
 package handlers
 
 import (
+	"bytes"
+	"context"
+	"crypto/md5"
 	"database/sql"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
@@ -16,6 +22,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"gocloud.dev/blob"
+	_ "gocloud.dev/blob/fileblob"
+	_ "gocloud.dev/blob/memblob"
 )
 
 type EndpointsDevicesSuite struct {
@@ -154,7 +163,6 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 }
 
 func (s *EndpointsDevicesSuite) TestDeleteDevice() {
-	fmt.Println("------start")
 	testData := []models.Device{
 		{
 			Name:    "iPhone",
@@ -196,7 +204,6 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 	expectedDevices := []models.Device{}
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
-	fmt.Println("------------end")
 }
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
@@ -218,42 +225,72 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 }
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
+	// TODO move to suite to be shared
+	bucketBaseURL := "mem://test_bucket"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB)).Methods("POST")
+	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, bucket, bucketBaseURL)).Methods("POST")
 
-	form := url.Values{}
-	form.Add("Name", "iPhone")
-	form.Add("IconURL", "https://example.com/image.jpg")
+	// open the image to be uploaded in the form
+	imageIconPath := "../../../pkg/server/handlers/testdata/x100f.jpg"
+	imageFile, err := os.Open(imageIconPath)
+	require.NoError(s.T(), err)
 
+	// build the form to be posted
+	values := map[string]io.Reader{
+		"Icon": imageFile,
+		"Name": strings.NewReader("X100F"),
+	}
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	for key, r := range values {
+		var fw io.Writer
+		if x, ok := r.(io.Closer); ok {
+			defer x.Close()
+		}
+		if x, ok := r.(*os.File); ok {
+			fw, err = w.CreateFormFile(key, x.Name())
+			require.NoError(s.T(), err)
+		} else {
+			fw, err = w.CreateFormField(key)
+			require.NoError(s.T(), err)
+		}
+		_, err = io.Copy(fw, r)
+		require.NoError(s.T(), err)
+	}
+	w.Close()
+
+	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
 		"/admin/devices",
-		strings.NewReader(form.Encode()),
+		&b,
 	)
 	require.NoError(s.T(), err)
 
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	// check that we get a see other to the right location
+	// check that we get a see other response to the right location
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices"})
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)
-	if err != nil {
-		s.T().Fatalf("failed to list devices: %s", err)
-	}
+	require.NoError(s.T(), err)
 
 	expectedDevices := td.Slice(
 		[]models.Device{},
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "iPhone",
-					IconURL: "https://example.com/image.jpg",
+					Name:    "X100F",
+					IconURL: "mem://test_bucket/device_icons/x100f.jpg",
 				},
 				td.StructFields{
 					"ID":        td.Ignore(),
@@ -264,4 +301,25 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	)
 
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
+
+	// check that the image has been uploaded ok
+	// get a digest for the image in the bucket
+	r, err := bucket.NewReader(context.Background(), "device_icons/x100f.jpg", nil)
+	defer r.Close()
+	require.NoError(s.T(), err)
+	bucketHash := md5.New()
+	_, err = io.Copy(bucketHash, r)
+	require.NoError(s.T(), err)
+	bucketMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
+
+	// get a digest for the image originally uploaded
+	f, err := os.Open(imageIconPath)
+	require.NoError(s.T(), err)
+	defer f.Close()
+	sourceHash := md5.New()
+	_, err = io.Copy(sourceHash, f)
+	require.NoError(s.T(), err)
+	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
+
+	require.Equal(s.T(), bucketMD5, sourceMD5)
 }

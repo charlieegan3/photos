@@ -4,11 +4,19 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
+	"github.com/gosimple/slug"
+
+	//"gocloud.dev/blob"
+	"gocloud.dev/blob"
+	_ "gocloud.dev/blob/fileblob"
+	_ "gocloud.dev/blob/memblob"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
@@ -130,25 +138,24 @@ func BuildGetHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func BuildCreateHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketBaseURL string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
+		if val, ok := r.Header["Content-Type"]; !ok || !strings.HasPrefix(val[0], "multipart/form-data") {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'x-www-form-urlencoded'"))
+			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
-		err := r.ParseForm()
+		err := r.ParseMultipartForm(32 << 20)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
 		var device models.Device
-
 		err = decoder.Decode(&device, r.PostForm)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -156,14 +163,49 @@ func BuildCreateHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
+		f, _, err := r.FormFile("Icon")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("failed to read uploaded icon file"))
+			return
+		}
+
+		key := fmt.Sprintf("device_icons/%s.jpg", slug.Make(device.Name))
+
+		bw, err := bucket.NewWriter(r.Context(), key, nil)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed initialize icon storage"))
+			return
+		}
+
+		_, err = io.Copy(bw, f)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to save to icon storage"))
+			return
+		}
+
+		err = bw.Close()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to close connection to icon storage"))
+			return
+		}
+
+		// use the supplied base and key to generate a url for use in icon
+		// display
+		device.IconURL = fmt.Sprintf("%s/%s", bucketBaseURL, key)
+
 		_, err = database.CreateDevices(db, []models.Device{device})
 		if err != nil {
+			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		http.Redirect(w, r, "/admin/devices", http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/admin/devices/%s", device.Name), http.StatusSeeOther)
 	}
 }
 

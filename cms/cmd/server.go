@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"log"
+	"os"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -36,7 +37,7 @@ var serverCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		params := viper.GetStringMapString("database.params")
 		connectionString := viper.GetString("database.connection_string")
-		db, err := database.Init(connectionString, params, "postgres", true)
+		db, err := database.Init(connectionString, params, params["dbname"], true)
 		if err != nil {
 			log.Fatalf("failed to init DB: %s", err)
 		}
@@ -56,11 +57,17 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to migrate up: %s", err)
 		}
 
-		log.Println("Listening on", viper.GetString("server.port"))
+		port := viper.GetString("server.port")
+		// PORT env var is used on heroku and should be used if set
+		if p := os.Getenv("PORT"); p != "" {
+			port = p
+		}
+
+		log.Println("Listening on", port)
 
 		server.Serve(
 			viper.GetString("server.address"),
-			viper.GetString("server.port"),
+			port,
 			viper.GetString("server.adminUsername"),
 			viper.GetString("server.adminPassword"),
 			db,

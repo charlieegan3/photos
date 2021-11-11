@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"encoding/base64"
+	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -44,11 +47,25 @@ func initConfig() {
 		cfgFile = "$HOME/.cms.yaml"
 	}
 
+	// if there is a CONFIG_STRING var, then dump that to the config file location
+	if configString := os.Getenv("CONFIG_STRING"); configString != "" {
+		yamlConfig, err := base64.StdEncoding.DecodeString(configString)
+		if err != nil {
+			log.Fatalf("Failed to decode CONFIG_STRING: %s", err)
+			return
+		}
+		err = ioutil.WriteFile(cfgFile, yamlConfig, 0644)
+		if err != nil {
+			log.Fatalf("Failed writing CONFIG_STRING: %s", err)
+			return
+		}
+	}
+
 	viper.SetConfigFile(cfgFile)
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatalf("Failed using config file: %s", viper.ConfigFileUsed())
+		log.Fatalf("Failed using config file %q: %s", viper.ConfigFileUsed(), err)
 		return
 	}
 	log.Printf("Using config file: %s", viper.ConfigFileUsed())

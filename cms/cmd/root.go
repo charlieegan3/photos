@@ -68,5 +68,24 @@ func initConfig() {
 		log.Fatalf("Failed using config file %q: %s", viper.ConfigFileUsed(), err)
 		return
 	}
+
 	log.Printf("Using config file: %s", viper.ConfigFileUsed())
+
+	if viper.GetString("google.service_account_key") != "" {
+		// place google credentials on disk
+		tmpfile, err := ioutil.TempFile("", "google.*.json")
+		if err != nil {
+			log.Fatal(err)
+		}
+		content := []byte(viper.GetString("google.service_account_key"))
+		if _, err := tmpfile.Write(content); err != nil {
+			tmpfile.Close()
+			log.Fatal(err)
+		}
+		if err := tmpfile.Close(); err != nil {
+			log.Fatal(err)
+		}
+
+		os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", tmpfile.Name())
+	}
 }

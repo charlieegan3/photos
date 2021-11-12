@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -16,12 +15,7 @@ import (
 	devices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 )
 
-func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
-	// TODO extract to top level
-	bucketBaseURL := "file:///Users/charlieegan/bucket"
-	bucket, _ := blob.OpenBucket(context.Background(), bucketBaseURL)
-	defer bucket.Close()
-
+func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *blob.Bucket, bucketWebURL string) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddleware404())
@@ -30,7 +24,7 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB) {
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 
 	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db)).Methods("GET")
-	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, bucketBaseURL)).Methods("POST")
+	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, bucketWebURL)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler()).Methods("GET")
 	adminRouter.HandleFunc("/devices/{deviceName}", devices.BuildGetHandler(db)).Methods("GET")
 	// handles update and delete

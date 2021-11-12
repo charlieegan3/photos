@@ -1,6 +1,6 @@
 <p><%= device.Name %></p>
 <p>ID: <%= device.ID %></p>
-<p><img width="200" src="<%= device.IconURLSrc() %>"/></p>
+<p><img width="200" src="<%= device.IconURL %>"/></p>
 <%= form_for(device, {action:"/admin/devices/"+device.Name, method: "PUT"}) { %>
   <div class="row">
     <div>

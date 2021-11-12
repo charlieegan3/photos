@@ -138,7 +138,7 @@ func BuildGetHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketBaseURL string) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -195,7 +195,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketBaseURL string) f
 
 		// use the supplied base and key to generate a url for use in icon
 		// display
-		device.IconURL = fmt.Sprintf("%s/%s", bucketBaseURL, key)
+		device.IconURL = fmt.Sprintf("%s%s", bucketWebURL, key)
 
 		_, err = database.CreateDevices(db, []models.Device{device})
 		if err != nil {

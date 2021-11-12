@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -25,6 +26,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"gocloud.dev/blob"
+	_ "gocloud.dev/blob/gcsblob"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server"
@@ -63,6 +66,12 @@ var serverCmd = &cobra.Command{
 			port = p
 		}
 
+		bucket, err := blob.OpenBucket(context.Background(), viper.GetString("bucket.url"))
+		if err != nil {
+			log.Fatalf("failed to open bucket: %s", err)
+		}
+		defer bucket.Close()
+
 		log.Println("Listening on", port)
 
 		server.Serve(
@@ -71,6 +80,8 @@ var serverCmd = &cobra.Command{
 			viper.GetString("server.adminUsername"),
 			viper.GetString("server.adminPassword"),
 			db,
+			bucket,
+			viper.GetString("bucket.webUrl"),
 		)
 	},
 }

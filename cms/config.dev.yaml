@@ -4,7 +4,11 @@ server:
   adminUsername: "username"
   adminPassword: "password"
 database:
-  connection_string: postgresql://postgres:password@localhost:5432
+  createDatabase: true
+  connectionString: postgresql://postgres:password@localhost:5432
   params:
     dbname: cms_dev
     sslmode: disable
+bucket:
+  url: file:///Users/charlieegan/Code/photos/cms/bucket
+  webUrl: http://localhost:8000/bucket/

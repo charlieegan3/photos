@@ -39,8 +39,8 @@ var serverCmd = &cobra.Command{
 	Short: "start cms server",
 	Run: func(cmd *cobra.Command, args []string) {
 		params := viper.GetStringMapString("database.params")
-		connectionString := viper.GetString("database.connection_string")
-		db, err := database.Init(connectionString, params, params["dbname"], true)
+		connectionString := viper.GetString("database.connectionString")
+		db, err := database.Init(connectionString, params, params["dbname"], viper.GetBool("database.createDatabase"))
 		if err != nil {
 			log.Fatalf("failed to init DB: %s", err)
 		}

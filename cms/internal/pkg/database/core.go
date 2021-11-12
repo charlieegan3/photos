@@ -18,18 +18,55 @@ func Init(
 	databaseName string,
 	bootstrap bool,
 ) (*sql.DB, error) {
+	// if the database in question might be missing, we need to connect to the
+	// server on the postgres database to create the database
+	if bootstrap {
+		params := url.Values{}
+		for k, v := range rawParams {
+			params.Add(k, v)
+		}
+
+		params.Del("dbname")
+		params.Add("dbname", "postgres")
+
+		// generate the final connectionString based on the params
+		connectionString := fmt.Sprintf(
+			"%s?%s",
+			connectionStringBase,
+			params.Encode())
+
+		// Open the connection and test that it's working
+		db, err := sql.Open("postgres", connectionString)
+		if err != nil {
+			return db, fmt.Errorf("failed to init db connection: %s", err)
+		}
+
+		exists, err := Exists(db, databaseName)
+		if err != nil {
+			return db, fmt.Errorf("failed to check if database must be created: %s", err)
+		}
+
+		if !exists {
+			err = Create(db, databaseName)
+			if err != nil {
+				return db, fmt.Errorf("failed to create database: %s", err)
+			}
+		}
+	}
+
 	// convert the map[string]string from the config into url params for the
 	// connection string
 	params := url.Values{}
 	for k, v := range rawParams {
+		// we should use the name of the database set in the function args
+		// here, this allows us to overide the dbname if set. This can be used
+		// to return a handle to the postgres database to allow dropping of the
+		// test database during test runs.
+		if k == "dbname" {
+			params.Add(k, databaseName)
+			continue
+		}
 		params.Add(k, v)
-	}
-
-	// if the database in question might be missing, we need to connect to the
-	// server on the postgres database to create the database
-	if bootstrap {
-		params.Del("dbname")
-		params.Add("dbname", databaseName)
 	}
 
 	// generate the final connectionString based on the params
@@ -43,6 +80,7 @@ func Init(
 	if err != nil {
 		return db, fmt.Errorf("failed to init db connection: %s", err)
 	}
+
 	if err = db.Ping(); err != nil {
 		return db, fmt.Errorf("failed to ping the database: %s", err)
 	}

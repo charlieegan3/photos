@@ -226,7 +226,7 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	// TODO move to suite to be shared
-	bucketBaseURL := "mem://test_bucket"
+	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
 	require.NoError(s.T(), err)
 	defer bucket.Close()
@@ -278,7 +278,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 
 	// check that we get a see other response to the right location
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
-	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices"})
+	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices/X100F"})
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)

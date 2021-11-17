@@ -26,7 +26,8 @@ func (s *TagsSuite) SetupTest() {
 func (s *TagsSuite) TestCreateTags() {
 	tags := []models.Tag{
 		{
-			Name: "No Filter",
+			Name:   "No Filter",
+			Hidden: true,
 		},
 		{
 			Name: "shotoniphone",
@@ -43,14 +44,16 @@ func (s *TagsSuite) TestCreateTags() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Tag{
-					Name: "no-filter",
+					Name:   "no-filter",
+					Hidden: true,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Tag{
-					Name: "shotoniphone",
+					Name:   "shotoniphone",
+					Hidden: false,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

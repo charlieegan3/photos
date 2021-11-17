@@ -31,6 +31,7 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 // serverCmd wraps server.Serve and starts the cms webserver
@@ -74,6 +75,8 @@ var serverCmd = &cobra.Command{
 		}
 		defer bucket.Close()
 
+		renderer := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"))
+
 		log.Println("Listening on", port)
 
 		server.Serve(
@@ -83,7 +86,7 @@ var serverCmd = &cobra.Command{
 			viper.GetString("server.adminPassword"),
 			db,
 			bucket,
-			viper.GetString("bucket.webUrl"),
+			renderer,
 		)
 	},
 }

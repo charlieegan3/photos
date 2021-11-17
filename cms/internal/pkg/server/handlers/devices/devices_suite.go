@@ -17,6 +17,7 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/assert"
@@ -55,7 +56,7 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, "http...")).Methods("GET")
+	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/devices", nil)
 	require.NoError(s.T(), err)
@@ -85,7 +86,7 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceSlug}", BuildGetHandler(s.DB, "http...")).Methods("GET")
+	router.HandleFunc("/admin/devices/{deviceSlug}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug), nil)
 	require.NoError(s.T(), err)
@@ -124,7 +125,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceSlug}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceSlug}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
 	// open the image to be uploaded in the form
 
@@ -212,7 +213,10 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceSlug}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
+	router.HandleFunc(
+		"/admin/devices/{deviceSlug}",
+		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://")),
+	).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "DELETE")
@@ -248,7 +252,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/new", BuildNewHandler("http...")).Methods("GET")
+	router.HandleFunc("/admin/devices/new", BuildNewHandler(templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/devices/new", nil)
 	require.NoError(s.T(), err)
@@ -266,7 +270,7 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
+	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"

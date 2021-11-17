@@ -14,9 +14,10 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
-func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *blob.Bucket, bucketWebURL string) {
+func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddleware404())
@@ -24,13 +25,13 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 
-	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(bucketWebURL)).Methods("GET")
-	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db, bucketWebURL)).Methods("GET")
-	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, bucketWebURL)).Methods("POST")
-	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(bucketWebURL)).Methods("GET")
-	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildGetHandler(db, bucketWebURL)).Methods("GET")
+	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(renderer)).Methods("GET")
+	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(renderer)).Methods("GET")
+	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildGetHandler(db, renderer)).Methods("GET")
 	// handles update and delete
-	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildFormHandler(db, bucket, bucketWebURL)).Methods("POST")
+	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildFormHandler(db, bucket, renderer)).Methods("POST")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 

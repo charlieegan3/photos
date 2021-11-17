@@ -26,7 +26,9 @@ func TestRenderPage(t *testing.T) {
 	ctx := plush.NewContext()
 	ctx.Set("foo", "bar")
 
-	result, err := RenderPage(ctx, nestedTemplate, "http://...")
+	renderFunc := BuildPageRenderFunc("http://")
+
+	result, err := renderFunc(ctx, nestedTemplate)
 	require.NoError(t, err)
 
 	td.Cmp(t, expectedResult, result)

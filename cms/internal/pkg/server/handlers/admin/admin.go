@@ -12,12 +12,12 @@ import (
 //go:embed templates/admin/index.html.plush
 var adminIndexTemplate string
 
-func BuildAdminIndexHandler(bucketWebURL string) func(http.ResponseWriter, *http.Request) {
+func BuildAdminIndexHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		ctx := plush.NewContext()
-		body, err := templating.RenderPage(ctx, adminIndexTemplate, bucketWebURL)
+		body, err := renderer(ctx, adminIndexTemplate)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

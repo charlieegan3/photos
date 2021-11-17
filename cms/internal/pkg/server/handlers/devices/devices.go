@@ -34,7 +34,7 @@ var showTemplate string
 // gorilla decoder can be safely shared and caches data on structs used
 var decoder = schema.NewDecoder()
 
-func BuildIndexHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter, *http.Request) {
+func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -48,7 +48,7 @@ func BuildIndexHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter
 		ctx := plush.NewContext()
 		ctx.Set("devices", devices)
 
-		body, err := templating.RenderPage(ctx, indexTemplate, bucketWebURL)
+		body, err := renderer(ctx, indexTemplate)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -59,14 +59,14 @@ func BuildIndexHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter
 	}
 }
 
-func BuildNewHandler(bucketWebURL string) func(http.ResponseWriter, *http.Request) {
+func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		ctx := plush.NewContext()
 		ctx.Set("device", models.Device{})
 
-		body, err := templating.RenderPage(ctx, newTemplate, bucketWebURL)
+		body, err := renderer(ctx, newTemplate)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -78,7 +78,7 @@ func BuildNewHandler(bucketWebURL string) func(http.ResponseWriter, *http.Reques
 	}
 }
 
-func BuildGetHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter, *http.Request) {
+func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -103,11 +103,8 @@ func BuildGetHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter, 
 
 		ctx := plush.NewContext()
 		ctx.Set("device", devices[0])
-		ctx.Set("image_url", func(s ...string) string {
-			return fmt.Sprintf("%s%s", bucketWebURL, strings.Join(s, ""))
-		})
 
-		body, err := templating.RenderPage(ctx, showTemplate, bucketWebURL)
+		body, err := renderer(ctx, showTemplate)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -118,7 +115,7 @@ func BuildGetHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter, 
 	}
 }
 
-func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -191,7 +188,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) fu
 	}
 }
 
-func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 

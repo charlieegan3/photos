@@ -29,7 +29,9 @@ import (
 
 type EndpointsDevicesSuite struct {
 	suite.Suite
-	DB *sql.DB
+	DB            *sql.DB
+	Bucket        *blob.Bucket
+	BucketBaseURL string
 }
 
 func (s *EndpointsDevicesSuite) SetupTest() {
@@ -106,7 +108,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	testData := []models.Device{
 		{
 			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			IconURL: "mem://test_bucket/device_icons/x100f.jpg",
 		},
 	}
 
@@ -116,24 +118,45 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB)).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
 
-	form := url.Values{}
-	form.Add("_method", "PUT")
-	form.Add("Name", "iPad")
-	form.Add("IconURL", "https://example.com/image.jpg")
+	// open the image to be uploaded in the form
 
+	// build the form to be posted
+	values := map[string]io.Reader{
+		"Name":    strings.NewReader("iPad"),
+		"_method": strings.NewReader("PUT"),
+	}
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	for key, r := range values {
+		var fw io.Writer
+		if x, ok := r.(io.Closer); ok {
+			defer x.Close()
+		}
+		if x, ok := r.(*os.File); ok {
+			fw, err = w.CreateFormFile(key, x.Name())
+			require.NoError(s.T(), err)
+		} else {
+			fw, err = w.CreateFormField(key)
+			require.NoError(s.T(), err)
+		}
+		_, err = io.Copy(fw, r)
+		require.NoError(s.T(), err)
+	}
+	w.Close()
+
+	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name),
-		strings.NewReader(form.Encode()),
+		&b,
 	)
 	require.NoError(s.T(), err)
 
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	rr := httptest.NewRecorder()
-
 	router.ServeHTTP(rr, req)
 
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
@@ -150,7 +173,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 				models.Device{
 					ID:      persistedDevices[0].ID,
 					Name:    "iPad",
-					IconURL: "https://example.com/image.jpg",
+					IconURL: "mem://test_bucket/device_icons/x100f.jpg",
 				},
 				td.StructFields{
 					"CreatedAt": td.Ignore(),
@@ -166,7 +189,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	testData := []models.Device{
 		{
 			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			IconURL: "mem://test_bucket/device_icons/iphone.jpg",
 		},
 	}
 
@@ -175,12 +198,23 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
 
+	// store the an icon in the bucket, check it's deleted
+	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
+	imageFile, err := os.Open(imageIconPath)
+	require.NoError(s.T(), err)
+	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
+	require.NoError(s.T(), err)
+	_, err = io.Copy(bw, imageFile)
+	err = bw.Close()
+	require.NoError(s.T(), err)
+
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB)).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "DELETE")
 
+	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name),
@@ -188,10 +222,9 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	)
 	require.NoError(s.T(), err)
 
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
-
 	router.ServeHTTP(rr, req)
 
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
@@ -204,6 +237,10 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 	expectedDevices := []models.Device{}
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
+
+	// should have a not found error as the icon should have been deleted
+	_, err = s.Bucket.Attributes(context.Background(), "device_icons/iphone.jpg")
+	require.Error(s.T(), err)
 }
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
@@ -225,14 +262,8 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 }
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
-	// TODO move to suite to be shared
-	bucketBaseURL := "mem://test_bucket/"
-	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
-	defer bucket.Close()
-
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, bucket, bucketBaseURL)).Methods("POST")
+	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
 
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
@@ -304,7 +335,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 
 	// check that the image has been uploaded ok
 	// get a digest for the image in the bucket
-	r, err := bucket.NewReader(context.Background(), "device_icons/x100f.jpg", nil)
+	r, err := s.Bucket.NewReader(context.Background(), "device_icons/x100f.jpg", nil)
 	defer r.Close()
 	require.NoError(s.T(), err)
 	bucketHash := md5.New()

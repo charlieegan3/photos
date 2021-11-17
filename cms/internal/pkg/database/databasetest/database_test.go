@@ -1,6 +1,7 @@
 package databasetest
 
 import (
+	"context"
 	"database/sql"
 	"testing"
 
@@ -11,7 +12,9 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"gocloud.dev/blob"
 )
 
 func TestDatabaseSuite(t *testing.T) {
@@ -119,5 +122,15 @@ func (s *DatabaseSuite) TestDevicesSuite() {
 }
 
 func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
-	suite.Run(s.T(), &devices.EndpointsDevicesSuite{DB: s.DB})
+	// TODO move to suite to be shared
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
+	suite.Run(s.T(), &devices.EndpointsDevicesSuite{
+		DB:            s.DB,
+		Bucket:        bucket,
+		BucketBaseURL: bucketBaseURL,
+	})
 }

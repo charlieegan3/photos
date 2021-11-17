@@ -209,13 +209,14 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) fu
 	}
 }
 
-func BuildFormHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
+		contentType, ok := r.Header["Content-Type"]
+		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'x-www-form-urlencoded'"))
+			w.Write([]byte("Content-Type must be set"))
 			return
 		}
 
@@ -238,17 +239,29 @@ func BuildFormHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		device := devices[0]
+		// handle delete
+		if contentType[0] == "application/x-www-form-urlencoded" {
+			err := r.ParseForm()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to parse delete form"))
+				return
+			}
 
-		err = r.ParseForm()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
+			if r.Form.Get("_method") != "DELETE" {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("expected _method to be DELETE"))
+				return
+			}
 
-		if r.PostForm.Get("_method") == "DELETE" {
-			err = database.DeleteDevices(db, []models.Device{device})
+			err = database.DeleteDevices(db, []models.Device{devices[0]})
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			err = bucket.Delete(r.Context(), strings.TrimPrefix(devices[0].IconURL, bucketWebURL))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -259,21 +272,60 @@ func BuildFormHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
+		if !strings.HasPrefix(contentType[0], "multipart/form-data") {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			return
+		}
+
+		err = r.ParseMultipartForm(32 << 20)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("failed to parse multipart form"))
+			return
+		}
+
+		device := models.Device{Name: r.PostForm.Get("Name")}
+
+		f, _, err := r.FormFile("Icon")
+		if err == nil {
+			key := fmt.Sprintf("device_icons/%s.jpg", slug.Make(device.Name))
+
+			bw, err := bucket.NewWriter(r.Context(), key, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed initialize icon storage"))
+				return
+			}
+
+			_, err = io.Copy(bw, f)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to save to icon storage"))
+				return
+			}
+
+			err = bw.Close()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to close connection to icon storage"))
+				return
+			}
+
+			// use the supplied base and key to generate a url for use in icon
+			// display
+			device.IconURL = fmt.Sprintf("%s%s", bucketWebURL, key)
+		}
+
+		device.ID = devices[0].ID
+		if device.IconURL == "" {
+			device.IconURL = devices[0].IconURL
+		}
+
 		if r.PostForm.Get("_method") != "PUT" {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return
-		}
-
-		err = decoder.Decode(&device, r.PostForm)
-		if err != nil {
-			// all keys are processed and then the errors all returned, so a
-			// single error of this type is ok for _method
-			if _, ok := err.(*schema.UnknownKeyError); ok {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
 		}
 
 		_, err = database.UpdateDevices(db, []models.Device{device})

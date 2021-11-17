@@ -1,0 +1,1 @@
+.image{width:100%;background-position:50%;background-repeat:no-repeat;background-size:cover}.image:after{content:"";display:block;padding-bottom:100%}.post-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.post-container{max-width:500px;margin:0 auto}

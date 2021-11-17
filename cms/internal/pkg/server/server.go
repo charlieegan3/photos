@@ -12,7 +12,8 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 
-	devices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
 )
 
 func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *blob.Bucket, bucketWebURL string) {
@@ -23,6 +24,7 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 
+	adminRouter.HandleFunc("", admin.AdminIndexHandler).Methods("GET")
 	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db)).Methods("GET")
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, bucketWebURL)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler()).Methods("GET")

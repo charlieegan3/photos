@@ -1,4 +1,4 @@
-package handlers
+package devices
 
 import (
 	"bytes"
@@ -235,7 +235,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, bucket, bucketBaseURL)).Methods("POST")
 
 	// open the image to be uploaded in the form
-	imageIconPath := "../../../pkg/server/handlers/testdata/x100f.jpg"
+	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
 	require.NoError(s.T(), err)
 

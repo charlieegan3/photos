@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -119,5 +119,5 @@ func (s *DatabaseSuite) TestDevicesSuite() {
 }
 
 func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
-	suite.Run(s.T(), &handlers.EndpointsDevicesSuite{DB: s.DB})
+	suite.Run(s.T(), &devices.EndpointsDevicesSuite{DB: s.DB})
 }

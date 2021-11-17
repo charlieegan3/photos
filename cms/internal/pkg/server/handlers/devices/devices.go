@@ -1,4 +1,4 @@
-package handlers
+package devices
 
 import (
 	"database/sql"
@@ -23,13 +23,13 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
-//go:embed devices/templates/index.html.plush
+//go:embed templates/index.html.plush
 var indexTemplate string
 
-//go:embed devices/templates/new.html.plush
+//go:embed templates/new.html.plush
 var newTemplate string
 
-//go:embed devices/templates/show.html.plush
+//go:embed templates/show.html.plush
 var showTemplate string
 
 // gorilla decoder can be safely shared and caches data on structs used

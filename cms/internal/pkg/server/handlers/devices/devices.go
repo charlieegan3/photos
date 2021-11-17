@@ -48,14 +48,7 @@ func BuildIndexHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter
 		ctx := plush.NewContext()
 		ctx.Set("devices", devices)
 
-		s, err := plush.Render(indexTemplate, ctx)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		body, err := templating.RenderPage(s, bucketWebURL)
+		body, err := templating.RenderPage(ctx, indexTemplate, bucketWebURL)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -73,7 +66,7 @@ func BuildNewHandler(bucketWebURL string) func(http.ResponseWriter, *http.Reques
 		ctx := plush.NewContext()
 		ctx.Set("device", models.Device{})
 
-		s, err := plush.Render(newTemplate, ctx)
+		body, err := templating.RenderPage(ctx, newTemplate, bucketWebURL)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -81,14 +74,6 @@ func BuildNewHandler(bucketWebURL string) func(http.ResponseWriter, *http.Reques
 		}
 
 		w.WriteHeader(http.StatusOK)
-
-		body, err := templating.RenderPage(s, bucketWebURL)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
 		fmt.Fprintf(w, body)
 	}
 }
@@ -122,14 +107,7 @@ func BuildGetHandler(db *sql.DB, bucketWebURL string) func(http.ResponseWriter, 
 			return fmt.Sprintf("%s%s", bucketWebURL, strings.Join(s, ""))
 		})
 
-		s, err := plush.Render(showTemplate, ctx)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		body, err := templating.RenderPage(s, bucketWebURL)
+		body, err := templating.RenderPage(ctx, showTemplate, bucketWebURL)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

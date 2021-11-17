@@ -17,15 +17,7 @@ func BuildAdminIndexHandler(bucketWebURL string) func(http.ResponseWriter, *http
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		ctx := plush.NewContext()
-
-		s, err := plush.Render(adminIndexTemplate, ctx)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		body, err := templating.RenderPage(s, bucketWebURL)
+		body, err := templating.RenderPage(ctx, adminIndexTemplate, bucketWebURL)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

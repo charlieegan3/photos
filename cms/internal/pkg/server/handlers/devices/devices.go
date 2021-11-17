@@ -155,18 +155,19 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) fu
 			return
 		}
 
-		var device models.Device
-		err = decoder.Decode(&device, r.PostForm)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
+		device := models.Device{Name: r.Form.Get("Name")}
 
-		f, _, err := r.FormFile("Icon")
+		f, header, err := r.FormFile("Icon")
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("failed to read uploaded icon file"))
+			return
+		}
+
+		lowerFilename := strings.ToLower(header.Filename)
+		if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("icon file must be jpg"))
 			return
 		}
 
@@ -285,13 +286,28 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func
 			return
 		}
 
+		if r.PostForm.Get("_method") != "PUT" {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			return
+		}
+
 		device := models.Device{Name: r.PostForm.Get("Name")}
 
-		f, _, err := r.FormFile("Icon")
-		if err == nil {
-			key := fmt.Sprintf("device_icons/%s.jpg", slug.Make(device.Name))
+		iconKey := fmt.Sprintf("device_icons/%s.jpg", slug.Make(device.Name))
 
-			bw, err := bucket.NewWriter(r.Context(), key, nil)
+		f, header, err := r.FormFile("Icon")
+		// only handle the file when it's present, file might not be submitted
+		// every time the form is sent
+		if err == nil {
+			lowerFilename := strings.ToLower(header.Filename)
+			if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("icon file must be jpg"))
+				return
+			}
+
+			bw, err := bucket.NewWriter(r.Context(), iconKey, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed initialize icon storage"))
@@ -314,18 +330,16 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func
 
 			// use the supplied base and key to generate a url for use in icon
 			// display
-			device.IconURL = fmt.Sprintf("%s%s", bucketWebURL, key)
+			device.IconURL = fmt.Sprintf("%s%s", bucketWebURL, iconKey)
 		}
 
 		device.ID = devices[0].ID
 		if device.IconURL == "" {
 			device.IconURL = devices[0].IconURL
 		}
-
-		if r.PostForm.Get("_method") != "PUT" {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT or DELETE in form"))
-			return
+		// update the icon url to what will form the new path
+		if device.Name != devices[0].Name {
+			device.IconURL = fmt.Sprintf("%s%s", bucketWebURL, iconKey)
 		}
 
 		_, err = database.UpdateDevices(db, []models.Device{device})
@@ -333,6 +347,55 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, bucketWebURL string) func
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
+		}
+
+		// move the icon, if the name has changed
+		if device.Name != devices[0].Name {
+			existingIconKey := fmt.Sprintf("device_icons/%s.jpg", slug.Make(devices[0].Name))
+			br, err := bucket.NewReader(r.Context(), existingIconKey, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed initialize icon storage"))
+				return
+			}
+
+			bw, err := bucket.NewWriter(r.Context(), iconKey, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed initialize icon storage"))
+				return
+			}
+
+			_, err = io.Copy(bw, br)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to save to icon storage"))
+				return
+			}
+
+			err = bucket.Delete(r.Context(), existingIconKey)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			err = bw.Close()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to close connection to icon storage"))
+				return
+			}
+			err = br.Close()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to close connection to icon storage"))
+				return
+			}
+
+			// use the supplied base and key to generate a url for use in icon
+			// display
+			device.IconURL = fmt.Sprintf("%s%s", bucketWebURL, iconKey)
 		}
 
 		http.Redirect(

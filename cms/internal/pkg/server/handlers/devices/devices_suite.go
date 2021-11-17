@@ -108,7 +108,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	testData := []models.Device{
 		{
 			Name:    "iPhone",
-			IconURL: "mem://test_bucket/device_icons/x100f.jpg",
+			IconURL: "mem://test_bucket/device_icons/iphone.jpg",
 		},
 	}
 
@@ -116,6 +116,16 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
+
+	// store the an icon in the bucket, check it's deleted
+	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
+	imageFile, err := os.Open(imageIconPath)
+	require.NoError(s.T(), err)
+	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
+	require.NoError(s.T(), err)
+	_, err = io.Copy(bw, imageFile)
+	err = bw.Close()
+	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
@@ -173,7 +183,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 				models.Device{
 					ID:      persistedDevices[0].ID,
 					Name:    "iPad",
-					IconURL: "mem://test_bucket/device_icons/x100f.jpg",
+					IconURL: "mem://test_bucket/device_icons/ipad.jpg",
 				},
 				td.StructFields{
 					"CreatedAt": td.Ignore(),

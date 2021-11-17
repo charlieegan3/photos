@@ -7,9 +7,9 @@ import (
 // Device represents data for devices used to take photos such as cameras and
 // phones
 type Device struct {
-	ID      int
-	Name    string
-	IconURL string
+	ID   int
+	Name string
+	Slug string
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

@@ -42,12 +42,10 @@ func (s *EndpointsDevicesSuite) SetupTest() {
 func (s *EndpointsDevicesSuite) TestListDevices() {
 	testData := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 		{
-			Name:    "X100F",
-			IconURL: "https://example.com/image2.jpg",
+			Name: "X100F",
 		},
 	}
 
@@ -57,7 +55,7 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB)).Methods("GET")
+	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, "http...")).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/devices", nil)
 	require.NoError(s.T(), err)
@@ -77,8 +75,7 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 func (s *EndpointsDevicesSuite) TestGetDevice() {
 	testData := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 	}
 
@@ -88,9 +85,9 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceName}", BuildGetHandler(s.DB)).Methods("GET")
+	router.HandleFunc("/admin/devices/{deviceSlug}", BuildGetHandler(s.DB, "http...")).Methods("GET")
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -107,8 +104,7 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	testData := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "mem://test_bucket/device_icons/iphone.jpg",
+			Name: "iPhone",
 		},
 	}
 
@@ -128,7 +124,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceSlug}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
 
 	// open the image to be uploaded in the form
 
@@ -159,7 +155,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name),
+		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug),
 		&b,
 	)
 	require.NoError(s.T(), err)
@@ -181,13 +177,11 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					ID:      persistedDevices[0].ID,
-					Name:    "iPad",
-					IconURL: "mem://test_bucket/device_icons/ipad.jpg",
+					ID:   persistedDevices[0].ID,
+					Name: "iPad",
 				},
 				td.StructFields{
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
@@ -198,8 +192,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	testData := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "mem://test_bucket/device_icons/iphone.jpg",
+			Name: "iPhone",
 		},
 	}
 
@@ -219,7 +212,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceName}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceSlug}", BuildFormHandler(s.DB, s.Bucket, s.BucketBaseURL)).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "DELETE")
@@ -227,7 +220,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Name),
+		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug),
 		strings.NewReader(form.Encode()),
 	)
 	require.NoError(s.T(), err)
@@ -255,7 +248,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/new", BuildNewHandler()).Methods("GET")
+	router.HandleFunc("/admin/devices/new", BuildNewHandler("http...")).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/devices/new", nil)
 	require.NoError(s.T(), err)
@@ -319,7 +312,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 
 	// check that we get a see other response to the right location
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
-	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices/X100F"})
+	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices/x100f"})
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)
@@ -330,13 +323,10 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "mem://test_bucket/device_icons/x100f.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)

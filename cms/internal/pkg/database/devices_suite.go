@@ -27,12 +27,10 @@ func (s *DevicesSuite) SetupTest() {
 func (s *DevicesSuite) TestCreateDevices() {
 	devices := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 		{
-			Name:    "X100F",
-			IconURL: "https://example.com/image2.jpg",
+			Name: "X100F",
 		},
 	}
 
@@ -46,23 +44,17 @@ func (s *DevicesSuite) TestCreateDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "iPhone",
-					IconURL: "https://example.com/image.jpg",
+					Name: "iPhone",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "https://example.com/image2.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
@@ -70,15 +62,13 @@ func (s *DevicesSuite) TestCreateDevices() {
 	td.Cmp(s.T(), returnedDevices, expectedResult)
 }
 
-func (s *DevicesSuite) TestFindDevicesByName() {
+func (s *DevicesSuite) TestFindDevicesBySlug() {
 	devices := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 		{
-			Name:    "X100F",
-			IconURL: "https://example.com/image2.jpg",
+			Name: "X100F",
 		},
 	}
 
@@ -87,7 +77,7 @@ func (s *DevicesSuite) TestFindDevicesByName() {
 		s.T().Fatalf("failed to create devices needed for test: %s", err)
 	}
 
-	returnedDevices, err := FindDevicesByName(s.DB, "X100F")
+	returnedDevices, err := FindDevicesBySlug(s.DB, "x100f")
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -97,13 +87,10 @@ func (s *DevicesSuite) TestFindDevicesByName() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "https://example.com/image2.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
@@ -114,12 +101,10 @@ func (s *DevicesSuite) TestFindDevicesByName() {
 func (s *DevicesSuite) TestAllDevices() {
 	devices := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 		{
-			Name:    "X100F",
-			IconURL: "https://example.com/image2.jpg",
+			Name: "X100F",
 		},
 	}
 
@@ -138,23 +123,17 @@ func (s *DevicesSuite) TestAllDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "iPhone",
-					IconURL: "https://example.com/image.jpg",
+					Name: "iPhone",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "https://example.com/image2.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
@@ -165,12 +144,10 @@ func (s *DevicesSuite) TestAllDevices() {
 func (s *DevicesSuite) TestUpdateDevices() {
 	initialDevices := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 		{
-			Name:    "X100F",
-			IconURL: "https://example.com/image2.jpg",
+			Name: "X100F",
 		},
 	}
 
@@ -184,23 +161,17 @@ func (s *DevicesSuite) TestUpdateDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "iPhone",
-					IconURL: "https://example.com/image.jpg",
+					Name: "iPhone",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "https://example.com/image2.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
@@ -220,30 +191,24 @@ func (s *DevicesSuite) TestUpdateDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "iPod",
-					IconURL: "https://example.com/image.jpg",
+					Name: "iPod",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "https://example.com/image2.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
 
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
 
-	returnedDevices, err = FindDevicesByName(s.DB, "iPod")
+	returnedDevices, err = FindDevicesBySlug(s.DB, "ipod")
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -253,13 +218,10 @@ func (s *DevicesSuite) TestUpdateDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "iPod",
-					IconURL: "https://example.com/image.jpg",
+					Name: "iPod",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)
@@ -270,12 +232,10 @@ func (s *DevicesSuite) TestUpdateDevices() {
 func (s *DevicesSuite) TestDeleteDevices() {
 	devices := []models.Device{
 		{
-			Name:    "iPhone",
-			IconURL: "https://example.com/image.jpg",
+			Name: "iPhone",
 		},
 		{
-			Name:    "X100F",
-			IconURL: "https://example.com/image2.jpg",
+			Name: "X100F",
 		},
 	}
 
@@ -299,13 +259,10 @@ func (s *DevicesSuite) TestDeleteDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name:    "X100F",
-					IconURL: "https://example.com/image2.jpg",
+					Name: "X100F",
 				},
 				td.StructFields{
-					"ID":        td.Ignore(),
-					"CreatedAt": td.Ignore(),
-					"UpdatedAt": td.Ignore(),
+					"=*": td.Ignore(),
 				}),
 		},
 	)

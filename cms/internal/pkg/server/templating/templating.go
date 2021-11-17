@@ -9,7 +9,7 @@ import (
 //go:embed base.html.plush
 var baseTemplate string
 
-func RenderPage(body string) (string, error) {
+func RenderPage(body string, bucketWebURL string) (string, error) {
 	ctx := plush.NewContext()
 	ctx.Set("body", body)
 

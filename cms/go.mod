@@ -11,7 +11,7 @@ require (
 	github.com/gorilla/schema v1.2.0
 	github.com/gosimple/slug v1.11.2
 	github.com/lib/pq v1.10.2
-	github.com/maxatome/go-testdeep v1.10.0
+	github.com/maxatome/go-testdeep v1.10.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/cobra v1.2.1

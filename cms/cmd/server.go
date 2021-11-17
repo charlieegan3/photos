@@ -58,6 +58,8 @@ var serverCmd = &cobra.Command{
 		err = m.Up()
 		if err != nil && err != migrate.ErrNoChange {
 			log.Fatalf("failed to migrate up: %s", err)
+		} else {
+			log.Println("migrated up")
 		}
 
 		port := viper.GetString("server.port")

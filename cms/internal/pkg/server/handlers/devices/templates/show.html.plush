@@ -1,7 +1,7 @@
 <p><%= device.Name %></p>
 <p>ID: <%= device.ID %></p>
-<p><img width="200" src="<%= device.IconURL %>"/></p>
-<%= form_for(device, {action:"/admin/devices/"+device.Name, method: "PUT"}) { %>
+<p><img width="200" src="<%= image_url("device_icons/", device.Slug, ".jpg") %>"/></p>
+<%= form_for(device, {action:"/admin/devices/"+device.Slug, method: "PUT"}) { %>
   <div class="row">
     <div>
       <%= f.InputTag("Name") %>
@@ -15,6 +15,6 @@
   <%= f.SubmitTag("Update Device") %>
 <% } %>
 
-<%= form_for(device, {action:"/admin/devices/"+device.Name, method: "DELETE"}) { %>
+<%= form_for(device, {action:"/admin/devices/"+device.Slug, method: "DELETE"}) { %>
   <%= f.SubmitTag("Delete Device") %>
 <% } %>

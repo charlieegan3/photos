@@ -22,7 +22,7 @@ func TestRenderPage(t *testing.T) {
 </html>
 `
 
-	result, err := RenderPage(body)
+	result, err := RenderPage(body, "http://...")
 	require.NoError(t, err)
 
 	td.Cmp(t, expectedResult, result)

@@ -64,8 +64,8 @@ func (s *EndpointsTagsSuite) TestListTags() {
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
-	assert.Contains(s.T(), string(body), "nofilter (hidden)")
 	assert.Contains(s.T(), string(body), "x100f")
+	assert.Contains(s.T(), string(body), "nofilter")
 }
 
 func (s *EndpointsTagsSuite) TestGetTag() {

@@ -1,0 +1,13 @@
+<%= form_for(tag, {action:"/admin/tags", method: "PUT"}) { %>
+  <div class="row">
+    <div>
+      <%= f.InputTag("Name") %>
+    </div>
+    <div>
+      <%= f.CheckboxTag("Hidden") %>
+    </div>
+  </div>
+
+  <br/>
+  <%= f.SubmitTag("Create Tag") %>
+<% } %>

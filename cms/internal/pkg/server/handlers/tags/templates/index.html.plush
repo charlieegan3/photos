@@ -1,0 +1,11 @@
+<h1>Tags</h1>
+<p><a href="./tags/new">New Tag</a></p>
+<ul>
+<%= for (tag) in tags { %>
+  <li>
+    <a href="/admin/tags/<%= tag.Name %>">
+    <%= tag.Name %> <%= if (tag.Hidden) { %>(hidden)<% } %>
+    </a>
+  </li>
+<% } %>
+</ul>

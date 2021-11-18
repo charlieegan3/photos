@@ -1,0 +1,19 @@
+<p><%= tag.Name %></p>
+<p>ID: <%= tag.ID %></p>
+<%= form_for(tag, {action:"/admin/tags/"+tag.Name, method: "PUT"}) { %>
+  <div class="row">
+    <div>
+      <%= f.InputTag("Name") %>
+    </div>
+    <div>
+      <%= f.CheckboxTag("Hidden") %>
+    </div>
+  </div>
+
+  <br/>
+  <%= f.SubmitTag("Update tag") %>
+<% } %>
+
+<%= form_for(tag, {action:"/admin/tags/"+tag.Name, method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete tag") %>
+<% } %>

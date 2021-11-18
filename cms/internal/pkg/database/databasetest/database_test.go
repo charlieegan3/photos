@@ -7,6 +7,7 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -136,5 +137,11 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 		DB:            s.DB,
 		Bucket:        bucket,
 		BucketBaseURL: bucketBaseURL,
+	})
+}
+
+func (s *DatabaseSuite) TestEndpointsTagsSuite() {
+	suite.Run(s.T(), &tags.EndpointsTagsSuite{
+		DB: s.DB,
 	})
 }

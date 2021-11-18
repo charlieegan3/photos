@@ -15,6 +15,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
@@ -34,6 +35,13 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *
 	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildGetHandler(db, renderer)).Methods("GET")
 	// handles update and delete
 	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildFormHandler(db, bucket, renderer)).Methods("POST")
+
+	adminRouter.HandleFunc("/tags", tags.BuildIndexHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/tags", tags.BuildCreateHandler(db, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/tags/new", tags.BuildNewHandler(renderer)).Methods("GET")
+	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildGetHandler(db, renderer)).Methods("GET")
+	// handles update and delete
+	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildFormHandler(db, renderer)).Methods("POST")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 

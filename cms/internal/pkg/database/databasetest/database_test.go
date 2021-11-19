@@ -5,9 +5,6 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -16,6 +13,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/locations"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 )
 
 func TestDatabaseSuite(t *testing.T) {
@@ -146,6 +148,12 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 
 func (s *DatabaseSuite) TestEndpointsTagsSuite() {
 	suite.Run(s.T(), &tags.EndpointsTagsSuite{
+		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
+	suite.Run(s.T(), &locations.EndpointsLocationsSuite{
 		DB: s.DB,
 	})
 }

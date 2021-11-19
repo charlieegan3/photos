@@ -1,5 +1,6 @@
 <h1>Admin</h1>
 <ul>
-  <li><a href="./admin/devices">Devices</a></li>
+  <li><a href="./admin/locations">Locations</a></li>
   <li><a href="./admin/tags">Tags</a></li>
+  <li><a href="./admin/devices">Devices</a></li>
 </ul>

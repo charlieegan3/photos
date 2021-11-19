@@ -111,10 +111,10 @@ func (s *LocationsSuite) TestFindLocationsBySlug() {
 func (s *LocationsSuite) TestAllLocations() {
 	locations := []models.Location{
 		{
-			Name: "iPhone",
+			Name: "London",
 		},
 		{
-			Name: "X100F",
+			Name: "New York",
 		},
 	}
 
@@ -133,14 +133,14 @@ func (s *LocationsSuite) TestAllLocations() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Location{
-					Name: "iPhone",
+					Name: "London",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Location{
-					Name: "X100F",
+					Name: "New York",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

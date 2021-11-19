@@ -1,0 +1,22 @@
+<p><%= location.Name %></p>
+<p>ID: <%= location.ID %></p>
+<%= form_for(location, {action:"/admin/locations/"+location.Name, method: "PUT"}) { %>
+  <div class="row">
+    <div>
+      <%= f.InputTag("Name") %>
+    </div>
+    <div>
+      <%= f.InputTag("Latitude") %>
+    </div>
+    <div>
+      <%= f.InputTag("Longitude") %>
+    </div>
+  </div>
+
+  <br/>
+  <%= f.SubmitTag("Update location") %>
+<% } %>
+
+<%= form_for(location, {action:"/admin/locations/"+location.Name, method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete location") %>
+<% } %>

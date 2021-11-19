@@ -1,4 +1,4 @@
-<%= form_for(tag, {action:"/admin/tags", method: "PUT"}) { %>
+<%= form_for(tag, {action:"/admin/tags", method: "POST"}) { %>
   <div class="row">
     <div>
       <%= f.InputTag("Name") %>

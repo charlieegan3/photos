@@ -1,0 +1,20 @@
+<h1>Locations</h1>
+<p><a href="./locations/new">New Location</a></p>
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+  </tr>
+</thead>
+<tbody>
+<%= for (location) in locations { %>
+  <tr>
+    <td><a href="/admin/locations/<%= location.Slug %>"><%= location.Name %></td>
+    <td><%= location.Latitude %></td>
+    <td><%= location.Longitude %></td>
+  </tr>
+<% } %>
+</tbody>
+</table>

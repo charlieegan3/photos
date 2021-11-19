@@ -266,6 +266,7 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Name")
+	assert.Contains(s.T(), string(body), "Icon")
 }
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {

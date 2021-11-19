@@ -218,6 +218,16 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			Name: r.PostForm.Get("Name"),
 		}
 
+		latitudeString := r.Form.Get("Latitude")
+		if s, err := strconv.ParseFloat(latitudeString, 32); err == nil {
+			location.Latitude = float32(s)
+		}
+
+		longitudeString := r.Form.Get("Longitude")
+		if s, err := strconv.ParseFloat(longitudeString, 32); err == nil {
+			location.Longitude = float32(s)
+		}
+
 		updatedLocations, err := database.UpdateLocations(db, []models.Location{location})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

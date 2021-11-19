@@ -186,6 +186,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 	form := url.Values{}
 	form.Add("_method", "PUT")
 	form.Add("Name", "Berlin")
+	form.Add("Longitude", "1.1")
 
 	// make the request to the handler
 	req, err := http.NewRequest(
@@ -211,8 +212,9 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Location{
-					ID:   persistedLocations[0].ID,
-					Name: "Berlin",
+					ID:        persistedLocations[0].ID,
+					Name:      "Berlin",
+					Longitude: 1.1,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

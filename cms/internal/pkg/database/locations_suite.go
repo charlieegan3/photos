@@ -190,6 +190,7 @@ func (s *LocationsSuite) TestUpdateLocations() {
 
 	updatedLocations := returnedLocations
 	updatedLocations[0].Name = "'ereford"
+	updatedLocations[0].Longitude = 1.1
 
 	returnedLocations, err = UpdateLocations(s.DB, updatedLocations)
 	if err != nil {

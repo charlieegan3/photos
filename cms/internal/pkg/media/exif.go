@@ -2,21 +2,72 @@ package media
 
 import (
 	"fmt"
+	"time"
 
 	exif "github.com/dsoprea/go-exif/v3"
 	exifcommon "github.com/dsoprea/go-exif/v3/common"
 )
 
 type Metadata struct {
-	Make         string
-	Model        string
+	Make  string
+	Model string
+
+	DateTime time.Time
+
 	FNumber      Fraction
 	ShutterSpeed SignedFraction
 	ISOSpeed     uint16
+
+	Latitude  Coordinate
+	Longitude Coordinate
+	Altitude  Altitude
+}
+
+type Coordinate struct {
+	Degrees Fraction
+	Minutes Fraction
+	Seconds Fraction
+
+	Ref string
+}
+
+func (c *Coordinate) ToDecimal() (float64, error) {
+	multiplier := 1.0
+	if c.Ref == "S" || c.Ref == "W" {
+		multiplier = -1.0
+	}
+
+	degrees, err := c.Degrees.ToDecimal()
+	if err != nil {
+		return 0, fmt.Errorf("coordinate can't be converted to decimal: %s", err)
+	}
+	minutes, err := c.Minutes.ToDecimal()
+	if err != nil {
+		return 0, fmt.Errorf("coordinate can't be converted to decimal: %s", err)
+	}
+	seconds, err := c.Seconds.ToDecimal()
+	if err != nil {
+		return 0, fmt.Errorf("coordinate can't be converted to decimal: %s", err)
+	}
+
+	return (degrees + minutes/float64(60) + seconds/float64(3600)) * multiplier, nil
+}
+
+type Altitude struct {
+	Value Fraction
+	Ref   byte
 }
 
 type Fraction struct {
 	Numerator, Denominator uint32
+}
+
+func (f *Fraction) ToDecimal() (float64, error) {
+	if f.Denominator == 0 {
+		return 0, fmt.Errorf("fraction with 0 denominator cannot be converted to decimal")
+	}
+
+	return float64(f.Numerator) / float64(f.Denominator), nil
 }
 
 type SignedFraction struct {
@@ -25,7 +76,9 @@ type SignedFraction struct {
 
 func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	rawExif, err := exif.SearchAndExtractExif(b)
-	if err != nil {
+	if err == exif.ErrNoExif {
+		return metadata, nil
+	} else if err != nil {
 		return metadata, fmt.Errorf("failed to get raw exif data: %s", err)
 	}
 
@@ -68,6 +121,23 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			}
 
 			metadata.Model = val
+		}
+
+		if ite.TagName() == "DateTime" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw DateTime value")
+			}
+
+			val, ok := rawValue.(string)
+			if !ok {
+				return fmt.Errorf("DateTime was not in expected format: %#v", rawValue)
+			}
+
+			metadata.DateTime, err = time.Parse("2006:01:02 15:04:05", val)
+			if err != nil {
+				return fmt.Errorf("failed to parse time: %s", err)
+			}
 		}
 
 		if ite.TagName() == "FNumber" {
@@ -123,6 +193,117 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			}
 
 			metadata.ISOSpeed = val[0]
+		}
+
+		if ite.TagName() == "GPSLatitudeRef" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw GPSLatitudeRef value")
+			}
+
+			val, ok := rawValue.(string)
+			if !ok {
+				return fmt.Errorf("GPSLatitudeRef was not in expected format: %#v", rawValue)
+			}
+
+			metadata.Latitude.Ref = val
+		}
+
+		if ite.TagName() == "GPSLatitude" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw GPSLatitude value")
+			}
+
+			val, ok := rawValue.([]exifcommon.Rational)
+			if !ok {
+				return fmt.Errorf("GPSLatitude was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) != 3 {
+				return fmt.Errorf("found %d GPSLatitude", len(val))
+			}
+
+			metadata.Latitude.Degrees.Numerator = val[0].Numerator
+			metadata.Latitude.Degrees.Denominator = val[0].Denominator
+			metadata.Latitude.Minutes.Numerator = val[1].Numerator
+			metadata.Latitude.Minutes.Denominator = val[1].Denominator
+			metadata.Latitude.Seconds.Numerator = val[2].Numerator
+			metadata.Latitude.Seconds.Denominator = val[2].Denominator
+		}
+
+		if ite.TagName() == "GPSLongitudeRef" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw GPSLongitudeRef value")
+			}
+
+			val, ok := rawValue.(string)
+			if !ok {
+				return fmt.Errorf("GPSLongitudeRef was not in expected format: %#v", rawValue)
+			}
+
+			metadata.Longitude.Ref = val
+		}
+
+		if ite.TagName() == "GPSLongitude" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw GPSLongitude value")
+			}
+
+			val, ok := rawValue.([]exifcommon.Rational)
+			if !ok {
+				return fmt.Errorf("GPSLongitude was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) != 3 {
+				return fmt.Errorf("found %d GPSLongitude", len(val))
+			}
+
+			metadata.Longitude.Degrees.Numerator = val[0].Numerator
+			metadata.Longitude.Degrees.Denominator = val[0].Denominator
+			metadata.Longitude.Minutes.Numerator = val[1].Numerator
+			metadata.Longitude.Minutes.Denominator = val[1].Denominator
+			metadata.Longitude.Seconds.Numerator = val[2].Numerator
+			metadata.Longitude.Seconds.Denominator = val[2].Denominator
+		}
+
+		if ite.TagName() == "GPSAltitudeRef" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw GPSAltitudeRef value")
+			}
+
+			val, ok := rawValue.([]byte)
+			if !ok {
+				return fmt.Errorf("GPSAltitudeRef was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) != 1 {
+				return fmt.Errorf("found %d GPSAltitudeRef", len(val))
+			}
+
+			metadata.Altitude.Ref = val[0]
+		}
+
+		if ite.TagName() == "GPSAltitude" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw GPSAltitude value")
+			}
+
+			val, ok := rawValue.([]exifcommon.Rational)
+			if !ok {
+				return fmt.Errorf("GPSAltitude was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) != 1 {
+				return fmt.Errorf("found %d GPSAltitude", len(val))
+			}
+
+			metadata.Altitude.Value.Numerator = val[0].Numerator
+			metadata.Altitude.Value.Denominator = val[0].Denominator
 		}
 
 		return nil

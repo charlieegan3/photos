@@ -132,6 +132,10 @@ func (s *DatabaseSuite) TestLocationsSuite() {
 	suite.Run(s.T(), &database.LocationsSuite{DB: s.DB})
 }
 
+func (s *DatabaseSuite) TestMediasSuite() {
+	suite.Run(s.T(), &database.MediasSuite{DB: s.DB})
+}
+
 func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 	// TODO move to suite to be shared
 	bucketBaseURL := "mem://test_bucket/"

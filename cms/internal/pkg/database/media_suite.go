@@ -20,14 +20,28 @@ type MediasSuite struct {
 
 func (s *MediasSuite) SetupTest() {
 	err := Truncate(s.DB, "medias")
-	if err != nil {
-		s.T().Fatalf("failed to truncate table: %s", err)
-	}
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "devices")
+	require.NoError(s.T(), err)
 }
 
 func (s *MediasSuite) TestCreateMedias() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	medias := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -42,6 +56,8 @@ func (s *MediasSuite) TestCreateMedias() {
 			Altitude:  100.0,
 		},
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "Apple",
 			Model: "iPhone",
 
@@ -82,8 +98,21 @@ func (s *MediasSuite) TestCreateMedias() {
 }
 
 func (s *MediasSuite) TestFindMediasByID() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	medias := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -98,6 +127,8 @@ func (s *MediasSuite) TestFindMediasByID() {
 			Altitude:  100.0,
 		},
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "Apple",
 			Model: "iPhone",
 
@@ -140,8 +171,21 @@ func (s *MediasSuite) TestFindMediasByID() {
 }
 
 func (s *MediasSuite) TestAllMedias() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	medias := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -156,6 +200,8 @@ func (s *MediasSuite) TestAllMedias() {
 			Altitude:  100.0,
 		},
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "Apple",
 			Model: "iPhone",
 
@@ -171,7 +217,7 @@ func (s *MediasSuite) TestAllMedias() {
 		},
 	}
 
-	_, err := CreateMedias(s.DB, medias)
+	_, err = CreateMedias(s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias needed for test: %s", err)
 	}
@@ -201,8 +247,21 @@ func (s *MediasSuite) TestAllMedias() {
 }
 
 func (s *MediasSuite) TestDeleteMedias() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	medias := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -217,6 +276,8 @@ func (s *MediasSuite) TestDeleteMedias() {
 			Altitude:  100.0,
 		},
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "Apple",
 			Model: "iPhone",
 
@@ -262,8 +323,21 @@ func (s *MediasSuite) TestDeleteMedias() {
 }
 
 func (s *MediasSuite) TestUpdateMedias() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	initialMedias := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -278,6 +352,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 			Altitude:  100.0,
 		},
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "Apple",
 			Model: "iPhone",
 

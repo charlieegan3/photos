@@ -31,6 +31,8 @@ type dbMedia struct {
 
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
+
+	DeviceID int `db:"device_id"`
 }
 
 func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
@@ -45,6 +47,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"latitude":      d.Latitude,
 		"longitude":     d.Longitude,
 		"altitude":      d.Altitude,
+		"device_id":     d.DeviceID,
 	}
 
 	if includeID {
@@ -73,6 +76,8 @@ func newMedia(media dbMedia) models.Media {
 
 		CreatedAt: media.CreatedAt,
 		UpdatedAt: media.UpdatedAt,
+
+		DeviceID: media.DeviceID,
 	}
 }
 
@@ -93,6 +98,8 @@ func newDBMedia(media models.Media) dbMedia {
 
 		CreatedAt: media.CreatedAt,
 		UpdatedAt: media.UpdatedAt,
+
+		DeviceID: media.DeviceID,
 	}
 }
 

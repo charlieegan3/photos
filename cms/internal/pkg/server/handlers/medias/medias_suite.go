@@ -40,11 +40,27 @@ type EndpointsMediasSuite struct {
 func (s *EndpointsMediasSuite) SetupTest() {
 	err := database.Truncate(s.DB, "medias")
 	require.NoError(s.T(), err)
+
+	err = database.Truncate(s.DB, "devices")
+	require.NoError(s.T(), err)
 }
 
 func (s *EndpointsMediasSuite) TestListMedias() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	testData := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -59,6 +75,8 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 			Altitude:  100.0,
 		},
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "Apple",
 			Model: "iPhone",
 
@@ -98,8 +116,21 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 }
 
 func (s *EndpointsMediasSuite) TestGetMedia() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	testData := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -142,8 +173,21 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 }
 
 func (s *EndpointsMediasSuite) TestUpdateMedia() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	testData := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 
@@ -181,9 +225,10 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 
 	// build the form to be posted
 	values := map[string]io.Reader{
-		"Make":    strings.NewReader("Fuji"),
-		"File":    imageFile,
-		"_method": strings.NewReader("PUT"),
+		"Make":     strings.NewReader("Fuji"),
+		"File":     imageFile,
+		"DeviceID": strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
+		"_method":  strings.NewReader("PUT"),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -217,7 +262,11 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	// check that the database content is also correct
 	returnedMedias, err := database.AllMedias(s.DB)
@@ -242,8 +291,21 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 }
 
 func (s *EndpointsMediasSuite) TestDeleteMedia() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	testData := []models.Media{
 		{
+			DeviceID: returnedDevices[0].ID,
+
 			Kind: "jpg",
 
 			Make:  "FujiFilm",
@@ -316,7 +378,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 
 func (s *EndpointsMediasSuite) TestNewMedia() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/medias/new", BuildNewHandler(templating.BuildPageRenderFunc("http://"))).Methods("GET")
+	router.HandleFunc("/admin/medias/new", BuildNewHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/medias/new", nil)
 	require.NoError(s.T(), err)
@@ -335,6 +397,17 @@ func (s *EndpointsMediasSuite) TestNewMedia() {
 }
 
 func (s *EndpointsMediasSuite) TestCreateMedia() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/medias", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
@@ -345,7 +418,8 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 
 	// build the form to be posted
 	values := map[string]io.Reader{
-		"File": imageFile,
+		"File":     imageFile,
+		"DeviceID": strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -380,7 +454,11 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 	if !strings.HasPrefix(rr.HeaderMap["Location"][0], "/admin/medias/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.HeaderMap["Location"])
 	}

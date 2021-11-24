@@ -23,4 +23,6 @@ type Media struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
+	DeviceID int
 }

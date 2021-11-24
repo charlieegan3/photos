@@ -91,8 +91,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
+		devices, err := database.AllDevices(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		deviceOptionMap := make(map[string]interface{})
+		for _, d := range devices {
+			deviceOptionMap[d.Name] = d.ID
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("media", medias[0])
+		ctx.Set("devices", deviceOptionMap)
 
 		body, err := renderer(ctx, showTemplate)
 		if err != nil {
@@ -244,6 +257,13 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			Altitude:     floatMap["Altitude"],
 		}
 
+		media.DeviceID, err = strconv.Atoi(r.Form.Get("DeviceID"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("failed to parse device ID"))
+			return
+		}
+
 		updatedMedias, err := database.UpdateMedias(db, []models.Media{media})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -301,12 +321,25 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 	}
 }
 
-func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
+		devices, err := database.AllDevices(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		deviceOptionMap := make(map[string]interface{})
+		for _, d := range devices {
+			deviceOptionMap[d.Name] = d.ID
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("media", models.Media{})
+		ctx.Set("devices", deviceOptionMap)
 
 		body, err := renderer(ctx, newTemplate)
 		if err != nil {
@@ -337,7 +370,16 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		media := models.Media{Make: r.Form.Get("Make")}
+		media := models.Media{
+			Make: r.Form.Get("Make"),
+		}
+
+		media.DeviceID, err = strconv.Atoi(r.Form.Get("DeviceID"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("failed to parse device ID"))
+			return
+		}
 
 		f, header, err := r.FormFile("File")
 		if err != nil {

@@ -3,6 +3,9 @@
     <div>
       <%= f.FileTag("File") %>
     </div>
+    <div>
+      <%= f.SelectTag("DeviceID", {options: devices}) %>
+    </div>
   </div>
 
   <%= f.SubmitTag("Create Media") %>

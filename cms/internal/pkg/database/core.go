@@ -160,7 +160,7 @@ func Exists(db *sql.DB, databaseName string) (bool, error) {
 
 // Truncate the table with tableName
 func Truncate(db *sql.DB, tableName string) error {
-	_, err := db.Exec(fmt.Sprintf(`TRUNCATE %s;`, tableName))
+	_, err := db.Exec(fmt.Sprintf(`TRUNCATE %s CASCADE;`, tableName))
 	if err != nil {
 		return fmt.Errorf("failed to truncate table: %s", err)
 	}

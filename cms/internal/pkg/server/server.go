@@ -54,7 +54,7 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *
 
 	adminRouter.HandleFunc("/medias", medias.BuildIndexHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/medias", medias.BuildCreateHandler(db, bucket, renderer)).Methods("POST")
-	adminRouter.HandleFunc("/medias/new", medias.BuildNewHandler(renderer)).Methods("GET")
+	adminRouter.HandleFunc("/medias/new", medias.BuildNewHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildGetHandler(db, renderer)).Methods("GET")
 	// handles update and delete
 	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildFormHandler(db, bucket, renderer)).Methods("POST")

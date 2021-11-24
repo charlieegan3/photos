@@ -2,12 +2,12 @@
 <p>Kind: <%= media.Kind %></p>
 
 <%= if (media.Kind == "jpg") { %>
-<p><img width="200" src="<%= image_url("media/", to_string(media.ID), ".jpg") %>"/></p>
+  <p><img width="200" src="<%= image_url("media/", to_string(media.ID), ".jpg") %>"/></p>
 <% } else if (media.Kind == "mp4") { %>
-<video controls width="250">
+  <video controls width="250">
     <source src="<%= image_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
     Sorry, your browser doesn't support embedded videos.
-</video>
+  </video>
 <% } else { %>
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
@@ -21,11 +21,13 @@
       <%= f.InputTag("Model") %>
     </div>
 
+    <br/>
     <div>
       <label for="TakenAt">TakenAt</label>
       <input type="datetime-local" name="TakenAt" value="<%= media.TakenAt.Format("2006-01-02T15:04") %>">
     </div>
 
+    <br/>
     <div>
       <%= f.InputTag("FNumber") %>
     </div>
@@ -36,6 +38,7 @@
       <%= f.InputTag("ISOSpeed") %>
     </div>
 
+    <br/>
     <div>
       <%= f.InputTag("Latitude") %>
     </div>
@@ -46,8 +49,14 @@
       <%= f.InputTag("Altitude") %>
     </div>
 
+    <br/>
     <div>
       <%= f.FileTag("File") %>
+    </div>
+
+    <br/>
+    <div>
+      <%= f.SelectTag("DeviceID", {options: devices}) %>
     </div>
   </div>
 

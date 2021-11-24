@@ -48,6 +48,9 @@
     <div>
       <%= f.InputTag("Altitude") %>
     </div>
+    <div>
+      <a href="/admin/locations/new?lat=<%= media.Latitude %>&long=<%= media.Longitude %>">Create Location</a>
+    </div>
 
     <br/>
     <div>

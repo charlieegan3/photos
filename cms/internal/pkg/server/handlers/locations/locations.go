@@ -89,8 +89,23 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
+		var location models.Location
+
+		latitude, ok := r.URL.Query()["lat"]
+		if ok {
+			if s, err := strconv.ParseFloat(latitude[0], 64); err == nil {
+				location.Latitude = s
+			}
+		}
+		longitude, ok := r.URL.Query()["long"]
+		if ok {
+			if s, err := strconv.ParseFloat(longitude[0], 64); err == nil {
+				location.Longitude = s
+			}
+		}
+
 		ctx := plush.NewContext()
-		ctx.Set("location", models.Location{})
+		ctx.Set("location", location)
 
 		body, err := renderer(ctx, newTemplate)
 		if err != nil {
@@ -126,13 +141,13 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 
 		latitudeString := r.Form.Get("Latitude")
-		if s, err := strconv.ParseFloat(latitudeString, 32); err == nil {
-			location.Latitude = float32(s)
+		if s, err := strconv.ParseFloat(latitudeString, 64); err == nil {
+			location.Latitude = s
 		}
 
 		longitudeString := r.Form.Get("Longitude")
-		if s, err := strconv.ParseFloat(longitudeString, 32); err == nil {
-			location.Longitude = float32(s)
+		if s, err := strconv.ParseFloat(longitudeString, 64); err == nil {
+			location.Longitude = s
 		}
 
 		persistedLocations, err := database.CreateLocations(db, []models.Location{location})
@@ -219,13 +234,13 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		latitudeString := r.Form.Get("Latitude")
-		if s, err := strconv.ParseFloat(latitudeString, 32); err == nil {
-			location.Latitude = float32(s)
+		if s, err := strconv.ParseFloat(latitudeString, 64); err == nil {
+			location.Latitude = s
 		}
 
 		longitudeString := r.Form.Get("Longitude")
-		if s, err := strconv.ParseFloat(longitudeString, 32); err == nil {
-			location.Longitude = float32(s)
+		if s, err := strconv.ParseFloat(longitudeString, 64); err == nil {
+			location.Longitude = s
 		}
 
 		updatedLocations, err := database.UpdateLocations(db, []models.Location{location})

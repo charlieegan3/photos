@@ -1,5 +1,6 @@
 <%= form_for(location, {action:"/admin/locations", method: "POST"}) { %>
   <div class="row">
+  <%= location %>
     <div>
       <%= f.InputTag("Name") %>
     </div>

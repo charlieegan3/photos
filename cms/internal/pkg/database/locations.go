@@ -15,8 +15,8 @@ type dbLocation struct {
 	ID        int     `db:"id"`
 	Name      string  `db:"name"`
 	Slug      string  `db:"slug"`
-	Latitude  float32 `db:"latitude"`
-	Longitude float32 `db:"longitude"`
+	Latitude  float64 `db:"latitude"`
+	Longitude float64 `db:"longitude"`
 
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`

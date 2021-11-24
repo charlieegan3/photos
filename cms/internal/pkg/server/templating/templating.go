@@ -22,6 +22,10 @@ func BuildPageRenderFunc(bucketWebURL string) PageRenderer {
 			return fmt.Sprintf("%s%s", bucketWebURL, strings.Join(s, ""))
 		})
 
+		ctx.Set("to_string", func(arg interface{}) string {
+			return fmt.Sprintf("%v", arg)
+		})
+
 		body, err := plush.Render(template, ctx)
 		if err != nil {
 			return "", errors.Wrap(err, "failed to evaluate provided template")

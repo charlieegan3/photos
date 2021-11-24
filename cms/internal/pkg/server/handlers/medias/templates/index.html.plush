@@ -1,0 +1,11 @@
+<h1>Medias</h1>
+<p><a href="./medias/new">New Media</a></p>
+<ul>
+<%= for (media) in medias { %>
+  <li>
+    <a href="/admin/medias/<%= media.ID %>">
+      id: <%= media.ID %>
+    </a>
+  </li>
+<% } %>
+</ul>

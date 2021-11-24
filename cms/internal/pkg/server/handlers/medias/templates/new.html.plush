@@ -1,0 +1,9 @@
+<%= form_for(media, {action:"/admin/medias", method: "POST"}) { %>
+  <div class="row">
+    <div>
+      <%= f.FileTag("File") %>
+    </div>
+  </div>
+
+  <%= f.SubmitTag("Create Media") %>
+<% } %>

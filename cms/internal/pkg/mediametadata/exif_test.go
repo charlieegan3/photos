@@ -1,4 +1,4 @@
-package media
+package mediametadata
 
 import (
 	"os"
@@ -23,7 +23,7 @@ func TestExtract(t *testing.T) {
 				FNumber: Fraction{
 					Numerator: 2, Denominator: 1,
 				},
-				ShutterSpeed: SignedFraction{
+				ShutterSpeed: Fraction{
 					Numerator: 328711, Denominator: 47450,
 				},
 				ISOSpeed: 100,
@@ -71,11 +71,11 @@ func TestExtract(t *testing.T) {
 			expectedMetadata: Metadata{
 				Make:     "FUJIFILM",
 				Model:    "X100F",
-				DateTime: time.Date(2021, time.November, 14, 19, 42, 15, 0, time.UTC),
+				DateTime: time.Date(2021, time.November, 13, 15, 38, 02, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 56, Denominator: 10,
 				},
-				ShutterSpeed: SignedFraction{
+				ShutterSpeed: Fraction{
 					Numerator: 10550747, Denominator: 1000000,
 				},
 				ISOSpeed: 400,

@@ -1,4 +1,4 @@
-package media
+package mediametadata
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ type Metadata struct {
 	DateTime time.Time
 
 	FNumber      Fraction
-	ShutterSpeed SignedFraction
+	ShutterSpeed Fraction
 	ISOSpeed     uint16
 
 	Latitude  Coordinate
@@ -58,6 +58,20 @@ type Altitude struct {
 	Ref   byte
 }
 
+func (a *Altitude) ToDecimal() (float64, error) {
+	value, err := a.Value.ToDecimal()
+	if err != nil {
+		return 0, fmt.Errorf("altitude can't be converted to decimal: %s", err)
+	}
+
+	multiplier := 1.0
+	if a.Ref == 1 {
+		multiplier = -1.0
+	}
+
+	return value * multiplier, nil
+}
+
 type Fraction struct {
 	Numerator, Denominator uint32
 }
@@ -68,10 +82,6 @@ func (f *Fraction) ToDecimal() (float64, error) {
 	}
 
 	return float64(f.Numerator) / float64(f.Denominator), nil
-}
-
-type SignedFraction struct {
-	Numerator, Denominator int32
 }
 
 func ExtractMetadata(b []byte) (metadata Metadata, err error) {
@@ -123,15 +133,15 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			metadata.Model = val
 		}
 
-		if ite.TagName() == "DateTime" {
+		if ite.TagName() == "DateTimeOriginal" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw DateTime value")
+				return fmt.Errorf("could not get raw DateTimeOriginal value")
 			}
 
 			val, ok := rawValue.(string)
 			if !ok {
-				return fmt.Errorf("DateTime was not in expected format: %#v", rawValue)
+				return fmt.Errorf("DateTimeOriginal was not in expected format: %#v", rawValue)
 			}
 
 			metadata.DateTime, err = time.Parse("2006:01:02 15:04:05", val)
@@ -173,8 +183,8 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 				return fmt.Errorf("found %d ShutterSpeedValues", len(val))
 			}
 
-			metadata.ShutterSpeed.Numerator = val[0].Numerator
-			metadata.ShutterSpeed.Denominator = val[0].Denominator
+			metadata.ShutterSpeed.Numerator = uint32(val[0].Numerator)
+			metadata.ShutterSpeed.Denominator = uint32(val[0].Denominator)
 		}
 
 		if ite.TagName() == "ISOSpeedRatings" {

@@ -1,0 +1,49 @@
+<p>ID: <%= media.ID %></p>
+<p><img width="200" src="<%= image_url("media/", to_string(media.ID), ".jpg") %>"/></p>
+<%= form_for(media, {action:"/admin/medias/"+to_string(media.ID), method: "PUT"}) { %>
+  <div class="row">
+    <div>
+      <%= f.InputTag("Make") %>
+    </div>
+    <div>
+      <%= f.InputTag("Model") %>
+    </div>
+
+    <div>
+      <label for="TakenAt">TakenAt</label>
+      <input type="datetime-local" name="TakenAt" value="<%= media.TakenAt.Format("2006-01-02T15:04") %>">
+    </div>
+
+    <div>
+      <%= f.InputTag("FNumber") %>
+    </div>
+    <div>
+      <%= f.InputTag("ShutterSpeed") %>
+    </div>
+    <div>
+      <%= f.InputTag("ISOSpeed") %>
+    </div>
+
+    <div>
+      <%= f.InputTag("Latitude") %>
+    </div>
+    <div>
+      <%= f.InputTag("Longitude") %>
+    </div>
+    <div>
+      <%= f.InputTag("Altitude") %>
+    </div>
+
+    <div>
+      <%= f.FileTag("File") %>
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+  <%= f.SubmitTag("Update Media") %>
+<% } %>
+
+<%= form_for(media, {action:"/admin/medias/"+to_string(media.ID), method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete Media") %>
+<% } %>

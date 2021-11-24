@@ -17,6 +17,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/locations"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 )
 
@@ -159,5 +160,19 @@ func (s *DatabaseSuite) TestEndpointsTagsSuite() {
 func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 	suite.Run(s.T(), &locations.EndpointsLocationsSuite{
 		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestEndpointsMediasSuite() {
+	// TODO move to suite to be shared
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
+	suite.Run(s.T(), &medias.EndpointsMediasSuite{
+		DB:            s.DB,
+		Bucket:        bucket,
+		BucketBaseURL: bucketBaseURL,
 	})
 }

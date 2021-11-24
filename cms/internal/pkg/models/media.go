@@ -6,6 +6,8 @@ import "time"
 type Media struct {
 	ID int
 
+	Kind string
+
 	Make  string
 	Model string
 

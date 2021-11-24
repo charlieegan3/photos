@@ -164,8 +164,8 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				return
 			}
 
-			iconKey := fmt.Sprintf("media/%d.jpg", existingMedias[0].ID)
-			err = bucket.Delete(r.Context(), iconKey)
+			mediaKey := fmt.Sprintf("media/%d.%s", existingMedias[0].ID, existingMedias[0].Kind)
+			err = bucket.Delete(r.Context(), mediaKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -232,6 +232,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 
 		media := models.Media{
 			ID:           existingMedias[0].ID,
+			Kind:         existingMedias[0].Kind,
 			Make:         r.PostForm.Get("Make"),
 			Model:        r.PostForm.Get("Model"),
 			TakenAt:      takenAt,
@@ -256,80 +257,37 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		// move the icon, if the id has changed
-		if existingMedias[0].ID != updatedMedias[0].ID {
-			existingFileKey := fmt.Sprintf("media/%d.jpg", existingMedias[0].ID)
-			br, err := bucket.NewReader(r.Context(), existingFileKey, nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize icon storage"))
-				return
-			}
-
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("media/%d.jpg", updatedMedias[0].ID), nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize icon storage"))
-				return
-			}
-
-			_, err = io.Copy(bw, br)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to save to icon storage"))
-				return
-			}
-
-			err = bucket.Delete(r.Context(), existingFileKey)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
-
-			err = bw.Close()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to icon storage"))
-				return
-			}
-			err = br.Close()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to icon storage"))
-				return
-			}
-		}
-
 		// only handle the file when it's present, file might not be submitted
 		// every time the form is sent
 		f, header, err := r.FormFile("File")
 		if err == nil {
 			lowerFilename := strings.ToLower(header.Filename)
-			if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
+			if !strings.HasSuffix(lowerFilename, ".jpg") &&
+				!strings.HasSuffix(lowerFilename, ".jpeg") &&
+				!strings.HasSuffix(lowerFilename, ".mp4") {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("icon file must be jpg"))
+				w.Write([]byte("media file must be jpg or mp4"))
 				return
 			}
 
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("media/%d.jpg", updatedMedias[0].ID), nil)
+			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("media/%d.%s", updatedMedias[0].ID, updatedMedias[0].Kind), nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize icon storage"))
+				w.Write([]byte("failed initialize media storage"))
 				return
 			}
 
 			_, err = io.Copy(bw, f)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to save to icon storage"))
+				w.Write([]byte("failed to save to media storage"))
 				return
 			}
 
 			err = bw.Close()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to icon storage"))
+				w.Write([]byte("failed to close connection to media storage"))
 				return
 			}
 		}
@@ -389,9 +347,22 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		}
 
 		lowerFilename := strings.ToLower(header.Filename)
-		if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
+		if !strings.HasSuffix(lowerFilename, ".jpg") &&
+			!strings.HasSuffix(lowerFilename, ".jpeg") &&
+			!strings.HasSuffix(lowerFilename, ".mp4") {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("icon file must be jpg"))
+			w.Write([]byte("media file must be jpg or mp4"))
+			return
+		}
+
+		if parts := strings.Split(lowerFilename, "."); len(parts) > 1 {
+			media.Kind = parts[len(parts)-1]
+			if media.Kind == "jpeg" {
+				media.Kind = "jpg"
+			}
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("file must have name and extension"))
 			return
 		}
 
@@ -432,7 +403,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		key := fmt.Sprintf("media/%d.jpg", persistedMedias[0].ID)
+		key := fmt.Sprintf("media/%d.%s", persistedMedias[0].ID, persistedMedias[0].Kind)
 
 		bw, err := bucket.NewWriter(r.Context(), key, nil)
 		if err != nil {

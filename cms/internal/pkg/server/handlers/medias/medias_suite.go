@@ -244,6 +244,8 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	testData := []models.Media{
 		{
+			Kind: "jpg",
+
 			Make:  "FujiFilm",
 			Model: "X100F",
 

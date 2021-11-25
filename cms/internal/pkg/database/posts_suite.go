@@ -1,0 +1,429 @@
+package database
+
+import (
+	"database/sql"
+	"time"
+
+	"github.com/maxatome/go-testdeep/td"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+)
+
+// PostsSuite is a number of tests to define the database integration for
+// storing posts
+type PostsSuite struct {
+	suite.Suite
+	DB *sql.DB
+}
+
+func (s *PostsSuite) SetupTest() {
+	err := Truncate(s.DB, "posts")
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "medias")
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "locations")
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "devices")
+	require.NoError(s.T(), err)
+}
+
+func (s *PostsSuite) TestCreatePosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedPosts, expectedResult)
+}
+
+func (s *PostsSuite) TestFindPostsByID() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	if err != nil {
+		s.T().Fatalf("failed to create locations: %s", err)
+	}
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took, same but diff",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	if err != nil {
+		s.T().Fatalf("failed to create posts: %s", err)
+	}
+
+	posts[0].ID = returnedPosts[0].ID
+
+	returnedPosts, err = FindPostsByID(s.DB, posts[0].ID)
+	if err != nil {
+		s.T().Fatalf("failed get posts: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedPosts, expectedResult)
+}
+
+func (s *PostsSuite) TestAllPosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took, same but diff",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	_, err = CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	returnedPosts, err := AllPosts(s.DB)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				posts[1],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedPosts, expectedResult)
+}
+
+func (s *PostsSuite) TestDeletePosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took, same but diff",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	postToDelete := returnedPosts[0]
+
+	err = DeletePosts(s.DB, []models.Post{postToDelete})
+	require.NoError(s.T(), err)
+
+	allPosts, err := AllPosts(s.DB)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[1],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), allPosts, expectedResult)
+}
+
+func (s *PostsSuite) TestUpdatePosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took, same but diff",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	createdPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	posts[0].ID = createdPosts[0].ID // needed to match up the update
+	posts[1].ID = createdPosts[1].ID // needed to match up the update
+
+	posts[0].Description = "foobar"
+
+	updatedPosts, err := UpdatePosts(s.DB, posts)
+	if err != nil {
+		s.T().Fatalf("failed to update posts: %s", err)
+	}
+
+	expectedPosts := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				posts[1],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), updatedPosts, expectedPosts)
+}

@@ -105,7 +105,8 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	testData := []models.Device{
 		{
-			Name: "iPhone",
+			Name:     "iPhone",
+			IconKind: "jpg",
 		},
 	}
 
@@ -166,7 +167,11 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)
@@ -193,7 +198,8 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	testData := []models.Device{
 		{
-			Name: "iPhone",
+			Name:     "iPhone",
+			IconKind: "jpg",
 		},
 	}
 
@@ -234,7 +240,11 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)

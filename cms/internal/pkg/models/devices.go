@@ -11,6 +11,8 @@ type Device struct {
 	Name string
 	Slug string
 
+	IconKind string
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

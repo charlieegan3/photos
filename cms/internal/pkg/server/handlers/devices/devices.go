@@ -136,9 +136,16 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		}
 
 		lowerFilename := strings.ToLower(header.Filename)
-		if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
+		if parts := strings.Split(lowerFilename, "."); len(parts) > 0 {
+			device.IconKind = parts[len(parts)-1]
+		} else {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("icon file must be jpg"))
+			w.Write([]byte("icon file missing extension"))
+			return
+		}
+		if device.IconKind != "jpg" && device.IconKind != "jepg" && device.IconKind != "png" {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(fmt.Sprintf("icon file must be jpg or png, got: %s", device.IconKind)))
 			return
 		}
 
@@ -155,12 +162,12 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		key := fmt.Sprintf("device_icons/%s.jpg", persistedDevices[0].Slug)
+		key := fmt.Sprintf("device_icons/%s.%s", persistedDevices[0].Slug, persistedDevices[0].IconKind)
 
 		bw, err := bucket.NewWriter(r.Context(), key, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed initialize icon storage"))
+			w.Write([]byte(fmt.Sprintf("failed to initialize icon storage: %s", err)))
 			return
 		}
 
@@ -234,7 +241,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				return
 			}
 
-			iconKey := fmt.Sprintf("device_icons/%s.jpg", existingDevices[0].Slug)
+			iconKey := fmt.Sprintf("device_icons/%s.%s", existingDevices[0].Slug, existingDevices[0].IconKind)
 			err = bucket.Delete(r.Context(), iconKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -266,8 +273,26 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		}
 
 		device := models.Device{
-			ID:   existingDevices[0].ID,
-			Name: r.PostForm.Get("Name"),
+			ID:       existingDevices[0].ID,
+			Name:     r.PostForm.Get("Name"),
+			IconKind: existingDevices[0].IconKind,
+		}
+
+		f, header, err := r.FormFile("Icon")
+		if err == nil {
+			lowerFilename := strings.ToLower(header.Filename)
+			if parts := strings.Split(lowerFilename, "."); len(parts) > 0 {
+				device.IconKind = parts[len(parts)-1]
+			} else {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("icon file missing extension"))
+				return
+			}
+			if device.IconKind != "jpg" && device.IconKind != "jepg" && device.IconKind != "png" {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(fmt.Sprintf("icon file must be jpg or png, got: %s", device.IconKind)))
+				return
+			}
 		}
 
 		updatedDevices, err := database.UpdateDevices(db, []models.Device{device})
@@ -283,20 +308,20 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		// move the icon, if the slug has changed
-		if existingDevices[0].Slug != updatedDevices[0].Slug {
-			existingIconKey := fmt.Sprintf("device_icons/%s.jpg", existingDevices[0].Slug)
+		// move the icon, if the slug or iconkind has changed
+		if existingDevices[0].Slug != updatedDevices[0].Slug || existingDevices[0].IconKind != updatedDevices[0].IconKind {
+			existingIconKey := fmt.Sprintf("device_icons/%s.%s", existingDevices[0].Slug, existingDevices[0].IconKind)
 			br, err := bucket.NewReader(r.Context(), existingIconKey, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize icon storage"))
+				w.Write([]byte(fmt.Sprintf("failed initialize icon storage: %s", err)))
 				return
 			}
 
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.jpg", updatedDevices[0].Slug), nil)
+			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, updatedDevices[0].IconKind), nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize icon storage"))
+				w.Write([]byte(fmt.Sprintf("failed to open new writer for object: %s", err)))
 				return
 			}
 
@@ -330,16 +355,9 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 
 		// only handle the file when it's present, file might not be submitted
 		// every time the form is sent
-		f, header, err := r.FormFile("Icon")
+		f, header, err = r.FormFile("Icon")
 		if err == nil {
-			lowerFilename := strings.ToLower(header.Filename)
-			if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("icon file must be jpg"))
-				return
-			}
-
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.jpg", updatedDevices[0].Slug), nil)
+			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, device.IconKind), nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed initialize icon storage"))

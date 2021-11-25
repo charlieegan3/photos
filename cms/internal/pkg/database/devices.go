@@ -12,9 +12,10 @@ import (
 )
 
 type dbDevice struct {
-	ID   int    `db:"id"`
-	Name string `db:"name"`
-	Slug string `db:"slug"`
+	ID       int    `db:"id"`
+	Name     string `db:"name"`
+	Slug     string `db:"slug"`
+	IconKind string `db:"icon_kind"`
 
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
@@ -22,7 +23,8 @@ type dbDevice struct {
 
 func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
-		"name": d.Name,
+		"name":      d.Name,
+		"icon_kind": d.IconKind,
 	}
 
 	if includeID {
@@ -37,6 +39,7 @@ func newDevice(device dbDevice) models.Device {
 		ID:        device.ID,
 		Name:      device.Name,
 		Slug:      device.Slug,
+		IconKind:  device.IconKind,
 		CreatedAt: device.CreatedAt,
 		UpdatedAt: device.UpdatedAt,
 	}
@@ -46,6 +49,7 @@ func newDBDevice(device models.Device) dbDevice {
 	return dbDevice{
 		ID:        device.ID,
 		Name:      device.Name,
+		IconKind:  device.IconKind,
 		CreatedAt: device.CreatedAt,
 		UpdatedAt: device.UpdatedAt,
 	}

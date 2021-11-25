@@ -14,3 +14,6 @@ test_db:
 
 local_bucket:
 	python -m SimpleHTTPServer 8000
+
+update_heroku_config:
+	heroku config:set -a charlieegan3-photos CONFIG_STRING="$(cat config.prod.yaml | base64)"

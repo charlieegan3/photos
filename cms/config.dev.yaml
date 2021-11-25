@@ -3,6 +3,8 @@ server:
   port: "3000"
   adminUsername: "username"
   adminPassword: "password"
+geoapify:
+  key: caa37cc9e66847b1a08e477f8068d178
 database:
   createDatabase: true
   connectionString: postgresql://postgres:password@localhost:5432

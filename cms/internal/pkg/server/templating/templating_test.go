@@ -1,6 +1,7 @@
 package templating
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/gobuffalo/plush"
@@ -23,13 +24,15 @@ func TestRenderPage(t *testing.T) {
 </html>
 `
 
+	b := new(strings.Builder)
+
 	ctx := plush.NewContext()
 	ctx.Set("foo", "bar")
 
-	renderFunc := BuildPageRenderFunc("http://")
+	renderFunc := BuildPageRenderFunc("http://", "")
 
-	result, err := renderFunc(ctx, nestedTemplate)
+	err := renderFunc(ctx, nestedTemplate, b)
 	require.NoError(t, err)
 
-	td.Cmp(t, expectedResult, result)
+	td.Cmp(t, expectedResult, b.String())
 }

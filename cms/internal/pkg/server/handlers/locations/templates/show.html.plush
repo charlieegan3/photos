@@ -1,5 +1,8 @@
 <p><%= location.Name %></p>
 <p>ID: <%= location.ID %></p>
+
+<div><%= map(location.Latitude, location.Longitude) %></div>
+
 <%= form_for(location, {action:"/admin/locations/"+location.Slug, method: "PUT"}) { %>
   <div class="row">
     <div>

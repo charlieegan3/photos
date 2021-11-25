@@ -2,10 +2,10 @@
 <p>Kind: <%= media.Kind %></p>
 
 <%= if (media.Kind == "jpg") { %>
-  <p><img width="200" src="<%= image_url("media/", to_string(media.ID), ".jpg") %>"/></p>
+  <p><img width="200" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/></p>
 <% } else if (media.Kind == "mp4") { %>
   <video controls width="250">
-    <source src="<%= image_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
+    <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
     Sorry, your browser doesn't support embedded videos.
   </video>
 <% } else { %>

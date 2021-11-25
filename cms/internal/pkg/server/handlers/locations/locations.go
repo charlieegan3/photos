@@ -37,14 +37,12 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		ctx := plush.NewContext()
 		ctx.Set("locations", locations)
 
-		body, err := renderer(ctx, indexTemplate)
+		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		fmt.Fprintf(w, body)
 	}
 }
 
@@ -74,14 +72,12 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx := plush.NewContext()
 		ctx.Set("location", locations[0])
 
-		body, err := renderer(ctx, showTemplate)
+		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		fmt.Fprintf(w, body)
 	}
 }
 
@@ -107,15 +103,12 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 		ctx := plush.NewContext()
 		ctx.Set("location", location)
 
-		body, err := renderer(ctx, newTemplate)
+		err := renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, body)
 	}
 }
 

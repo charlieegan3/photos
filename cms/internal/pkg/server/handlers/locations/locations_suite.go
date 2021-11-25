@@ -54,7 +54,7 @@ func (s *EndpointsLocationsSuite) TestListLocations() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/locations", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
+	router.HandleFunc("/admin/locations", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/locations", nil)
 	require.NoError(s.T(), err)
@@ -88,7 +88,7 @@ func (s *EndpointsLocationsSuite) TestGetLocation() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/locations/{locationSlug}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
+	router.HandleFunc("/admin/locations/{locationSlug}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/locations/%s", persistedLocations[0].Slug), nil)
 	require.NoError(s.T(), err)
@@ -108,7 +108,7 @@ func (s *EndpointsLocationsSuite) TestGetLocation() {
 
 func (s *EndpointsLocationsSuite) TestNewLocation() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/locations/new", BuildNewHandler(templating.BuildPageRenderFunc("http://"))).Methods("GET")
+	router.HandleFunc("/admin/locations/new", BuildNewHandler(templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/locations/new", nil)
 	require.NoError(s.T(), err)
@@ -126,7 +126,7 @@ func (s *EndpointsLocationsSuite) TestNewLocation() {
 
 func (s *EndpointsLocationsSuite) TestCreateLocation() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/locations", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("POST")
+	router.HandleFunc("/admin/locations", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
 
 	form := url.Values{}
 	form.Add("Name", "London")
@@ -181,7 +181,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/locations/{locationSlug}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("POST")
+	router.HandleFunc("/admin/locations/{locationSlug}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "PUT")
@@ -240,7 +240,7 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	router := mux.NewRouter()
 	router.HandleFunc(
 		"/admin/locations/{locationSlug}",
-		BuildFormHandler(s.DB, templating.BuildPageRenderFunc("http://")),
+		BuildFormHandler(s.DB, templating.BuildPageRenderFunc("http://", "")),
 	).Methods("POST")
 
 	form := url.Values{}

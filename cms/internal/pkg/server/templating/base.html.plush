@@ -5,6 +5,6 @@
     <title>Photos</title>
   </head>
   <body>
-    <%= raw(body) %>
+    {{ .Body }}
   </body>
 </html>

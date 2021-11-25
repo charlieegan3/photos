@@ -75,7 +75,7 @@ var serverCmd = &cobra.Command{
 		}
 		defer bucket.Close()
 
-		renderer := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"))
+		renderer := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"), viper.GetString("geoapify.key"))
 
 		log.Println("Listening on", port)
 

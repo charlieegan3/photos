@@ -50,14 +50,12 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		ctx := plush.NewContext()
 		ctx.Set("medias", medias)
 
-		body, err := renderer(ctx, indexTemplate)
+		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		fmt.Fprintf(w, body)
 	}
 }
 
@@ -107,14 +105,12 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("media", medias[0])
 		ctx.Set("devices", deviceOptionMap)
 
-		body, err := renderer(ctx, showTemplate)
+		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		fmt.Fprintf(w, body)
 	}
 }
 
@@ -341,15 +337,12 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("media", models.Media{})
 		ctx.Set("devices", deviceOptionMap)
 
-		body, err := renderer(ctx, newTemplate)
+		err = renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, body)
 	}
 }
 

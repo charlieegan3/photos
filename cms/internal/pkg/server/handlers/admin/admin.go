@@ -2,7 +2,6 @@ package admin
 
 import (
 	_ "embed"
-	"fmt"
 	"net/http"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
@@ -17,13 +16,11 @@ func BuildAdminIndexHandler(renderer templating.PageRenderer) func(http.Response
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		ctx := plush.NewContext()
-		body, err := renderer(ctx, adminIndexTemplate)
+		err := renderer(ctx, adminIndexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		fmt.Fprintf(w, body)
 	}
 }

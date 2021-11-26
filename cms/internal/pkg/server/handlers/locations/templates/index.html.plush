@@ -11,7 +11,7 @@
 <tbody>
 <%= for (location) in locations { %>
   <tr>
-    <td><a href="/admin/locations/<%= location.Slug %>"><%= location.Name %></td>
+    <td><a href="/admin/locations/<%= location.ID %>"><%= location.Name %></td>
     <td><%= location.Latitude %></td>
     <td><%= location.Longitude %></td>
   </tr>

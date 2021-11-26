@@ -3,7 +3,7 @@
 <ul>
 <%= for (device) in devices { %>
   <li>
-    <a href="/admin/devices/<%= device.Slug %>">
+    <a href="/admin/devices/<%= device.ID %>">
       <%= device.Name %>
     </a>
   </li>

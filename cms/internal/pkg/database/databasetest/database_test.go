@@ -137,8 +137,13 @@ func (s *DatabaseSuite) TestLocationsSuite() {
 func (s *DatabaseSuite) TestMediasSuite() {
 	suite.Run(s.T(), &database.MediasSuite{DB: s.DB})
 }
+
 func (s *DatabaseSuite) TestPostsSuite() {
 	suite.Run(s.T(), &database.PostsSuite{DB: s.DB})
+}
+
+func (s *DatabaseSuite) TestTaggingsSuite() {
+	suite.Run(s.T(), &database.TaggingsSuite{DB: s.DB})
 }
 
 func (s *DatabaseSuite) TestEndpointsDevicesSuite() {

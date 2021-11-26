@@ -215,8 +215,6 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		fmt.Printf("%#v", post)
-
 		persistedPosts, err := database.CreatePosts(db, []models.Post{post})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

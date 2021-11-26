@@ -1,0 +1,29 @@
+<%= form_for(post, {action:"/admin/posts", method: "POST"}) { %>
+  <div class="row">
+    <div>
+      <label for="Description">Description</label>
+      <br/>
+      <textarea name="Description" rows="4" cols="50"><%= post.Description %></textarea>
+    </div>
+    <br/>
+    <div>
+      <label for="PublishDate">PublishDate</label>
+      <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
+    </div>
+    <br/>
+    <div>
+      <%= f.SelectTag("LocationID", {options: locations}) %>
+    </div>
+    <br/>
+    <div>
+      <%= f.SelectTag("MediaID", {options: medias}) %>
+    </div>
+    <br/>
+    <div>
+      <%= f.CheckboxTag("IsDraft") %>
+    </div>
+  </div>
+
+  <br/>
+  <%= f.SubmitTag("Create Post") %>
+<% } %>

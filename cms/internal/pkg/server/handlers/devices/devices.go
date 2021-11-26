@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gobuffalo/plush"
@@ -78,14 +79,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		slug, ok := mux.Vars(r)["deviceSlug"]
+		rawID, ok := mux.Vars(r)["deviceID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device slug is required"))
+			w.Write([]byte("device id is required"))
 			return
 		}
 
-		devices, err := database.FindDevicesBySlug(db, slug)
+		id, err := strconv.Atoi(rawID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse device ID"))
+			return
+		}
+
+		devices, err := database.FindDevicesByID(db, id)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -200,14 +208,21 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		slug, ok := mux.Vars(r)["deviceSlug"]
+		rawID, ok := mux.Vars(r)["deviceID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device slug is required"))
+			w.Write([]byte("device id is required"))
 			return
 		}
 
-		existingDevices, err := database.FindDevicesBySlug(db, slug)
+		id, err := strconv.Atoi(rawID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse device ID"))
+			return
+		}
+
+		existingDevices, err := database.FindDevicesByID(db, id)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -382,7 +397,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		http.Redirect(
 			w,
 			r,
-			fmt.Sprintf("/admin/devices/%s", updatedDevices[0].Slug),
+			fmt.Sprintf("/admin/devices/%d", updatedDevices[0].ID),
 			http.StatusSeeOther,
 		)
 	}

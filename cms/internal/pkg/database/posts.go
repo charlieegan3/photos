@@ -18,6 +18,8 @@ type dbPost struct {
 
 	PublishDate time.Time `db:"publish_date"`
 
+	IsDraft bool `db:"is_draft"`
+
 	MediaID    int `db:"media_id"`
 	LocationID int `db:"location_id"`
 
@@ -28,6 +30,7 @@ type dbPost struct {
 func (d *dbPost) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"description":  d.Description,
+		"is_draft":     d.IsDraft,
 		"publish_date": d.PublishDate.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
 		"media_id":     d.MediaID,
 		"location_id":  d.LocationID,
@@ -47,6 +50,8 @@ func newPost(post dbPost) models.Post {
 		Description: post.Description,
 		PublishDate: post.PublishDate.UTC(),
 
+		IsDraft: post.IsDraft,
+
 		CreatedAt: post.CreatedAt,
 		UpdatedAt: post.UpdatedAt,
 
@@ -61,6 +66,8 @@ func newDBPost(post models.Post) dbPost {
 
 		Description: post.Description,
 		PublishDate: post.PublishDate.UTC(),
+
+		IsDraft: post.IsDraft,
 
 		CreatedAt: post.CreatedAt,
 		UpdatedAt: post.UpdatedAt,

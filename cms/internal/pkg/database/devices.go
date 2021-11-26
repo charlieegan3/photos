@@ -77,11 +77,11 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	return results, nil
 }
 
-func FindDevicesBySlug(db *sql.DB, slug string) (results []models.Device, err error) {
+func FindDevicesByID(db *sql.DB, id int) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("devices").Select("*").Where(goqu.Ex{"slug": slug}).Executor()
+	insert := goquDB.From("devices").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}

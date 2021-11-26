@@ -72,7 +72,7 @@ func (s *LocationsSuite) TestCreateLocations() {
 	td.Cmp(s.T(), returnedLocations, expectedResult)
 }
 
-func (s *LocationsSuite) TestFindLocationsBySlug() {
+func (s *LocationsSuite) TestFindLocationsByID() {
 	locations := []models.Location{
 		{
 			Name: "Edinburgh",
@@ -82,12 +82,12 @@ func (s *LocationsSuite) TestFindLocationsBySlug() {
 		},
 	}
 
-	_, err := CreateLocations(s.DB, locations)
+	persistedLocations, err := CreateLocations(s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations needed for test: %s", err)
 	}
 
-	returnedLocations, err := FindLocationsBySlug(s.DB, "edinburgh")
+	returnedLocations, err := FindLocationsByID(s.DB, persistedLocations[0].ID)
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -219,7 +219,7 @@ func (s *LocationsSuite) TestUpdateLocations() {
 
 	td.Cmp(s.T(), returnedLocations, expectedLocations)
 
-	returnedLocations, err = FindLocationsBySlug(s.DB, "ereford")
+	returnedLocations, err = FindLocationsByID(s.DB, returnedLocations[0].ID)
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}

@@ -82,13 +82,13 @@ func CreateLocations(db *sql.DB, locations []models.Location) (results []models.
 	return results, nil
 }
 
-func FindLocationsBySlug(db *sql.DB, slug string) (results []models.Location, err error) {
+func FindLocationsByID(db *sql.DB, id int) (results []models.Location, err error) {
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("locations").Select("*").Where(goqu.Ex{"slug": slug}).Executor()
+	insert := goquDB.From("locations").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbLocations); err != nil {
-		return results, errors.Wrap(err, "failed to select locations by slug")
+		return results, errors.Wrap(err, "failed to select locations by id")
 	}
 
 	for _, v := range dbLocations {

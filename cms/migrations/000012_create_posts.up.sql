@@ -9,6 +9,8 @@ CREATE TABLE posts (
 
   publish_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
+  is_draft BOOLEAN NOT NULL DEFAULT FALSE,
+
   CONSTRAINT fk_media_id
      FOREIGN KEY(media_id)
      REFERENCES medias(id),

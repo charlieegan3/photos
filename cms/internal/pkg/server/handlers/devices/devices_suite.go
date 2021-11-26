@@ -86,15 +86,19 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceSlug}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/devices/{deviceID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
@@ -126,7 +130,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceSlug}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
 
 	// open the image to be uploaded in the form
 
@@ -154,10 +158,9 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	}
 	w.Close()
 
-	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug),
+		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		&b,
 	)
 	require.NoError(s.T(), err)
@@ -220,7 +223,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 	router := mux.NewRouter()
 	router.HandleFunc(
-		"/admin/devices/{deviceSlug}",
+		"/admin/devices/{deviceID}",
 		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", "")),
 	).Methods("POST")
 
@@ -230,7 +233,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	// make the request to the handler
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug),
+		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		strings.NewReader(form.Encode()),
 	)
 	require.NoError(s.T(), err)

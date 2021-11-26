@@ -17,6 +17,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/locations"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/medias"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
@@ -34,30 +35,32 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *
 	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, renderer)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(renderer)).Methods("GET")
-	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildGetHandler(db, renderer)).Methods("GET")
-	// handles update and delete
-	adminRouter.HandleFunc("/devices/{deviceSlug}", devices.BuildFormHandler(db, bucket, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildGetHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildFormHandler(db, bucket, renderer)).Methods("POST")
 
 	adminRouter.HandleFunc("/tags", tags.BuildIndexHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/tags", tags.BuildCreateHandler(db, renderer)).Methods("POST")
 	adminRouter.HandleFunc("/tags/new", tags.BuildNewHandler(renderer)).Methods("GET")
 	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildGetHandler(db, renderer)).Methods("GET")
-	// handles update and delete
 	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildFormHandler(db, renderer)).Methods("POST")
 
 	adminRouter.HandleFunc("/locations", locations.BuildIndexHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/locations", locations.BuildCreateHandler(db, renderer)).Methods("POST")
 	adminRouter.HandleFunc("/locations/new", locations.BuildNewHandler(renderer)).Methods("GET")
-	adminRouter.HandleFunc("/locations/{locationSlug}", locations.BuildGetHandler(db, renderer)).Methods("GET")
-	// handles update and delete
-	adminRouter.HandleFunc("/locations/{locationSlug}", locations.BuildFormHandler(db, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildGetHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildFormHandler(db, renderer)).Methods("POST")
 
 	adminRouter.HandleFunc("/medias", medias.BuildIndexHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/medias", medias.BuildCreateHandler(db, bucket, renderer)).Methods("POST")
 	adminRouter.HandleFunc("/medias/new", medias.BuildNewHandler(db, renderer)).Methods("GET")
 	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildGetHandler(db, renderer)).Methods("GET")
-	// handles update and delete
 	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildFormHandler(db, bucket, renderer)).Methods("POST")
+
+	adminRouter.HandleFunc("/posts", posts.BuildIndexHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/posts", posts.BuildCreateHandler(db, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/posts/new", posts.BuildNewHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, renderer)).Methods("GET")
+	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, renderer)).Methods("POST")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 

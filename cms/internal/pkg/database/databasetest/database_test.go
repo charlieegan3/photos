@@ -18,6 +18,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/locations"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/medias"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
 )
 
@@ -156,6 +157,12 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 
 func (s *DatabaseSuite) TestEndpointsTagsSuite() {
 	suite.Run(s.T(), &tags.EndpointsTagsSuite{
+		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestEndpointsPostsSuite() {
+	suite.Run(s.T(), &posts.EndpointsPostsSuite{
 		DB: s.DB,
 	})
 }

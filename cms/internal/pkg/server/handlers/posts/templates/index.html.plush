@@ -1,0 +1,12 @@
+<h1>Posts</h1>
+<p><a href="./posts/new">New Post</a></p>
+<ul>
+<%= for (post) in posts { %>
+    <li>
+      <a href="/admin/posts/<%= post.ID %>">
+        (<%= post.ID %>)
+        <%= post.Description %>
+      </a>
+    </li>
+<% } %>
+</ul>

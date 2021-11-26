@@ -61,6 +61,9 @@
     <div>
       <%= f.SelectTag("DeviceID", {options: devices}) %>
     </div>
+    <div>
+      <a href="/admin/devices/<%= media.DeviceID %>">View Device</a>
+    </div>
   </div>
 
   <br/>

@@ -11,6 +11,8 @@ type Post struct {
 
 	PublishDate time.Time
 
+	IsDraft bool
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 

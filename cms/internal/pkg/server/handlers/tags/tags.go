@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
@@ -114,7 +115,9 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		tag := models.Tag{Name: r.Form.Get("Name")}
+		tag := models.Tag{
+			Name: strings.TrimSpace(r.Form.Get("Name")),
+		}
 		if r.Form.Get("Hidden") != "" {
 			tag.Hidden = true
 		}

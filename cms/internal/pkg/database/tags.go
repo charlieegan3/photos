@@ -74,17 +74,49 @@ func CreateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 	return results, nil
 }
 
-func FindTagsByName(db *sql.DB, name string) (results []models.Tag, err error) {
+func FindTagsByName(db *sql.DB, names []string) (results []models.Tag, err error) {
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("tags").Select("*").Where(goqu.Ex{"name": name}).Executor()
+	insert := goquDB.From("tags").Select("*").Where(goqu.I("name").In(names)).Executor()
 	if err := insert.ScanStructs(&dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags by slug")
 	}
 
 	for _, v := range dbTags {
 		results = append(results, newTag(v))
+	}
+
+	return results, nil
+}
+
+func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, err error) {
+	resultMap := make(map[string]models.Tag)
+
+	foundTags, err := FindTagsByName(db, names)
+	for _, t := range foundTags {
+		resultMap[t.Name] = t
+	}
+
+	var tagsToCreate []models.Tag
+	for _, n := range names {
+		if _, ok := resultMap[n]; !ok {
+			tagsToCreate = append(tagsToCreate, models.Tag{Name: n})
+		}
+	}
+
+	createdTags, err := CreateTags(db, tagsToCreate)
+	for _, t := range createdTags {
+		resultMap[t.Name] = t
+	}
+
+	for _, t := range names {
+		tag, ok := resultMap[t]
+		if !ok {
+			return results, fmt.Errorf("expected tag %q to have been found or created", t)
+		}
+
+		results = append(results, tag)
 	}
 
 	return results, nil

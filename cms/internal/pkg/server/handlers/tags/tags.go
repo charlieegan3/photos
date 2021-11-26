@@ -56,7 +56,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		tags, err := database.FindTagsByName(db, name)
+		tags, err := database.FindTagsByName(db, []string{name})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -154,7 +154,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		existingTags, err := database.FindTagsByName(db, name)
+		existingTags, err := database.FindTagsByName(db, []string{name})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

@@ -64,6 +64,48 @@ func (s *TagsSuite) TestCreateTags() {
 	td.Cmp(s.T(), returnedTags, expectedTags)
 }
 
+func (s *TagsSuite) TestFindOrCreateTagsByName() {
+	existingTags := []models.Tag{
+		{
+			Name:   "foobar",
+			Hidden: true,
+		},
+	}
+
+	returnedTags, err := CreateTags(s.DB, existingTags)
+	require.NoError(s.T(), err)
+
+	tags := []string{"example", "foobar"}
+
+	foundTags, err := FindOrCreateTagsByName(s.DB, tags)
+	require.NoError(s.T(), err)
+
+	expectedTags := td.Slice(
+		[]models.Tag{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Tag{
+					Name:   "example",
+					Hidden: false,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				models.Tag{
+					ID:     returnedTags[0].ID,
+					Name:   "foobar",
+					Hidden: false,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), foundTags, expectedTags)
+}
+
 func (s *TagsSuite) TestFindTagsByName() {
 	tags := []models.Tag{
 		{
@@ -79,7 +121,7 @@ func (s *TagsSuite) TestFindTagsByName() {
 		s.T().Fatalf("failed to create tags needed for test: %s", err)
 	}
 
-	returnedTags, err := FindTagsByName(s.DB, "nofilter")
+	returnedTags, err := FindTagsByName(s.DB, []string{"nofilter"})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -210,7 +252,7 @@ func (s *TagsSuite) TestUpdateTags() {
 
 	td.Cmp(s.T(), returnedTags, expectedTags)
 
-	returnedTags, err = FindTagsByName(s.DB, "ipod")
+	returnedTags, err = FindTagsByName(s.DB, []string{"ipod"})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}

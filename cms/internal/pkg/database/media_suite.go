@@ -170,6 +170,79 @@ func (s *MediasSuite) TestFindMediasByID() {
 	td.Cmp(s.T(), returnedMedias, expectedResult)
 }
 
+func (s *MediasSuite) TestFindMediasByInstagramPost() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			InstagramCode: "abc",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "Apple",
+			Model: "iPhone",
+
+			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
+
+			FNumber:      4.0,
+			ShutterSpeed: 0.05,
+			ISOSpeed:     400,
+
+			Latitude:  53.1,
+			Longitude: 54.2,
+			Altitude:  200.0,
+		},
+	}
+
+	_, err = CreateMedias(s.DB, medias)
+	if err != nil {
+		s.T().Fatalf("failed to create medias needed for test: %s", err)
+	}
+
+	returnedMedias, err := FindMediasByInstagramCode(s.DB, "abc")
+	if err != nil {
+		s.T().Fatalf("failed get medias: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Media{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				medias[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedMedias, expectedResult)
+}
+
 func (s *MediasSuite) TestAllMedias() {
 	devices := []models.Device{
 		{

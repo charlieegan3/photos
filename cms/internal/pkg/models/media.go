@@ -25,4 +25,6 @@ type Media struct {
 	UpdatedAt time.Time
 
 	DeviceID int
+
+	InstagramCode string
 }

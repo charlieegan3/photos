@@ -32,22 +32,25 @@ type dbMedia struct {
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 
+	InstagramCode string `db:"instagram_code"`
+
 	DeviceID int `db:"device_id"`
 }
 
 func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
-		"kind":          d.Kind,
-		"make":          d.Make,
-		"model":         d.Model,
-		"taken_at":      d.TakenAt.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
-		"f_number":      d.FNumber,
-		"shutter_speed": d.ShutterSpeed,
-		"iso_speed":     d.ISOSpeed,
-		"latitude":      d.Latitude,
-		"longitude":     d.Longitude,
-		"altitude":      d.Altitude,
-		"device_id":     d.DeviceID,
+		"kind":           d.Kind,
+		"make":           d.Make,
+		"model":          d.Model,
+		"taken_at":       d.TakenAt.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
+		"f_number":       d.FNumber,
+		"shutter_speed":  d.ShutterSpeed,
+		"iso_speed":      d.ISOSpeed,
+		"latitude":       d.Latitude,
+		"longitude":      d.Longitude,
+		"altitude":       d.Altitude,
+		"device_id":      d.DeviceID,
+		"instagram_code": d.InstagramCode,
 	}
 
 	if includeID {
@@ -78,6 +81,8 @@ func newMedia(media dbMedia) models.Media {
 		UpdatedAt: media.UpdatedAt,
 
 		DeviceID: media.DeviceID,
+
+		InstagramCode: media.InstagramCode,
 	}
 }
 
@@ -100,6 +105,8 @@ func newDBMedia(media models.Media) dbMedia {
 		UpdatedAt: media.UpdatedAt,
 
 		DeviceID: media.DeviceID,
+
+		InstagramCode: media.InstagramCode,
 	}
 }
 
@@ -130,6 +137,22 @@ func FindMediasByID(db *sql.DB, id int) (results []models.Media, err error) {
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("medias").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	if err := insert.ScanStructs(&dbMedias); err != nil {
+		return results, errors.Wrap(err, "failed to select medias by id")
+	}
+
+	for _, v := range dbMedias {
+		results = append(results, newMedia(v))
+	}
+
+	return results, nil
+}
+
+func FindMediasByInstagramCode(db *sql.DB, code string) (results []models.Media, err error) {
+	var dbMedias []dbMedia
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("medias").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
 	if err := insert.ScanStructs(&dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias by id")
 	}

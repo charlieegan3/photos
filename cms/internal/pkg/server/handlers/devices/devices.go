@@ -134,7 +134,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		device := models.Device{Name: r.Form.Get("Name")}
+		device := models.Device{Name: strings.TrimSpace(r.Form.Get("Name"))}
 
 		f, header, err := r.FormFile("Icon")
 		if err != nil {
@@ -289,7 +289,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 
 		device := models.Device{
 			ID:       existingDevices[0].ID,
-			Name:     r.PostForm.Get("Name"),
+			Name:     strings.TrimSpace(r.PostForm.Get("Name")),
 			IconKind: existingDevices[0].IconKind,
 		}
 

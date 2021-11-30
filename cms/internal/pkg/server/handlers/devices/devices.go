@@ -193,7 +193,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		http.Redirect(w, r, fmt.Sprintf("/admin/devices/%s", persistedDevices[0].Slug), http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), http.StatusSeeOther)
 	}
 }
 

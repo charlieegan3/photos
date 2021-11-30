@@ -98,6 +98,42 @@ func (s *DevicesSuite) TestFindDevicesByID() {
 	td.Cmp(s.T(), returnedDevices, expectedResult)
 }
 
+func (s *DevicesSuite) TestFindDevicesByName() {
+	devices := []models.Device{
+		{
+			Name: "iPhone",
+		},
+		{
+			Name: "X100F",
+		},
+	}
+
+	_, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices needed for test: %s", err)
+	}
+
+	returnedDevices, err := FindDevicesByName(s.DB, "iPhone")
+	if err != nil {
+		s.T().Fatalf("failed get devices: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Device{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Device{
+					Name: "iPhone",
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedDevices, expectedResult)
+}
+
 func (s *DevicesSuite) TestAllDevices() {
 	devices := []models.Device{
 		{

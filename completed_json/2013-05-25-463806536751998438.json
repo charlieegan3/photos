@@ -12,7 +12,9 @@
     "slug": "moray",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1369510069,
   "dimensions": {
     "height": 612,

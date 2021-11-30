@@ -12,7 +12,9 @@
     "slug": "rosemount-aberdeen",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1360332926,
   "dimensions": {
     "height": 612,

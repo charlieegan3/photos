@@ -12,7 +12,9 @@
     "slug": "trafalgar-square",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1379441580,
   "dimensions": {
     "height": 612,

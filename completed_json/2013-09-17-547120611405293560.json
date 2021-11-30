@@ -12,7 +12,9 @@
     "slug": "westminster-abbey",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1379441881,
   "dimensions": {
     "height": 612,

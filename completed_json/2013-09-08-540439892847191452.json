@@ -12,7 +12,9 @@
     "slug": "gollanfield",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1378645477,
   "dimensions": {
     "height": 612,

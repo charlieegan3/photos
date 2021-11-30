@@ -12,7 +12,9 @@
     "slug": "university-of-aberdeen",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1386798083,
   "dimensions": {
     "height": 640,

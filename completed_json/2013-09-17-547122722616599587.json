@@ -12,7 +12,9 @@
     "slug": "london-united-kingdom",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1379442132,
   "dimensions": {
     "height": 612,

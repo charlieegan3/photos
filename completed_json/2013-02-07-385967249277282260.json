@@ -12,7 +12,9 @@
     "slug": "don-street",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1360230903,
   "dimensions": {
     "height": 612,

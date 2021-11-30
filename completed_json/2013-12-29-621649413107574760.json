@@ -12,7 +12,9 @@
     "slug": "nairn-beach",
     "has_public_page": true
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1388326406,
   "dimensions": {
     "height": 640,

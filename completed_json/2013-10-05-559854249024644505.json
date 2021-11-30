@@ -12,7 +12,9 @@
     "name": "Aberdeen Beach Front",
     "slug": "aberdeen-beach-front"
   },
-  "tags": [],
+  "tags": [
+    "#samsunggalaxy"
+  ],
   "timestamp": 1380959848,
   "dimensions": {
     "height": 612,

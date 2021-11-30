@@ -330,7 +330,9 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 
 	// check that we get a see other response to the right location
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
-	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/devices/x100f"})
+	if !strings.HasPrefix(rr.HeaderMap["Location"][0], "/admin/devices/") {
+		s.T().Fatalf("%v doesn't appear to be the correct path", rr.HeaderMap["Location"])
+	}
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)

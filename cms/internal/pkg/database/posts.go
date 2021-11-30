@@ -115,6 +115,56 @@ func FindPostsByID(db *sql.DB, id int) (results []models.Post, err error) {
 	return results, nil
 }
 
+func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
+	var tags []models.Tag
+	if len(rawTags) > 0 {
+		tags, err = FindOrCreateTagsByName(db, rawTags)
+		if err != nil {
+			return errors.Wrap(err, "failed to find or created tags")
+		}
+	}
+
+	existingTaggings, err := FindTaggingsByPostID(db, post.ID)
+	if err != nil {
+		return errors.Wrap(err, "failed to find existing taggings for post")
+	}
+
+	var requiredTaggings []models.Tagging
+	for _, t := range tags {
+		requiredTaggings = append(requiredTaggings, models.Tagging{
+			PostID: post.ID,
+			TagID:  t.ID,
+		})
+	}
+
+	var taggingsToDelete []models.Tagging
+	for _, tagging := range existingTaggings {
+		found := false
+		for _, t := range tags {
+			if t.ID == tagging.TagID {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			taggingsToDelete = append(taggingsToDelete, tagging)
+		}
+	}
+
+	err = DeleteTaggings(db, taggingsToDelete)
+	if err != nil {
+		return errors.Wrap(err, "failed to delete old taggings")
+	}
+
+	_, err = FindOrCreateTaggings(db, requiredTaggings)
+	if err != nil {
+		return errors.Wrap(err, "failed to find or create taggings")
+	}
+
+	return nil
+}
+
 func AllPosts(db *sql.DB) (results []models.Post, err error) {
 	var dbPosts []dbPost
 

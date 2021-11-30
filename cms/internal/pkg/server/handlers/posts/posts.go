@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
@@ -77,15 +78,30 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, posts[0].MediaID)
+		// TODO create a db function to get tags for post in SQL
+		taggings, err := database.FindTaggingsByPostID(db, posts[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		if len(posts) == 0 {
-			w.WriteHeader(http.StatusNotFound)
+		var tagIDs []int
+		for _, t := range taggings {
+			tagIDs = append(tagIDs, t.TagID)
+		}
+
+		tags, err := database.FindTagsByID(db, tagIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		medias, err := database.FindMediasByID(db, posts[0].MediaID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -118,6 +134,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("media", medias[0])
 		ctx.Set("locations", locationMap)
 		ctx.Set("medias", mediaMap)
+		ctx.Set("tags", tags)
 
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
@@ -225,6 +242,14 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		if len(persistedPosts) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("unexpected number of persistedPosts"))
+			return
+		}
+
+		tags := strings.Fields(r.Form.Get("Tags"))
+		err = database.SetPostTags(db, persistedPosts[0], tags)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -338,6 +363,14 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		if len(updatedPosts) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("unexpected number of updatedPosts"))
+			return
+		}
+
+		tags := strings.Fields(r.Form.Get("Tags"))
+		err = database.SetPostTags(db, updatedPosts[0], tags)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
 			return
 		}
 

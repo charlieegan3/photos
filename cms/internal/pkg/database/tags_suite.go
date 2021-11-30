@@ -142,6 +142,40 @@ func (s *TagsSuite) TestFindTagsByName() {
 	td.Cmp(s.T(), returnedTags, expectedResult)
 }
 
+func (s *TagsSuite) TestFindTagsByID() {
+	tags := []models.Tag{
+		{
+			Name: "nofilter",
+		},
+		{
+			Name: "shotoniphone",
+		},
+	}
+
+	persistedTags, err := CreateTags(s.DB, tags)
+	require.NoError(s.T(), err)
+
+	returnedTags, err := FindTagsByID(s.DB, []int{persistedTags[0].ID})
+	if err != nil {
+		s.T().Fatalf("failed get tags: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Tag{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Tag{
+					Name: "nofilter",
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedTags, expectedResult)
+}
+
 func (s *TagsSuite) TestAllTags() {
 	tags := []models.Tag{
 		{

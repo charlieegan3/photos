@@ -80,7 +80,27 @@ func FindTagsByName(db *sql.DB, names []string) (results []models.Tag, err error
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("tags").Select("*").Where(goqu.I("name").In(names)).Executor()
 	if err := insert.ScanStructs(&dbTags); err != nil {
-		return results, errors.Wrap(err, "failed to select tags by slug")
+		return results, errors.Wrap(err, "failed to select tags by name")
+	}
+
+	for _, v := range dbTags {
+		results = append(results, newTag(v))
+	}
+
+	return results, nil
+}
+
+func FindTagsByID(db *sql.DB, ids []int) (results []models.Tag, err error) {
+	if len(ids) == 0 {
+		return results, nil
+	}
+
+	var dbTags []dbTag
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("tags").Select("*").Where(goqu.I("id").In(ids)).Executor()
+	if err := insert.ScanStructs(&dbTags); err != nil {
+		return results, errors.Wrap(err, "failed to select tags by id")
 	}
 
 	for _, v := range dbTags {

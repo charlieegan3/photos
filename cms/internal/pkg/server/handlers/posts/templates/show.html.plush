@@ -21,6 +21,12 @@
     </div>
     <br/>
     <div>
+      <label for="Tags">Tags</label>
+      <br/>
+      <textarea name="Tags" rows="4" cols="50"><%= for (tag) in tags { %><%= tag.Name %> <% } %></textarea>
+    </div>
+    <br/>
+    <div>
       <label for="PublishDate">PublishDate</label>
       <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
     </div>

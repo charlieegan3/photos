@@ -121,6 +121,95 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 	td.Cmp(s.T(), returnedTaggings, expectedResult)
 }
 
+func (s *TaggingsSuite) TestFindOrCreateTaggings() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	tags := []models.Tag{
+		{
+			Name: "nofilter",
+		},
+	}
+	returnedTags, err := CreateTags(s.DB, tags)
+	require.NoError(s.T(), err)
+
+	taggings := []models.Tagging{
+		{
+			PostID: returnedPosts[0].ID,
+			TagID:  returnedTags[0].ID,
+		},
+	}
+
+	returnedTaggings, err := FindOrCreateTaggings(s.DB, taggings)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Tagging{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				taggings[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedTaggings, expectedResult)
+
+	// create them again
+	returnedTaggings2, err := FindOrCreateTaggings(s.DB, taggings)
+	require.NoError(s.T(), err)
+
+	td.Cmp(s.T(), returnedTaggings, returnedTaggings2)
+}
+
 func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 	devices := []models.Device{
 		{

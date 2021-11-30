@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/exp"
 	"github.com/pkg/errors"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
@@ -80,10 +81,59 @@ func CreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tag
 	return results, nil
 }
 
+func FindOrCreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tagging, err error) {
+	var ex []exp.Expression
+	for _, t := range taggings {
+		ex = append(ex, goqu.Ex{
+			"post_id": t.PostID,
+			"tag_id":  t.TagID,
+		})
+	}
+
+	var dbTaggings []dbTagging
+
+	goquDB := goqu.New("postgres", db)
+	sel := goquDB.From("taggings").Select("*").Where(goqu.Or(ex...)).Executor()
+	if err := sel.ScanStructs(&dbTaggings); err != nil {
+		return results, errors.Wrap(err, "failed to select taggings by post_id")
+	}
+
+	for _, v := range dbTaggings {
+		results = append(results, newTagging(v))
+	}
+
+	var taggingsToCreate []models.Tagging
+	for _, t := range taggings {
+		found := false
+		for _, tagging := range dbTaggings {
+			if t.TagID == tagging.TagID && t.PostID == tagging.PostID {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			taggingsToCreate = append(taggingsToCreate, t)
+		}
+	}
+	if len(taggingsToCreate) > 0 {
+		newTaggings, err := CreateTaggings(db, taggingsToCreate)
+		if err != nil {
+			return results, errors.Wrap(err, "failed to create missing taggings")
+		}
+
+		for _, v := range newTaggings {
+			results = append(results, v)
+		}
+	}
+
+	return results, nil
+}
+
 func FindTaggingsByPostID(db *sql.DB, id int) (results []models.Tagging, err error) {
 	var dbTaggings []dbTagging
 
-	goquDB := goqu.New("post", db)
+	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("taggings").Select("*").Where(goqu.Ex{"post_id": id}).Executor()
 	if err := insert.ScanStructs(&dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by post_id")
@@ -100,6 +150,11 @@ func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
 	var ids []int
 	for _, d := range taggings {
 		ids = append(ids, d.ID)
+	}
+
+	// nothing to delete
+	if len(ids) == 0 {
+		return nil
 	}
 
 	goquDB := goqu.New("postgres", db)

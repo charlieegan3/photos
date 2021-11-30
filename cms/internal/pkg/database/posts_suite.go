@@ -427,3 +427,123 @@ func (s *PostsSuite) TestUpdatePosts() {
 
 	td.Cmp(s.T(), updatedPosts, expectedPosts)
 }
+
+func (s *PostsSuite) TestSetPostTags() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	persistedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	tags := []models.Tag{
+		{Name: "tag_a"},
+		{Name: "tag_b"},
+		{Name: "tag_c"},
+	}
+	persistedTags, err := CreateTags(s.DB, tags)
+	require.NoError(s.T(), err)
+
+	taggings := []models.Tagging{
+		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
+		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
+	}
+	_, err = CreateTaggings(s.DB, taggings)
+	require.NoError(s.T(), err)
+
+	// update to a and c
+	err = SetPostTags(s.DB, persistedPosts[0], []string{"tag_a", "tag_c"})
+	require.NoError(s.T(), err)
+
+	postTaggings, err := FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
+	require.NoError(s.T(), err)
+
+	var tagIDs []int
+	for _, v := range postTaggings {
+		tagIDs = append(tagIDs, v.TagID)
+	}
+
+	postTags, err := FindTagsByID(s.DB, tagIDs)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Tag{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				tags[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				tags[2],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), postTags, expectedResult)
+
+	// update to none
+	err = SetPostTags(s.DB, persistedPosts[0], []string{})
+	require.NoError(s.T(), err)
+
+	postTaggings, err = FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
+	require.NoError(s.T(), err)
+
+	tagIDs = []int{}
+	for _, v := range postTaggings {
+		tagIDs = append(tagIDs, v.TagID)
+	}
+
+	postTags, err = FindTagsByID(s.DB, tagIDs)
+	require.NoError(s.T(), err)
+
+	expectedResult = td.Slice([]models.Tag{}, td.ArrayEntries{})
+
+	td.Cmp(s.T(), postTags, expectedResult)
+}

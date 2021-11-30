@@ -74,15 +74,101 @@ func (s *PostsSuite) TestCreatePosts() {
 
 	posts := []models.Post{
 		{
-			Description: "Here is a photo I took",
-			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
-			MediaID:     returnedMedias[0].ID,
-			LocationID:  returnedLocations[0].ID,
+			Description:   "Here is a photo I took",
+			InstagramCode: "abc",
+			PublishDate:   time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:       returnedMedias[0].ID,
+			LocationID:    returnedLocations[0].ID,
 		},
 	}
 
 	returnedPosts, err := CreatePosts(s.DB, posts)
 	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedPosts, expectedResult)
+}
+
+func (s *PostsSuite) TestFindPostsByInstagramCode() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	if err != nil {
+		s.T().Fatalf("failed to create locations: %s", err)
+	}
+
+	posts := []models.Post{
+		{
+			Description:   "Here is a photo I took",
+			InstagramCode: "foo",
+			PublishDate:   time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:       returnedMedias[0].ID,
+			LocationID:    returnedLocations[0].ID,
+		},
+		{
+			Description:   "Here is another photo I took, same but diff",
+			InstagramCode: "bar",
+			PublishDate:   time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:       returnedMedias[0].ID,
+			LocationID:    returnedLocations[0].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	if err != nil {
+		s.T().Fatalf("failed to create posts: %s", err)
+	}
+
+	posts[0].ID = returnedPosts[0].ID
+
+	returnedPosts, err = FindPostsByInstagramCode(s.DB, posts[0].InstagramCode)
+	if err != nil {
+		s.T().Fatalf("failed get posts: %s", err)
+	}
 
 	expectedResult := td.Slice(
 		[]models.Post{},

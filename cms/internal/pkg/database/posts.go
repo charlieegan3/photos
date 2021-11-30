@@ -16,6 +16,8 @@ type dbPost struct {
 
 	Description string `db:"description"`
 
+	InstagramCode string `db:"instagram_code"`
+
 	PublishDate time.Time `db:"publish_date"`
 
 	IsDraft bool `db:"is_draft"`
@@ -29,11 +31,12 @@ type dbPost struct {
 
 func (d *dbPost) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
-		"description":  d.Description,
-		"is_draft":     d.IsDraft,
-		"publish_date": d.PublishDate.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
-		"media_id":     d.MediaID,
-		"location_id":  d.LocationID,
+		"description":    d.Description,
+		"instagram_code": d.InstagramCode,
+		"is_draft":       d.IsDraft,
+		"publish_date":   d.PublishDate.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
+		"media_id":       d.MediaID,
+		"location_id":    d.LocationID,
 	}
 
 	if includeID {
@@ -47,8 +50,9 @@ func newPost(post dbPost) models.Post {
 	return models.Post{
 		ID: post.ID,
 
-		Description: post.Description,
-		PublishDate: post.PublishDate.UTC(),
+		Description:   post.Description,
+		InstagramCode: post.InstagramCode,
+		PublishDate:   post.PublishDate.UTC(),
 
 		IsDraft: post.IsDraft,
 
@@ -64,8 +68,9 @@ func newDBPost(post models.Post) dbPost {
 	return dbPost{
 		ID: post.ID,
 
-		Description: post.Description,
-		PublishDate: post.PublishDate.UTC(),
+		Description:   post.Description,
+		InstagramCode: post.InstagramCode,
+		PublishDate:   post.PublishDate.UTC(),
 
 		IsDraft: post.IsDraft,
 
@@ -106,6 +111,22 @@ func FindPostsByID(db *sql.DB, id int) (results []models.Post, err error) {
 	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
+	}
+
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
+}
+
+func FindPostsByInstagramCode(db *sql.DB, code string) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
+	if err := insert.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts by instagram_code")
 	}
 
 	for _, v := range dbPosts {

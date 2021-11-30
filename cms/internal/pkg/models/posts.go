@@ -9,6 +9,8 @@ type Post struct {
 
 	Description string
 
+	InstagramCode string
+
 	PublishDate time.Time
 
 	IsDraft bool

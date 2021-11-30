@@ -108,6 +108,42 @@ func (s *LocationsSuite) TestFindLocationsByID() {
 	td.Cmp(s.T(), returnedLocations, expectedResult)
 }
 
+func (s *LocationsSuite) TestFindLocationsByName() {
+	locations := []models.Location{
+		{
+			Name: "Edinburgh",
+		},
+		{
+			Name: "Norwich",
+		},
+	}
+
+	_, err := CreateLocations(s.DB, locations)
+	if err != nil {
+		s.T().Fatalf("failed to create locations needed for test: %s", err)
+	}
+
+	returnedLocations, err := FindLocationsByName(s.DB, "Edinburgh")
+	if err != nil {
+		s.T().Fatalf("failed get locations: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Location{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Location{
+					Name: "Edinburgh",
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedLocations, expectedResult)
+}
+
 func (s *LocationsSuite) TestAllLocations() {
 	locations := []models.Location{
 		{

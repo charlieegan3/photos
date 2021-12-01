@@ -15,11 +15,11 @@ import (
 	"gocloud.dev/blob"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/locations"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/medias"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/posts"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/locations"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
 )
 
 func TestDatabaseSuite(t *testing.T) {

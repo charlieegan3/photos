@@ -17,6 +17,7 @@ func TestRenderPage(t *testing.T) {
   <head>
     <meta charset="utf-8">
     <title>Photos</title>
+    <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <p>bar</p>

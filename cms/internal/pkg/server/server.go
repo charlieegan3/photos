@@ -2,6 +2,7 @@ package server
 
 import (
 	"database/sql"
+	"embed"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,18 +15,36 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/devices"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/locations"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/medias"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/posts"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/tags"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/locations"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
+
+//go:embed static/css/*
+var cssContent embed.FS
 
 func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddleware404())
+
+	router.HandleFunc("/", public.BuildAdminIndexHandler(renderer)).Methods("GET")
+	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
+
+	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
+		data, err := cssContent.ReadFile("static/css/tachyons.min.css")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		w.Header().Set("Content-Type", "text/css")
+		fmt.Fprint(w, string(data))
+	}).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))

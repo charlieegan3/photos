@@ -120,7 +120,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	}
 
 	// store the an icon in the bucket, check it's deleted
-	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
+	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
 	require.NoError(s.T(), err)
 	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
@@ -212,7 +212,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	}
 
 	// store the an icon in the bucket, check it's deleted
-	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
+	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
 	require.NoError(s.T(), err)
 	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
@@ -287,7 +287,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
 
 	// open the image to be uploaded in the form
-	imageIconPath := "../../../pkg/server/handlers/devices/testdata/x100f.jpg"
+	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
 	require.NoError(s.T(), err)
 

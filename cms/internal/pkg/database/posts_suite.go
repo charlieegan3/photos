@@ -316,7 +316,7 @@ func (s *PostsSuite) TestAllPosts() {
 		},
 		{
 			Description: "Here is another photo I took, same but diff",
-			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			PublishDate: time.Date(2021, time.November, 24, 18, 56, 0, 0, time.UTC),
 			MediaID:     returnedMedias[0].ID,
 			LocationID:  returnedLocations[0].ID,
 		},

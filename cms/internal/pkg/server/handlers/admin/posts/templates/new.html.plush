@@ -3,13 +3,13 @@
     <div>
       <label for="Description">Description</label>
       <br/>
-      <textarea name="Description" rows="4" cols="50"><%= post.Description %></textarea>
+      <textarea class="w-100" name="Description" rows="4"><%= post.Description %></textarea>
     </div>
     <br/>
     <div>
       <label for="Tags">Tags</label>
       <br/>
-      <textarea name="Tags" rows="4" cols="50"></textarea>
+      <textarea class="w-100" name="Tags" rows="4"></textarea>
     </div>
     <br/>
     <div>

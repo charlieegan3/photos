@@ -17,10 +17,11 @@ func TestRenderPage(t *testing.T) {
   <head>
     <meta charset="utf-8">
     <title>Photos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <p>bar</p>
+    <div class="pa2"><p>bar</p></div>
   </body>
 </html>
 `

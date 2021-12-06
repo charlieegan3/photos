@@ -269,7 +269,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	}
 
 	// check that the database content is also correct
-	returnedMedias, err := database.AllMedias(s.DB)
+	returnedMedias, err := database.AllMedias(s.DB, false)
 	if err != nil {
 		s.T().Fatalf("failed to list medias: %s", err)
 	}
@@ -363,7 +363,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedMedias, err := database.AllMedias(s.DB)
+	returnedMedias, err := database.AllMedias(s.DB, false)
 	if err != nil {
 		s.T().Fatalf("failed to list medias: %s", err)
 	}
@@ -464,7 +464,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	}
 
 	// check that the database content is also correct
-	returnedMedias, err := database.AllMedias(s.DB)
+	returnedMedias, err := database.AllMedias(s.DB, false)
 	require.NoError(s.T(), err)
 
 	expectedMedias := td.Slice(

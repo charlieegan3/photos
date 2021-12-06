@@ -4,8 +4,11 @@
 <%= for (post) in posts { %>
     <li>
       <a href="/admin/posts/<%= post.ID %>">
-        (<%= post.ID %>)
-        <%= post.Description %>
+        <%= if (post.Description == "") { %>
+          (missing description)
+        <% } else { %>
+          <%= truncate(post.Description, 30) %>
+        <% } %>
       </a>
     </li>
 <% } %>

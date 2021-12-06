@@ -42,11 +42,18 @@ func BuildPageRenderFunc(bucketWebURL string, geoapifyAPIKey string) PageRendere
 			}
 			mapURL.RawQuery = values.Encode()
 
-			return template.HTML(fmt.Sprintf(`<img loading="lazy" width="300" src="%v"/>`, mapURL.String())), nil
+			return template.HTML(fmt.Sprintf(`<img loading="lazy" class="w-100" src="%v"/>`, mapURL.String())), nil
 		})
 
 		ctx.Set("to_string", func(arg interface{}) string {
 			return fmt.Sprintf("%v", arg)
+		})
+
+		ctx.Set("truncate", func(s string, length int) string {
+			if len(s) < length {
+				return s
+			}
+			return s[:length] + "..."
 		})
 
 		body, err := plush.Render(t, ctx)

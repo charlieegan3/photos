@@ -295,7 +295,7 @@ func (s *MediasSuite) TestAllMedias() {
 		s.T().Fatalf("failed to create medias needed for test: %s", err)
 	}
 
-	returnedMedias, err := AllMedias(s.DB)
+	returnedMedias, err := AllMedias(s.DB, true)
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}
@@ -376,7 +376,7 @@ func (s *MediasSuite) TestDeleteMedias() {
 	err = DeleteMedias(s.DB, []models.Media{mediaToDelete})
 	require.NoError(s.T(), err, "unexpected error deleting medias")
 
-	allMedias, err := AllMedias(s.DB)
+	allMedias, err := AllMedias(s.DB, false)
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}

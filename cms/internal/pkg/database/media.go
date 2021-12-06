@@ -164,12 +164,17 @@ func FindMediasByInstagramCode(db *sql.DB, code string) (results []models.Media,
 	return results, nil
 }
 
-func AllMedias(db *sql.DB) (results []models.Media, err error) {
+func AllMedias(db *sql.DB, descending bool) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("medias").Select("*").Executor()
-	if err := insert.ScanStructs(&dbMedias); err != nil {
+	insert := goquDB.From("medias").Select("*")
+
+	if descending {
+		insert = insert.Order(goqu.I("taken_at").Desc(), goqu.I("created_at").Desc())
+	}
+
+	if err := insert.Executor().ScanStructs(&dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias")
 	}
 

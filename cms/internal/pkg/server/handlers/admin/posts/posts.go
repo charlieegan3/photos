@@ -112,7 +112,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		allMedias, err := database.AllMedias(db)
+		allMedias, err := database.AllMedias(db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -156,7 +156,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		medias, err := database.AllMedias(db)
+		medias, err := database.AllMedias(db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

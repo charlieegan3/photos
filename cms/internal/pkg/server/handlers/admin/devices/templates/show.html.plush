@@ -1,17 +1,16 @@
 <p><%= device.Name %></p>
 <p>ID: <%= device.ID %></p>
-<p><img width="200" src="<%= media_url("device_icons/", device.Slug, ".", device.IconKind) %>"/></p>
-<%= form_for(device, {action:"/admin/devices/"+device.ID, method: "PUT"}) { %>
-  <div class="row">
-    <div>
-      <%= f.InputTag("Name") %>
-    </div>
-    <div>
-      <%= f.FileTag("Icon") %>
-    </div>
+
+<img class="mb1 w-100 db" src="<%= media_url("device_icons/", device.Slug, ".", device.IconKind) %>"/>
+
+<%= form_for(device, {class: "mb3", action:"/admin/devices/"+device.ID, method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Name") %>
+  </div>
+  <div class="mb2">
+    <%= f.FileTag("Icon") %>
   </div>
 
-  <br/>
   <%= f.SubmitTag("Update Device") %>
 <% } %>
 

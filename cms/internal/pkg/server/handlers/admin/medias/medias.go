@@ -40,7 +40,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		medias, err := database.AllMedias(db)
+		medias, err := database.AllMedias(db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

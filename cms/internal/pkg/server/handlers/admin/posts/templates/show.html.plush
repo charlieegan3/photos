@@ -2,7 +2,7 @@
 <p><%= post.Description %></p>
 
 <%= if (media.Kind == "jpg") { %>
-  <p><img width="200" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/></p>
+  <img class="mb1 db w-100" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
 <% } else if (media.Kind == "mp4") { %>
   <video controls width="250">
     <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
@@ -12,45 +12,38 @@
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
 
-<%= form_for(post, {action:"/admin/posts/"+post.ID, method: "PUT"}) { %>
-  <div class="row">
-    <div>
-      <label for="Description">Description</label>
-      <br/>
-      <textarea class="w-100" name="Description" rows="4"><%= post.Description %></textarea>
-    </div>
-    <br/>
-    <div>
-      <label for="Tags">Tags</label>
-      <br/>
-      <textarea class="w-100" name="Tags" rows="4"><%= for (tag) in tags { %><%= tag.Name %> <% } %></textarea>
-    </div>
-    <br/>
-    <div>
-      <label for="PublishDate">PublishDate</label>
-      <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
-    </div>
-    <br/>
-    <div>
-      <%= f.SelectTag("LocationID", {options: locations}) %>
-    </div>
-    <div>
-      <a href="/admin/locations/<%= post.LocationID %>">View Location</a>
-    </div>
-    <br/>
-    <div>
-      <%= f.SelectTag("MediaID", {options: medias}) %>
-    </div>
-    <div>
-      <a href="/admin/medias/<%= post.MediaID %>">View Media</a>
-    </div>
-    <br/>
-    <div>
-      <%= f.CheckboxTag("IsDraft") %>
-    </div>
+<%= form_for(post, {class: "mb3", action:"/admin/posts/"+post.ID, method: "PUT"}) { %>
+  <div class="mb1">
+    <label for="Description">Description</label>
+    <textarea class="w-100" name="Description" rows="4"><%= post.Description %></textarea>
+  </div>
+  <div class="mb1">
+    <label for="Tags">Tags</label>
+    <textarea class="w-100" name="Tags" rows="4"><%= for (tag) in tags { %><%= tag.Name %> <% } %></textarea>
+  </div>
+  <div class="mb2">
+    <label for="PublishDate">PublishDate</label>
+    <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
   </div>
 
-  <br/>
+  <div class="mb1">
+    <%= f.SelectTag("LocationID", {label: "Location", options: locations}) %>
+  </div>
+  <div class="mb2">
+    <a href="/admin/locations/<%= post.LocationID %>">View Location</a>
+  </div>
+
+  <div class="mb1">
+    <%= f.SelectTag("MediaID", {label: "Media", options: medias}) %>
+  </div>
+  <div class="mb2">
+    <a href="/admin/medias/<%= post.MediaID %>">View Media</a>
+  </div>
+
+  <div class="mb1">
+    <%= f.CheckboxTag("IsDraft", {label: "Is Draft"}) %>
+  </div>
+
   <%= f.SubmitTag("Update Post") %>
 <% } %>
 

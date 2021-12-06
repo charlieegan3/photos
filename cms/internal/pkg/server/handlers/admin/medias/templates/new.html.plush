@@ -1,11 +1,9 @@
 <%= form_for(media, {action:"/admin/medias", method: "POST"}) { %>
-  <div class="row">
-    <div>
-      <%= f.FileTag("File") %>
-    </div>
-    <div>
-      <%= f.SelectTag("DeviceID", {options: devices}) %>
-    </div>
+  <div class="mb1">
+    <%= f.FileTag("File") %>
+  </div>
+  <div class="mb1">
+    <%= f.SelectTag("DeviceID", {label: "Device", options: devices}) %>
   </div>
 
   <%= f.SubmitTag("Create Media") %>

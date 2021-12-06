@@ -2,7 +2,7 @@
 <p>Kind: <%= media.Kind %></p>
 
 <%= if (media.Kind == "jpg") { %>
-  <p><img width="200" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/></p>
+  <img width="w-100" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
 <% } else if (media.Kind == "mp4") { %>
   <video controls width="250">
     <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
@@ -12,62 +12,53 @@
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
 
-<%= form_for(media, {action:"/admin/medias/"+to_string(media.ID), method: "PUT"}) { %>
-  <div class="row">
-    <div>
-      <%= f.InputTag("Make") %>
-    </div>
-    <div>
-      <%= f.InputTag("Model") %>
-    </div>
-
-    <br/>
-    <div>
-      <label for="TakenAt">TakenAt</label>
-      <input type="datetime-local" name="TakenAt" value="<%= media.TakenAt.Format("2006-01-02T15:04") %>">
-    </div>
-
-    <br/>
-    <div>
-      <%= f.InputTag("FNumber") %>
-    </div>
-    <div>
-      <%= f.InputTag("ShutterSpeed") %>
-    </div>
-    <div>
-      <%= f.InputTag("ISOSpeed") %>
-    </div>
-
-    <br/>
-    <div>
-      <%= f.InputTag("Latitude") %>
-    </div>
-    <div>
-      <%= f.InputTag("Longitude") %>
-    </div>
-    <div>
-      <%= f.InputTag("Altitude") %>
-    </div>
-    <div>
-      <a href="/admin/locations/new?lat=<%= media.Latitude %>&long=<%= media.Longitude %>">Create Location</a>
-    </div>
-
-    <br/>
-    <div>
-      <%= f.FileTag("File") %>
-    </div>
-
-    <br/>
-    <div>
-      <%= f.SelectTag("DeviceID", {options: devices}) %>
-    </div>
-    <div>
-      <a href="/admin/devices/<%= media.DeviceID %>">View Device</a>
-    </div>
+<%= form_for(media, {class: "mb3", action:"/admin/medias/"+to_string(media.ID), method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Make") %>
+  </div>
+  <div class="mb3">
+    <%= f.InputTag("Model") %>
   </div>
 
-  <br/>
-  <br/>
+  <div class="mb3">
+    <label for="TakenAt">TakenAt</label>
+    <input type="datetime-local" name="TakenAt" value="<%= media.TakenAt.Format("2006-01-02T15:04") %>">
+  </div>
+
+  <div class="mb1">
+    <%= f.InputTag("FNumber") %>
+  </div>
+  <div class="mb1">
+    <%= f.InputTag("ShutterSpeed") %>
+  </div>
+  <div class="mb3">
+    <%= f.InputTag("ISOSpeed") %>
+  </div>
+
+  <div class="mb1">
+    <%= f.InputTag("Latitude") %>
+  </div>
+  <div class="mb1">
+    <%= f.InputTag("Longitude") %>
+  </div>
+  <div class="mb1">
+    <%= f.InputTag("Altitude") %>
+  </div>
+  <div class="mb3">
+    <a href="/admin/locations/new?lat=<%= media.Latitude %>&long=<%= media.Longitude %>">Create Location</a>
+  </div>
+
+  <div class="mb3">
+    <%= f.FileTag("File") %>
+  </div>
+
+  <div class="mb1">
+    <%= f.SelectTag("DeviceID", {options: devices}) %>
+  </div>
+  <div class="mb3">
+    <a href="/admin/devices/<%= media.DeviceID %>">View Device</a>
+  </div>
+
   <%= f.SubmitTag("Update Media") %>
 <% } %>
 

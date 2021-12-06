@@ -1,11 +1,9 @@
 <%= form_for(device, {action:"/admin/devices", method: "POST"}) { %>
-  <div class="row">
-    <div>
-      <%= f.InputTag("Name") %>
-    </div>
-    <div>
-      <%= f.FileTag("Icon") %>
-    </div>
+  <div class="mb1">
+    <%= f.InputTag("Name") %>
+  </div>
+  <div class="mb2">
+    <%= f.FileTag("Icon") %>
   </div>
 
   <%= f.SubmitTag("Create Device") %>

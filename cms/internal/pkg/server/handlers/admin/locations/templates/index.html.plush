@@ -11,9 +11,9 @@
 <tbody>
 <%= for (location) in locations { %>
   <tr>
-    <td><a href="/admin/locations/<%= location.ID %>"><%= location.Name %></td>
-    <td><%= location.Latitude %></td>
-    <td><%= location.Longitude %></td>
+    <td><a href="/admin/locations/<%= location.ID %>"><%= truncate(location.Name, 20) %></td>
+    <td><%= truncate(to_string(location.Latitude),10) %></td>
+    <td><%= truncate(to_string(location.Longitude),10) %></td>
   </tr>
 <% } %>
 </tbody>

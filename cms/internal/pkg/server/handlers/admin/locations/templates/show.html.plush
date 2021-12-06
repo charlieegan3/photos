@@ -1,25 +1,22 @@
 <p><%= location.Name %></p>
 <p>ID: <%= location.ID %></p>
 
-<div><%= map(location.Latitude, location.Longitude) %></div>
+<div class="mb1"><%= map(location.Latitude, location.Longitude) %></div>
 
-<%= form_for(location, {action:"/admin/locations/"+location.Slug, method: "PUT"}) { %>
-  <div class="row">
-    <div>
-      <%= f.InputTag("Name") %>
-    </div>
-    <div>
-      <%= f.InputTag("Latitude") %>
-    </div>
-    <div>
-      <%= f.InputTag("Longitude") %>
-    </div>
+<%= form_for(location, {class: "mb3", action:"/admin/locations/"+location.ID, method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Name") %>
+  </div>
+  <div class="mb1">
+    <%= f.InputTag("Latitude") %>
+  </div>
+  <div class="mb1">
+    <%= f.InputTag("Longitude") %>
   </div>
 
-  <br/>
   <%= f.SubmitTag("Update location") %>
 <% } %>
 
-<%= form_for(location, {action:"/admin/locations/"+location.Slug, method: "DELETE"}) { %>
+<%= form_for(location, {action:"/admin/locations/"+location.ID, method: "DELETE"}) { %>
   <%= f.SubmitTag("Delete location") %>
 <% } %>

@@ -169,7 +169,7 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("ID: %d", persistedMedias[0].ID))
+	assert.Contains(s.T(), string(body), fmt.Sprintf("%d", persistedMedias[0].ID))
 }
 
 func (s *EndpointsMediasSuite) TestUpdateMedia() {

@@ -12,13 +12,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-//go:embed base.html.plush
+//go:embed base.html
 var baseTemplate string
+
+//go:embed base.admin.html
+var baseTemplateAdmin string
 
 type PageRenderer func(*plush.Context, string, io.Writer) error
 
-func BuildPageRenderFunc(bucketWebURL string, geoapifyAPIKey string) PageRenderer {
+func BuildPageRenderFunc(bucketWebURL string, geoapifyAPIKey string, intermediateTemplates ...string) PageRenderer {
+	// list of all templates to run including intermediateTemplates
+	templates := append(intermediateTemplates, "base")
+
 	return func(ctx *plush.Context, t string, w io.Writer) error {
+
 		// make the media_url helper function available to supplied nested
 		// templates
 		ctx.Set("media_url", func(s ...string) string {
@@ -61,11 +68,33 @@ func BuildPageRenderFunc(bucketWebURL string, geoapifyAPIKey string) PageRendere
 			return errors.Wrap(err, "failed to evaluate provided template")
 		}
 
-		tmpl, err := template.New("base").Parse(baseTemplate)
-		if err != nil {
-			return errors.Wrap(err, "failed to parse base template")
+		for _, chainTemplate := range templates {
+
+			templateContent := ""
+			switch chainTemplate {
+			case "base":
+				templateContent = baseTemplate
+			case "admin":
+				templateContent = baseTemplateAdmin
+			default:
+				return fmt.Errorf("unknown template: %s", chainTemplate)
+			}
+
+			tmpl, err := template.New("base").Parse(templateContent)
+			if err != nil {
+				return errors.Wrap(err, "failed to parse base template")
+			}
+
+			var bodyBuilder strings.Builder
+			err = tmpl.Execute(&bodyBuilder, struct{ Body template.HTML }{Body: template.HTML(body)})
+			if err != nil {
+				return errors.Wrap(err, "failed to parse base template")
+			}
+
+			body = bodyBuilder.String()
 		}
 
-		return tmpl.Execute(w, struct{ Body template.HTML }{Body: template.HTML(body)})
+		_, err = io.Copy(w, strings.NewReader(body))
+		return err
 	}
 }

@@ -21,7 +21,7 @@ func TestRenderPage(t *testing.T) {
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="ma1"><p>bar</p></div>
+    <div class="center pa1 mw8"><p>bar</p></div>
   </body>
 </html>
 `

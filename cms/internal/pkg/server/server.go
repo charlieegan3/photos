@@ -27,12 +27,18 @@ import (
 //go:embed static/css/*
 var cssContent embed.FS
 
-func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) {
+func Serve(
+	addr, port, adminUsername, adminPassword string,
+	db *sql.DB,
+	bucket *blob.Bucket,
+	renderer templating.PageRenderer,
+	rendererAdmin templating.PageRenderer,
+) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddleware404())
 
-	router.HandleFunc("/", public.BuildAdminIndexHandler(renderer)).Methods("GET")
+	router.HandleFunc("/", public.BuildIndexHandler(renderer)).Methods("GET")
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
@@ -49,37 +55,37 @@ func Serve(addr, port, adminUsername, adminPassword string, db *sql.DB, bucket *
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 
-	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(renderer)).Methods("GET")
+	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/", handlers.BuildRedirectHandler("/admin")).Methods("GET")
-	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, renderer)).Methods("POST")
-	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(renderer)).Methods("GET")
-	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildGetHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildFormHandler(db, bucket, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildFormHandler(db, bucket, rendererAdmin)).Methods("POST")
 
-	adminRouter.HandleFunc("/tags", tags.BuildIndexHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/tags", tags.BuildCreateHandler(db, renderer)).Methods("POST")
-	adminRouter.HandleFunc("/tags/new", tags.BuildNewHandler(renderer)).Methods("GET")
-	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildGetHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildFormHandler(db, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/tags", tags.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/tags", tags.BuildCreateHandler(db, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/tags/new", tags.BuildNewHandler(rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/tags/{tagName}", tags.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
-	adminRouter.HandleFunc("/locations", locations.BuildIndexHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/locations", locations.BuildCreateHandler(db, renderer)).Methods("POST")
-	adminRouter.HandleFunc("/locations/new", locations.BuildNewHandler(renderer)).Methods("GET")
-	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildGetHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildFormHandler(db, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/locations", locations.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/locations", locations.BuildCreateHandler(db, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/locations/new", locations.BuildNewHandler(rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
-	adminRouter.HandleFunc("/medias", medias.BuildIndexHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/medias", medias.BuildCreateHandler(db, bucket, renderer)).Methods("POST")
-	adminRouter.HandleFunc("/medias/new", medias.BuildNewHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildGetHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildFormHandler(db, bucket, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/medias", medias.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/medias", medias.BuildCreateHandler(db, bucket, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/medias/new", medias.BuildNewHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildFormHandler(db, bucket, rendererAdmin)).Methods("POST")
 
-	adminRouter.HandleFunc("/posts", posts.BuildIndexHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/posts", posts.BuildCreateHandler(db, renderer)).Methods("POST")
-	adminRouter.HandleFunc("/posts/new", posts.BuildNewHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, renderer)).Methods("GET")
-	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, renderer)).Methods("POST")
+	adminRouter.HandleFunc("/posts", posts.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/posts", posts.BuildCreateHandler(db, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/posts/new", posts.BuildNewHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 

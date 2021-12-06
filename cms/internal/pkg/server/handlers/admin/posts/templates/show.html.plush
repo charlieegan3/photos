@@ -1,4 +1,4 @@
-<p>ID: <%= post.ID %></p>
+<h1>ID: <%= post.ID %></h1>
 <p><%= post.Description %></p>
 
 <%= if (media.Kind == "jpg") { %>

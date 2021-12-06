@@ -11,7 +11,7 @@ import (
 //go:embed templates/index.html.plush
 var publicIndexTemplate string
 
-func BuildAdminIndexHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildIndexHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 

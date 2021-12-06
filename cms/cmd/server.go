@@ -61,6 +61,7 @@ var serverCmd = &cobra.Command{
 		defer bucket.Close()
 
 		renderer := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"), viper.GetString("geoapify.key"))
+		rendererAdmin := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"), viper.GetString("geoapify.key"), "admin")
 
 		log.Println("Listening on", port)
 
@@ -72,6 +73,7 @@ var serverCmd = &cobra.Command{
 			db,
 			bucket,
 			renderer,
+			rendererAdmin,
 		)
 	},
 }

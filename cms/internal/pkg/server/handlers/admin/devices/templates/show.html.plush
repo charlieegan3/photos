@@ -1,4 +1,4 @@
-<p><%= device.Name %></p>
+<h1><%= device.Name %></h1>
 <p>ID: <%= device.ID %></p>
 
 <img class="mb1 w-100 db" src="<%= media_url("device_icons/", device.Slug, ".", device.IconKind) %>"/>

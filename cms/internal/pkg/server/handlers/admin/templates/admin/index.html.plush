@@ -1,8 +1,8 @@
-<h1>Admin</h1>
+<p>Manage...</p>
 <ul>
-  <li><a href="./admin/posts">Posts</a></li>
-  <li><a href="./admin/medias">Medias</a></li>
-  <li><a href="./admin/locations">Locations</a></li>
-  <li><a href="./admin/tags">Tags</a></li>
-  <li><a href="./admin/devices">Devices</a></li>
+  <li><a href="/admin/posts">Posts</a></li>
+  <li><a href="/admin/medias">Medias</a></li>
+  <li><a href="/admin/locations">Locations</a></li>
+  <li><a href="/admin/tags">Tags</a></li>
+  <li><a href="/admin/devices">Devices</a></li>
 </ul>

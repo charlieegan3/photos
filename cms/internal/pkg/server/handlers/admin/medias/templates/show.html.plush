@@ -1,4 +1,4 @@
-<p>ID: <%= media.ID %></p>
+<h1><%= media.ID %></h1>
 <p>Kind: <%= media.Kind %></p>
 
 <%= if (media.Kind == "jpg") { %>

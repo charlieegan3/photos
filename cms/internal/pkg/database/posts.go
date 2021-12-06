@@ -186,12 +186,17 @@ func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
 	return nil
 }
 
-func AllPosts(db *sql.DB) (results []models.Post, err error) {
+func AllPosts(db *sql.DB, descending bool) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*").Executor()
-	if err := insert.ScanStructs(&dbPosts); err != nil {
+	insert := goquDB.From("posts").Select("*")
+
+	if descending {
+		insert = insert.Order(goqu.I("publish_date").Desc())
+	}
+
+	if err := insert.Executor().ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 

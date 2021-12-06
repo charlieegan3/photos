@@ -325,7 +325,7 @@ func (s *PostsSuite) TestAllPosts() {
 	_, err = CreatePosts(s.DB, posts)
 	require.NoError(s.T(), err)
 
-	returnedPosts, err := AllPosts(s.DB)
+	returnedPosts, err := AllPosts(s.DB, true)
 	require.NoError(s.T(), err)
 
 	expectedResult := td.Slice(
@@ -410,7 +410,7 @@ func (s *PostsSuite) TestDeletePosts() {
 	err = DeletePosts(s.DB, []models.Post{postToDelete})
 	require.NoError(s.T(), err)
 
-	allPosts, err := AllPosts(s.DB)
+	allPosts, err := AllPosts(s.DB, false)
 	require.NoError(s.T(), err)
 
 	expectedResult := td.Slice(

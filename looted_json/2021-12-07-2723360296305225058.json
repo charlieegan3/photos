@@ -1,0 +1,74 @@
+{
+    "__typename": "GraphImage",
+    "accessibility_caption": "Photo by Charlie in Canterbury Cathedral. May be a black-and-white image.",
+    "comments_disabled": false,
+    "dimensions": {
+        "height": 1080,
+        "width": 1080
+    },
+    "display_url": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s1080x1080/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=e2b6cf96bf1aa1ad783f706c563dde5a\u0026oe=61B68620\u0026_nc_sid=7bff83",
+    "edge_liked_by": {
+        "count": 0
+    },
+    "edge_media_preview_like": {
+        "count": 0
+    },
+    "edge_media_to_caption": {
+        "edges": [
+            {
+                "node": {
+                    "text": "One of these years is not like the other #x100f #graffiti #wall #blackandwhite #texture #marble"
+                }
+            }
+        ]
+    },
+    "edge_media_to_comment": {
+        "count": 0
+    },
+    "fact_check_information": null,
+    "fact_check_overall_rating": null,
+    "gating_info": null,
+    "id": "2723360296305225058",
+    "is_video": false,
+    "location": {
+        "has_public_page": true,
+        "id": "377781395",
+        "name": "Canterbury Cathedral",
+        "slug": "canterbury-cathedral"
+    },
+    "media_preview": "ACoqjG70zSkU4UpoAixUJFTZxUbGgCHqKZg1PxUeaALxbikDZFRO5WmBienegBZMk5FQ7uakYYAqPqcUALuplOIpNtAFpxke1Ax27UCgdaAGlcnNQshBzVnsaiagCEcmn001FQB//9k=",
+    "owner": {
+        "id": "302526752",
+        "username": "charlieegan3"
+    },
+    "shortcode": "CXLUcKwrO1i",
+    "taken_at_timestamp": 1638869867,
+    "thumbnail_resources": [
+        {
+            "config_height": 150,
+            "config_width": 150,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s150x150/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=8b5ed70975786943e10cd92c4c72c077\u0026oe=61B6585F\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 240,
+            "config_width": 240,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s240x240/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=e9187bcce5fbf82020176583884a00aa\u0026oe=61B57B99\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 320,
+            "config_width": 320,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s320x320/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=4cd61b3eb520413395934151ba2d7e71\u0026oe=61B70467\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 480,
+            "config_width": 480,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/e35/s480x480/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=623687e40da9ccfa47348cfd4ac2b007\u0026oe=61B52722\u0026_nc_sid=7bff83"
+        },
+        {
+            "config_height": 640,
+            "config_width": 640,
+            "src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=1d4ad5ab57e51a303d6c5cd8a7f39b61\u0026oe=61B53A9C\u0026_nc_sid=7bff83"
+        }
+    ],
+    "thumbnail_src": "https://scontent-lhr8-2.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/264739252_668684834510464_4474006172645782780_n.jpg?_nc_ht=scontent-lhr8-2.cdninstagram.com\u0026_nc_cat=104\u0026_nc_ohc=gOqBin8IRx0AX-4-JJE\u0026edm=ABfd0MgBAAAA\u0026ccb=7-4\u0026oh=1d4ad5ab57e51a303d6c5cd8a7f39b61\u0026oe=61B53A9C\u0026_nc_sid=7bff83"
+}

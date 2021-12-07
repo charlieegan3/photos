@@ -20,7 +20,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public"
+	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 )
 
 func TestDatabaseSuite(t *testing.T) {
@@ -180,7 +180,7 @@ func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 }
 
 func (s *DatabaseSuite) TestPublicPostsSuite() {
-	suite.Run(s.T(), &public.PostsSuite{
+	suite.Run(s.T(), &publicposts.PostsSuite{
 		DB: s.DB,
 	})
 }

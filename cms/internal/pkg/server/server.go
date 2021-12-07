@@ -20,7 +20,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public"
+	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
@@ -38,7 +38,7 @@ func Serve(
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddleware404())
 
-	router.HandleFunc("/", public.BuildIndexHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {

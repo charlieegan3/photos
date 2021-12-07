@@ -307,7 +307,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	}
 
 	// check that the database content is also correct
-	returnedPosts, err := database.AllPosts(s.DB, false)
+	returnedPosts, err := database.AllPosts(s.DB, true, database.SelectOptions{})
 	require.NoError(s.T(), err)
 
 	expectedPosts := td.Slice(
@@ -433,7 +433,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	}
 
 	// check that the database content is also correct
-	returnedPosts, err := database.AllPosts(s.DB, false)
+	returnedPosts, err := database.AllPosts(s.DB, true, database.SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed to list posts: %s", err)
 	}
@@ -546,7 +546,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedPosts, err := database.AllPosts(s.DB, false)
+	returnedPosts, err := database.AllPosts(s.DB, true, database.SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed to list posts: %s", err)
 	}

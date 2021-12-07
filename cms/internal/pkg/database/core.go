@@ -9,6 +9,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+type SelectOptions struct {
+	SortField      string
+	SortDescending bool
+	Offset         uint
+	Limit          uint
+}
+
 // Init takes the details from config and initializes a database connection,
 // bootstrap can be set to overide the database name in the params to postgres
 // when first connecting to the database server

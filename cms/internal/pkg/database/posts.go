@@ -186,14 +186,26 @@ func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
 	return nil
 }
 
-func AllPosts(db *sql.DB, descending bool) (results []models.Post, err error) {
+func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("posts").Select("*")
 
-	if descending {
-		insert = insert.Order(goqu.I("publish_date").Desc())
+	if !includeDrafts {
+		insert = insert.Where(goqu.Ex{"is_draft": false})
+	}
+
+	if options.SortField != "" && options.SortDescending {
+		insert = insert.Order(goqu.I(options.SortField).Desc())
+	}
+
+	if options.Offset != 0 {
+		insert = insert.Offset(options.Offset)
+	}
+
+	if options.Limit != 0 {
+		insert = insert.Limit(options.Limit)
 	}
 
 	if err := insert.Executor().ScanStructs(&dbPosts); err != nil {
@@ -208,6 +220,34 @@ func AllPosts(db *sql.DB, descending bool) (results []models.Post, err error) {
 	}
 
 	return results, nil
+}
+
+func CountPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (int64, error) {
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("posts").Select("*")
+
+	if !includeDrafts {
+		insert = insert.Where(goqu.Ex{"is_draft": false})
+	}
+
+	if options.SortField != "" && options.SortDescending {
+		insert = insert.Order(goqu.I(options.SortField).Desc())
+	}
+
+	if options.Offset != 0 {
+		insert = insert.Offset(options.Offset)
+	}
+
+	if options.Limit != 0 {
+		insert = insert.Limit(options.Limit)
+	}
+
+	count, err := insert.Count()
+	if err != nil {
+		return count, errors.Wrap(err, "failed to count posts")
+	}
+
+	return count, nil
 }
 
 func DeletePosts(db *sql.DB, posts []models.Post) (err error) {

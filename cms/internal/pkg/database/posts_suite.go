@@ -267,6 +267,71 @@ func (s *PostsSuite) TestFindPostsByID() {
 	td.Cmp(s.T(), returnedPosts, expectedResult)
 }
 
+func (s *PostsSuite) TestCountPosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:      2.0,
+			ShutterSpeed: 0.004,
+			ISOSpeed:     100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took, same but diff",
+			PublishDate: time.Date(2021, time.November, 24, 18, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+			IsDraft:     true,
+		},
+	}
+
+	_, err = CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	count, err := CountPosts(s.DB, false, SelectOptions{})
+	require.NoError(s.T(), err)
+
+	td.Cmp(s.T(), count, int64(1))
+}
+
 func (s *PostsSuite) TestAllPosts() {
 	devices := []models.Device{
 		{
@@ -325,7 +390,7 @@ func (s *PostsSuite) TestAllPosts() {
 	_, err = CreatePosts(s.DB, posts)
 	require.NoError(s.T(), err)
 
-	returnedPosts, err := AllPosts(s.DB, true)
+	returnedPosts, err := AllPosts(s.DB, true, SelectOptions{})
 	require.NoError(s.T(), err)
 
 	expectedResult := td.Slice(
@@ -410,7 +475,7 @@ func (s *PostsSuite) TestDeletePosts() {
 	err = DeletePosts(s.DB, []models.Post{postToDelete})
 	require.NoError(s.T(), err)
 
-	allPosts, err := AllPosts(s.DB, false)
+	allPosts, err := AllPosts(s.DB, true, SelectOptions{})
 	require.NoError(s.T(), err)
 
 	expectedResult := td.Slice(

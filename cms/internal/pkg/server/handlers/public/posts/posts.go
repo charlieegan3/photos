@@ -26,8 +26,9 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		if pageParam != "" {
 			parsedPage, err := strconv.Atoi(pageParam)
 			if err == nil {
-				if parsedPage < 1 {
-					parsedPage = 1
+				if parsedPage < 2 { // first page also strip param
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
 				}
 				page = uint(parsedPage)
 			}

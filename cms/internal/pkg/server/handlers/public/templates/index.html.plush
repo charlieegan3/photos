@@ -1,1 +1,7 @@
 <p class="f1">Photos</p>
+
+<div class="flex flex-wrap">
+<%= for (post) in posts { %>
+  <img class="db w-third" loading="lazy" alt="<%= post.Description %>" src="<%= media_url("media/", to_string(post.MediaID), ".jpg") %>"/>
+<% } %>
+</div>

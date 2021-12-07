@@ -38,7 +38,7 @@ func Serve(
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddleware404())
 
-	router.HandleFunc("/", public.BuildIndexHandler(renderer)).Methods("GET")
+	router.HandleFunc("/", public.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {

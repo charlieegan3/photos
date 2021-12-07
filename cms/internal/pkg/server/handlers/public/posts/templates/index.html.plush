@@ -1,8 +1,18 @@
-<div class="mt3 flex flex-wrap">
+<section class="cf w-100 pa2-ns">
 <%= for (post) in posts { %>
-  <img class="db w-third" loading="lazy" alt="<%= post.Description %>" src="<%= media_url("media/", to_string(post.MediaID), ".jpg") %>"/>
+  <article class="fl w-third pa2-ns">
+    <div class="aspect-ratio aspect-ratio--1x1">
+      <a class="w-third" href="/posts/<%= post.ID %>">
+        <img
+          loading="lazy"
+          alt="<%= post.Description %>"
+          src="<%= media_url("media/", to_string(post.MediaID), ".jpg") %>"
+          class="db bg-center cover aspect-ratio--object" />
+      </a>
+    </div>
+  </article>
 <% } %>
-</div>
+</section>
 
 <div class="mv3 flex justify-between">
 <%= if (page > 1) { %>

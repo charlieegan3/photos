@@ -1,0 +1,20 @@
+<div class="center mt3 mw6 mw7-l">
+  <%= if (media.Kind == "jpg") { %>
+    <img class="mb1 db w-100" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
+  <% } else if (media.Kind == "mp4") { %>
+    <video controls width="250">
+      <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
+      Sorry, your browser doesn't support embedded videos.
+    </video>
+  <% } else { %>
+    Cannot display media of kind: <%= media.Kind %>
+  <% } %>
+
+  <p><%= post.Description %></p>
+
+  <%= for (tag) in tags { %>
+    #<%= tag.Name %>
+  <% } %>
+
+  <p><%= post.PublishDate.Format("January 2, 2006") %></p>
+</div>

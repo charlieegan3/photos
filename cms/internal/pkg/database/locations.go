@@ -118,7 +118,8 @@ func AllLocations(db *sql.DB) (results []models.Location, err error) {
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("locations").Select("*").Executor()
+	insert := goquDB.From("locations").Select("*").Order(goqu.I("name").Asc()).Executor()
+	
 	if err := insert.ScanStructs(&dbLocations); err != nil {
 		return results, errors.Wrap(err, "failed to select locations")
 	}

@@ -162,6 +162,30 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
+		newPost := models.Post{}
+
+		mediaID := r.URL.Query().Get("mediaID")
+		if mediaID != "" {
+			i, err := strconv.ParseInt(mediaID, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to parse supplied mediaID value"))
+				return
+			}
+			newPost.MediaID = int(i)
+		}
+
+		timestamp := r.URL.Query().Get("timestamp")
+		if timestamp != "" {
+			i, err := strconv.ParseInt(timestamp, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to parse supplied timestamp value"))
+				return
+			}
+			newPost.PublishDate = time.Unix(i, 0)
+		}
+
 		locations, err := database.AllLocations(db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -187,7 +211,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		ctx := plush.NewContext()
-		ctx.Set("post", models.Post{})
+		ctx.Set("post", newPost)
 		ctx.Set("locations", formLocations)
 		ctx.Set("medias", mediaMap)
 

@@ -2,7 +2,7 @@
 <p>Kind: <%= media.Kind %></p>
 
 <%= if (media.Kind == "jpg") { %>
-  <img width="w-100" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
+  <img class="w-100 mw6" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
 <% } else if (media.Kind == "mp4") { %>
   <video controls width="250">
     <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
@@ -11,6 +11,9 @@
 <% } else { %>
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
+<div class="mv3">
+  <a href="/admin/posts/new?mediaID=<%= media.ID %>&timestamp=<%= media.TakenAt.Unix() %>">Create Post</a>
+</div>
 
 <%= form_for(media, {class: "mb3", action:"/admin/medias/"+to_string(media.ID), method: "PUT"}) { %>
   <div class="mb1">

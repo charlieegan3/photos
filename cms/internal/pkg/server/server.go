@@ -41,6 +41,8 @@ func Serve(
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods("GET")
+	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods("GET")
 
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
 		data, err := cssContent.ReadFile("static/css/tachyons.min.css")

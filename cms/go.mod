@@ -5,11 +5,12 @@ go 1.17
 
 require (
 	github.com/doug-martin/goqu/v9 v9.16.0
+	github.com/dsoprea/go-exif/v3 v3.0.0-20210625224831-a6301f85c82b
 	github.com/gobuffalo/plush v3.8.3+incompatible
+	github.com/gobuffalo/tags v2.1.7+incompatible
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/schema v1.2.0
-	github.com/gosimple/slug v1.11.2
 	github.com/lib/pq v1.10.2
 	github.com/maxatome/go-testdeep v1.10.1
 	github.com/pkg/errors v0.9.1
@@ -26,8 +27,6 @@ require (
 	cloud.google.com/go/storage v1.16.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/dsoprea/go-exif v0.0.0-20210625224831-a6301f85c82b // indirect
-	github.com/dsoprea/go-exif/v3 v3.0.0-20210625224831-a6301f85c82b // indirect
 	github.com/dsoprea/go-logging v0.0.0-20200710184922-b02d349568dd // indirect
 	github.com/dsoprea/go-utility/v2 v2.0.0-20200717064901-2fccff4aa15e // indirect
 	github.com/fatih/structs v1.1.0 // indirect
@@ -36,8 +35,8 @@ require (
 	github.com/gobuffalo/flect v0.2.3 // indirect
 	github.com/gobuffalo/github_flavored_markdown v1.1.0 // indirect
 	github.com/gobuffalo/helpers v0.6.2 // indirect
-	github.com/gobuffalo/tags v2.1.7+incompatible // indirect
 	github.com/gobuffalo/tags/v3 v3.1.0 // indirect
+	github.com/gobuffalo/validate v2.0.4+incompatible // indirect
 	github.com/gobuffalo/validate/v3 v3.3.0 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/geo v0.0.0-20210211234256-740aa86cb551 // indirect
@@ -47,7 +46,6 @@ require (
 	github.com/google/wire v0.5.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
-	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

@@ -25,6 +25,19 @@ var showTemplate string
 //go:embed templates/new.html.plush
 var newTemplate string
 
+type SelectableModel struct {
+	Name string
+	ID   int
+}
+
+func (sm SelectableModel) SelectLabel() string {
+	return sm.Name
+}
+
+func (sm SelectableModel) SelectValue() interface{} {
+	return sm.ID
+}
+
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
@@ -105,7 +118,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		allLocations, err := database.AllLocations(db)
+		locations, err := database.AllLocations(db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -119,20 +132,20 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locationMap := make(map[string]interface{})
-		for _, l := range allLocations {
-			locationMap[l.Name] = l.ID
-		}
-
 		mediaMap := make(map[string]interface{})
 		for _, m := range allMedias {
 			mediaMap[fmt.Sprintf("%d-%s", m.ID, m.TakenAt)] = m.ID
 		}
 
+		var formLocations []SelectableModel
+		for _, l := range locations {
+			formLocations = append(formLocations, SelectableModel{Name: l.Name, ID: l.ID})
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("post", posts[0])
 		ctx.Set("media", medias[0])
-		ctx.Set("locations", locationMap)
+		ctx.Set("locations", formLocations)
 		ctx.Set("medias", mediaMap)
 		ctx.Set("tags", tags)
 
@@ -163,19 +176,19 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locationMap := make(map[string]interface{})
-		for _, l := range locations {
-			locationMap[l.Name] = l.ID
-		}
-
 		mediaMap := make(map[string]interface{})
 		for _, m := range medias {
 			mediaMap[fmt.Sprintf("%d-%s", m.ID, m.TakenAt)] = m.ID
 		}
 
+		var formLocations []SelectableModel
+		for _, l := range locations {
+			formLocations = append(formLocations, SelectableModel{Name: l.Name, ID: l.ID})
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("post", models.Post{})
-		ctx.Set("locations", locationMap)
+		ctx.Set("locations", formLocations)
 		ctx.Set("medias", mediaMap)
 
 		err = renderer(ctx, newTemplate, w)
@@ -184,7 +197,6 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			w.Write([]byte(err.Error()))
 			return
 		}
-		w.WriteHeader(http.StatusOK)
 	}
 }
 

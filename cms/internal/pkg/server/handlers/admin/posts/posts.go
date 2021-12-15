@@ -9,11 +9,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gobuffalo/plush"
+	"github.com/gorilla/mux"
+
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
-	"github.com/gobuffalo/plush"
-	"github.com/gorilla/mux"
 )
 
 //go:embed templates/index.html.plush
@@ -281,7 +282,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		tags := strings.Fields(r.Form.Get("Tags"))
+		tags := strings.Fields(strings.ToLower(r.Form.Get("Tags")))
 		err = database.SetPostTags(db, persistedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -402,7 +403,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		tags := strings.Fields(r.Form.Get("Tags"))
+		tags := strings.Fields(strings.ToLower(r.Form.Get("Tags")))
 		err = database.SetPostTags(db, updatedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

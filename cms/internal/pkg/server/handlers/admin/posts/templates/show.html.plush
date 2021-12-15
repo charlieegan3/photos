@@ -1,5 +1,8 @@
 <h1>ID: <%= post.ID %></h1>
-<p><%= post.Description %></p>
+
+<div class="mv2">
+  <a href="/posts/<%= post.ID %>">View Public Post</a>
+</div>
 
 <%= if (media.Kind == "jpg") { %>
   <img class="w-100 mw6" src="/medias/<%= post.MediaID %>/file.jpg"/>

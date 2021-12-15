@@ -16,5 +16,7 @@
     #<%= tag.Name %>
   <% } %>
 
-  <p><%= post.PublishDate.Format("January 2, 2006") %></p>
+  <p class="mb1"><%= post.PublishDate.Format("January 2, 2006") %></p>
+
+  <div class="mb1"><img class="mw5 center db br4 outline bw2" src="/locations/<%= post.LocationID %>/map.jpg"/></div>
 </div>

@@ -58,7 +58,6 @@ var serverCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("failed to open bucket: %s", err)
 		}
-		defer bucket.Close()
 
 		renderer := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"), viper.GetString("geoapify.key"))
 		rendererAdmin := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"), viper.GetString("geoapify.key"), "admin")
@@ -72,9 +71,16 @@ var serverCmd = &cobra.Command{
 			viper.GetString("server.adminPassword"),
 			db,
 			bucket,
+			viper.GetString("geoapify.url"),
+			viper.GetString("geoapify.key"),
 			renderer,
 			rendererAdmin,
 		)
+
+		err = bucket.Close()
+		if err != nil {
+			log.Fatalf("failed to close bucket: %s", err)
+		}
 	},
 }
 

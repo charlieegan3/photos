@@ -20,6 +20,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 )
 
@@ -182,6 +183,18 @@ func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 func (s *DatabaseSuite) TestPublicPostsSuite() {
 	suite.Run(s.T(), &publicposts.PostsSuite{
 		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicLocationsSuite() {
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
+	suite.Run(s.T(), &publiclocations.LocationsSuite{
+		DB:     s.DB,
+		Bucket: bucket,
 	})
 }
 

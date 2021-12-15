@@ -1,7 +1,7 @@
 <h1><%= location.Name %></h1>
 <p>ID: <%= location.ID %></p>
 
-<div class="mb1"><%= map(location.Latitude, location.Longitude) %></div>
+<div class="mb1"><img src="/locations/<%= location.ID %>/map.jpg"/></div>
 
 <%= form_for(location, {class: "mb3", action:"/admin/locations/"+location.ID, method: "PUT"}) { %>
   <div class="mb1">

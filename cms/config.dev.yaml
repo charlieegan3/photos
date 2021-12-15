@@ -4,6 +4,7 @@ server:
   adminUsername: "username"
   adminPassword: "password"
 geoapify:
+  url: https://maps.geoapify.com/v1/staticmap
   key: caa37cc9e66847b1a08e477f8068d178
 database:
   createDatabase: true

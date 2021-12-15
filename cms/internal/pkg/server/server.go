@@ -20,6 +20,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
@@ -31,6 +32,7 @@ func Serve(
 	addr, port, adminUsername, adminPassword string,
 	db *sql.DB,
 	bucket *blob.Bucket,
+	mapServerURL, mapServerAPIKey string,
 	renderer templating.PageRenderer,
 	rendererAdmin templating.PageRenderer,
 ) {
@@ -43,6 +45,7 @@ func Serve(
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods("GET")
+	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods("GET")
 
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
 		data, err := cssContent.ReadFile("static/css/tachyons.min.css")

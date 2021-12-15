@@ -2,10 +2,10 @@
 <p><%= post.Description %></p>
 
 <%= if (media.Kind == "jpg") { %>
-  <img class="mb1 db w-100" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
+  <img class="w-100 mw6" src="/medias/<%= post.MediaID %>/file.jpg"/>
 <% } else if (media.Kind == "mp4") { %>
   <video controls width="250">
-    <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
+    <source src="/medias/<%= post.MediaID %>/file.mp4" type="video/mp4">
     Sorry, your browser doesn't support embedded videos.
   </video>
 <% } else { %>

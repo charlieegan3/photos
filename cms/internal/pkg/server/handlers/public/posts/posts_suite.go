@@ -8,9 +8,6 @@ import (
 	"net/http/httptest"
 	"time"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,6 +15,10 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 type PostsSuite struct {
@@ -101,7 +102,7 @@ func (s *PostsSuite) TestListPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/", nil)
 	require.NoError(s.T(), err)
@@ -177,7 +178,7 @@ func (s *PostsSuite) TestGetPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
 	require.NoError(s.T(), err)

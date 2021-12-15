@@ -24,13 +24,6 @@ func BuildPageRenderFunc(bucketWebURL string, intermediateTemplates ...string) P
 	templates := append(intermediateTemplates, "base")
 
 	return func(ctx *plush.Context, t string, w io.Writer) error {
-
-		// make the media_url helper function available to supplied nested
-		// templates
-		ctx.Set("media_url", func(s ...string) string {
-			return fmt.Sprintf("%s%s", bucketWebURL, strings.Join(s, ""))
-		})
-
 		ctx.Set("to_string", func(arg interface{}) string {
 			return fmt.Sprintf("%v", arg)
 		})
@@ -48,7 +41,6 @@ func BuildPageRenderFunc(bucketWebURL string, intermediateTemplates ...string) P
 		}
 
 		for _, chainTemplate := range templates {
-
 			templateContent := ""
 			switch chainTemplate {
 			case "base":

@@ -15,9 +15,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/assert"
@@ -26,6 +23,10 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 type EndpointsDevicesSuite struct {
@@ -56,7 +57,7 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/devices", nil)
 	require.NoError(s.T(), err)
@@ -86,7 +87,7 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/devices/{deviceID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -130,7 +131,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
 	// open the image to be uploaded in the form
 
@@ -224,7 +225,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	router := mux.NewRouter()
 	router.HandleFunc(
 		"/admin/devices/{deviceID}",
-		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", "")),
+		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://")),
 	).Methods("POST")
 
 	form := url.Values{}
@@ -265,7 +266,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/new", BuildNewHandler(templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/devices/new", BuildNewHandler(templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/devices/new", nil)
 	require.NoError(s.T(), err)
@@ -284,7 +285,7 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
+	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"

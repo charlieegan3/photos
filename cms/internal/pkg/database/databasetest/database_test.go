@@ -20,7 +20,9 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	publicdevices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/devices"
 	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
+	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 )
 
@@ -193,6 +195,30 @@ func (s *DatabaseSuite) TestPublicLocationsSuite() {
 	defer bucket.Close()
 
 	suite.Run(s.T(), &publiclocations.LocationsSuite{
+		DB:     s.DB,
+		Bucket: bucket,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicDevicesSuite() {
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
+	suite.Run(s.T(), &publicdevices.DevicesSuite{
+		DB:     s.DB,
+		Bucket: bucket,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicMediasSuite() {
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
+	suite.Run(s.T(), &publicmedias.MediasSuite{
 		DB:     s.DB,
 		Bucket: bucket,
 	})

@@ -98,7 +98,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/medias", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/medias", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/medias", nil)
 	require.NoError(s.T(), err)
@@ -152,7 +152,7 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/medias/{mediaID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/medias/{mediaID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -219,7 +219,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/medias/{mediaID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
+	router.HandleFunc("/admin/medias/{mediaID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
 	// open the image to be uploaded in the form
 
@@ -341,7 +341,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	router := mux.NewRouter()
 	router.HandleFunc(
 		"/admin/medias/{mediaID}",
-		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", "")),
+		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://")),
 	).Methods("POST")
 
 	form := url.Values{}
@@ -378,7 +378,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 
 func (s *EndpointsMediasSuite) TestNewMedia() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/medias/new", BuildNewHandler(s.DB, templating.BuildPageRenderFunc("http://", ""))).Methods("GET")
+	router.HandleFunc("/admin/medias/new", BuildNewHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/medias/new", nil)
 	require.NoError(s.T(), err)
@@ -409,7 +409,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/medias", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://", ""))).Methods("POST")
+	router.HandleFunc("/admin/medias", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc("http://"))).Methods("POST")
 
 	// open the image to be uploaded in the form
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"

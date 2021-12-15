@@ -1,7 +1,7 @@
 <h1><%= device.Name %></h1>
 <p>ID: <%= device.ID %></p>
 
-<img class="mb1 w-100 db" src="<%= media_url("device_icons/", device.Slug, ".", device.IconKind) %>"/>
+<img class="mb1 w-100 db" src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>"/>
 
 <%= form_for(device, {class: "mb3", action:"/admin/devices/"+device.ID, method: "PUT"}) { %>
   <div class="mb1">

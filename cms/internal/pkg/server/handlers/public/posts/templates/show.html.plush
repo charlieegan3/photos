@@ -1,9 +1,9 @@
 <div class="center mt3 mw6 mw7-l">
   <%= if (media.Kind == "jpg") { %>
-    <img class="mb1 db w-100" src="<%= media_url("media/", to_string(media.ID), ".jpg") %>"/>
+    <img class="mb1 db w-100" src="/medias/<%= media.ID %>/image.jpg"/>
   <% } else if (media.Kind == "mp4") { %>
     <video controls width="250">
-      <source src="<%= media_url("media/", to_string(media.ID), ".mp4") %>" type="video/mp4">
+      <source src="/medias/<%= media.ID %>/movie.mp4" type="video/mp4">
       Sorry, your browser doesn't support embedded videos.
     </video>
   <% } else { %>
@@ -18,5 +18,5 @@
 
   <p class="mb1"><%= post.PublishDate.Format("January 2, 2006") %></p>
 
-  <div class="mb1"><img class="mw5 center db br4 outline bw2" src="/locations/<%= post.LocationID %>/map.jpg"/></div>
+  <div class="mb1"><img loading="lazy" class="mw5 center db br4 outline bw2" src="/locations/<%= post.LocationID %>/map.jpg"/></div>
 </div>

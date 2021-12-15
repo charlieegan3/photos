@@ -20,7 +20,9 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	publicdevices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/devices"
 	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
+	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
@@ -38,7 +40,7 @@ func Serve(
 ) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
-	router.Use(InitMiddleware404())
+	router.NotFoundHandler = http.HandlerFunc(notFound)
 
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
@@ -46,6 +48,8 @@ func Serve(
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods("GET")
+	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
+	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
 
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
 		data, err := cssContent.ReadFile("static/css/tachyons.min.css")
@@ -93,8 +97,6 @@ func Serve(
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
-	router.NotFoundHandler = http.HandlerFunc(notFound)
-
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         fmt.Sprintf("%s:%s", addr, port),
@@ -106,7 +108,11 @@ func Serve(
 }
 
 func notFound(w http.ResponseWriter, r *http.Request) {
-	logger := logrus.New()
-	entry := logrus.NewEntry(logger)
-	entry.Info("not found", r.URL.Path)
+	logrus.NewEntry(logrus.New()).WithFields(logrus.Fields{
+		"status": http.StatusNotFound,
+		"path":   r.URL.Path,
+		"method": r.Method,
+	}).Info("not found")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write([]byte("not found"))
 }

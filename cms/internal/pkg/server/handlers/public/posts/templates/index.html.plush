@@ -6,7 +6,7 @@
         <img
           loading="lazy"
           alt="<%= post.Description %>"
-          src="<%= media_url("media/", to_string(post.MediaID), ".jpg") %>"
+          src="/medias/<%= post.MediaID %>/file.jpg"
           class="db bg-center cover aspect-ratio--object" />
       </a>
     </div>

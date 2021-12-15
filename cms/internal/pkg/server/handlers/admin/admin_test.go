@@ -6,16 +6,17 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 func TestIndexPage(t *testing.T) {
 	router := mux.NewRouter()
 
-	renderer := templating.BuildPageRenderFunc("http://", "", "admin")
+	renderer := templating.BuildPageRenderFunc("http://", "admin")
 
 	router.HandleFunc("/admin", BuildAdminIndexHandler(renderer)).Methods("GET")
 

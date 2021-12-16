@@ -31,7 +31,7 @@ import (
 var cssContent embed.FS
 
 func Serve(
-	addr, port, adminUsername, adminPassword string,
+	environment, hostname, addr, port, adminUsername, adminPassword string,
 	db *sql.DB,
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
@@ -40,6 +40,7 @@ func Serve(
 ) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
+	router.Use(InitMiddlewareHTTPS(hostname, environment))
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")

@@ -24,6 +24,11 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "start cms server",
 	Run: func(cmd *cobra.Command, args []string) {
+		environment := viper.GetString("environment")
+		if environment != "production" && environment != "development" && environment != "test" {
+			log.Fatalf("unknown environment %q", environment)
+		}
+
 		params := viper.GetStringMapString("database.params")
 		connectionString := viper.GetString("database.connectionString")
 		db, err := database.Init(connectionString, params, params["dbname"], viper.GetBool("database.createDatabase"))
@@ -65,6 +70,8 @@ var serverCmd = &cobra.Command{
 		log.Println("Listening on", port)
 
 		server.Serve(
+			environment,
+			viper.GetString("hostname"),
 			viper.GetString("server.address"),
 			port,
 			viper.GetString("server.adminUsername"),

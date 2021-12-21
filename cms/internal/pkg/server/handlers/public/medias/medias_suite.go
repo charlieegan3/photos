@@ -60,7 +60,7 @@ func (s *MediasSuite) TestGetMedia() {
 	require.NoError(s.T(), err)
 
 	// store an image for the media in the bucket to be served in the request.
-	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
+	imageFilePath := "../../../pkg/server/handlers/public/medias/fixtures/img.jpg"
 	imageBytes, err := ioutil.ReadFile(imageFilePath)
 	require.NoError(s.T(), err)
 	imageFile, err := os.Open(imageFilePath)

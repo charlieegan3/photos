@@ -46,9 +46,14 @@ func InitMiddlewareLogging() func(http.Handler) http.Handler {
 
 			next.ServeHTTP(lw, r)
 
+			path := r.URL.Path
+			if len(r.URL.RawQuery) > 0 {
+				path += "?" + r.URL.RawQuery
+			}
+
 			entry = entry.WithFields(logrus.Fields{
 				"status": lw.statusCode,
-				"path":   r.URL.Path,
+				"path":   path,
 				"method": method,
 			})
 

@@ -1,6 +1,11 @@
 <div class="center mt3 mw6 mw7-l">
   <%= if (media.Kind == "jpg") { %>
-    <img class="mb1 db w-100" src="/medias/<%= media.ID %>/image.jpg"/>
+  <picture>
+    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=1000x 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000x 2x" media="(min-width: 60em)">
+    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=750x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1500x 2x" media="(min-width: 30em)">
+    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x">
+    <img class="mb1 db w-100" src="/medias/<%= post.MediaID %>/image.jpg?o=1000x" alt="<%= post.Description %>">
+  </picture>
   <% } else if (media.Kind == "mp4") { %>
     <video controls width="250">
       <source src="/medias/<%= media.ID %>/movie.mp4" type="video/mp4">

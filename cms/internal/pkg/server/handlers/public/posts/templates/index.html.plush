@@ -3,11 +3,16 @@
   <article class="fl w-third pa2-ns">
     <div class="aspect-ratio aspect-ratio--1x1">
       <a class="w-third" href="/posts/<%= post.ID %>">
-        <img
-          loading="lazy"
-          alt="<%= post.Description %>"
-          src="/medias/<%= post.MediaID %>/file.jpg"
-          class="db bg-center cover aspect-ratio--object" />
+        <picture>
+          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
+          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=250x 1x, /medias/<%= post.MediaID %>/image.jpg?o=500x 2x" media="(min-width: 30em)">
+          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=100x 1x, /medias/<%= post.MediaID %>/image.jpg?o=200x 2x">
+          <img
+            loading="lazy"
+            alt="<%= post.Description %>"
+            src="/medias/<%= post.MediaID %>/image.jpg"
+            class="db bg-center cover aspect-ratio--object" />
+        </picture>
       </a>
     </div>
   </article>

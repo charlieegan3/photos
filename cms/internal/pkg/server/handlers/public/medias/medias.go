@@ -1,6 +1,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	"io"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"gocloud.dev/blob"
+	"willnorris.com/go/imageproxy"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 )
@@ -56,13 +58,16 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			return
 		}
 
-		// TODO handle other media kinds
 		w.Header().Set("Content-Type", "image/jpeg")
-		_, err = io.Copy(w, br)
+
+		buf := bytes.NewBuffer([]byte{})
+
+		// TODO handle other media kinds
+		_, err = io.Copy(buf, br)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to copy media item into response"))
+			w.Write([]byte("failed to copy media item into byte buffer for image processing"))
 			return
 		}
 
@@ -71,6 +76,25 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to close handle loading image from backing store"))
+			return
+		}
+
+		imageResizeString := r.URL.Query().Get("o")
+		if imageResizeString == "" {
+			imageResizeString = "0x0" // do nothing if no imageOptions set
+		}
+
+		imageOptions := imageproxy.ParseOptions(imageResizeString)
+		imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
+
+		imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
+		buf = bytes.NewBuffer(imageBytes)
+
+		_, err = io.Copy(w, buf)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to copy media item into response"))
 			return
 		}
 	}

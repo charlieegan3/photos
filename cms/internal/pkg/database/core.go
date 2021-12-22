@@ -92,6 +92,9 @@ func Init(
 		return db, fmt.Errorf("failed to ping the database: %s", err)
 	}
 
+	// this is the limit set by elephantsql.com free tier, so no point in making configurable right now
+	db.SetMaxOpenConns(5)
+
 	return db, nil
 }
 

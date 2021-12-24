@@ -1,7 +1,2 @@
-media/*
-calendar/*
-site/content/photos
-site/content/locations
-site/content/archive
-site/public
-output
+config.prod.yaml
+bucket/*

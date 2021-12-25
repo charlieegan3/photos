@@ -1,6 +1,7 @@
 package public
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha1"
 	"database/sql"
@@ -60,9 +61,7 @@ func (s *MediasSuite) TestGetMedia() {
 	require.NoError(s.T(), err)
 
 	// store an image for the media in the bucket to be served in the request.
-	imageFilePath := "../../../pkg/server/handlers/public/medias/fixtures/img.jpg"
-	imageBytes, err := ioutil.ReadFile(imageFilePath)
-	require.NoError(s.T(), err)
+	imageFilePath := "../../../pkg/server/handlers/public/medias/fixtures/image-original.jpg"
 	imageFile, err := os.Open(imageFilePath)
 	require.NoError(s.T(), err)
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("media/%d.jpg", returnedMedias[0].ID), nil)
@@ -74,7 +73,7 @@ func (s *MediasSuite) TestGetMedia() {
 	router := mux.NewRouter()
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods("GET")
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/medias/%d/file.jpg", returnedMedias[0].ID), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("/medias/%d/file.jpg?o=100x", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -93,8 +92,26 @@ func (s *MediasSuite) TestGetMedia() {
 	h := sha1.New()
 	h.Write(body)
 	bodySha := hex.EncodeToString(h.Sum(nil))
+
+	// load the resized image to test the response content
+	imageFilePath = "../../../pkg/server/handlers/public/medias/fixtures/image-100x.jpg"
+	imageBytes, err := ioutil.ReadFile(imageFilePath)
+	require.NoError(s.T(), err)
 	h = sha1.New()
 	h.Write(imageBytes)
 	imageSha := hex.EncodeToString(h.Sum(nil))
 	assert.Equal(s.T(), bodySha, imageSha)
+
+	// check that the image has been stashed in the bucket for future requests
+	br, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("thumbs/%d-100x.jpg", returnedMedias[0].ID), nil)
+	require.NoError(s.T(), err)
+
+	buf := bytes.NewBuffer([]byte{})
+	_, err = io.Copy(buf, br)
+	require.NoError(s.T(), err)
+
+	h = sha1.New()
+	h.Write(buf.Bytes())
+	objectSha := hex.EncodeToString(h.Sum(nil))
+	assert.Equal(s.T(), objectSha, imageSha)
 }

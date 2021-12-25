@@ -15,5 +15,5 @@ database:
     dbname: cms_dev
     sslmode: disable
 bucket:
-  url: file:///Users/charlieegan/Code/photos/cms/bucket
+  url: file:///Users/charlieegan/Code/photos/bucket
   webUrl: http://localhost:8000/bucket/

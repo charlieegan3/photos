@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 //go:embed templates/index.html.plush
@@ -142,35 +143,17 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		allLocations, err := database.AllLocations(db)
+		locations, err := database.FindLocationsByID(db, posts[0].LocationID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
-		}
-
-		allMedias, err := database.AllMedias(db, true)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		locationMap := make(map[string]interface{})
-		for _, l := range allLocations {
-			locationMap[l.Name] = l.ID
-		}
-
-		mediaMap := make(map[string]interface{})
-		for _, m := range allMedias {
-			mediaMap[fmt.Sprintf("%d-%s", m.ID, m.TakenAt)] = m.ID
 		}
 
 		ctx := plush.NewContext()
 		ctx.Set("post", posts[0])
 		ctx.Set("media", medias[0])
-		ctx.Set("locations", locationMap)
-		ctx.Set("medias", mediaMap)
+		ctx.Set("location", locations[0])
 		ctx.Set("tags", tags)
 
 		err = renderer(ctx, showTemplate, w)

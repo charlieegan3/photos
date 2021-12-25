@@ -1,9 +1,13 @@
 package server
 
 import (
+	"bytes"
+	"crypto/sha1"
 	"database/sql"
 	"embed"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -30,6 +34,9 @@ import (
 //go:embed static/css/*
 var cssContent embed.FS
 
+//go:embed static/favicon.ico
+var faviconContent []byte
+
 func Serve(
 	environment, hostname, addr, port, adminUsername, adminPassword string,
 	db *sql.DB,
@@ -52,15 +59,34 @@ func Serve(
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
 
+	styleData, err := cssContent.ReadFile("static/css/tachyons.min.css")
+	if err != nil {
+		log.Fatal("failed to read styles: %s", err)
+		return
+	}
+	styleHash := sha1.New()
+	styleHash.Write(styleData)
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
-		data, err := cssContent.ReadFile("static/css/tachyons.min.css")
+		w.Header().Set("Cache-Control", "public, max-age=60")
+		w.Header().Set("Content-Type", "text/css")
+		w.Header().Set("ETag", hex.EncodeToString(styleHash.Sum(nil)))
+
+		fmt.Fprint(w, string(styleData))
+	}).Methods("GET")
+
+	faviconHash := sha1.New()
+	faviconHash.Write(faviconContent)
+	router.HandleFunc("/favicon.ico", func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=3600")
+		w.Header().Set("Content-Type", "image/vnd.microsoft.icon")
+		w.Header().Set("ETag", hex.EncodeToString(faviconHash.Sum(nil)))
+
+		_, err := io.Copy(w, bytes.NewBuffer(faviconContent))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			w.Write([]byte("failed to return favicon content"))
 			return
 		}
-		w.Header().Set("Content-Type", "text/css")
-		fmt.Fprint(w, string(data))
 	}).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()

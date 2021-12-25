@@ -38,7 +38,8 @@ func mapURL(serverURL, apiKey string, latitude, longitude float64) (string, erro
 
 func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPIKey string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "image/jpeg")
+		w.Header().Set("Cache-Control", "public, max-age=604800")
 
 		rawID, ok := mux.Vars(r)["locationID"]
 		if !ok {
@@ -72,7 +73,8 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 			return
 		}
 
-		br, err := bucket.NewReader(r.Context(), fmt.Sprintf("location_maps/%d.jpg", locations[0].ID), nil)
+		mapPath := fmt.Sprintf("location_maps/%d.jpg", locations[0].ID)
+		br, err := bucket.NewReader(r.Context(), mapPath, nil)
 		if gcerrors.Code(err) == gcerrors.NotFound {
 			mapImageURL, err := mapURL(mapServerURL, mapServerAPIKey, locations[0].Latitude, locations[0].Longitude)
 			if err != nil {
@@ -93,7 +95,7 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 				return
 			}
 
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("location_maps/%d.jpg", locations[0].ID), nil)
+			bw, err := bucket.NewWriter(r.Context(), mapPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to open bucket to stash map"))
@@ -114,7 +116,7 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 				return
 			}
 
-			br, err = bucket.NewReader(r.Context(), fmt.Sprintf("location_maps/%d.jpg", locations[0].ID), nil)
+			br, err = bucket.NewReader(r.Context(), mapPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -122,20 +124,31 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 			}
 		}
 
-		w.Header().Set("Content-Type", "image/jpeg")
+		// defer close here in case we have a 304 response
+		defer br.Close()
+
+		attrs, err := bucket.Attributes(r.Context(), mapPath)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.Header().Set("ETag", attrs.ETag)
+
+		// handle potential 304 response
+		if ifNoneMatch := r.Header.Get("If-None-Match"); ifNoneMatch != "" {
+			if ifNoneMatch == attrs.ETag {
+				w.WriteHeader(http.StatusNotModified)
+				return
+			}
+		}
+
 		_, err = io.Copy(w, br)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to copy map into response"))
-			return
-		}
-
-		err = br.Close()
-		if err != nil {
-			w.Header().Set("Content-Type", "application/text")
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close map image source"))
 			return
 		}
 	}

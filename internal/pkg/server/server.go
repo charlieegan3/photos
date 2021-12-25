@@ -1,19 +1,13 @@
 package server
 
 import (
-	"bytes"
-	"crypto/sha1"
 	"database/sql"
-	"embed"
-	"encoding/hex"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 
@@ -31,12 +25,6 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
-//go:embed static/css/*
-var cssContent embed.FS
-
-//go:embed static/favicon.ico
-var faviconContent []byte
-
 func Serve(
 	environment, hostname, addr, port, adminUsername, adminPassword string,
 	db *sql.DB,
@@ -50,6 +38,14 @@ func Serve(
 	router.Use(InitMiddlewareHTTPS(hostname, environment))
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 
+	stylesHandler, err := buildStylesHandler()
+	if err != nil {
+		log.Fatalf("failed to build styles handler: %s", err)
+	}
+	router.HandleFunc("/styles.css", stylesHandler).Methods("GET")
+
+	router.HandleFunc("/favicon.ico", faviconHandler).Methods("GET")
+
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods("GET")
@@ -58,55 +54,6 @@ func Serve(
 	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods("GET")
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
-
-	normalizeData, err := cssContent.ReadFile("static/css/normalize.min.css")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	tachyonsData, err := cssContent.ReadFile("static/css/tachyons.min.css")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	siteStyleData, err := cssContent.ReadFile("static/css/styles.css")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	allStyleData := ""
-	for _, b := range []*[]byte{&normalizeData, &tachyonsData, &siteStyleData} {
-		allStyleData += string(*b) + "\n"
-	}
-
-	styleHash := sha1.New()
-	styleHash.Write([]byte(allStyleData))
-
-	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Cache-Control", "public, max-age=60")
-		w.Header().Set("Content-Type", "text/css")
-		w.Header().Set("ETag", hex.EncodeToString(styleHash.Sum(nil)))
-
-		fmt.Fprint(w, string(allStyleData))
-	}).Methods("GET")
-
-	faviconHash := sha1.New()
-	faviconHash.Write(faviconContent)
-	router.HandleFunc("/favicon.ico", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Cache-Control", "public, max-age=3600")
-		w.Header().Set("Content-Type", "image/vnd.microsoft.icon")
-		w.Header().Set("ETag", hex.EncodeToString(faviconHash.Sum(nil)))
-
-		_, err := io.Copy(w, bytes.NewBuffer(faviconContent))
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to return favicon content"))
-			return
-		}
-	}).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
@@ -151,14 +98,4 @@ func Serve(
 	}
 
 	log.Fatal(srv.ListenAndServe())
-}
-
-func notFound(w http.ResponseWriter, r *http.Request) {
-	logrus.NewEntry(logrus.New()).WithFields(logrus.Fields{
-		"status": http.StatusNotFound,
-		"path":   r.URL.Path,
-		"method": r.Method,
-	}).Info("not found")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("not found"))
 }

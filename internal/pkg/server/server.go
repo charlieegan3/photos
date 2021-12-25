@@ -59,19 +59,38 @@ func Serve(
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
 
-	styleData, err := cssContent.ReadFile("static/css/tachyons.min.css")
+	normalizeData, err := cssContent.ReadFile("static/css/normalize.min.css")
 	if err != nil {
-		log.Fatal("failed to read styles: %s", err)
+		log.Fatal(err)
 		return
 	}
+
+	tachyonsData, err := cssContent.ReadFile("static/css/tachyons.min.css")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	siteStyleData, err := cssContent.ReadFile("static/css/styles.css")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	allStyleData := ""
+	for _, b := range []*[]byte{&normalizeData, &tachyonsData, &siteStyleData} {
+		allStyleData += string(*b) + "\n"
+	}
+
 	styleHash := sha1.New()
-	styleHash.Write(styleData)
+	styleHash.Write([]byte(allStyleData))
+
 	router.HandleFunc("/styles.css", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=60")
 		w.Header().Set("Content-Type", "text/css")
 		w.Header().Set("ETag", hex.EncodeToString(styleHash.Sum(nil)))
 
-		fmt.Fprint(w, string(styleData))
+		fmt.Fprint(w, string(allStyleData))
 	}).Methods("GET")
 
 	faviconHash := sha1.New()

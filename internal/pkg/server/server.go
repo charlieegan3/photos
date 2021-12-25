@@ -35,7 +35,7 @@ func Serve(
 ) {
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
-	router.Use(InitMiddlewareHTTPS(hostname, environment))
+	// router.Use(InitMiddlewareHTTPS(hostname, environment))
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 
 	stylesHandler, err := buildStylesHandler()

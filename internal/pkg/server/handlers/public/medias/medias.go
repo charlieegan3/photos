@@ -58,7 +58,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		// TODO validate this matches a basic regex
 		imageResizeString := r.URL.Query().Get("o")
 		originalMediaPath := fmt.Sprintf("media/%d.%s", medias[0].ID, medias[0].Kind)
-		thumbMediaPath := fmt.Sprintf("thumbs/%d-%s.jpg", medias[0].ID, imageResizeString)
+		thumbMediaPath := fmt.Sprintf("thumbs/media/%d-%s.jpg", medias[0].ID, imageResizeString)
 
 		// if there are no options, serve the image from the media upload path
 		if imageResizeString == "" {

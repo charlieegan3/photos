@@ -32,9 +32,6 @@
     <%= f.InputTag("FNumber") %>
   </div>
   <div class="mb1">
-    <%= f.InputTag("ShutterSpeed") %>
-  </div>
-  <div class="mb1">
     <%= f.InputTag("ExposureTimeNumerator") %>
   </div>
   <div class="mb1">

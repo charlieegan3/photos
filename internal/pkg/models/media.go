@@ -14,7 +14,6 @@ type Media struct {
 	TakenAt time.Time
 
 	FNumber                 float64
-	ShutterSpeed            float64
 	ExposureTimeNumerator   uint32
 	ExposureTimeDenominator uint32
 	ISOSpeed                int

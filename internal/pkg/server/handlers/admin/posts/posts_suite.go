@@ -64,9 +64,8 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -140,9 +139,8 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -251,9 +249,8 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -354,9 +351,8 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -488,9 +484,8 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,

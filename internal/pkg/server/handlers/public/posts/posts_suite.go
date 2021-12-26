@@ -61,9 +61,8 @@ func (s *PostsSuite) TestListPosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -137,9 +136,8 @@ func (s *PostsSuite) TestGetPost() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -186,7 +184,11 @@ func (s *PostsSuite) TestGetPost() {
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)

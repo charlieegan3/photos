@@ -56,9 +56,8 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -139,9 +138,8 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -228,9 +226,8 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -314,9 +311,8 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,

@@ -66,9 +66,8 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -82,9 +81,8 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -136,9 +134,8 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -193,9 +190,8 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -313,9 +309,8 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -473,9 +468,11 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 			0: td.SStruct(
 				models.Media{
 					// set from image exif data
-					Make:     "Apple",
-					Altitude: 97.99822998046875,
-					FNumber:  2.0,
+					Make:                    "Apple",
+					Altitude:                97.99822998046875,
+					FNumber:                 2.0,
+					ExposureTimeDenominator: 122,
+					ExposureTimeNumerator:   1,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

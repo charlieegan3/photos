@@ -50,9 +50,8 @@ func (s *PostsSuite) TestCreatePosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -117,9 +116,8 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -202,9 +200,8 @@ func (s *PostsSuite) TestFindPostsByID() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -285,9 +282,8 @@ func (s *PostsSuite) TestCountPosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -350,9 +346,8 @@ func (s *PostsSuite) TestAllPosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -430,9 +425,8 @@ func (s *PostsSuite) TestDeletePosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -510,9 +504,8 @@ func (s *PostsSuite) TestUpdatePosts() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -597,9 +590,8 @@ func (s *PostsSuite) TestSetPostTags() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,

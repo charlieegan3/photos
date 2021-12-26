@@ -47,9 +47,10 @@ func (s *MediasSuite) TestCreateMedias() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:                 2.0,
+			ExposureTimeNumerator:   1,
+			ExposureTimeDenominator: 100,
+			ISOSpeed:                100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -63,9 +64,8 @@ func (s *MediasSuite) TestCreateMedias() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -118,9 +118,8 @@ func (s *MediasSuite) TestFindMediasByID() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -134,9 +133,8 @@ func (s *MediasSuite) TestFindMediasByID() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -193,9 +191,8 @@ func (s *MediasSuite) TestFindMediasByInstagramPost() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -209,9 +206,8 @@ func (s *MediasSuite) TestFindMediasByInstagramPost() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -264,9 +260,10 @@ func (s *MediasSuite) TestAllMedias() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:                 2.0,
+			ExposureTimeNumerator:   1,
+			ExposureTimeDenominator: 100,
+			ISOSpeed:                100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -280,9 +277,8 @@ func (s *MediasSuite) TestAllMedias() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -340,9 +336,8 @@ func (s *MediasSuite) TestDeleteMedias() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -356,9 +351,8 @@ func (s *MediasSuite) TestDeleteMedias() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -416,9 +410,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-			FNumber:      2.0,
-			ShutterSpeed: 0.004,
-			ISOSpeed:     100,
+			FNumber:  2.0,
+			ISOSpeed: 100,
 
 			Latitude:  51.1,
 			Longitude: 52.2,
@@ -432,9 +425,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 			TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-			FNumber:      4.0,
-			ShutterSpeed: 0.05,
-			ISOSpeed:     400,
+			FNumber:  4.0,
+			ISOSpeed: 400,
 
 			Latitude:  53.1,
 			Longitude: 54.2,
@@ -457,9 +449,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 					TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-					FNumber:      2.0,
-					ShutterSpeed: 0.004,
-					ISOSpeed:     100,
+					FNumber:  2.0,
+					ISOSpeed: 100,
 
 					Latitude:  51.1,
 					Longitude: 52.2,
@@ -475,9 +466,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 					TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-					FNumber:      4.0,
-					ShutterSpeed: 0.05,
-					ISOSpeed:     400,
+					FNumber:  4.0,
+					ISOSpeed: 400,
 
 					Latitude:  53.1,
 					Longitude: 54.2,
@@ -509,9 +499,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 					TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-					FNumber:      2.0,
-					ShutterSpeed: 0.004,
-					ISOSpeed:     100,
+					FNumber:  2.0,
+					ISOSpeed: 100,
 
 					Latitude:  51.1,
 					Longitude: 52.2,
@@ -527,9 +516,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 					TakenAt: time.Date(2021, time.September, 22, 18, 56, 0, 0, time.UTC),
 
-					FNumber:      4.0,
-					ShutterSpeed: 0.05,
-					ISOSpeed:     400,
+					FNumber:  4.0,
+					ISOSpeed: 400,
 
 					Latitude:  53.1,
 					Longitude: 54.2,
@@ -558,9 +546,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 					TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
 
-					FNumber:      2.0,
-					ShutterSpeed: 0.004,
-					ISOSpeed:     100,
+					FNumber:  2.0,
+					ISOSpeed: 100,
 
 					Latitude:  51.1,
 					Longitude: 52.2,

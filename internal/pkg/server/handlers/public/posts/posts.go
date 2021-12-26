@@ -142,6 +142,10 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			w.Write([]byte(err.Error()))
 			return
 		}
+		if len(medias) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 
 		locations, err := database.FindLocationsByID(db, posts[0].LocationID)
 		if err != nil {

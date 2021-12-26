@@ -15,7 +15,6 @@ type Metadata struct {
 	DateTime time.Time
 
 	FNumber      Fraction
-	ShutterSpeed Fraction
 	ExposureTime Fraction
 	ISOSpeed     uint16
 
@@ -167,25 +166,6 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			metadata.FNumber.Numerator = val[0].Numerator
 			metadata.FNumber.Denominator = val[0].Denominator
-		}
-
-		if ite.TagName() == "ShutterSpeedValue" {
-			rawValue, err := ite.Value()
-			if err != nil {
-				return fmt.Errorf("could not get raw ShutterSpeed value")
-			}
-
-			val, ok := rawValue.([]exifcommon.SignedRational)
-			if !ok {
-				return fmt.Errorf("ShutterSpeed was not in expected format: %#v", rawValue)
-			}
-
-			if len(val) != 1 {
-				return fmt.Errorf("found %d ShutterSpeedValues", len(val))
-			}
-
-			metadata.ShutterSpeed.Numerator = uint32(val[0].Numerator)
-			metadata.ShutterSpeed.Denominator = uint32(val[0].Denominator)
 		}
 
 		if ite.TagName() == "ExposureTime" {

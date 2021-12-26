@@ -204,7 +204,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		floatKeys := []string{"FNumber", "ShutterSpeed", "Latitude", "Longitude", "Altitude"}
+		floatKeys := []string{"FNumber", "Latitude", "Longitude", "Altitude"}
 		floatMap := make(map[string]float64)
 		for _, key := range floatKeys {
 			floatMap[key] = 0
@@ -229,6 +229,26 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			}
 		}
 
+		var exposureTimeNumerator uint64
+		if val := r.PostForm.Get("ExposureTimeNumerator"); val != "" {
+			exposureTimeNumerator, err = strconv.ParseUint(val, 10, 32)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(fmt.Sprintf("exposureTimeNumerator int value %v was invalid", val)))
+				return
+			}
+		}
+
+		var exposureTimeDenominator uint64
+		if val := r.PostForm.Get("ExposureTimeDenominator"); val != "" {
+			exposureTimeDenominator, err = strconv.ParseUint(val, 10, 32)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(fmt.Sprintf("exposureTimeDenominator int value %v was invalid", val)))
+				return
+			}
+		}
+
 		var takenAt time.Time
 		if val := r.PostForm.Get("TakenAt"); val != "" {
 			takenAt, err = time.Parse("2006-01-02T15:04", val)
@@ -240,17 +260,18 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		}
 
 		media := models.Media{
-			ID:           existingMedias[0].ID,
-			Kind:         existingMedias[0].Kind,
-			Make:         r.PostForm.Get("Make"),
-			Model:        r.PostForm.Get("Model"),
-			TakenAt:      takenAt,
-			ISOSpeed:     isoSpeed,
-			FNumber:      floatMap["FNumber"],
-			ShutterSpeed: floatMap["ShutterSpeed"],
-			Latitude:     floatMap["Latitude"],
-			Longitude:    floatMap["Longitude"],
-			Altitude:     floatMap["Altitude"],
+			ID:                      existingMedias[0].ID,
+			Kind:                    existingMedias[0].Kind,
+			Make:                    r.PostForm.Get("Make"),
+			Model:                   r.PostForm.Get("Model"),
+			TakenAt:                 takenAt,
+			ISOSpeed:                isoSpeed,
+			ExposureTimeNumerator:   uint32(exposureTimeNumerator),
+			ExposureTimeDenominator: uint32(exposureTimeDenominator),
+			FNumber:                 floatMap["FNumber"],
+			Latitude:                floatMap["Latitude"],
+			Longitude:               floatMap["Longitude"],
+			Altitude:                floatMap["Altitude"],
 		}
 
 		media.DeviceID, err = strconv.Atoi(r.Form.Get("DeviceID"))
@@ -418,8 +439,10 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		media.Make = exifData.Make
 		media.Model = exifData.Model
 		media.TakenAt = exifData.DateTime
+		// TODO handle exif errors
 		media.FNumber, err = exifData.FNumber.ToDecimal()
-		media.ShutterSpeed, err = exifData.ShutterSpeed.ToDecimal()
+		media.ExposureTimeNumerator = exifData.ExposureTime.Numerator
+		media.ExposureTimeDenominator = exifData.ExposureTime.Denominator
 		media.ISOSpeed = int(exifData.ISOSpeed)
 		media.Latitude, err = exifData.Latitude.ToDecimal()
 		media.Longitude, err = exifData.Longitude.ToDecimal()

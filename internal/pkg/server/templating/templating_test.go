@@ -36,5 +36,5 @@ func TestRenderPage(t *testing.T) {
 	err := renderFunc(ctx, nestedTemplate, b)
 	require.NoError(t, err)
 
-	td.Cmp(t, expectedResult, b.String())
+	td.Cmp(t, b.String(), expectedResult)
 }

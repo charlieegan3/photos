@@ -22,7 +22,6 @@ type dbMedia struct {
 	TakenAt time.Time `db:"taken_at"`
 
 	FNumber                 float64 `db:"f_number"`
-	ShutterSpeed            float64 `db:"shutter_speed"`
 	ExposureTimeNumerator   uint32  `db:"exposure_time_numerator"`
 	ExposureTimeDenominator uint32  `db:"exposure_time_denominator"`
 	ISOSpeed                int     `db:"iso_speed"`
@@ -46,7 +45,6 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"model":                     d.Model,
 		"taken_at":                  d.TakenAt.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
 		"f_number":                  d.FNumber,
-		"shutter_speed":             d.ShutterSpeed,
 		"exposure_time_numerator":   d.ExposureTimeNumerator,
 		"exposure_time_denominator": d.ExposureTimeDenominator,
 		"iso_speed":                 d.ISOSpeed,
@@ -75,7 +73,6 @@ func newMedia(media dbMedia) models.Media {
 		// present as UTC since zone information is missing in EXIF
 		TakenAt:                 media.TakenAt.UTC(),
 		FNumber:                 media.FNumber,
-		ShutterSpeed:            media.ShutterSpeed,
 		ExposureTimeNumerator:   media.ExposureTimeNumerator,
 		ExposureTimeDenominator: media.ExposureTimeDenominator,
 		ISOSpeed:                media.ISOSpeed,
@@ -101,7 +98,6 @@ func newDBMedia(media models.Media) dbMedia {
 		Model:                   media.Model,
 		TakenAt:                 media.TakenAt,
 		FNumber:                 media.FNumber,
-		ShutterSpeed:            media.ShutterSpeed,
 		ExposureTimeNumerator:   media.ExposureTimeNumerator,
 		ExposureTimeDenominator: media.ExposureTimeDenominator,
 		ISOSpeed:                media.ISOSpeed,

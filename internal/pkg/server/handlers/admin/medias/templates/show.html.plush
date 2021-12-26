@@ -13,6 +13,12 @@
 <% } %>
 <div class="mv3">
   <a href="/admin/posts/new?mediaID=<%= media.ID %>&timestamp=<%= media.TakenAt.Unix() %>">Create Post</a>
+  <%= if (len(posts) > 0) { %>
+    - Used in posts:
+    <%= for (p) in posts { %>
+    <a href="/admin/posts/<%= p.ID %>"><%= p.ID %></a>
+    <% } %>
+  <% } %>
 </div>
 
 <%= form_for(media, {class: "mb3", action:"/admin/medias/"+to_string(media.ID), method: "PUT"}) { %>

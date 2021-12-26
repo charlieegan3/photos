@@ -136,6 +136,22 @@ func FindPostsByInstagramCode(db *sql.DB, code string) (results []models.Post, e
 	return results, nil
 }
 
+func FindPostsByMediaID(db *sql.DB, id int) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"media_id": id}).Executor()
+	if err := insert.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts by media_id")
+	}
+
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
+}
+
 func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
 	var tags []models.Tag
 	if len(rawTags) > 0 {

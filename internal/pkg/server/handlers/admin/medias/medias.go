@@ -101,9 +101,17 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			deviceOptionMap[d.Name] = d.ID
 		}
 
+		posts, err := database.FindPostsByMediaID(db, medias[0].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("media", medias[0])
 		ctx.Set("devices", deviceOptionMap)
+		ctx.Set("posts", posts)
 
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {

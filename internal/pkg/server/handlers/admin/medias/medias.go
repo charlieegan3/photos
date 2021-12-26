@@ -412,10 +412,9 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 
 		lowerFilename := strings.ToLower(header.Filename)
 		if !strings.HasSuffix(lowerFilename, ".jpg") &&
-			!strings.HasSuffix(lowerFilename, ".jpeg") &&
-			!strings.HasSuffix(lowerFilename, ".mp4") {
+			!strings.HasSuffix(lowerFilename, ".jpeg") {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("media file must be jpg or mp4"))
+			w.Write([]byte("media file must be jpg"))
 			return
 		}
 

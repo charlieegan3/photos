@@ -3,11 +3,6 @@
 
 <%= if (media.Kind == "jpg") { %>
   <img class="w-100 mw6" src="/medias/<%= media.ID %>/file.jpg"/>
-<% } else if (media.Kind == "mp4") { %>
-  <video controls width="250">
-    <source src="/medias/<%= media.ID %>/file.mp4" type="video/mp4">
-    Sorry, your browser doesn't support embedded videos.
-  </video>
 <% } else { %>
   Cannot display media of kind: <%= media.Kind %>
 <% } %>

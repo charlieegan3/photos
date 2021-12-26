@@ -83,10 +83,6 @@ func TestExtract(t *testing.T) {
 				ISOSpeed: 400,
 			},
 		},
-		"iphone video, does not error but has no data": {
-			sourceFile:       "./samples/iphone-movie.mp4",
-			expectedMetadata: Metadata{},
-		},
 	}
 
 	for description, testCase := range testCases {

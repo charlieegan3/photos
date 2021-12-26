@@ -1,19 +1,12 @@
 <div class="mw6 mw9-l center ph3-ns">
   <div class="cf ph2-ns">
     <div class="fl w-100 w-two-thirds-l">
-      <%= if (media.Kind == "jpg") { %>
       <picture>
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=1000x 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000x 2x" media="(min-width: 60em)">
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=750x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1500x 2x" media="(min-width: 30em)">
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x">
         <img class="mb1 db w-100 center mw7 br0 br1-l" src="/medias/<%= post.MediaID %>/image.jpg?o=1000x" alt="<%= post.Description %>">
       </picture>
-      <% } else if (media.Kind == "mp4") { %>
-      <video controls width="250">
-        <source src="/medias/<%= media.ID %>/movie.mp4" type="video/mp4">
-        Sorry, your browser doesn't support embedded videos.
-      </video>
-      <% } %>
     </div>
     <div class="fl w-100 w-third-l pl3-l">
       <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-l">

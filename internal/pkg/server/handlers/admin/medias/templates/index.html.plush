@@ -5,6 +5,9 @@
   <li>
     <a href="/admin/medias/<%= media.ID %>">
       id: <%= media.ID %>
+      <%= if (media.Kind != "jpg") { %>
+       <%= media.Kind %>
+      <% } %>
     </a>
   </li>
 <% } %>

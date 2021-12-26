@@ -7,7 +7,7 @@
         <%= if (post.Description == "") { %>
           (missing description)
         <% } else { %>
-          <%= truncate(post.Description, 30) %>
+          <%= truncate(post.Description, 30, true) %>
         <% } %>
       </a>
     </li>

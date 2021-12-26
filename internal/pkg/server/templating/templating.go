@@ -28,11 +28,14 @@ func BuildPageRenderFunc(bucketWebURL string, intermediateTemplates ...string) P
 			return fmt.Sprintf("%v", arg)
 		})
 
-		ctx.Set("truncate", func(s string, length int) string {
+		ctx.Set("truncate", func(s string, length int, elipsis bool) string {
 			if len(s) < length {
 				return s
 			}
-			return s[:length] + "..."
+			if elipsis {
+				return s[:length] + "..."
+			}
+			return s[:length]
 		})
 
 		body, err := plush.Render(t, ctx)

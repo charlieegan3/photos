@@ -6,7 +6,7 @@
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=1000x 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000x 2x" media="(min-width: 60em)">
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=750x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1500x 2x" media="(min-width: 30em)">
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x">
-        <img class="mb1 db w-100 center mw7 br1" src="/medias/<%= post.MediaID %>/image.jpg?o=1000x" alt="<%= post.Description %>">
+        <img class="mb1 db w-100 center mw7 br0 br1-l" src="/medias/<%= post.MediaID %>/image.jpg?o=1000x" alt="<%= post.Description %>">
       </picture>
       <% } else if (media.Kind == "mp4") { %>
       <video controls width="250">
@@ -16,16 +16,37 @@
       <% } %>
     </div>
     <div class="fl w-100 w-third-l pl3-l">
-      <div class="bl-l bw1 b--light-gray pl3-l">
+      <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-l">
         <p class="mt0 mb2"><%= raw(post.Description) %></p>
 
         <p class="mt0 mb2 f6 silver"><em>Posted <%= post.PublishDate.Format("January 2, 2006") %> from <%= raw(location.Name) %></em></p>
 
         <div class="mb2">
           <a target="_blank" href="http://www.openstreetmap.org/?lat=<%= location.Latitude %>&lon=<%= location.Longitude %>&zoom=17&layers=M">
-            <img loading="lazy" class="mw5 w-100 br1 center-s center-m db" src="/locations/<%= location.ID %>/map.jpg"/>
+            <img loading="lazy" class="mw5 mw6-l w-100 br1 db center ml0-l" src="/locations/<%= location.ID %>/map.jpg"/>
           </a>
         </div>
+
+        <div class="mb2">
+          <img alt="<%= device.Name %>" loading="lazy" class="h2 dib v-mid" src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>"/>
+          <span class="v-mid dib f7 silver"><%= device.Name %></span>
+        </div>
+
+        <%= if (media.ISOSpeed != 0) { %>
+        <div class="mb2 f7 silver mw5 center">
+          <div class="flex justify-between">
+            <div class="tc w-third">
+              <span>&#119943;/<%= media.FNumber %></span>
+            </div>
+            <div class="tc bl bw1 tc b--light-gray w-third">
+              <span><%= media.ExposureTimeNumerator %>/<%= media.ExposureTimeDenominator %></span>
+            </div>
+            <div class="tc bl bw1 tr b--light-gray w-third">
+              <span>ISO <%= media.ISOSpeed %></span>
+            </div>
+          </div>
+        </div>
+        <% } %>
 
         <p class="f7 moon-gray tc tl-l">
           <%= for (tag) in tags { %>

@@ -153,10 +153,26 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			w.Write([]byte(err.Error()))
 			return
 		}
+		if len(medias) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		devices, err := database.FindDevicesByID(db, medias[0].DeviceID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		if len(medias) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 
 		ctx := plush.NewContext()
 		ctx.Set("post", posts[0])
 		ctx.Set("media", medias[0])
+		ctx.Set("device", devices[0])
 		ctx.Set("location", locations[0])
 		ctx.Set("tags", tags)
 

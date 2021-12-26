@@ -169,8 +169,29 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
+		nextPosts, err := database.FindNextPost(db, posts[0], false)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		previousPosts, err := database.FindNextPost(db, posts[0], true)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("post", posts[0])
+		ctx.Set("nextPost", 0)
+		if len(nextPosts) > 0 {
+			ctx.Set("nextPost", nextPosts[0].ID)
+		}
+		ctx.Set("previousPost", 0)
+		if len(previousPosts) > 0 {
+			ctx.Set("previousPost", previousPosts[0].ID)
+		}
 		ctx.Set("media", medias[0])
 		ctx.Set("device", devices[0])
 		ctx.Set("location", locations[0])

@@ -152,6 +152,37 @@ func FindPostsByMediaID(db *sql.DB, id int) (results []models.Post, err error) {
 	return results, nil
 }
 
+func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	query := goqu.C("publish_date").Gt(post.PublishDate)
+	if previous {
+		query = goqu.C("publish_date").Lt(post.PublishDate)
+	}
+
+	order := goqu.I("publish_date").Asc()
+	if previous {
+		order = goqu.I("publish_date").Desc()
+	}
+
+	goquDB := goqu.New("postgres", db)
+	operation := goquDB.From("posts").Select("*").
+		Where(query).
+		Order(order).
+		Limit(1).
+		Executor()
+	if err := operation.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts by media_id")
+	}
+
+	for _, v := range dbPosts {
+		fmt.Println(v.Description)
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
+}
+
 func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
 	var tags []models.Tag
 	if len(rawTags) > 0 {

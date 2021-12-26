@@ -21,12 +21,12 @@
 
 <div class="mv3 flex justify-between">
 <%= if (page > 1) { %>
-  <a class="dib" href="/?page=<%= page - 1 %>"/>Previous</a>
+  <a class="dib" href="/?page=<%= page - 1 %>"/>Next</a>
 <% } else { %>
   <span class="hidden"></span>
 <% } %>
 <%= if (page < lastPage) { %>
-  <a class="dib" href="/?page=<%= page + 1 %>"/>Next</a>
+  <a class="dib" href="/?page=<%= page + 1 %>"/>Previous</a>
 <% } else { %>
   <span class="hidden"></span>
 <% } %>

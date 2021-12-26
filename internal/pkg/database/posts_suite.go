@@ -341,6 +341,112 @@ func (s *PostsSuite) TestFindPostsByID() {
 	td.Cmp(s.T(), returnedPosts, expectedResult)
 }
 
+func (s *PostsSuite) TestFindNextPost() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:  2.0,
+			ISOSpeed: 100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	if err != nil {
+		s.T().Fatalf("failed to create locations: %s", err)
+	}
+
+	posts := []models.Post{
+		{
+			Description: "post 1",
+			PublishDate: time.Date(2021, time.October, 25, 19, 56, 0, 0, time.Local),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post 2",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.Local),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post 3",
+			PublishDate: time.Date(2021, time.December, 25, 19, 56, 0, 0, time.Local),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	if err != nil {
+		s.T().Fatalf("failed to create posts: %s", err)
+	}
+
+	posts[0].ID = returnedPosts[0].ID
+
+	nextPosts, err := FindNextPost(s.DB, posts[1], false)
+	if err != nil {
+		s.T().Fatalf("failed get next: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				returnedPosts[2],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), nextPosts, expectedResult)
+
+	nextPosts, err = FindNextPost(s.DB, posts[1], true)
+	if err != nil {
+		s.T().Fatalf("failed get prev: %s", err)
+	}
+
+	expectedResult = td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				returnedPosts[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), nextPosts, expectedResult)
+}
+
 func (s *PostsSuite) TestCountPosts() {
 	devices := []models.Device{
 		{

@@ -7,6 +7,23 @@
         <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x">
         <img class="mb1 db w-100 center mw7 br0 br1-l" src="/medias/<%= post.MediaID %>/image.jpg?o=1000x" alt="<%= post.Description %>">
       </picture>
+
+      <div class="dn flex-l w-100 justify-between f6 mv2">
+        <div class="tl w-50">
+          <%= if (nextPost != 0) { %>
+            <a href="/posts/<%= nextPost %>">Next</a>
+          <% } else { %>
+            <span class="moon-gray">Next</span>
+          <% } %>
+        </div>
+        <div class="tr w-50<%= if (nextPost != 0) { %> bl bw1 b--light-gray<% } %>">
+          <%= if (previousPost != 0) { %>
+            <a href="/posts/<%= previousPost %>">Previous</a>
+          <% } else { %>
+            <span class="moon-gray">Previous</span>
+          <% } %>
+        </div>
+      </div>
     </div>
     <div class="fl w-100 w-third-l pl3-l">
       <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-l">
@@ -20,7 +37,7 @@
           </a>
         </div>
 
-        <div class="mb2">
+        <div class="mb2 mw5 center ml0-l">
           <img alt="<%= device.Name %>" loading="lazy" class="h2 dib v-mid" src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=100x"/>
           <span class="v-mid dib f7 silver"><%= device.Name %></span>
         </div>
@@ -47,6 +64,22 @@
           <% } %>
         </p>
       </div>
+    </div>
+  </div>
+  <div class="dn-l flex w-100 justify-between f6 mv3 ph3">
+    <div class="tl w-50">
+      <%= if (nextPost != 0) { %>
+        <a href="/posts/<%= nextPost %>">Next</a>
+      <% } else { %>
+        <span class="moon-gray">Next</span>
+      <% } %>
+    </div>
+    <div class="tr w-50<%= if (nextPost != 0) { %> bl bw1 b--light-gray<% } %>">
+      <%= if (previousPost != 0) { %>
+        <a href="/posts/<%= previousPost %>">Previous</a>
+      <% } else { %>
+        <span class="moon-gray">Previous</span>
+      <% } %>
     </div>
   </div>
 </div>

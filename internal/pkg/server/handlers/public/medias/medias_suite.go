@@ -103,7 +103,7 @@ func (s *MediasSuite) TestGetMedia() {
 	assert.Equal(s.T(), bodySha, imageSha)
 
 	// check that the image has been stashed in the bucket for future requests
-	br, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("thumbs/%d-100x.jpg", returnedMedias[0].ID), nil)
+	br, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("thumbs/media/%d-100x.jpg", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
 
 	buf := bytes.NewBuffer([]byte{})

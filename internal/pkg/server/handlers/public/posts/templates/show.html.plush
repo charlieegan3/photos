@@ -28,7 +28,7 @@
         </div>
 
         <div class="mb2">
-          <img alt="<%= device.Name %>" loading="lazy" class="h2 dib v-mid" src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>"/>
+          <img alt="<%= device.Name %>" loading="lazy" class="h2 dib v-mid" src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=100x"/>
           <span class="v-mid dib f7 silver"><%= device.Name %></span>
         </div>
 

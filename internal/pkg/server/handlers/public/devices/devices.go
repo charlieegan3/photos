@@ -1,6 +1,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	"io"
@@ -9,6 +10,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"gocloud.dev/blob"
+	"gocloud.dev/gcerrors"
+	"willnorris.com/go/imageproxy"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 )
@@ -49,30 +52,177 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			return
 		}
 
-		br, err := bucket.NewReader(r.Context(), fmt.Sprintf("device_icons/%s.%s", devices[0].Slug, devices[0].IconKind), nil)
+		w.Header().Set("Cache-Control", "public, max-age=604800")
+		w.Header().Set("Content-Type", "image/jpeg")
+
+		// TODO validate this matches a basic regex
+		imageResizeString := r.URL.Query().Get("o")
+		originalIconPath := fmt.Sprintf("device_icons/%s.%s", devices[0].Slug, devices[0].IconKind)
+		thumbIconPath := fmt.Sprintf("thumbs/device_icons/%d-%s.%s", devices[0].ID, imageResizeString, devices[0].IconKind)
+
+		// if there are no options, serve the image from the media upload path
+		if imageResizeString == "" {
+			attrs, err := bucket.Attributes(r.Context(), originalIconPath)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			w.Header().Set("ETag", attrs.ETag)
+
+			// handle potential 304 response
+			if ifNoneMatch := r.Header.Get("If-None-Match"); ifNoneMatch != "" {
+				if ifNoneMatch == attrs.ETag {
+					w.WriteHeader(http.StatusNotModified)
+					return
+				}
+			}
+
+			br, err := bucket.NewReader(r.Context(), originalIconPath, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			_, err = io.Copy(w, br)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to copy map into bucket"))
+				return
+			}
+
+			err = br.Close()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to close bucket reader"))
+				return
+			}
+
+			return
+		}
+
+		// otherwise, if there are options set, look for a suitable thumb
+		br, err := bucket.NewReader(r.Context(), thumbIconPath, nil)
+		// if there is not an existing thumb for these size options
+		if gcerrors.Code(err) == gcerrors.NotFound {
+			// create a reader to get the full size media from the bucket
+			br, err := bucket.NewReader(r.Context(), originalIconPath, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			// read the full size item
+			buf := bytes.NewBuffer([]byte{})
+			_, err = io.Copy(buf, br)
+			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to copy media item into byte buffer for image processing"))
+				return
+			}
+
+			err = br.Close()
+			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to close handle loading image from backing store"))
+				return
+			}
+
+			// resize the image based on the current settings
+			imageOptions := imageproxy.ParseOptions(imageResizeString)
+			imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
+
+			imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
+			buf = bytes.NewBuffer(imageBytes)
+
+			// create a writer for the new thumb
+			bw, err := bucket.NewWriter(r.Context(), thumbIconPath, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to open bucket to stash resized image"))
+				return
+			}
+			_, err = io.Copy(bw, bytes.NewReader(imageBytes))
+			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to copy media item into response"))
+				return
+			}
+
+			err = bw.Close()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to close bucket after writing"))
+				return
+			}
+
+			attrs, err := bucket.Attributes(r.Context(), thumbIconPath)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			w.Header().Set("ETag", attrs.ETag)
+
+			// return the resized image in the response
+			_, err = io.Copy(w, bytes.NewReader(imageBytes))
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to copy map into bucket"))
+				return
+			}
+			return
+		}
+
+		err = br.Close()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to close bucket after reading"))
+			return
+		}
+
+		// if there is a thumb, then return the contents in the response
+		attrs, err := bucket.Attributes(r.Context(), thumbIconPath)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		w.Header().Set("ETag", attrs.ETag)
+
+		// handle potential 304 response
+		if ifNoneMatch := r.Header.Get("If-None-Match"); ifNoneMatch != "" {
+			if ifNoneMatch == attrs.ETag {
+				w.WriteHeader(http.StatusNotModified)
+				return
+			}
+		}
+
+		br, err = bucket.NewReader(r.Context(), thumbIconPath, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		w.Header().Set("Content-Type", "image/jpeg")
-		if devices[0].IconKind == "png" {
-			w.Header().Set("Content-Type", "image/png")
-		}
 		_, err = io.Copy(w, br)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to copy media item into response"))
+			w.Write([]byte("failed to copy thumbnail into response"))
 			return
 		}
 
 		err = br.Close()
 		if err != nil {
-			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close handle loading image from backing store"))
+			w.Write([]byte("failed to close bucket after reading"))
 			return
 		}
 	}

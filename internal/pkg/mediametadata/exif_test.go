@@ -23,6 +23,10 @@ func TestExtract(t *testing.T) {
 				FNumber: Fraction{
 					Numerator: 2, Denominator: 1,
 				},
+				ExposureTime: Fraction{
+					Numerator:   1,
+					Denominator: 122,
+				},
 				ShutterSpeed: Fraction{
 					Numerator: 328711, Denominator: 47450,
 				},
@@ -77,6 +81,10 @@ func TestExtract(t *testing.T) {
 				},
 				ShutterSpeed: Fraction{
 					Numerator: 10550747, Denominator: 1000000,
+				},
+				ExposureTime: Fraction{
+					Numerator:   1,
+					Denominator: 1500,
 				},
 				ISOSpeed: 400,
 			},

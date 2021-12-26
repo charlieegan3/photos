@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	exif "github.com/dsoprea/go-exif/v3"
+	"github.com/dsoprea/go-exif/v3"
 	exifcommon "github.com/dsoprea/go-exif/v3/common"
 )
 
@@ -16,6 +16,7 @@ type Metadata struct {
 
 	FNumber      Fraction
 	ShutterSpeed Fraction
+	ExposureTime Fraction
 	ISOSpeed     uint16
 
 	Latitude  Coordinate
@@ -185,6 +186,25 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			metadata.ShutterSpeed.Numerator = uint32(val[0].Numerator)
 			metadata.ShutterSpeed.Denominator = uint32(val[0].Denominator)
+		}
+
+		if ite.TagName() == "ExposureTime" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw ExposureTime value")
+			}
+
+			val, ok := rawValue.([]exifcommon.Rational)
+			if !ok {
+				return fmt.Errorf("ExposureTime was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) != 1 {
+				return fmt.Errorf("found %d ExposureTime values", len(val))
+			}
+
+			metadata.ExposureTime.Numerator = uint32(val[0].Numerator)
+			metadata.ExposureTime.Denominator = uint32(val[0].Denominator)
 		}
 
 		if ite.TagName() == "ISOSpeedRatings" {

@@ -4,3 +4,6 @@ body {
 .f7 {
    font-size: 0.675rem;
 }
+.md p:first-child {
+  margin-top: 0;
+}

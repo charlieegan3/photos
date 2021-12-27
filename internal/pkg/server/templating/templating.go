@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/gobuffalo/plush"
+	"github.com/gomarkdown/markdown"
 	"github.com/pkg/errors"
 )
 
@@ -26,6 +27,11 @@ func BuildPageRenderFunc(bucketWebURL string, intermediateTemplates ...string) P
 	return func(ctx *plush.Context, t string, w io.Writer) error {
 		ctx.Set("to_string", func(arg interface{}) string {
 			return fmt.Sprintf("%v", arg)
+		})
+
+		ctx.Set("markdown", func(md string) string {
+			d := markdown.NormalizeNewlines([]byte(md))
+			return string(markdown.ToHTML(d, nil, nil))
 		})
 
 		ctx.Set("truncate", func(s string, length int, elipsis bool) string {

@@ -13,6 +13,7 @@
 <%= form_for(post, {class: "mb3", action:"/admin/posts/"+post.ID, method: "PUT"}) { %>
   <div class="mb1">
     <label for="Description">Description</label>
+    <div><%= raw(markdown(post.Description)) %></div>
     <textarea class="w-100" name="Description" rows="4"><%= post.Description %></textarea>
   </div>
   <div class="mb1">

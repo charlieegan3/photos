@@ -1,33 +1,39 @@
-<section class="cf w-100 pa2-ns">
-<%= for (post) in posts { %>
-  <article class="fl w-third pa2-l pa1-m">
-    <div class="aspect-ratio aspect-ratio--1x1">
-      <a class="w-third" href="/posts/<%= post.ID %>">
-        <picture>
-          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
-          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=250x 1x, /medias/<%= post.MediaID %>/image.jpg?o=500x 2x" media="(min-width: 30em)">
-          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=100x 1x, /medias/<%= post.MediaID %>/image.jpg?o=200x 2x">
-          <img
-            loading="lazy"
-            alt="<%= post.Description %>"
-            src="/medias/<%= post.MediaID %>/image.jpg"
-            class="db bg-center cover aspect-ratio--object br1-ns" />
-        </picture>
-      </a>
-    </div>
-  </article>
-<% } %>
-</section>
+<div class="w-100">
+  <div class="cf pa2-ns ">
+    <%= for (post) in posts { %>
+      <article class="fl w-third pa2-l pa1-m">
+        <div class="aspect-ratio aspect-ratio--1x1">
+          <a class="w-third" href="/posts/<%= post.ID %>">
+            <picture>
+              <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
+              <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=250x 1x, /medias/<%= post.MediaID %>/image.jpg?o=500x 2x" media="(min-width: 30em)">
+              <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=100x 1x, /medias/<%= post.MediaID %>/image.jpg?o=200x 2x">
+              <img
+                loading="lazy"
+                alt="<%= post.Description %>"
+                src="/medias/<%= post.MediaID %>/image.jpg"
+                class="db bg-center cover aspect-ratio--object br1-ns" />
+            </picture>
+          </a>
+        </div>
+      </article>
+    <% } %>
+  </div>
+</div>
 
-<div class="mv3 flex justify-between">
-<%= if (page > 1) { %>
-  <a class="dib" href="/?page=<%= page - 1 %>"/>Next</a>
-<% } else { %>
-  <span class="hidden"></span>
-<% } %>
-<%= if (page < lastPage) { %>
-  <a class="dib" href="/?page=<%= page + 1 %>"/>Previous</a>
-<% } else { %>
-  <span class="hidden"></span>
-<% } %>
+<div class="flex w-100 justify-between f6 mv3 mt1-l ph3">
+  <div class="tl w-50">
+    <%= if (page > 1) { %>
+      <a href="/?page=<%= page - 1 %>"/>Next</a>
+    <% } else { %>
+      <span class="moon-gray">Next</span>
+    <% } %>
+  </div>
+  <div class="tr w-50 bl bw1 b--light-gray">
+    <%= if (page < lastPage) { %>
+      <a href="/?page=<%= page + 1 %>"/>Previous</a>
+    <% } else { %>
+      <span class="moon-gray">Previous</span>
+    <% } %>
+  </div>
 </div>

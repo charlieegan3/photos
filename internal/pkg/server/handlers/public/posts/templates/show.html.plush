@@ -66,6 +66,7 @@
       </div>
     </div>
   </div>
+
   <div class="dn-l flex w-100 justify-between f6 mv3 ph3">
     <div class="tl w-50">
       <%= if (nextPost != 0) { %>
@@ -74,7 +75,7 @@
         <span class="moon-gray">Next</span>
       <% } %>
     </div>
-    <div class="tr w-50<%= if (nextPost != 0) { %> bl bw1 b--light-gray<% } %>">
+    <div class="tr w-50 bl bw1 b--light-gray">
       <%= if (previousPost != 0) { %>
         <a href="/posts/<%= previousPost %>">Previous</a>
       <% } else { %>

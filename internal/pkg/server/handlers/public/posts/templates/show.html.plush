@@ -60,7 +60,9 @@
 
         <p class="f7 moon-gray tc tl-l">
           <%= for (tag) in tags { %>
-          #<%= tag.Name %>
+          <%= if (!tag.Hidden) { %>
+            #<%= tag.Name %>
+          <% } %>
           <% } %>
         </p>
       </div>

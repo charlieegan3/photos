@@ -213,19 +213,41 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		updatedTags, err := database.UpdateTags(db, []models.Tag{tag})
+		var redirectTo string
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
+			_, ok := err.(*database.TagNameConflictError)
+			if ok {
+				conflictingTags, err := database.FindTagsByName(db, []string{tag.Name})
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
+				if len(conflictingTags) != 1 {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte("conflicting tag was not found"))
+					return
+				}
+				err = database.MergeTags(db, conflictingTags[0], tag)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
+				redirectTo = fmt.Sprintf("/admin/tags/%s", conflictingTags[0].Name)
+			} else {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+		} else {
+			if len(updatedTags) != 1 {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("unexpected number of updatedTags"))
+				return
+			}
+			redirectTo = fmt.Sprintf("/admin/tags/%s", updatedTags[0].Name)
 		}
-
-		if len(updatedTags) != 1 {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of updatedTags"))
-			return
-		}
-
-		redirectTo := fmt.Sprintf("/admin/tags/%s", updatedTags[0].Name)
 
 		// also possible to update from the index
 		if referrer := r.Form.Get("RedirectTo"); referrer != "" {

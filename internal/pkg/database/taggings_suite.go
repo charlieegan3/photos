@@ -33,9 +33,6 @@ func (s *TaggingsSuite) SetupTest() {
 
 	err = Truncate(s.DB, "tags")
 	require.NoError(s.T(), err)
-
-	err = Truncate(s.DB, "taggings")
-	require.NoError(s.T(), err)
 }
 
 func (s *TaggingsSuite) TestCreateTaggings() {

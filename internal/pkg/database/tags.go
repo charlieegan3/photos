@@ -53,6 +53,12 @@ func newDBTag(tag models.Tag) dbTag {
 	}
 }
 
+type TagNameConflictError struct{}
+
+func (t TagNameConflictError) Error() string {
+	return "tag name conflicted with an existing tag"
+}
+
 func CreateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
 	records := []goqu.Record{}
 	for _, v := range tags {
@@ -230,7 +236,8 @@ func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
+
+			return results, &TagNameConflictError{}
 		}
 
 		results = append(results, newTag(result))
@@ -240,4 +247,30 @@ func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 	}
 
 	return results, nil
+}
+
+// TODO make this a transaction
+func MergeTags(db *sql.DB, tag1, tag2 models.Tag) (err error) {
+	taggings, err := AllTaggings(db)
+	if err != nil {
+		return errors.Wrap(err, "failed to list all taggings")
+	}
+
+	// create new taggings for all posts to tag1
+	var newTaggings []models.Tagging
+	for _, t := range taggings {
+		newTaggings = append(newTaggings, models.Tagging{TagID: tag1.ID, PostID: t.PostID})
+	}
+
+	_, err = CreateTaggings(db, newTaggings)
+	if err != nil {
+		return errors.Wrap(err, "failed to create new taggings for tag1")
+	}
+
+	err = DeleteTags(db, []models.Tag{tag2})
+	if err != nil {
+		return errors.Wrap(err, "failed to delete tag2")
+	}
+
+	return nil
 }

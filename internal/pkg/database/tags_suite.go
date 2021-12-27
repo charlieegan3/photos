@@ -19,9 +19,19 @@ type TagsSuite struct {
 
 func (s *TagsSuite) SetupTest() {
 	err := Truncate(s.DB, "tags")
-	if err != nil {
-		s.T().Fatalf("failed to truncate table: %s", err)
-	}
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "taggings")
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "medias")
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "locations")
+	require.NoError(s.T(), err)
+
+	err = Truncate(s.DB, "devices")
+	require.NoError(s.T(), err)
 }
 
 func (s *TagsSuite) TestCreateTags() {
@@ -347,4 +357,100 @@ func (s *TagsSuite) TestDeleteTags() {
 	)
 
 	td.Cmp(s.T(), allTags, expectedResult)
+}
+
+func (s *TagsSuite) TestMergeTags() {
+	devices := []models.Device{{Name: "Example Device"}}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took",
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	tags := []models.Tag{
+		{Name: "example1"},
+		{Name: "example2"},
+	}
+	returnedTags, err := CreateTags(s.DB, tags)
+	require.NoError(s.T(), err)
+
+	taggings := []models.Tagging{
+		{
+			PostID: returnedPosts[0].ID,
+			TagID:  returnedTags[0].ID,
+		},
+		{
+			PostID: returnedPosts[1].ID,
+			TagID:  returnedTags[1].ID,
+		},
+	}
+
+	_, err = CreateTaggings(s.DB, taggings)
+	require.NoError(s.T(), err)
+
+	err = MergeTags(s.DB, returnedTags[0], returnedTags[1])
+	require.NoError(s.T(), err)
+
+	allTags, err := AllTags(s.DB, true, SelectOptions{})
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Tag{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				returnedTags[0],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), allTags, expectedResult)
+
+	returnedTaggings, err := AllTaggings(s.DB)
+	require.NoError(s.T(), err)
+
+	expectedResult = td.Slice(
+		[]models.Tagging{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Tagging{
+					PostID: returnedPosts[0].ID,
+					TagID:  returnedTags[0].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				models.Tagging{
+					PostID: returnedPosts[1].ID,
+					TagID:  returnedTags[0].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedTaggings, expectedResult)
 }

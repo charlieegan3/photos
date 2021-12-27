@@ -69,7 +69,11 @@ func CreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tag
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("taggings").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("taggings").
+		Returning(goqu.Star()).
+		Rows(records).
+		OnConflict(goqu.DoNothing()). // there are only two fields
+		Executor()
 	if err := insert.ScanStructs(&dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to insert taggings")
 	}
@@ -170,4 +174,21 @@ func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
 	}
 
 	return nil
+}
+func AllTaggings(db *sql.DB) (results []models.Tagging, err error) {
+	var dbTaggings []dbTagging
+
+	goquDB := goqu.New("postgres", db)
+	query := goquDB.From("taggings").Select("*")
+
+	if err := query.Executor().ScanStructs(&dbTaggings); err != nil {
+		return results, errors.Wrap(err, "failed to select tags")
+	}
+
+	results = []models.Tagging{}
+	for _, v := range dbTaggings {
+		results = append(results, newTagging(v))
+	}
+
+	return results, nil
 }

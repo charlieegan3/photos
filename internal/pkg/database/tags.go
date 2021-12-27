@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 )
 
 type dbTag struct {
@@ -142,12 +143,32 @@ func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, e
 	return results, nil
 }
 
-func AllTags(db *sql.DB) (results []models.Tag, err error) {
+func AllTags(db *sql.DB, includeHidden bool, options SelectOptions) (results []models.Tag, err error) {
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("tags").Select("*").Executor()
-	if err := insert.ScanStructs(&dbTags); err != nil {
+	query := goquDB.From("tags").Select("*")
+
+	if !includeHidden {
+		query = query.Where(goqu.Ex{"hidden": false})
+	}
+
+	if options.SortField != "" {
+		query = query.Order(goqu.I(options.SortField).Asc())
+	}
+	if options.SortField != "" && options.SortDescending {
+		query = query.Order(goqu.I(options.SortField).Desc())
+	}
+
+	if options.Offset != 0 {
+		query = query.Offset(options.Offset)
+	}
+
+	if options.Limit != 0 {
+		query = query.Limit(options.Limit)
+	}
+
+	if err := query.Executor().ScanStructs(&dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags")
 	}
 

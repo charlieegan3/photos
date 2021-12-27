@@ -145,7 +145,7 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/tags/nofilter"})
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB)
+	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{})
 	require.NoError(s.T(), err)
 
 	expectedTags := td.Slice(
@@ -201,7 +201,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB)
+	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed to list tags: %s", err)
 	}
@@ -260,7 +260,7 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB)
+	returnedTags, err := database.AllTags(s.DB, false, database.SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed to list tags: %s", err)
 	}

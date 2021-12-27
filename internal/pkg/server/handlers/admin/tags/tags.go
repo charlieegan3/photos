@@ -7,11 +7,12 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/gobuffalo/plush"
+	"github.com/gorilla/mux"
+
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
-	"github.com/gobuffalo/plush"
-	"github.com/gorilla/mux"
 )
 
 //go:embed templates/index.html.plush
@@ -27,7 +28,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		tags, err := database.AllTags(db)
+		tags, err := database.AllTags(db, true, database.SelectOptions{SortField: "name"})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -207,6 +208,9 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		if r.Form.Get("Hidden") != "" {
 			tag.Hidden = true
 		}
+		if r.Form.Get("Hidden") == "false" {
+			tag.Hidden = false
+		}
 
 		updatedTags, err := database.UpdateTags(db, []models.Tag{tag})
 		if err != nil {
@@ -221,10 +225,17 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
+		redirectTo := fmt.Sprintf("/admin/tags/%s", updatedTags[0].Name)
+
+		// also possible to update from the index
+		if referrer := r.Form.Get("RedirectTo"); referrer != "" {
+			redirectTo = referrer
+		}
+
 		http.Redirect(
 			w,
 			r,
-			fmt.Sprintf("/admin/tags/%s", updatedTags[0].Name),
+			redirectTo,
 			http.StatusSeeOther,
 		)
 	}

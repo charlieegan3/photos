@@ -1,26 +1,48 @@
 <h1>Tags</h1>
 <p><a href="./tags/new">New Tag</a></p>
-<ul>
-<%= for (tag) in tags { %>
-  <%= if (!tag.Hidden) { %>
-    <li>
-      <a href="/admin/tags/<%= tag.Name %>">
-      <%= tag.Name %>
-      </a>
-    </li>
+<table>
+  <%= for (tag) in tags { %>
+    <%= if (!tag.Hidden) { %>
+      <tr class="striped--near-white">
+        <td><a href="/admin/tags/<%= tag.Name %>"><%= tag.Name %></a></td>
+        <td>
+          <%= form_for(tag, {id: tag.ID, class: "dib", action:"/admin/tags/"+tag.Name, method: "PUT"}) { %>
+            <input name="Name" type="hidden" value="<%= tag.Name %>">
+            <input name="Hidden" type="hidden" value="true">
+            <input name="RedirectTo" type="hidden" value="/admin/tags">
+            <%= f.SubmitTag("Hide") %>
+          <% } %>
+        </td>
+        <td>
+          <%= form_for(tag, {class: "dib", action:"/admin/tags/"+tag.Name, method: "DELETE"}) { %>
+          <%= f.SubmitTag("Delete") %>
+          <% } %>
+        </td>
+      </tr>
+    <% } %>
   <% } %>
-<% } %>
-</ul>
+</table>
 
 <p>Hidden</p>
-<ul>
-<%= for (tag) in tags { %>
-  <%= if (tag.Hidden) { %>
-    <li>
-      <a href="/admin/tags/<%= tag.Name %>">
-      <%= tag.Name %>
-      </a>
-    </li>
+<table>
+  <%= for (tag) in tags { %>
+    <%= if (tag.Hidden) { %>
+      <tr class="striped--near-white">
+        <td><a href="/admin/tags/<%= tag.Name %>"><%= tag.Name %></a></td>
+        <td>
+          <%= form_for(tag, {id: tag.ID, class: "dib", action:"/admin/tags/"+tag.Name, method: "PUT"}) { %>
+            <input name="Name" type="hidden" value="<%= tag.Name %>">
+            <input name="Hidden" type="hidden" value="false">
+            <input name="RedirectTo" type="hidden" value="/admin/tags">
+            <%= f.SubmitTag("Show") %>
+          <% } %>
+        </td>
+        <td>
+          <%= form_for(tag, {class: "dib", action:"/admin/tags/"+tag.Name, method: "DELETE"}) { %>
+            <%= f.SubmitTag("Delete") %>
+          <% } %>
+        </td>
+      </tr>
+    <% } %>
   <% } %>
-<% } %>
-</ul>
+</table>

@@ -237,25 +237,28 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*")
+	query := goquDB.From("posts").Select("*")
 
 	if !includeDrafts {
-		insert = insert.Where(goqu.Ex{"is_draft": false})
+		query = query.Where(goqu.Ex{"is_draft": false})
 	}
 
+	if options.SortField != "" {
+		query = query.Order(goqu.I(options.SortField).Asc())
+	}
 	if options.SortField != "" && options.SortDescending {
-		insert = insert.Order(goqu.I(options.SortField).Desc())
+		query = query.Order(goqu.I(options.SortField).Desc())
 	}
 
 	if options.Offset != 0 {
-		insert = insert.Offset(options.Offset)
+		query = query.Offset(options.Offset)
 	}
 
 	if options.Limit != 0 {
-		insert = insert.Limit(options.Limit)
+		query = query.Limit(options.Limit)
 	}
 
-	if err := insert.Executor().ScanStructs(&dbPosts); err != nil {
+	if err := query.Executor().ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 

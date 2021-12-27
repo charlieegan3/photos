@@ -3,10 +3,11 @@ package database
 import (
 	"database/sql"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 )
 
 // TagsSuite is a number of tests to define the database integration for
@@ -191,7 +192,7 @@ func (s *TagsSuite) TestAllTags() {
 		s.T().Fatalf("failed to create tags needed for test: %s", err)
 	}
 
-	returnedTags, err := AllTags(s.DB)
+	returnedTags, err := AllTags(s.DB, false, SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -327,7 +328,7 @@ func (s *TagsSuite) TestDeleteTags() {
 	err = DeleteTags(s.DB, []models.Tag{tagToDelete})
 	require.NoError(s.T(), err, "unexpected error deleting tags")
 
-	allTags, err := AllTags(s.DB)
+	allTags, err := AllTags(s.DB, false, SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}

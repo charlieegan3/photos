@@ -1,5 +1,5 @@
 <div class="w-100">
-  <div class="cf pa2-ns ">
+  <div class="cf pa2-ns f7">
     <%= for (post) in posts { %>
       <article class="fl w-third pa2-l pa1-m">
         <div class="aspect-ratio aspect-ratio--1x1">

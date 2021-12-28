@@ -1,5 +1,6 @@
 <h1>Posts</h1>
 <p><a href="./posts/new">New Post</a></p>
+<p><%= len(posts) %> posts</p>
 <ul>
 <%= for (post) in posts { %>
     <li>

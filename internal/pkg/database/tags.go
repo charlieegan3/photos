@@ -251,7 +251,7 @@ func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 
 // TODO make this a transaction
 func MergeTags(db *sql.DB, tag1, tag2 models.Tag) (err error) {
-	taggings, err := AllTaggings(db)
+	taggings, err := FindTaggingsByTagID(db, tag2.ID)
 	if err != nil {
 		return errors.Wrap(err, "failed to list all taggings")
 	}

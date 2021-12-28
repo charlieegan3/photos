@@ -150,6 +150,22 @@ func FindTaggingsByPostID(db *sql.DB, id int) (results []models.Tagging, err err
 	return results, nil
 }
 
+func FindTaggingsByTagID(db *sql.DB, id int) (results []models.Tagging, err error) {
+	var dbTaggings []dbTagging
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("taggings").Select("*").Where(goqu.Ex{"tag_id": id}).Executor()
+	if err := insert.ScanStructs(&dbTaggings); err != nil {
+		return results, errors.Wrap(err, "failed to select taggings by tag_id")
+	}
+
+	for _, v := range dbTaggings {
+		results = append(results, newTagging(v))
+	}
+
+	return results, nil
+}
+
 func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
 	var ids []int
 	for _, d := range taggings {

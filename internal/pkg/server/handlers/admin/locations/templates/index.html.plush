@@ -1,5 +1,6 @@
 <h1>Locations</h1>
 <p><a href="./locations/new">New Location</a></p>
+<p><%= len(locations) %> locations</p>
 <table>
 <thead>
   <tr>

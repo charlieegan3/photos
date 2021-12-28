@@ -1,5 +1,6 @@
 <h1>Tags</h1>
 <p><a href="./tags/new">New Tag</a></p>
+<p><%= len(tags) %> tags</p>
 <table>
   <%= for (tag) in tags { %>
     <%= if (!tag.Hidden) { %>

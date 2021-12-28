@@ -1,5 +1,6 @@
 <h1>Medias</h1>
 <p><a href="./medias/new">New Media</a></p>
+<p><%= len(medias) %> medias</p>
 <ul>
 <%= for (media) in medias { %>
   <li>

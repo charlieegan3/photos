@@ -1,0 +1,73 @@
+name: Database Backup
+
+on:
+  schedule:
+  - cron: "15 * * * *"
+  workflow_dispatch:
+    inputs:
+      label:
+        description: 'label'
+        required: true
+
+jobs:
+  database_backup:
+    name: Database Backup
+    runs-on: ubuntu-latest
+    steps:
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: "${{ secrets.GOOGLE_JSON }}"
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+
+    - name: 'Dump database'
+      env:
+        DATABASE_URL: "${{ secrets.DATABASE_URL }}"
+      run: |
+        pg_dump -d "$DATABASE_URL" -Fc -c > dump.out
+
+    - name: Get date information
+      id: date
+      run: |
+        echo "::set-output name=hour::$(date +'%H')"
+        echo "::set-output name=day::$(date +'%u')"
+        echo "::set-output name=date::$(date +'%d')"
+
+    - name: 'Upload manual dump'
+      if: "${{ github.event_name == 'workflow_dispatch' }}"
+      env:
+        DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
+        BACKUP_LABEL: "${{ github.event.inputs.label }}"
+      run: |
+        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/manual/$BACKUP_LABEL.out"
+
+    - name: 'Upload hourly dump'
+      if: "${{ github.event_name != 'workflow_dispatch' }}"
+      env:
+        DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
+      run: |
+        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/hour.out"
+
+    - name: 'Upload daily dump'
+      if: "${{ github.event_name != 'workflow_dispatch' && steps.date.outputs.hour == '12' }}"
+      env:
+        DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
+      run: |
+        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/day.out"
+
+    - name: 'Upload weekly dump'
+      if: "${{ github.event_name != 'workflow_dispatch' && steps.date.outputs.hour == '12' && steps.date.outputs.day == '5' }}"
+      env:
+        DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
+      run: |
+        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/week.out"
+
+    - name: 'Upload month dump'
+      if: "${{ github.event_name != 'workflow_dispatch' && steps.date.outputs.date == '01' && steps.date.outputs.hour == '12' }}"
+      env:
+        DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
+      run: |
+        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/month.out"

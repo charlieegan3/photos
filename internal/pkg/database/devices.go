@@ -113,8 +113,11 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("devices").Select("*").Executor()
-	if err := insert.ScanStructs(&dbDevices); err != nil {
+	selectDevices := goquDB.From("devices").
+		Select("*").
+		Order(goqu.I("name").Asc()).
+		Executor()
+	if err := selectDevices.ScanStructs(&dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices")
 	}
 

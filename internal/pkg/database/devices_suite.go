@@ -137,7 +137,7 @@ func (s *DevicesSuite) TestFindDevicesByName() {
 func (s *DevicesSuite) TestAllDevices() {
 	devices := []models.Device{
 		{
-			Name: "iPhone",
+			Name: "IPhone",
 		},
 		{
 			Name: "X100F",
@@ -159,7 +159,7 @@ func (s *DevicesSuite) TestAllDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name: "iPhone",
+					Name: "IPhone",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

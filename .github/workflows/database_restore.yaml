@@ -1,0 +1,36 @@
+name: Database Restore
+
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: 'path'
+        required: false
+        default: hour.dump
+
+jobs:
+  database_restore:
+    name: Database Restore
+    runs-on: ubuntu-latest
+    steps:
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: "${{ secrets.GOOGLE_JSON }}"
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+
+    - name: 'Download dump'
+      env:
+        DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
+        BACKUP_PATH: "${{ github.event.inputs.path }}"
+      run: |
+        gsutil cp "gs://$DATABASE_BACKUP_BUCKET_NAME/$BACKUP_PATH" "./database.dump"
+
+    - name: 'Restore database'
+      env:
+        DATABASE_URL: "${{ secrets.DATABASE_URL }}"
+      run: |
+        pg_restore -d "$DATABASE_URL" -Fc -c "./database.dump" || true

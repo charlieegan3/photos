@@ -27,7 +27,7 @@ jobs:
       env:
         DATABASE_URL: "${{ secrets.DATABASE_URL }}"
       run: |
-        pg_dump -d "$DATABASE_URL" -Fc -c > dump.out
+        pg_dump -d "$DATABASE_URL" -Fc -c > dump.dump
 
     - name: Get date information
       id: date
@@ -42,32 +42,32 @@ jobs:
         DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
         BACKUP_LABEL: "${{ github.event.inputs.label }}"
       run: |
-        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/manual/$BACKUP_LABEL.out"
+        gsutil cp "./dump.dump" "gs://$DATABASE_BACKUP_BUCKET_NAME/manual/$BACKUP_LABEL.dump"
 
     - name: 'Upload hourly dump'
       if: "${{ github.event_name != 'workflow_dispatch' }}"
       env:
         DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
       run: |
-        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/hour.out"
+        gsutil cp "./dump.dump" "gs://$DATABASE_BACKUP_BUCKET_NAME/hour.dump"
 
     - name: 'Upload daily dump'
       if: "${{ github.event_name != 'workflow_dispatch' && steps.date.outputs.hour == '12' }}"
       env:
         DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
       run: |
-        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/day.out"
+        gsutil cp "./dump.dump" "gs://$DATABASE_BACKUP_BUCKET_NAME/day.dump"
 
     - name: 'Upload weekly dump'
       if: "${{ github.event_name != 'workflow_dispatch' && steps.date.outputs.hour == '12' && steps.date.outputs.day == '5' }}"
       env:
         DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
       run: |
-        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/week.out"
+        gsutil cp "./dump.dump" "gs://$DATABASE_BACKUP_BUCKET_NAME/week.dump"
 
     - name: 'Upload month dump'
       if: "${{ github.event_name != 'workflow_dispatch' && steps.date.outputs.date == '01' && steps.date.outputs.hour == '12' }}"
       env:
         DATABASE_BACKUP_BUCKET_NAME: "${{ secrets.DATABASE_BACKUP_BUCKET_NAME }}"
       run: |
-        gsutil cp "./dump.out" "gs://$DATABASE_BACKUP_BUCKET_NAME/month.out"
+        gsutil cp "./dump.dump" "gs://$DATABASE_BACKUP_BUCKET_NAME/month.dump"

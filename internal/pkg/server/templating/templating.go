@@ -20,7 +20,7 @@ var baseTemplateAdmin string
 
 type PageRenderer func(*plush.Context, string, io.Writer) error
 
-func BuildPageRenderFunc(bucketWebURL string, intermediateTemplates ...string) PageRenderer {
+func BuildPageRenderFunc(intermediateTemplates ...string) PageRenderer {
 	// list of all templates to run including intermediateTemplates
 	templates := append(intermediateTemplates, "base")
 

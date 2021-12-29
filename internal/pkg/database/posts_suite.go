@@ -873,3 +873,61 @@ func (s *PostsSuite) TestSetPostTags() {
 
 	td.Cmp(s.T(), postTags, expectedResult)
 }
+
+func (s *PostsSuite) TestPostsInDateRange() {
+	devices := []models.Device{{Name: "Example Device"}}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "older post",
+			PublishDate: time.Date(2021, time.October, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post in range",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "future post",
+			PublishDate: time.Date(2021, time.December, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	_, err = CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	returnedPosts, err := PostsInDateRange(
+		s.DB,
+		time.Date(2021, time.November, 1, 0, 0, 0, 0, time.Local),
+		time.Date(2021, time.November, 30, 0, 0, 0, 0, time.Local),
+	)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				posts[1],
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedPosts, expectedResult)
+}

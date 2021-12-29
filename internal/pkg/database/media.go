@@ -136,7 +136,7 @@ func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, er
 	return results, nil
 }
 
-func FindMediasByID(db *sql.DB, id int) (results []models.Media, err error) {
+func FindMediasByID(db *sql.DB, id []int) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)

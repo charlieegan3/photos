@@ -16,7 +16,7 @@ import (
 func TestIndexPage(t *testing.T) {
 	router := mux.NewRouter()
 
-	renderer := templating.BuildPageRenderFunc("http://", "admin")
+	renderer := templating.BuildPageRenderFunc("admin")
 
 	router.HandleFunc("/admin", BuildAdminIndexHandler(renderer)).Methods("GET")
 

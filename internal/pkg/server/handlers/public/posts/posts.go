@@ -6,16 +6,21 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 //go:embed templates/index.html.plush
 var indexTemplate string
+
+//go:embed templates/period.html.plush
+var periodTemplate string
 
 //go:embed templates/show.html.plush
 var showTemplate string
@@ -136,7 +141,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, posts[0].MediaID)
+		medias, err := database.FindMediasByID(db, []int{posts[0].MediaID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -147,24 +152,24 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, posts[0].LocationID)
+		locations, err := database.FindLocationsByID(db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-		if len(medias) == 0 {
+		if len(locations) == 0 {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, medias[0].DeviceID)
+		devices, err := database.FindDevicesByID(db, []int{medias[0].DeviceID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
-		if len(medias) == 0 {
+		if len(devices) == 0 {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -198,6 +203,109 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("tags", tags)
 
 		err = renderer(ctx, showTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+	}
+}
+
+func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		fromString, ok := mux.Vars(r)["from"]
+		if !ok {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("from param required"))
+			return
+		}
+
+		fromTime, err := time.Parse("2006-01-02", fromString)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("invalid from date format"))
+			return
+		}
+
+		toTime := fromTime.Add(24 * time.Hour)
+		toString, ok := mux.Vars(r)["to"]
+		if ok {
+			toTime, err = time.Parse("2006-01-02", toString)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("invalid from date format"))
+				return
+			}
+			toTime = toTime.Add(24 * time.Hour).Add(-time.Second)
+		}
+
+		posts, err := database.PostsInDateRange(db, fromTime, toTime)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		// TODO fetch these with posts
+		var locationIDs []int
+		for _, p := range posts {
+			locationIDs = append(locationIDs, p.LocationID)
+		}
+
+		locations, err := database.FindLocationsByID(db, locationIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		locationMap := make(map[int]models.Location)
+		for _, l := range locations {
+			locationMap[l.ID] = l
+		}
+
+		// TODO fetch these with posts
+		var mediaIDs []int
+		for _, p := range posts {
+			mediaIDs = append(mediaIDs, p.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediaMap := make(map[int]models.Media)
+		for _, m := range medias {
+			mediaMap[m.ID] = m
+		}
+
+		multipleDays := false
+		if toTime.Sub(fromTime) > (24 * time.Hour) {
+			multipleDays = true
+		}
+
+		postGroupKeys := []string{}
+		postGroups := make(map[string][]models.Post)
+		for _, p := range posts {
+			key := p.PublishDate.Format("January 2, 2006")
+			if _, ok := postGroups[key]; !ok {
+				postGroups[key] = []models.Post{}
+				postGroupKeys = append(postGroupKeys, key)
+			}
+			postGroups[key] = append(postGroups[key], p)
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("postGroupKeys", postGroupKeys)
+		ctx.Set("postGroups", postGroups)
+		ctx.Set("locations", locationMap)
+		ctx.Set("multipleDays", multipleDays)
+
+		err = renderer(ctx, periodTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

@@ -101,7 +101,7 @@ func (s *PostsSuite) TestListPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
+	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/", nil)
 	require.NoError(s.T(), err)
@@ -176,7 +176,7 @@ func (s *PostsSuite) TestGetPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc("http://"))).Methods("GET")
+	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -195,4 +195,64 @@ func (s *PostsSuite) TestGetPost() {
 
 	assert.Contains(s.T(), string(body), "Here is a shot I took")
 	assert.NotContains(s.T(), string(body), "another photo")
+}
+
+func (s *PostsSuite) TestPeriodHandler() {
+	devices := []models.Device{{Name: "Example Device"}}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
+	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "older post",
+			PublishDate: time.Date(2021, time.October, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post in range",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "future post",
+			PublishDate: time.Date(2021, time.December, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	_, err = database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/posts/period/{from}-to-{to}", BuildPeriodHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/posts/period/2021-11-01-to-2021-11-29", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.NotContains(s.T(), string(body), "older post")
+	assert.Contains(s.T(), string(body), "post in range")
+	assert.NotContains(s.T(), string(body), "future post")
 }

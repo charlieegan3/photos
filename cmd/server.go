@@ -64,8 +64,8 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to open bucket: %s", err)
 		}
 
-		renderer := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"))
-		rendererAdmin := templating.BuildPageRenderFunc(viper.GetString("bucket.webUrl"), "admin")
+		renderer := templating.BuildPageRenderFunc()
+		rendererAdmin := templating.BuildPageRenderFunc("admin")
 
 		log.Println("Listening on", port)
 

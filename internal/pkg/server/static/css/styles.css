@@ -7,3 +7,7 @@ body {
 .md p:first-child {
   margin-top: 0;
 }
+
+.md p:last-child {
+    margin-bottom: 0;
+}

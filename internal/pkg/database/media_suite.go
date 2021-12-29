@@ -149,7 +149,7 @@ func (s *MediasSuite) TestFindMediasByID() {
 
 	medias[0].ID = returnedMedias[0].ID
 
-	returnedMedias, err = FindMediasByID(s.DB, medias[0].ID)
+	returnedMedias, err = FindMediasByID(s.DB, []int{medias[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}
@@ -531,7 +531,7 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 	td.Cmp(s.T(), returnedMedias, expectedMedias)
 
-	returnedMedias, err = FindMediasByID(s.DB, updatedMedias[0].ID)
+	returnedMedias, err = FindMediasByID(s.DB, []int{updatedMedias[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}

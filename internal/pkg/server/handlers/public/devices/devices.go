@@ -34,7 +34,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, id)
+		devices, err := database.FindDevicesByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

@@ -93,7 +93,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, id)
+		devices, err := database.FindDevicesByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -222,7 +222,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		existingDevices, err := database.FindDevicesByID(db, id)
+		existingDevices, err := database.FindDevicesByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

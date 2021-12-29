@@ -31,7 +31,7 @@ func TestRenderPage(t *testing.T) {
 	ctx := plush.NewContext()
 	ctx.Set("foo", "bar")
 
-	renderFunc := BuildPageRenderFunc("http://")
+	renderFunc := BuildPageRenderFunc()
 
 	err := renderFunc(ctx, nestedTemplate, b)
 	require.NoError(t, err)

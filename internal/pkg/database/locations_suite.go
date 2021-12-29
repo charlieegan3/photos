@@ -87,7 +87,7 @@ func (s *LocationsSuite) TestFindLocationsByID() {
 		s.T().Fatalf("failed to create locations needed for test: %s", err)
 	}
 
-	returnedLocations, err := FindLocationsByID(s.DB, persistedLocations[0].ID)
+	returnedLocations, err := FindLocationsByID(s.DB, []int{persistedLocations[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -255,7 +255,7 @@ func (s *LocationsSuite) TestUpdateLocations() {
 
 	td.Cmp(s.T(), returnedLocations, expectedLocations)
 
-	returnedLocations, err = FindLocationsByID(s.DB, returnedLocations[0].ID)
+	returnedLocations, err = FindLocationsByID(s.DB, []int{returnedLocations[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}

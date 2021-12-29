@@ -77,7 +77,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, intID)
+		medias, err := database.FindMediasByID(db, []int{intID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -147,7 +147,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		existingMedias, err := database.FindMediasByID(db, intID)
+		existingMedias, err := database.FindMediasByID(db, []int{intID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

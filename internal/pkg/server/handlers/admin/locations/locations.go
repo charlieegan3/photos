@@ -7,11 +7,12 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gobuffalo/plush"
+	"github.com/gorilla/mux"
+
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
-	"github.com/gobuffalo/plush"
-	"github.com/gorilla/mux"
 )
 
 //go:embed templates/index.html.plush
@@ -64,7 +65,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, id)
+		locations, err := database.FindLocationsByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -192,7 +193,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		existingLocations, err := database.FindLocationsByID(db, id)
+		existingLocations, err := database.FindLocationsByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

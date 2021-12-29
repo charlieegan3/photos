@@ -77,7 +77,7 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	return results, nil
 }
 
-func FindDevicesByID(db *sql.DB, id int) (results []models.Device, err error) {
+func FindDevicesByID(db *sql.DB, id []int) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)

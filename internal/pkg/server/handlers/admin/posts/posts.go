@@ -112,7 +112,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, posts[0].MediaID)
+		medias, err := database.FindMediasByID(db, []int{posts[0].MediaID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

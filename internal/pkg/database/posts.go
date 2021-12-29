@@ -176,7 +176,6 @@ func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models
 	}
 
 	for _, v := range dbPosts {
-		fmt.Println(v.Description)
 		results = append(results, newPost(v))
 	}
 
@@ -355,6 +354,38 @@ func UpdatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 	}
 	if err = tx.Commit(); err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
+	}
+
+	return results, nil
+}
+
+func PostsInDateRange(db *sql.DB, after, before time.Time) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	query := goquDB.From("posts").
+		Select("*").
+		Where(
+			goqu.And(
+				goqu.Ex{
+					"publish_date": goqu.Op{"gt": after},
+				},
+				goqu.Ex{
+					"publish_date": goqu.Op{"lt": before},
+				},
+			),
+		).
+		Order(goqu.I("publish_date").Asc())
+
+	if err := query.Executor().ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	results = []models.Post{}
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
 	}
 
 	return results, nil

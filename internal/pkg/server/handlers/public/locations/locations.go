@@ -55,7 +55,7 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, id)
+		locations, err := database.FindLocationsByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

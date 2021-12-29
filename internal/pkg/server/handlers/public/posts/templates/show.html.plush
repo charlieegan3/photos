@@ -58,13 +58,17 @@
         </div>
         <% } %>
 
-        <p class="f7 moon-gray tc tl-l">
+        <p class="mb2 f7 moon-gray tc tl-l">
           <%= for (tag) in tags { %>
           <%= if (!tag.Hidden) { %>
             #<%= tag.Name %>
           <% } %>
           <% } %>
         </p>
+
+        <div class="f6">
+          <a href="/posts/period/<%= post.PublishDate.Format("2006-01-02") %>">View <%= post.PublishDate.Format("January 2, 2006") %></a>
+        </div>
       </div>
     </div>
   </div>

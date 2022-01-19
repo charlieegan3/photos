@@ -50,6 +50,7 @@ func Serve(
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}-to-{to}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(renderer)).Methods("GET")
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods("GET")

@@ -22,6 +22,12 @@ var indexTemplate string
 //go:embed templates/period.html.plush
 var periodTemplate string
 
+//go:embed templates/periodIndex.html.plush
+var periodIndexTemplate string
+
+//go:embed templates/periodMissing.html.plush
+var periodMissingTemplate string
+
 //go:embed templates/show.html.plush
 var showTemplate string
 
@@ -248,8 +254,21 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		// TODO fetch these with posts
+		fmt.Printf("%T\n", w)
+
+		if len(posts) == 0 {
+			err := renderer(plush.NewContext(), periodMissingTemplate, w)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
 		var locationIDs []int
+		// TODO fetch these with posts
 		for _, p := range posts {
 			locationIDs = append(locationIDs, p.LocationID)
 		}
@@ -311,5 +330,31 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			w.Write([]byte(err.Error()))
 			return
 		}
+	}
+}
+
+func BuildPeriodIndexHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		fromString := r.URL.Query().Get("from")
+		if fromString == "" {
+			err := renderer(plush.NewContext(), periodIndexTemplate, w)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			return
+		}
+
+		toString := r.URL.Query().Get("to")
+		if toString != "" {
+			http.Redirect(w, r, fmt.Sprintf("/posts/period/%s-to-%s", fromString, toString), http.StatusSeeOther)
+			return
+		}
+
+		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", fromString), http.StatusSeeOther)
+		return
 	}
 }

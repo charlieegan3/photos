@@ -256,3 +256,40 @@ func (s *PostsSuite) TestPeriodHandler() {
 	assert.Contains(s.T(), string(body), "post in range")
 	assert.NotContains(s.T(), string(body), "future post")
 }
+
+func (s *PostsSuite) TestPeriodIndexHandler() {
+	router := mux.NewRouter()
+	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(templating.BuildPageRenderFunc())).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/posts/period?from=2021-10-01&to=2021-11-01", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	assert.Equal(s.T(), "/posts/period/2021-10-01-to-2021-11-01", rr.Header().Get("Location"))
+
+	// getting with no params renders form page
+	req, err = http.NewRequest("GET", "/posts/period", nil)
+	require.NoError(s.T(), err)
+	rr = httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), "From:")
+}

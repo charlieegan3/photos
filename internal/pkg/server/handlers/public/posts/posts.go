@@ -3,6 +3,7 @@ package public
 import (
 	"database/sql"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -356,5 +357,62 @@ func BuildPeriodIndexHandler(renderer templating.PageRenderer) func(http.Respons
 
 		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", fromString), http.StatusSeeOther)
 		return
+	}
+}
+
+func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		posts, err := database.AllPosts(
+			db,
+			false,
+			database.SelectOptions{
+				SortField:      "publish_date",
+				SortDescending: true,
+				Limit:          1,
+			},
+		)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(posts) < 1 {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("no post found"))
+			return
+		}
+
+		// TODO get in same query
+		locations, err := database.FindLocationsByID(db, []int{posts[0].LocationID})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(locations) < 1 {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("no location found"))
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err = json.NewEncoder(w).Encode(struct {
+			Location  string `json:"location"`
+			URL       string `json:"url"`
+			CreatedAt string `json:"created_at"`
+		}{
+			Location:  locations[0].Name,
+			URL:       fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[0].ID),
+			CreatedAt: posts[0].PublishDate.Format(time.RFC3339),
+		})
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 	}
 }

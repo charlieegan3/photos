@@ -48,6 +48,7 @@ func Serve(
 
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/posts/latest.json", publicposts.BuildLatestHandler(db)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}-to-{to}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(renderer)).Methods("GET")

@@ -22,6 +22,7 @@ import (
 	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
 	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
+	publictags "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/tags"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
@@ -50,6 +51,10 @@ func Serve(
 
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
+
+	router.HandleFunc("/tags", publictags.BuildIndexHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/tags/{tagName}", publictags.BuildGetHandler(db, renderer)).Methods("GET")
+
 	router.HandleFunc("/posts/latest.json", publicposts.BuildLatestHandler(db)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}-to-{to}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")

@@ -322,7 +322,7 @@ func (s *PostsSuite) TestFindPostsByID() {
 
 	posts[0].ID = returnedPosts[0].ID
 
-	returnedPosts, err = FindPostsByID(s.DB, posts[0].ID)
+	returnedPosts, err = FindPostsByID(s.DB, []int{posts[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get posts: %s", err)
 	}

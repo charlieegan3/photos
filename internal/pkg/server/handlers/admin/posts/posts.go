@@ -80,7 +80,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		posts, err := database.FindPostsByID(db, id)
+		posts, err := database.FindPostsByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -319,7 +319,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		existingPosts, err := database.FindPostsByID(db, id)
+		existingPosts, err := database.FindPostsByID(db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

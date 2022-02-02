@@ -7,6 +7,9 @@
       <tr class="striped--near-white">
         <td><a href="/admin/tags/<%= tag.Name %>"><%= tag.Name %></a></td>
         <td>
+          <a href="/tags/<%= tag.Name %>">View Posts</a>
+        </td>
+        <td>
           <%= form_for(tag, {id: tag.ID, class: "dib", action:"/admin/tags/"+tag.Name, method: "PUT"}) { %>
             <input name="Name" type="hidden" value="<%= tag.Name %>">
             <input name="Hidden" type="hidden" value="true">

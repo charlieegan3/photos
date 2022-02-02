@@ -1,0 +1,11 @@
+<div class="w-100">
+  <div class="cf pa2-ns">
+    <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray">Tags</div>
+
+    <ul>
+      <%= for (tag) in tags { %>
+        <li><a href="/tags/<%= tag.Name %>"><%= tag.Name %></li>
+      <% } %>
+    </ul>
+  </div>
+</div>

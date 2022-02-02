@@ -104,7 +104,7 @@ func CreatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 	return results, nil
 }
 
-func FindPostsByID(db *sql.DB, id int) (results []models.Post, err error) {
+func FindPostsByID(db *sql.DB, id []int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)

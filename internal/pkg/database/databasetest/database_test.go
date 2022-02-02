@@ -24,6 +24,7 @@ import (
 	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
 	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
+	publictags "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/tags"
 )
 
 func TestDatabaseSuite(t *testing.T) {
@@ -164,14 +165,14 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 	})
 }
 
-func (s *DatabaseSuite) TestEndpointsTagsSuite() {
-	suite.Run(s.T(), &tags.EndpointsTagsSuite{
+func (s *DatabaseSuite) TestEndpointsPostsSuite() {
+	suite.Run(s.T(), &posts.EndpointsPostsSuite{
 		DB: s.DB,
 	})
 }
 
-func (s *DatabaseSuite) TestEndpointsPostsSuite() {
-	suite.Run(s.T(), &posts.EndpointsPostsSuite{
+func (s *DatabaseSuite) TestEndpointsTagsSuite() {
+	suite.Run(s.T(), &tags.EndpointsTagsSuite{
 		DB: s.DB,
 	})
 }
@@ -184,6 +185,12 @@ func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 
 func (s *DatabaseSuite) TestPublicPostsSuite() {
 	suite.Run(s.T(), &publicposts.PostsSuite{
+		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicTagsSuite() {
+	suite.Run(s.T(), &publictags.TagsSuite{
 		DB: s.DB,
 	})
 }

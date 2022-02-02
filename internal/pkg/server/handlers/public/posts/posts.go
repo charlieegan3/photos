@@ -4,12 +4,15 @@ import (
 	"database/sql"
 	_ "embed"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gobuffalo/plush"
+	"github.com/gomarkdown/markdown"
+	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
@@ -414,5 +417,120 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			w.Write([]byte(err.Error()))
 			return
 		}
+	}
+}
+
+func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/rss+xml")
+
+		posts, err := database.AllPosts(
+			db,
+			false,
+			database.SelectOptions{
+				SortField:      "publish_date",
+				SortDescending: true,
+				Limit:          25,
+			},
+		)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(posts) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		medias, err := database.FindMediasByID(db, []int{posts[0].MediaID})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		if len(medias) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		mediaMap := make(map[int]models.Media)
+		for _, m := range medias {
+			mediaMap[m.ID] = m
+		}
+
+		locations, err := database.FindLocationsByID(db, []int{posts[0].LocationID})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		if len(locations) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		locationMap := make(map[int]models.Location)
+		for _, l := range locations {
+			locationMap[l.ID] = l
+		}
+
+		devices, err := database.FindDevicesByID(db, []int{medias[0].DeviceID})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		if len(devices) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		deviceMap := make(map[int]models.Device)
+		for _, l := range devices {
+			deviceMap[l.ID] = l
+		}
+
+		feed := &feeds.Feed{
+			Title:       "photos.charlieegan3.com - All",
+			Link:        &feeds.Link{Href: "https://photos.charlieegan3.com/rss.xml"},
+			Description: "RSS feed of all photos",
+			Author:      &feeds.Author{Name: "Charlie Egan", Email: "me@charlieegan3.com"},
+		}
+
+		var feedItems []*feeds.Item
+		for _, p := range posts {
+			md := fmt.Sprintf("%s\n\n%s\n\n%s",
+				p.Description,
+				fmt.Sprintf("![post image](https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000x)", p.MediaID),
+				fmt.Sprintf("Taken on %s", deviceMap[mediaMap[p.MediaID].DeviceID].Name),
+			)
+
+			content := markdown.NormalizeNewlines([]byte(md))
+
+			feedItems = append(feedItems,
+				&feeds.Item{
+					Id:          fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", p.ID),
+					Title:       fmt.Sprintf("%s - %s", p.PublishDate.Format("January 2, 2006"), locationMap[p.LocationID].Name),
+					Link:        &feeds.Link{Href: fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", p.ID)},
+					Description: string(markdown.ToHTML(content, nil, nil)),
+					Created:     p.PublishDate,
+				})
+		}
+
+		feed.Items = feedItems
+
+		rssFeed := (&feeds.Rss{Feed: feed}).RssFeed()
+		output, err := xml.MarshalIndent(rssFeed, "", "    ")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.Write([]byte(`<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+`))
+		w.Write([]byte(output))
+
+		w.Write([]byte("\n</rss>"))
 	}
 }

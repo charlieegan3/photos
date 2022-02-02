@@ -368,3 +368,92 @@ func (s *PostsSuite) TestLatestPost() {
 	assert.Contains(s.T(), string(body), `"created_at":"2021-11-25`)
 	assert.Contains(s.T(), string(body), `/posts`)
 }
+
+func (s *PostsSuite) TestRSS() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:  2.0,
+			ISOSpeed: 100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is photo I took",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+			IsDraft:     false,
+		},
+	}
+
+	_, err = database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/rss.xml", BuildRSSHandler(s.DB)).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/rss.xml", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	expectedBody := `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+    <title>photos.charlieegan3.com - All</title>
+    <link>https://photos.charlieegan3.com/rss.xml</link>
+    <description>RSS feed of all photos</description>
+    <managingEditor>me@charlieegan3.com (Charlie Egan)</managingEditor>
+    <item>
+        <title>November 25, 2021 - London</title>
+        <link>https://photos.charlieegan3.com/posts/36</link>
+        <description>&lt;p&gt;Here is photo I took&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://photos.charlieegan3.com/medias/40/image.jpg?o=1000x&#34; alt=&#34;post image&#34; /&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Taken on Example Device&lt;/p&gt;&#xA;</description>
+        <guid>https://photos.charlieegan3.com/posts/36</guid>
+        <pubDate>Thu, 25 Nov 2021 19:56:00 +0000</pubDate>
+    </item>
+</channel>
+</rss>`
+	assert.Equal(s.T(), expectedBody, string(body))
+}

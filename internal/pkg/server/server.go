@@ -46,6 +46,8 @@ func Serve(
 
 	router.HandleFunc("/favicon.ico", faviconHandler).Methods("GET")
 
+	router.HandleFunc("/rss.xml", publicposts.BuildRSSHandler(db)).Methods("GET")
+
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/latest.json", publicposts.BuildLatestHandler(db)).Methods("GET")

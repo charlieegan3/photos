@@ -256,15 +256,17 @@ func MergeTags(db *sql.DB, tag1, tag2 models.Tag) (err error) {
 		return errors.Wrap(err, "failed to list all taggings")
 	}
 
-	// create new taggings for all posts to tag1
-	var newTaggings []models.Tagging
-	for _, t := range taggings {
-		newTaggings = append(newTaggings, models.Tagging{TagID: tag1.ID, PostID: t.PostID})
-	}
+	if len(taggings) > 0 {
+		// create new taggings for all posts to tag1
+		var newTaggings []models.Tagging
+		for _, t := range taggings {
+			newTaggings = append(newTaggings, models.Tagging{TagID: tag1.ID, PostID: t.PostID})
+		}
 
-	_, err = CreateTaggings(db, newTaggings)
-	if err != nil {
-		return errors.Wrap(err, "failed to create new taggings for tag1")
+		_, err = CreateTaggings(db, newTaggings)
+		if err != nil {
+			return errors.Wrap(err, "failed to create new taggings for tag1")
+		}
 	}
 
 	err = DeleteTags(db, []models.Tag{tag2})

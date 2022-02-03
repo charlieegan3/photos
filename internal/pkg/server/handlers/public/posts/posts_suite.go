@@ -418,7 +418,7 @@ func (s *PostsSuite) TestRSS() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	persistedPosts, err := database.CreatePosts(s.DB, posts)
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
@@ -439,7 +439,7 @@ func (s *PostsSuite) TestRSS() {
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
-	expectedBody := `<?xml version="1.0" encoding="UTF-8" ?>
+	expectedBody := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
     <title>photos.charlieegan3.com - All</title>
@@ -448,12 +448,12 @@ func (s *PostsSuite) TestRSS() {
     <managingEditor>me@charlieegan3.com (Charlie Egan)</managingEditor>
     <item>
         <title>November 25, 2021 - London</title>
-        <link>https://photos.charlieegan3.com/posts/36</link>
-        <description>&lt;p&gt;Here is photo I took&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://photos.charlieegan3.com/medias/40/image.jpg?o=1000x&#34; alt=&#34;post image&#34; /&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Taken on Example Device&lt;/p&gt;&#xA;</description>
-        <guid>https://photos.charlieegan3.com/posts/36</guid>
+        <link>https://photos.charlieegan3.com/posts/%d</link>
+        <description>&lt;p&gt;Here is photo I took&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000x&#34; alt=&#34;post image&#34; /&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Taken on Example Device&lt;/p&gt;&#xA;</description>
+        <guid>https://photos.charlieegan3.com/posts/%d</guid>
         <pubDate>Thu, 25 Nov 2021 19:56:00 +0000</pubDate>
     </item>
 </channel>
-</rss>`
+</rss>`, persistedPosts[0].ID, returnedMedias[0].ID, persistedPosts[0].ID)
 	assert.Equal(s.T(), expectedBody, string(body))
 }

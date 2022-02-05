@@ -80,6 +80,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
+		if len(taggings) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
 		var postIDs []int
 		for _, t := range taggings {
 			postIDs = append(postIDs, t.PostID)

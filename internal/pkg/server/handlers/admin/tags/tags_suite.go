@@ -232,11 +232,6 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	returnedPosts, err := database.CreatePosts(s.DB, posts)
 	require.NoError(s.T(), err)
 
-	err = database.SetPostTags(s.DB, returnedPosts[0], []string{"tag1"})
-	require.NoError(s.T(), err)
-	err = database.SetPostTags(s.DB, returnedPosts[1], []string{"tag2"})
-	require.NoError(s.T(), err)
-
 	testData := []models.Tag{
 		{
 			Name:   "nofilter",
@@ -246,12 +241,25 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 			Name:   "nofiltered",
 			Hidden: false,
 		},
+		{
+			Name:   "tag1",
+			Hidden: false,
+		},
+		{
+			Name:   "tag2",
+			Hidden: false,
+		},
 	}
 
 	persistedTags, err := database.CreateTags(s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
+
+	err = database.SetPostTags(s.DB, returnedPosts[0], []string{"tag1"})
+	require.NoError(s.T(), err)
+	err = database.SetPostTags(s.DB, returnedPosts[1], []string{"tag2"})
+	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/tags/{tagName}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc())).Methods("POST")
@@ -293,16 +301,17 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	}
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{})
-	if err != nil {
-		s.T().Fatalf("failed to list tags: %s", err)
-	}
+	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{
+		SortField: "name",
+	})
+	require.NoError(s.T(), err)
+
 	expectedTags := td.Slice(
 		[]models.Tag{},
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Tag{
-					Name:   "tag1",
+					Name:   "nofiltered",
 					Hidden: false,
 				},
 				td.StructFields{
@@ -310,8 +319,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 				}),
 			1: td.SStruct(
 				models.Tag{
-					ID:     persistedTags[1].ID,
-					Name:   "nofiltered",
+					Name:   "tag1",
 					Hidden: false,
 				},
 				td.StructFields{
@@ -321,6 +329,33 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	)
 
 	td.Cmp(s.T(), returnedTags, expectedTags)
+
+	taggings, err := database.FindTaggingsByTagID(s.DB, returnedTags[1].ID)
+	require.NoError(s.T(), err)
+
+	expectedTaggings := td.Slice(
+		[]models.Tagging{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Tagging{
+					PostID: posts[0].ID,
+					TagID:  returnedTags[1].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				models.Tagging{
+					PostID: posts[1].ID,
+					TagID:  returnedTags[1].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), taggings, expectedTaggings)
 }
 
 func (s *EndpointsTagsSuite) TestDeleteTag() {

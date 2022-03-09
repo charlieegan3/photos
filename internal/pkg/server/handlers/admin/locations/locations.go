@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	"github.com/gobuffalo/plush"
@@ -23,6 +24,9 @@ var showTemplate string
 
 //go:embed templates/new.html.plush
 var newTemplate string
+
+//go:embed templates/select.html.plush
+var selectTemplate string
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -270,5 +274,47 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			fmt.Sprintf("/admin/locations/%d", updatedLocations[0].ID),
 			http.StatusSeeOther,
 		)
+	}
+}
+
+func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		redirectToRaw := r.URL.Query().Get("redirectTo")
+		if redirectToRaw == "" {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("missing redirectTo param"))
+			return
+		}
+
+		params := r.URL.Query()
+		params.Del("redirectTo")
+
+		redirectToURL, err := url.QueryUnescape(redirectToRaw)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		redirectToURL += "?" + params.Encode()
+
+		locations, err := database.AllLocations(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("locations", locations)
+		ctx.Set("redirectTo", redirectToURL)
+
+		err = renderer(ctx, selectTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
 	}
 }

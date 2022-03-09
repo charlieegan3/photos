@@ -176,6 +176,17 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			newPost.MediaID = int(i)
 		}
 
+		locationID := r.URL.Query().Get("locationID")
+		if locationID != "" {
+			i, err := strconv.ParseInt(locationID, 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to parse supplied locationID value"))
+				return
+			}
+			newPost.LocationID = int(i)
+		}
+
 		timestamp := r.URL.Query().Get("timestamp")
 		if timestamp != "" {
 			i, err := strconv.ParseInt(timestamp, 10, 64)

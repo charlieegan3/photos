@@ -1,0 +1,10 @@
+<h1>Select a location</h1>
+<ul>
+<%= for (location) in locations { %>
+  <li>
+    <a href="<%= raw(redirectTo) %>&locationID=<%= location.ID %>">
+      <%= truncate(location.Name, 40, false) %>
+    </a>
+  </li>
+<% } %>
+</ul>

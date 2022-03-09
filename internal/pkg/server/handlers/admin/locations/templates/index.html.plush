@@ -12,7 +12,7 @@
 <tbody>
 <%= for (location) in locations { %>
   <tr>
-    <td><a href="/admin/locations/<%= location.ID %>"><%= truncate(location.Name, 20, false) %></td>
+    <td><a href="/admin/locations/<%= location.ID %>"><%= truncate(location.Name, 20, false) %></a></td>
     <td><%= truncate(to_string(location.Latitude), 10, false) %></td>
     <td><%= truncate(to_string(location.Longitude), 10, false) %></td>
   </tr>

@@ -273,3 +273,42 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	expectedLocations := []models.Location{}
 	td.Cmp(s.T(), returnedLocations, expectedLocations)
 }
+
+func (s *EndpointsLocationsSuite) TestLocationSelector() {
+	testData := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+		{
+			Name:      "New York",
+			Latitude:  1.3,
+			Longitude: 1.4,
+		},
+	}
+
+	persistedLocations, err := database.CreateLocations(s.DB, testData)
+	if err != nil {
+		s.T().Fatalf("failed to create locations: %s", err)
+	}
+
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/locations/select", BuildSelectHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	require.Equal(s.T(), http.StatusOK, rr.Code)
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), "London")
+	assert.Contains(s.T(), string(body), "New York")
+
+	assert.Contains(s.T(), string(body), fmt.Sprintf(`<a href="/admin/posts/new?param1=1&param2=2&locationID=%d">`, persistedLocations[0].ID))
+}

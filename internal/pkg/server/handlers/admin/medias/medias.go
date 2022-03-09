@@ -47,8 +47,20 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			return
 		}
 
+		posts, err := database.AllPosts(db, true, database.SelectOptions{})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		postMediaMap := make(map[int][]models.Post)
+		for _, p := range posts {
+			postMediaMap[p.MediaID] = append(postMediaMap[p.MediaID], p)
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("medias", medias)
+		ctx.Set("postMediaMap", postMediaMap)
 
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {

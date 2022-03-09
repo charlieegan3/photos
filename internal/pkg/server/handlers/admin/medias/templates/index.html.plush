@@ -6,6 +6,9 @@
   <li>
     <a href="/admin/medias/<%= media.ID %>">
       id: <%= media.ID %>
+      <%= if (len(postMediaMap[media.ID]) > 0) { %>
+      (<%= len(postMediaMap[media.ID]) %>)
+      <% } %>
       <%= if (media.Kind != "jpg") { %>
        <%= media.Kind %>
       <% } %>

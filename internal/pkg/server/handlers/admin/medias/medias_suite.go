@@ -13,6 +13,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -95,6 +96,29 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a shot I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	_, err = database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/medias", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
 
@@ -109,7 +133,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("id: %d", returnedMedias[0].ID))
+	assert.Contains(s.T(), regexp.MustCompile(`\s+`).ReplaceAllString(string(body), " "), fmt.Sprintf("id: %d (1)", returnedMedias[0].ID))
 	assert.Contains(s.T(), string(body), fmt.Sprintf("id: %d", returnedMedias[1].ID))
 }
 

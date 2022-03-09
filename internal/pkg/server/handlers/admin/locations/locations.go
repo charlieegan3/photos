@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/cms/internal/pkg/geoapify"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
@@ -27,6 +28,12 @@ var newTemplate string
 
 //go:embed templates/select.html.plush
 var selectTemplate string
+
+//go:embed templates/lookup.html.plush
+var lookupTemplate string
+
+//go:embed templates/lookupForm.html.plush
+var lookupFormTemplate string
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -111,6 +118,9 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 				location.Longitude = s
 			}
 		}
+
+		// this is only set when coming from lookup
+		location.Name = r.URL.Query().Get("name")
 
 		ctx := plush.NewContext()
 		ctx.Set("location", location)
@@ -316,5 +326,45 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			w.Write([]byte(err.Error()))
 			return
 		}
+	}
+}
+
+func BuildLookupHandler(mapServerAPIKey string, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		query := r.URL.Query().Get("query")
+		if query == "" {
+			err := renderer(plush.NewContext(), lookupFormTemplate, w)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+			}
+			return
+		}
+
+		client, err := geoapify.NewClient("https://api.geoapify.com", mapServerAPIKey)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		features, err := client.GeocodingSearch(query)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("features", features)
+
+		err = renderer(ctx, lookupTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+		}
+		return
 	}
 }

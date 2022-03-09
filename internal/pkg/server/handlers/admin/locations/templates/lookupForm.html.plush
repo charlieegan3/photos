@@ -1,0 +1,15 @@
+<div class="w-100">
+    <div class="pa2-ns">
+        <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">Lookup a location</div>
+
+        <form action="/admin/locations/lookup" method="get">
+            <div class="mt2">
+                <label class="dib w3 mb2" for="query">Query</label>
+                <input class="w-100 pa2" type="text" id="query" name="query" required>
+            </div>
+            <div class="mt2">
+                <input class="w-100 mw5 pa2" type="submit" value="Search">
+            </div>
+        </form>
+    </div>
+</div>

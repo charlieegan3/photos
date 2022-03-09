@@ -1,0 +1,20 @@
+<div class="w-100">
+    <div class="pa2-ns">
+        <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">Lookup a location</div>
+
+        <p>Found <%= len(features) %> locations</p>
+
+        <ul>
+        <%= for (feature) in features { %>
+            <li>
+                <p><%= feature.Properties.Name %></p>
+                <p class="f6 silver"><%= feature.Properties.ResultType %> - <%= feature.Properties.Formatted %></p>
+                <p class="f6 silver">
+                    <a target="_blank" href="https://www.google.com/maps/place/<%= feature.Properties.Lat %>,<%= feature.Properties.Lon %>">View Map</a>
+                    <a href="/admin/locations/new?lat=<%= feature.Properties.Lat %>&long=<%= feature.Properties.Lon %>&name=<%= feature.Properties.Name %>">Create Location</a>
+                </p>
+            </li>
+        <% } %>
+        </ul>
+    </div>
+</div>

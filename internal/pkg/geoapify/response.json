@@ -1,0 +1,263 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "name": "Highgate Hill",
+        "street": "Highgate Hill",
+        "suburb": "Highgate",
+        "district": "London Borough of Haringey",
+        "city": "London",
+        "county": "Greater London",
+        "state": "England",
+        "postcode": "N6 5XG",
+        "country": "United Kingdom",
+        "country_code": "gb",
+        "lon": -0.1421935,
+        "lat": 51.5691675,
+        "state_code": "ENG",
+        "formatted": "Highgate Hill, London, N6 5XG, United Kingdom",
+        "address_line1": "Highgate Hill",
+        "address_line2": "London, N6 5XG, United Kingdom",
+        "result_type": "street",
+        "rank": {
+          "importance": 0.4,
+          "popularity": 7.474059438019315,
+          "confidence": 1,
+          "confidence_city_level": 1,
+          "confidence_street_level": 1,
+          "match_type": "full_match"
+        },
+        "place_id": "5155151a886533c2bf5919390b7bdac84940f00102f9012900101800000000c0020492030d48696768676174652048696c6c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1421935,
+          51.5691675
+        ]
+      },
+      "bbox": [
+        -0.1421935,
+        51.5691488,
+        -0.1421352,
+        51.5691675
+      ]
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "name": "Highgate Hill",
+        "street": "Highgate Hill",
+        "suburb": "Highgate",
+        "district": "London Borough of Haringey",
+        "city": "London",
+        "county": "Greater London",
+        "state": "England",
+        "postcode": "N6 5LZ",
+        "country": "United Kingdom",
+        "country_code": "gb",
+        "lon": -0.141888,
+        "lat": 51.5690496,
+        "state_code": "ENG",
+        "formatted": "Highgate Hill, London, N6 5LZ, United Kingdom",
+        "address_line1": "Highgate Hill",
+        "address_line2": "London, N6 5LZ, United Kingdom",
+        "result_type": "street",
+        "rank": {
+          "importance": 0.4,
+          "popularity": 7.474059438019315,
+          "confidence": 1,
+          "confidence_city_level": 1,
+          "confidence_street_level": 1,
+          "match_type": "full_match"
+        },
+        "place_id": "51c7f0d8cf6229c2bf59a4e6069ed6c84940f00102f9014a98251700000000c0020492030d48696768676174652048696c6c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.141888,
+          51.5690496
+        ]
+      },
+      "bbox": [
+        -0.1421352,
+        51.5689103,
+        -0.1415516,
+        51.5691488
+      ]
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "name": "Highgate Hill",
+        "street": "Highgate Hill",
+        "suburb": "Upper Holloway",
+        "district": "London Borough of Islington",
+        "city": "London",
+        "county": "Greater London",
+        "state": "England",
+        "postcode": "N19 5NL",
+        "country": "United Kingdom",
+        "country_code": "gb",
+        "lon": -0.1392284,
+        "lat": 51.5678738,
+        "state_code": "ENG",
+        "formatted": "Highgate Hill, London, N19 5NL, United Kingdom",
+        "address_line1": "Highgate Hill",
+        "address_line2": "London, N19 5NL, United Kingdom",
+        "result_type": "street",
+        "rank": {
+          "importance": 0.4,
+          "popularity": 7.660262848026512,
+          "confidence": 1,
+          "confidence_city_level": 1,
+          "confidence_street_level": 1,
+          "match_type": "full_match"
+        },
+        "place_id": "51f35256783cd2c1bf59aca0b316b0c84940f00102f9016717dd0700000000c0020492030d48696768676174652048696c6c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1392284,
+          51.5678738
+        ]
+      },
+      "bbox": [
+        -0.1415516,
+        51.5667085,
+        -0.1371107,
+        51.5689103
+      ]
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "name": "Highgate Hill",
+        "street": "Highgate Hill",
+        "suburb": "Upper Holloway",
+        "district": "London Borough of Islington",
+        "city": "London",
+        "county": "Greater London",
+        "state": "England",
+        "postcode": "N19 5LP",
+        "country": "United Kingdom",
+        "country_code": "gb",
+        "lon": -0.1355993,
+        "lat": 51.566015,
+        "state_code": "ENG",
+        "formatted": "Highgate Hill, London, N19 5LP, United Kingdom",
+        "address_line1": "Highgate Hill",
+        "address_line2": "London, N19 5LP, United Kingdom",
+        "result_type": "street",
+        "rank": {
+          "importance": 0.4,
+          "popularity": 7.8591117088532965,
+          "confidence": 1,
+          "confidence_city_level": 1,
+          "confidence_street_level": 1,
+          "match_type": "full_match"
+        },
+        "place_id": "51a1246e5f515bc1bf59d105f52d73c84940f00102f9015b84711b00000000c0020492030d48696768676174652048696c6c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1355993,
+          51.566015
+        ]
+      },
+      "bbox": [
+        -0.135855,
+        51.5660119,
+        -0.1354995,
+        51.5661392
+      ]
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "name": "Highgate Hill",
+        "street": "Highgate Hill",
+        "suburb": "Dartmouth Park",
+        "district": "London Borough of Camden",
+        "city": "London",
+        "county": "Greater London",
+        "state": "England",
+        "postcode": "N6 5HE",
+        "country": "United Kingdom",
+        "country_code": "gb",
+        "lon": -0.1439201,
+        "lat": 51.5699178,
+        "state_code": "ENG",
+        "formatted": "Highgate Hill, London, N6 5HE, United Kingdom",
+        "address_line1": "Highgate Hill",
+        "address_line2": "London, N6 5HE, United Kingdom",
+        "result_type": "street",
+        "rank": {
+          "importance": 0.4,
+          "popularity": 7.338324351296861,
+          "confidence": 1,
+          "confidence_city_level": 1,
+          "confidence_street_level": 1,
+          "match_type": "full_match"
+        },
+        "place_id": "51a4575e4df96bc2bf5942340411f3c84940f00102f9010d4f4d0000000000c0020492030d48696768676174652048696c6c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1439201,
+          51.5699178
+        ]
+      },
+      "bbox": [
+        -0.1450439,
+        51.5694573,
+        -0.1428267,
+        51.570193
+      ]
+    }
+  ],
+  "query": {
+    "text": "highgate hill london",
+    "parsed": {
+      "street": "highgate hill",
+      "city": "london",
+      "expected_type": "street"
+    }
+  }
+}

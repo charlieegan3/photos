@@ -87,6 +87,7 @@ func Serve(
 	adminRouter.HandleFunc("/locations", locations.BuildCreateHandler(db, rendererAdmin)).Methods("POST")
 	adminRouter.HandleFunc("/locations/new", locations.BuildNewHandler(rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/locations/select", locations.BuildSelectHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/locations/lookup", locations.BuildLookupHandler(mapServerAPIKey, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 

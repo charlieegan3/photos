@@ -133,8 +133,8 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
-	assert.Contains(s.T(), regexp.MustCompile(`\s+`).ReplaceAllString(string(body), " "), fmt.Sprintf("id: %d (1)", returnedMedias[0].ID))
-	assert.Contains(s.T(), string(body), fmt.Sprintf("id: %d", returnedMedias[1].ID))
+	assert.Contains(s.T(), string(body), fmt.Sprintf("id: %d", returnedMedias[0].ID))
+	assert.Contains(s.T(), regexp.MustCompile(`\s+`).ReplaceAllString(string(body), " "), fmt.Sprintf("id: %d (not posted)", returnedMedias[1].ID))
 }
 
 func (s *EndpointsMediasSuite) TestGetMedia() {

@@ -53,9 +53,9 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			w.Write([]byte(err.Error()))
 			return
 		}
-		postMediaMap := make(map[int][]models.Post)
+		postMediaMap := make(map[int]bool)
 		for _, p := range posts {
-			postMediaMap[p.MediaID] = append(postMediaMap[p.MediaID], p)
+			postMediaMap[p.MediaID] = true
 		}
 
 		ctx := plush.NewContext()

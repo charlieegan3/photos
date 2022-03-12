@@ -1,2 +1,3 @@
 config.prod.yaml
+config.dev.yaml
 bucket/*

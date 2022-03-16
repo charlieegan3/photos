@@ -131,6 +131,34 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 	return results, nil
 }
 
+func MostRecentlyUsedDevice(db *sql.DB) (result models.Device, err error) {
+	var dbDevices []dbDevice
+
+	goquDB := goqu.New("postgres", db)
+	selectDevices := goquDB.From("devices").
+		InnerJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+		Select("devices.*").
+		Order(goqu.I("medias.taken_at").Desc()).
+		Executor()
+	if err := selectDevices.ScanStructs(&dbDevices); err != nil {
+		return result, errors.Wrap(err, "failed to select devices")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	results := []models.Device{}
+	for _, v := range dbDevices {
+		results = append(results, newDevice(v))
+	}
+
+	if len(results) < 1 {
+		return result, nil
+	}
+
+	result = results[0]
+	return result, nil
+}
+
 func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
 	var ids []int
 	for _, d := range devices {

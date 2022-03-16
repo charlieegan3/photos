@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/require"
@@ -22,6 +23,68 @@ func (s *DevicesSuite) SetupTest() {
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
+}
+
+func (s *DevicesSuite) TestMostRecentlyUsedDevice() {
+	devices := []models.Device{
+		{
+			Name: "iPhone",
+		},
+		{
+			Name: "X100F",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:                 2.0,
+			ExposureTimeNumerator:   1,
+			ExposureTimeDenominator: 100,
+			ISOSpeed:                100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+		{
+			DeviceID: returnedDevices[1].ID,
+
+			Make:  "Apple",
+			Model: "iPhone",
+
+			TakenAt: time.Date(2020, time.June, 22, 18, 56, 0, 0, time.UTC),
+
+			FNumber:  4.0,
+			ISOSpeed: 400,
+
+			Latitude:  53.1,
+			Longitude: 54.2,
+			Altitude:  200.0,
+		},
+	}
+	_, err = CreateMedias(s.DB, medias)
+	if err != nil {
+		s.T().Fatalf("failed to create medias: %s", err)
+	}
+
+	device, err := MostRecentlyUsedDevice(s.DB)
+	if err != nil {
+		s.T().Fatalf("failed to create medias: %s", err)
+	}
+
+	td.Cmp(s.T(), device, returnedDevices[0])
 }
 
 func (s *DevicesSuite) TestCreateDevices() {

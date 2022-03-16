@@ -374,8 +374,16 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			deviceOptionMap[d.Name] = d.ID
 		}
 
+		// device will be empty if there isn't a most recently used device in the current db
+		device, err := database.MostRecentlyUsedDevice(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
 		ctx := plush.NewContext()
-		ctx.Set("media", models.Media{})
+		ctx.Set("media", models.Media{DeviceID: device.ID})
 		ctx.Set("devices", deviceOptionMap)
 
 		err = renderer(ctx, newTemplate, w)

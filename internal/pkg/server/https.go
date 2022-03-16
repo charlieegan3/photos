@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -9,9 +8,6 @@ import (
 func InitMiddlewareHTTPS(hostname, environment string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.Println("proto")
-			log.Println(r.Header.Get("X-Forwarded-Proto"))
-			log.Println(environment)
 			if environment == "production" {
 				if r.Header.Get("X-Forwarded-Proto") != "https" {
 					newURL, err := url.Parse(r.URL.String())

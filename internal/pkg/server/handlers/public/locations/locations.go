@@ -84,14 +84,14 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 			}
 
 			resp, err := http.Get(mapImageURL)
-			if resp.StatusCode != http.StatusOK {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("upstream map server request failed: %d", resp.StatusCode)))
-				return
-			}
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(fmt.Sprintf("upstream map server request failed: %s", err)))
+				return
+			}
+			if resp.StatusCode != http.StatusOK {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(fmt.Sprintf("upstream map server request failed: %d", resp.StatusCode)))
 				return
 			}
 

@@ -221,6 +221,20 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
+// BuildLegacyPostRedirect will send requests to old post IDs to the period pages as a best guess
+func BuildLegacyPostRedirect() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		date, ok := mux.Vars(r)["date"]
+		if !ok {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse date from legacy URL"))
+			return
+		}
+		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", date), http.StatusSeeOther)
+		return
+	}
+}
+
 func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
@@ -257,8 +271,6 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		fmt.Printf("%T\n", w)
 
 		if len(posts) == 0 {
 			err := renderer(plush.NewContext(), periodMissingTemplate, w)

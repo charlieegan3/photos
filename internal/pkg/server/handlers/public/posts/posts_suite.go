@@ -256,6 +256,24 @@ func (s *PostsSuite) TestPeriodHandler() {
 	assert.Contains(s.T(), string(body), "post in range")
 	assert.NotContains(s.T(), string(body), "future post")
 }
+func (s *PostsSuite) TestLegacyPostPathRedirect() {
+	router := mux.NewRouter()
+	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, BuildLegacyPostRedirect()).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/posts/2018-07-08-1819241500870030645", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	assert.Equal(s.T(), "/posts/period/2018-07-08", rr.Header().Get("Location"))
+}
 
 func (s *PostsSuite) TestPeriodIndexHandler() {
 	router := mux.NewRouter()

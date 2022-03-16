@@ -36,8 +36,6 @@ func (c *Client) GeocodingSearch(query string) ([]Feature, error) {
 	queryURL.RawQuery = values.Encode()
 	queryURL.Path = "/v1/geocode/search"
 
-	fmt.Println(queryURL.String())
-
 	resp, err := http.Get(queryURL.String())
 	if err != nil {
 		return []Feature{}, fmt.Errorf("failed to get features from API: %w", err)

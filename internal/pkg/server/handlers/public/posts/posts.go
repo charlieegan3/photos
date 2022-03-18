@@ -456,7 +456,12 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, []int{posts[0].MediaID})
+		var mediaIDs []int
+		for _, v := range posts {
+			mediaIDs = append(mediaIDs, v.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -486,7 +491,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			locationMap[l.ID] = l
 		}
 
-		devices, err := database.FindDevicesByID(db, []int{medias[0].DeviceID})
+		devices, err := database.AllDevices(db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

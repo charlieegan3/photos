@@ -1,5 +1,9 @@
 <h1>New Post</h1>
 
+<%= if (post.MediaID != 0) { %>
+  <img class="w-100 mw6" src="/medias/<%= post.MediaID %>/file.jpg"/>
+<% } %>
+
 <%= form_for(post, {action:"/admin/posts", method: "POST"}) { %>
   <div class="mb1">
     <label for="Description">Description</label>

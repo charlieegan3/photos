@@ -9,18 +9,21 @@
       </picture>
 
       <div class="dn flex-l w-100 justify-between f6 mv2">
-        <div class="tl w-50">
+        <div class="tl w-third">
           <%= if (nextPost != 0) { %>
-            <a href="/posts/<%= nextPost %>">Next</a>
+          <a href="/posts/<%= nextPost %>">Next</a>
           <% } else { %>
-            <span class="moon-gray">Next</span>
+          <span class="moon-gray">Next</span>
           <% } %>
         </div>
-        <div class="tr w-50<%= if (nextPost != 0) { %> bl bw1 b--light-gray<% } %>">
+        <div class="tc w-third bl bw1 b--light-gray">
+          <a href="/">Home</a>
+        </div>
+        <div class="tr w-third bl bw1 b--light-gray">
           <%= if (previousPost != 0) { %>
-            <a href="/posts/<%= previousPost %>">Previous</a>
+          <a href="/posts/<%= previousPost %>">Previous</a>
           <% } else { %>
-            <span class="moon-gray">Previous</span>
+          <span class="moon-gray">Previous</span>
           <% } %>
         </div>
       </div>

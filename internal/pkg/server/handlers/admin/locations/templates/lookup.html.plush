@@ -10,7 +10,7 @@
                 <p><%= feature.Properties.Name %></p>
                 <p class="f6 silver"><%= feature.Properties.ResultType %> - <%= feature.Properties.Formatted %></p>
                 <p class="f6 silver">
-                    <a target="_blank" href="https://www.google.com/maps/place/<%= feature.Properties.Lat %>,<%= feature.Properties.Lon %>">View Map</a>
+                    <a target="_blank" href="http://www.openstreetmap.org/?lat=<%= feature.Properties.Lat %>&lon=<%= feature.Properties.Lon %>&zoom=20&layers=M">View Map</a>
                     <a href="/admin/locations/new?lat=<%= feature.Properties.Lat %>&long=<%= feature.Properties.Lon %>&name=<%= feature.Properties.Name %>">Create Location</a>
                 </p>
             </li>

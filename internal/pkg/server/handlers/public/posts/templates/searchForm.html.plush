@@ -1,0 +1,20 @@
+<div class="w-100">
+  <div class="pa2-ns">
+    <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">Search for Posts</div>
+
+    <form action="/posts/search" method="get">
+      <div class="mt2">
+        <input type="text" class="w-100 pa2" placeholder="Query" id="query" name="query"></span>
+      </div>
+      <div class="mt2">
+        <input class="w-100 pa2" type="submit" value="Search">
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="flex justify-around">
+  <a class="db" href="/">Home</a>
+  <a class="db" href="/posts/period">By Date</a>
+  <a class="db" href="/posts/search">Search</a>
+</div>

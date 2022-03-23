@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"testing"
 	"time"
 
 	"github.com/maxatome/go-testdeep/td"
@@ -930,4 +931,146 @@ func (s *PostsSuite) TestPostsInDateRange() {
 	)
 
 	td.Cmp(s.T(), returnedPosts, expectedResult)
+}
+
+func (s *PostsSuite) TestSearchPosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:  2.0,
+			ISOSpeed: 100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "Apple",
+			Model: "iPhone",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:  2.0,
+			ISOSpeed: 100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+		{
+			Name:      "New York",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "post from englerland",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post from USA",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[1].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	err = SetPostTags(s.DB, returnedPosts[0], []string{"cats", "kittens", "pets"})
+	require.NoError(s.T(), err)
+	err = SetPostTags(s.DB, returnedPosts[1], []string{"dogs", "doggos", "pets"})
+	require.NoError(s.T(), err)
+
+	expectPostIDs := func(posts []models.Post, ids []int) {
+		s.T().Helper()
+		for _, id := range ids {
+			found := false
+			for _, v := range posts {
+				if v.ID == id {
+					found = true
+					break
+				}
+			}
+			if !found {
+				s.T().Errorf("expected to have post id: %d", id)
+			}
+		}
+	}
+
+	s.T().Run("can find posts by post body", func(t *testing.T) {
+		results, err := SearchPosts(s.DB, "post")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
+	})
+
+	s.T().Run("can find posts by tags", func(t *testing.T) {
+		results, err := SearchPosts(s.DB, "pets")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
+	})
+
+	s.T().Run("can find a single post by non pluralized tag", func(t *testing.T) {
+		results, err := SearchPosts(s.DB, "dog")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[1].ID})
+
+		results, err = SearchPosts(s.DB, "cats")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[0].ID})
+	})
+
+	s.T().Run("can find post by location name", func(t *testing.T) {
+		results, err := SearchPosts(s.DB, "london")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[0].ID})
+
+		results, err = SearchPosts(s.DB, "new york")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[1].ID})
+	})
+
+	s.T().Run("cleans query", func(t *testing.T) {
+		results, err := SearchPosts(s.DB, "';DROP TABLE posts;")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{})
+
+		// still works after that
+		results, err = SearchPosts(s.DB, "new york")
+		require.NoError(t, err)
+		expectPostIDs(results, []int{returnedPosts[1].ID})
+	})
 }

@@ -1,3 +1,10 @@
+<%= if (len(posts) == 0) { %>
+<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray">No posts matched <em><%= query %></em></div>
+<p><a href="/posts/search">Search again</a></p>
+<% } else { %>
+<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray">Posts matching <em><%= query %></em></div>
+<% } %>
+
 <div class="w-100">
   <div class="cf pa2-ns f7">
     <%= for (post) in posts { %>
@@ -21,25 +28,7 @@
   </div>
 </div>
 
-<div class="flex w-100 justify-between f6 mv3 mt1-l ph3">
-  <div class="tl w-50">
-    <%= if (page > 1) { %>
-      <a href="/?page=<%= page - 1 %>"/>Next</a>
-    <% } else { %>
-      <span class="moon-gray">Next</span>
-    <% } %>
-  </div>
-  <div class="tr w-50 bl bw1 b--light-gray">
-    <%= if (page < lastPage) { %>
-      <a href="/?page=<%= page + 1 %>"/>Previous</a>
-    <% } else { %>
-      <span class="moon-gray">Previous</span>
-    <% } %>
-  </div>
-</div>
-
 <div class="flex justify-around">
   <a class="db" href="/">Home</a>
   <a class="db" href="/posts/period">By Date</a>
-  <a class="db" href="/posts/search">Search</a>
 </div>

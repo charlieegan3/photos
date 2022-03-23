@@ -7,6 +7,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -22,6 +23,12 @@ import (
 
 //go:embed templates/index.html.plush
 var indexTemplate string
+
+//go:embed templates/searchForm.html.plush
+var searchFormTemplate string
+
+//go:embed templates/search.html.plush
+var searchTemplate string
 
 //go:embed templates/period.html.plush
 var periodTemplate string
@@ -93,6 +100,45 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		ctx.Set("lastPage", int(lastPage))
 
 		err = renderer(ctx, indexTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+	}
+}
+
+func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		queryParam := r.URL.Query().Get("query")
+		if queryParam == "" {
+			err := renderer(plush.NewContext(), searchFormTemplate, w)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			return
+		}
+
+		// this is cleaned here since it's also shown in the HTML, it's also cleaned in the database package
+		safeQuery := regexp.MustCompile(`[^\w\s]+`).ReplaceAllString(queryParam, "")
+		safeQuery = regexp.MustCompile(`[\s]+`).ReplaceAllString(safeQuery, " ")
+
+		posts, err := database.SearchPosts(db, safeQuery)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("posts", posts)
+		ctx.Set("query", safeQuery)
+
+		err = renderer(ctx, searchTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

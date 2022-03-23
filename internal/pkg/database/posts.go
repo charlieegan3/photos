@@ -3,6 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -110,6 +112,37 @@ func FindPostsByID(db *sql.DB, id []int) (results []models.Post, err error) {
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts by id")
+	}
+
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
+}
+
+func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	safeQuery := regexp.MustCompile(`[^\w\s]+`).ReplaceAllString(query, "")
+	matcher := regexp.MustCompile(fmt.Sprintf(`(^|\W)%s(s|\W|$)`, strings.ToLower(safeQuery)))
+
+	goquDB := goqu.New("postgres", db)
+	q := goquDB.From("posts").
+		Select("posts.*").
+		LeftJoin(goqu.T("locations"), goqu.On(goqu.Ex{"posts.location_id": goqu.I("locations.id")})).
+		LeftJoin(goqu.T("taggings"), goqu.On(goqu.Ex{"posts.id": goqu.I("taggings.post_id")})).
+		LeftJoin(goqu.T("tags"), goqu.On(goqu.Ex{"taggings.tag_id": goqu.I("tags.id")})).
+		GroupBy("posts.id", "locations.id", "tags.id").
+		Having(
+			goqu.Or(
+				goqu.Ex{"posts.description": goqu.Op{"ilike": matcher}},
+				goqu.Ex{"locations.name": goqu.Op{"ilike": matcher}},
+				goqu.Ex{"tags.name": goqu.Op{"ilike": matcher}},
+			),
+		)
+	if err := q.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 

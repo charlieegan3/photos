@@ -311,6 +311,22 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			toTime = toTime.Add(24 * time.Hour).Add(-time.Second)
 		}
 
+		showDates := true
+		title := fmt.Sprintf("Posts from %v to %v", fromTime.Format("January 2, 2006"), toTime.Format("January 2, 2006"))
+		timeFormat := "January 2, 2006"
+		if fromTime.Year() == toTime.Year() {
+			title = fmt.Sprintf("Posts from %v to %v %d", fromTime.Format("January 2"), toTime.Format("January 2"), fromTime.Year())
+			timeFormat = "January 2"
+
+			if fromTime.Month() == toTime.Month() {
+				title = fmt.Sprintf("Posts from %s %v-%v %d", fromTime.Month(), fromTime.Format("2"), toTime.Format("2"), fromTime.Year())
+			}
+		}
+		if fromTime.Add(24*time.Hour).After(toTime) || fromTime.Add(24*time.Hour).Equal(toTime) {
+			title = fmt.Sprintf("Posts from %v", fromTime.Format("January 2, 2006"))
+			showDates = false
+		}
+
 		posts, err := database.PostsInDateRange(db, fromTime, toTime)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -364,15 +380,10 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			mediaMap[m.ID] = m
 		}
 
-		multipleDays := false
-		if toTime.Sub(fromTime) > (24 * time.Hour) {
-			multipleDays = true
-		}
-
 		postGroupKeys := []string{}
 		postGroups := make(map[string][]models.Post)
 		for _, p := range posts {
-			key := p.PublishDate.Format("January 2, 2006")
+			key := p.PublishDate.Format(timeFormat)
 			if _, ok := postGroups[key]; !ok {
 				postGroups[key] = []models.Post{}
 				postGroupKeys = append(postGroupKeys, key)
@@ -384,7 +395,8 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		ctx.Set("postGroupKeys", postGroupKeys)
 		ctx.Set("postGroups", postGroups)
 		ctx.Set("locations", locationMap)
-		ctx.Set("multipleDays", multipleDays)
+		ctx.Set("title", title)
+		ctx.Set("showDates", showDates)
 
 		err = renderer(ctx, periodTemplate, w)
 		if err != nil {

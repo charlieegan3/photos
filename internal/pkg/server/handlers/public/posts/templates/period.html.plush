@@ -1,8 +1,11 @@
 <div class="w-100">
+  <div class="mv3 pt2 pl3 pl0-ns f3 f3-ns"><%= title %></div>
   <div class="pa2-ns">
     <%= for (i, date) in postGroupKeys { %>
       <% let posts = postGroups[date] %>
-      <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns <%= if (i != 0) { %>bt<% } %> bw1 b--light-gray"><%= date %></div>
+      <%= if (showDates) { %>
+        <div class="mv3 pt2 pl3 pl0-ns f5 f4-ns <%= if (i != 0) { %>bt<% } %> bw1 b--light-gray"><%= date %></div>
+      <% } %>
       <%= for (i, post) in posts { %>
         <% let location = locations[post.LocationID] %>
         <article class="cf mb3 mb0-ns">
@@ -27,11 +30,7 @@
                 <em>
                   <%= raw(location.Name) %>
                   &horbar;
-                  <%= if (multipleDays) { %>
-                    <%= post.PublishDate.Format("January 2, 2006 at 3:04PM") %>
-                  <% } else { %>
-                    <%= post.PublishDate.Format("3:04PM") %>
-                  <% } %>
+                  <%= post.PublishDate.Format("3:04PM") %>
                 </em>
               </p>
 

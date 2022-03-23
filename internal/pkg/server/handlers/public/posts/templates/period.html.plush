@@ -1,8 +1,8 @@
 <div class="w-100">
   <div class="pa2-ns">
-    <%= for (date) in postGroupKeys { %>
+    <%= for (i, date) in postGroupKeys { %>
       <% let posts = postGroups[date] %>
-      <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray"><%= date %></div>
+      <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns <%= if (i != 0) { %>bt<% } %> bw1 b--light-gray"><%= date %></div>
       <%= for (i, post) in posts { %>
         <% let location = locations[post.LocationID] %>
         <article class="cf mb3 mb0-ns">

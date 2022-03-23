@@ -315,11 +315,11 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		title := fmt.Sprintf("Posts from %v to %v", fromTime.Format("January 2, 2006"), toTime.Format("January 2, 2006"))
 		timeFormat := "January 2, 2006"
 		if fromTime.Year() == toTime.Year() {
-			title = fmt.Sprintf("Posts from %v to %v %d", fromTime.Format("January 2"), toTime.Format("January 2"), fromTime.Year())
+			title = fmt.Sprintf("Posts from %v to %v, %d", fromTime.Format("January 2"), toTime.Format("January 2"), fromTime.Year())
 			timeFormat = "January 2"
 
 			if fromTime.Month() == toTime.Month() {
-				title = fmt.Sprintf("Posts from %s %v-%v %d", fromTime.Month(), fromTime.Format("2"), toTime.Format("2"), fromTime.Year())
+				title = fmt.Sprintf("Posts from %s %v-%v, %d", fromTime.Month(), fromTime.Format("2"), toTime.Format("2"), fromTime.Year())
 			}
 		}
 		if fromTime.Add(24*time.Hour).After(toTime) || fromTime.Add(24*time.Hour).Equal(toTime) {

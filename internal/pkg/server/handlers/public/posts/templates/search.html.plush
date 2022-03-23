@@ -1,8 +1,8 @@
 <%= if (len(posts) == 0) { %>
-<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray">No posts matched <em><%= query %></em></div>
+<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">No posts matched <em><%= query %></em></div>
 <p><a href="/posts/search">Search again</a></p>
 <% } else { %>
-<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray">Posts matching <em><%= query %></em></div>
+<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">Posts matching <em><%= query %></em></div>
 <% } %>
 
 <div class="w-100">

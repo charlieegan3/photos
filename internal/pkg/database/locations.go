@@ -193,3 +193,76 @@ func UpdateLocations(db *sql.DB, locations []models.Location) (results []models.
 
 	return results, nil
 }
+
+func MergeLocations(db *sql.DB, locationName, oldLocationName string) (id int, err error) {
+	goquDB := goqu.New("postgres", db)
+
+	var oldID int
+
+	tx, err := goquDB.Begin()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to open transaction")
+	}
+
+	newLocationID := tx.From("locations").
+		Select("id").
+		Where(goqu.Ex{"name": locationName}).Executor()
+	result, err := newLocationID.ScanVal(&id)
+	if err != nil {
+		if rErr := tx.Rollback(); rErr != nil {
+			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		}
+		return 0, errors.Wrap(err, "failed to get new location ID")
+	}
+	if !result {
+		if rErr := tx.Rollback(); rErr != nil {
+			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		}
+		return 0, errors.Wrap(err, "failed to get new location from queried row")
+	}
+
+	oldLocationID := tx.From("locations").
+		Select("id").
+		Where(goqu.Ex{"name": oldLocationName}).Executor()
+	result, err = oldLocationID.ScanVal(&oldID)
+	if err != nil {
+		if rErr := tx.Rollback(); rErr != nil {
+			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		}
+		return 0, errors.Wrap(err, "failed to get old location ID")
+	}
+	if !result {
+		if rErr := tx.Rollback(); rErr != nil {
+			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		}
+		return 0, errors.Wrap(err, "failed to get old location from queried row")
+	}
+
+	updatePosts := tx.Update("posts").
+		Where(goqu.Ex{"location_id": oldID}).
+		Set(map[string]interface{}{"location_id": id}).
+		Executor()
+	_, err = updatePosts.Exec()
+	if err != nil {
+		if rErr := tx.Rollback(); rErr != nil {
+			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		}
+		return 0, errors.Wrap(err, "failed to update posts to merged location")
+	}
+
+	deleteLocation := tx.Delete("locations").
+		Where(goqu.Ex{"id": oldID}).Executor()
+	_, err = deleteLocation.Exec()
+	if err != nil {
+		if rErr := tx.Rollback(); rErr != nil {
+			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		}
+		return 0, errors.Wrap(err, "failed to delete old location")
+	}
+
+	if err = tx.Commit(); err != nil {
+		return 0, errors.Wrap(err, "failed to commit transaction")
+	}
+
+	return id, nil
+}

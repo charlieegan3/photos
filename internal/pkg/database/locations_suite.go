@@ -2,12 +2,12 @@ package database
 
 import (
 	"database/sql"
-
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/maxatome/go-testdeep/td"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"testing"
 )
 
 // LocationsSuite is a number of tests to define the database integration for
@@ -315,4 +315,84 @@ func (s *LocationsSuite) TestDeleteLocations() {
 	)
 
 	td.Cmp(s.T(), allLocations, expectedResult)
+}
+
+func (s *PostsSuite) TestMergeLocations() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{
+			Name:      "London 1",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+		{
+			Name:      "London 2",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+		{
+			Name:      "London 3",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			MediaID:    returnedMedias[0].ID,
+			LocationID: returnedLocations[0].ID,
+		},
+		{
+			MediaID:    returnedMedias[0].ID,
+			LocationID: returnedLocations[1].ID,
+		},
+	}
+	_, err = CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	s.T().Run("simple merge", func(t *testing.T) {
+		remainingLocationID, err := MergeLocations(s.DB, "London 1", "London 2")
+		require.NoError(s.T(), err)
+
+		assert.Equal(t, returnedLocations[0].ID, remainingLocationID)
+	})
+
+	s.T().Run("merge when target name is missing from table", func(t *testing.T) {
+		remainingLocationID, err := MergeLocations(s.DB, "London X", "London 3")
+		require.NoError(s.T(), err)
+
+		assert.Equal(t, 0, remainingLocationID)
+
+		locations, err := FindLocationsByName(s.DB, "London 3")
+		require.NoError(s.T(), err)
+
+		assert.Equal(t, 1, len(locations))
+	})
+
+	s.T().Run("merge when old name is missing from table", func(t *testing.T) {
+		remainingLocationID, err := MergeLocations(s.DB, "London 3", "London X")
+		require.NoError(s.T(), err)
+
+		assert.Equal(t, 0, remainingLocationID)
+
+		locations, err := FindLocationsByName(s.DB, "London 3")
+		require.NoError(s.T(), err)
+
+		assert.Equal(t, 1, len(locations))
+	})
 }

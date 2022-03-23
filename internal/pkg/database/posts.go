@@ -129,8 +129,9 @@ func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
 	matcher := regexp.MustCompile(fmt.Sprintf(`(^|\W)%s(s|\W|$)`, strings.ToLower(safeQuery)))
 
 	goquDB := goqu.New("postgres", db)
-	q := goquDB.From("posts").
+	inner := goquDB.From("posts").
 		Select("posts.*").
+		Distinct("posts.id").
 		LeftJoin(goqu.T("locations"), goqu.On(goqu.Ex{"posts.location_id": goqu.I("locations.id")})).
 		LeftJoin(goqu.T("taggings"), goqu.On(goqu.Ex{"posts.id": goqu.I("taggings.post_id")})).
 		LeftJoin(goqu.T("tags"), goqu.On(goqu.Ex{"taggings.tag_id": goqu.I("tags.id")})).
@@ -142,7 +143,8 @@ func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
 				goqu.Ex{"tags.name": goqu.Op{"ilike": matcher}},
 			),
 		)
-	if err := q.ScanStructs(&dbPosts); err != nil {
+	outer := goquDB.From(inner).Select("*").Order(goqu.I("publish_date").Desc())
+	if err := outer.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 

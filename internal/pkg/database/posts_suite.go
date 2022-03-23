@@ -1010,13 +1010,16 @@ func (s *PostsSuite) TestSearchPosts() {
 	returnedPosts, err := CreatePosts(s.DB, posts)
 	require.NoError(s.T(), err)
 
-	err = SetPostTags(s.DB, returnedPosts[0], []string{"cats", "kittens", "pets"})
+	err = SetPostTags(s.DB, returnedPosts[0], []string{"cats", "kittens", "pets", "pet"})
 	require.NoError(s.T(), err)
 	err = SetPostTags(s.DB, returnedPosts[1], []string{"dogs", "doggos", "pets"})
 	require.NoError(s.T(), err)
 
 	expectPostIDs := func(posts []models.Post, ids []int) {
 		s.T().Helper()
+		if len(posts) != len(ids) {
+			s.T().Errorf("unexpected number of posts: %d, want %d", len(posts), len(ids))
+		}
 		for _, id := range ids {
 			found := false
 			for _, v := range posts {

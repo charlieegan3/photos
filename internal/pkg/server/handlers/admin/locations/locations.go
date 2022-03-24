@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
+	"gocloud.dev/blob"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -182,7 +183,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 	}
 }
 
-func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -234,12 +235,28 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		if r.Form.Get("_method") == "DELETE" {
+			mapKey := fmt.Sprintf("location_maps/%d.jpg", existingLocations[0].ID)
+			exists, err := bucket.Exists(r.Context(), mapKey)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			if exists {
+				err = bucket.Delete(r.Context(), mapKey)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
+			}
 			err = database.DeleteLocations(db, []models.Location{existingLocations[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
+
 			http.Redirect(w, r, "/admin/locations", http.StatusSeeOther)
 			return
 		}
@@ -250,9 +267,40 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
+		name := r.PostForm.Get("Name")
+
+		// handle the case where there's an existing location with the new name
+		if name != existingLocations[0].Name {
+			newLocationID, err := database.MergeLocations(db, name, existingLocations[0].Name)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			if newLocationID != 0 {
+				mapKey := fmt.Sprintf("location_maps/%d.jpg", existingLocations[0].ID)
+				exists, err := bucket.Exists(r.Context(), mapKey)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
+				if exists {
+					err = bucket.Delete(r.Context(), mapKey)
+					if err != nil {
+						w.WriteHeader(http.StatusInternalServerError)
+						w.Write([]byte(err.Error()))
+						return
+					}
+				}
+				http.Redirect(w, r, fmt.Sprintf("/admin/locations/%d", newLocationID), http.StatusSeeOther)
+				return
+			}
+		}
+
 		location := models.Location{
 			ID:   existingLocations[0].ID,
-			Name: r.PostForm.Get("Name"),
+			Name: name,
 		}
 
 		latitudeString := r.Form.Get("Latitude")

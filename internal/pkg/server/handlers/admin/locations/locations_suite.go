@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
@@ -184,7 +185,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/locations/{locationID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc())).Methods("POST")
+	router.HandleFunc("/admin/locations/{locationID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc())).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "PUT")
@@ -228,6 +229,112 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 	td.Cmp(s.T(), returnedLocations, expectedLocations)
 }
 
+func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+	}
+	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{Name: "Paris"},
+		{Name: "Berlin"},
+	}
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "photo to move to berlin",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "photo already in berlin",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[1].ID,
+		},
+	}
+	returnedPosts, err := database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/admin/locations/{locationID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc())).Methods("POST")
+
+	form := url.Values{}
+	form.Add("_method", "PUT")
+	form.Add("Name", "Berlin")
+
+	// make the request to the handler
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf("/admin/locations/%d", returnedLocations[0].ID),
+		strings.NewReader(form.Encode()),
+	)
+	require.NoError(s.T(), err)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+
+	// check that the database content is also correct
+	endingLocations, err := database.AllLocations(s.DB)
+	require.NoError(s.T(), err)
+
+	expectedLocations := td.Slice(
+		[]models.Location{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Location{
+					ID:   returnedLocations[1].ID,
+					Name: "Berlin",
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+	td.Cmp(s.T(), endingLocations, expectedLocations)
+
+	endingPosts, err := database.AllPosts(s.DB, false, database.SelectOptions{SortField: "id"})
+	require.NoError(s.T(), err)
+
+	expectedPosts := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Post{
+					ID:         returnedPosts[0].ID,
+					LocationID: returnedLocations[1].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+			1: td.SStruct(
+				models.Post{
+					ID:         returnedPosts[1].ID,
+					LocationID: returnedLocations[1].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+	td.Cmp(s.T(), endingPosts, expectedPosts)
+}
+
 func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	testData := []models.Location{
 		{
@@ -243,7 +350,7 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	router := mux.NewRouter()
 	router.HandleFunc(
 		"/admin/locations/{locationID}",
-		BuildFormHandler(s.DB, templating.BuildPageRenderFunc()),
+		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc()),
 	).Methods("POST")
 
 	form := url.Values{}
@@ -262,7 +369,11 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	// check that the database content is also correct
 	returnedLocations, err := database.AllLocations(s.DB)

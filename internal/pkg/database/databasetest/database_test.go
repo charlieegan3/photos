@@ -178,8 +178,13 @@ func (s *DatabaseSuite) TestEndpointsTagsSuite() {
 }
 
 func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
 	suite.Run(s.T(), &locations.EndpointsLocationsSuite{
-		DB: s.DB,
+		DB:     s.DB,
+		Bucket: bucket,
 	})
 }
 

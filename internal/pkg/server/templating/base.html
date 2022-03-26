@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="center ph2-l pv3-l mw8">{{ .Body }}</div>
+    <div class="center ph2-l pb3 pv3-l mw8 mb4">
+      {{ .Body }}
+    </div>
+    {{if .ShowMenu }}
+    <a class="fixed bottom-0 right-0 z-max tc w-100 mw4-ns bl-ns pa2 db bt bg-white b--light-gray hover-bg-light-gray" href="/menu">Menu</a>
+    {{end}}
   </body>
 </html>

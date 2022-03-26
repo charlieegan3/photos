@@ -63,7 +63,7 @@ func (s *EndpointsTagsSuite) TestListTags() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/admin/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/tags", nil)
 	require.NoError(s.T(), err)
@@ -94,7 +94,7 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/admin/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name), nil)
 	require.NoError(s.T(), err)
@@ -113,7 +113,7 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 
 func (s *EndpointsTagsSuite) TestNewTag() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags/new", BuildNewHandler(templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/admin/tags/new", BuildNewHandler(templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/tags/new", nil)
 	require.NoError(s.T(), err)
@@ -132,7 +132,7 @@ func (s *EndpointsTagsSuite) TestNewTag() {
 
 func (s *EndpointsTagsSuite) TestCreateTag() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc())).Methods("POST")
+	router.HandleFunc("/admin/tags", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("POST")
 
 	form := url.Values{}
 	form.Add("Name", "nofilter")
@@ -262,7 +262,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags/{tagName}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc())).Methods("POST")
+	router.HandleFunc("/admin/tags/{tagName}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("POST")
 
 	form := url.Values{}
 	form.Add("_method", "PUT")
@@ -373,7 +373,7 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	router := mux.NewRouter()
 	router.HandleFunc(
 		"/admin/tags/{tagName}",
-		BuildFormHandler(s.DB, templating.BuildPageRenderFunc()),
+		BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true)),
 	).Methods("POST")
 
 	form := url.Values{}

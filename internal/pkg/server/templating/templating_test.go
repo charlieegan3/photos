@@ -21,7 +21,12 @@ func TestRenderPage(t *testing.T) {
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="center ph2-l pv3-l mw8"><p>bar</p></div>
+    <div class="center ph2-l pv3-l mw8">
+      <p>bar</p>
+    </div>
+    
+    <a class="absolute bottom-0 tc w-100 pa2 db bt b--silver hover-bg-light-gray" href="/menu">Menu</a>
+    
   </body>
 </html>
 `
@@ -31,7 +36,7 @@ func TestRenderPage(t *testing.T) {
 	ctx := plush.NewContext()
 	ctx.Set("foo", "bar")
 
-	renderFunc := BuildPageRenderFunc()
+	renderFunc := BuildPageRenderFunc(true)
 
 	err := renderFunc(ctx, nestedTemplate, b)
 	require.NoError(t, err)

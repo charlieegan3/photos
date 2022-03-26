@@ -1,6 +1,6 @@
 <div class="w-100">
-  <div class="pa2-ns">
-    <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">View Posts from a Date Range</div>
+  <div class="pa2">
+    <div class="mv3 f4 f3-ns">View Posts from a Date Range</div>
 
     <p class="mt0 mb3">
       Select a date and an optional end date to view posts within a given date range. Not selecting an
@@ -17,7 +17,7 @@
         <input type="date" id="to" name="to"> <span class="silver">(optional)</span>
       </div>
       <div class="mt2">
-        <input class="w-100 mw5" type="submit" value="View">
+        <input class="w-100 pa2 mw5-ns" type="submit" value="View">
       </div>
     </form>
 

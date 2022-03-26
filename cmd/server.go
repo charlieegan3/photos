@@ -16,7 +16,6 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 // serverCmd wraps server.Serve and starts the cms webserver
@@ -64,9 +63,6 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to open bucket: %s", err)
 		}
 
-		renderer := templating.BuildPageRenderFunc()
-		rendererAdmin := templating.BuildPageRenderFunc("admin")
-
 		log.Println("Listening on", port)
 
 		server.Serve(
@@ -80,8 +76,6 @@ var serverCmd = &cobra.Command{
 			bucket,
 			viper.GetString("geoapify.url"),
 			viper.GetString("geoapify.key"),
-			renderer,
-			rendererAdmin,
 		)
 
 		err = bucket.Close()

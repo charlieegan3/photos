@@ -20,7 +20,7 @@ var baseTemplateAdmin string
 
 type PageRenderer func(*plush.Context, string, io.Writer) error
 
-func BuildPageRenderFunc(intermediateTemplates ...string) PageRenderer {
+func BuildPageRenderFunc(showMenu bool, intermediateTemplates ...string) PageRenderer {
 	// list of all templates to run including intermediateTemplates
 	templates := append(intermediateTemplates, "base")
 
@@ -66,7 +66,13 @@ func BuildPageRenderFunc(intermediateTemplates ...string) PageRenderer {
 			}
 
 			var bodyBuilder strings.Builder
-			err = tmpl.Execute(&bodyBuilder, struct{ Body template.HTML }{Body: template.HTML(body)})
+			err = tmpl.Execute(&bodyBuilder, struct {
+				ShowMenu bool
+				Body     template.HTML
+			}{
+				ShowMenu: showMenu,
+				Body:     template.HTML(body),
+			})
 			if err != nil {
 				return errors.Wrap(err, "failed to parse base template")
 			}

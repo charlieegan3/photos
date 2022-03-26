@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/menu"
 	"log"
 	"net/http"
 	"time"
@@ -31,9 +32,11 @@ func Serve(
 	db *sql.DB,
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
-	renderer templating.PageRenderer,
-	rendererAdmin templating.PageRenderer,
 ) {
+	renderer := templating.BuildPageRenderFunc(true)
+	rendererMenu := templating.BuildPageRenderFunc(false)
+	rendererAdmin := templating.BuildPageRenderFunc(true, "admin")
+
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
 	router.Use(InitMiddlewareHTTPS(hostname, environment))
@@ -51,6 +54,8 @@ func Serve(
 
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods("GET")
+
+	router.HandleFunc("/menu", menu.BuildIndexHandler(db, rendererMenu)).Methods("GET")
 
 	router.HandleFunc("/tags", publictags.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/tags/{tagName}", publictags.BuildGetHandler(db, renderer)).Methods("GET")

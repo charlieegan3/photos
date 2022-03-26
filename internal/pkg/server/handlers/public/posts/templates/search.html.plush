@@ -1,9 +1,11 @@
-<%= if (len(posts) == 0) { %>
-<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">No posts matched <em><%= query %></em></div>
-<p><a href="/posts/search">Search again</a></p>
-<% } else { %>
-<div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">Posts matching <em><%= query %></em></div>
-<% } %>
+<div class="w-100 pa2">
+  <%= if (len(posts) == 0) { %>
+    <div class="mv3 f4 f3-ns">No posts matched <em><%= query %></em></div>
+    <p><a href="/posts/search">Search again</a></p>
+  <% } else { %>
+    <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">Posts matching <em><%= query %></em></div>
+  <% } %>
+</div>
 
 <div class="w-100">
   <div class="cf pa2-ns f7">
@@ -26,9 +28,4 @@
       </article>
     <% } %>
   </div>
-</div>
-
-<div class="flex justify-around">
-  <a class="db" href="/">Home</a>
-  <a class="db" href="/posts/period">By Date</a>
 </div>

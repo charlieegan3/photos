@@ -37,9 +37,3 @@
     <% } %>
   </div>
 </div>
-
-<div class="mb3 mb0-ns flex justify-around">
-  <a class="db" href="/">Home</a>
-  <a class="db" href="/posts/period">By Date</a>
-  <a class="db" href="/posts/search">Search</a>
-</div>

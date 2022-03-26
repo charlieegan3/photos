@@ -101,7 +101,7 @@ func (s *PostsSuite) TestListPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/", nil)
 	require.NoError(s.T(), err)
@@ -176,7 +176,7 @@ func (s *PostsSuite) TestGetPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -235,7 +235,7 @@ func (s *PostsSuite) TestPeriodHandler() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/period/{from}-to-{to}", BuildPeriodHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/posts/period/{from}-to-{to}", BuildPeriodHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/posts/period/2021-11-01-to-2021-11-29", nil)
 	require.NoError(s.T(), err)
@@ -277,7 +277,7 @@ func (s *PostsSuite) TestLegacyPostPathRedirect() {
 
 func (s *PostsSuite) TestPeriodIndexHandler() {
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/posts/period?from=2021-10-01&to=2021-11-01", nil)
 	require.NoError(s.T(), err)
@@ -534,7 +534,7 @@ func (s *PostsSuite) TestSearchPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/search", BuildSearchHandler(s.DB, templating.BuildPageRenderFunc())).Methods("GET")
+	router.HandleFunc("/posts/search", BuildSearchHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/posts/search?query=post1", nil)
 	require.NoError(s.T(), err)

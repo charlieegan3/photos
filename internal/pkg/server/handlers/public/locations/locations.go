@@ -8,12 +8,10 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"gocloud.dev/blob"
-	"gocloud.dev/gcerrors"
-
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 )
 
 func mapURL(serverURL, apiKey string, latitude, longitude float64) (string, error) {
@@ -74,8 +72,15 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 		}
 
 		mapPath := fmt.Sprintf("location_maps/%d.jpg", locations[0].ID)
-		br, err := bucket.NewReader(r.Context(), mapPath, nil)
-		if gcerrors.Code(err) == gcerrors.NotFound {
+
+		exists, err := bucket.Exists(r.Context(), mapPath)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if !exists {
 			mapImageURL, err := mapURL(mapServerURL, mapServerAPIKey, locations[0].Latitude, locations[0].Longitude)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -115,13 +120,13 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 				w.Write([]byte("failed to close bucket after writing"))
 				return
 			}
+		}
 
-			br, err = bucket.NewReader(r.Context(), mapPath, nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
+		br, err := bucket.NewReader(r.Context(), mapPath, nil)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
 		}
 
 		// defer close here in case we have a 304 response

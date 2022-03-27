@@ -10,7 +10,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"gocloud.dev/blob"
-	"gocloud.dev/gcerrors"
 	"willnorris.com/go/imageproxy"
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
@@ -103,10 +102,13 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			return
 		}
 
-		// otherwise, if there are options set, look for a suitable thumb
-		br, err := bucket.NewReader(r.Context(), thumbMediaPath, nil)
-		// if there is not an existing thumb for these size options
-		if gcerrors.Code(err) == gcerrors.NotFound {
+		exists, err := bucket.Exists(r.Context(), thumbMediaPath)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		if !exists {
 			// create a reader to get the full size media from the bucket
 			br, err := bucket.NewReader(r.Context(), originalMediaPath, nil)
 			if err != nil {
@@ -180,13 +182,6 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			return
 		}
 
-		err = br.Close()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close bucket after reading"))
-			return
-		}
-
 		// if there is a thumb, then return the contents in the response
 		attrs, err := bucket.Attributes(r.Context(), thumbMediaPath)
 		if err != nil {
@@ -204,7 +199,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			}
 		}
 
-		br, err = bucket.NewReader(r.Context(), thumbMediaPath, nil)
+		br, err := bucket.NewReader(r.Context(), thumbMediaPath, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

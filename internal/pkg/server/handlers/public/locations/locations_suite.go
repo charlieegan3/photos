@@ -80,7 +80,11 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	// we expect that the raw map is only requested once, since the second time it's in object storage
 	assert.Equal(s.T(), 1, requested)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
 
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)

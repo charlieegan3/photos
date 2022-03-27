@@ -36,6 +36,8 @@ type dbMedia struct {
 	InstagramCode string `db:"instagram_code"`
 
 	DeviceID int `db:"device_id"`
+
+	LensID sql.NullInt64 `db:"lens_id"`
 }
 
 func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
@@ -55,6 +57,11 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"instagram_code":            d.InstagramCode,
 	}
 
+	record["lens_id"] = nil
+	if d.LensID.Valid {
+		record["lens_id"] = d.LensID.Int64
+	}
+
 	if includeID {
 		record["id"] = d.ID
 	}
@@ -63,7 +70,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 }
 
 func newMedia(media dbMedia) models.Media {
-	return models.Media{
+	m := models.Media{
 		ID: media.ID,
 
 		Kind: media.Kind,
@@ -87,10 +94,16 @@ func newMedia(media dbMedia) models.Media {
 
 		InstagramCode: media.InstagramCode,
 	}
+
+	if media.LensID.Valid {
+		m.LensID = media.LensID.Int64
+	}
+
+	return m
 }
 
 func newDBMedia(media models.Media) dbMedia {
-	return dbMedia{
+	m := dbMedia{
 		ID: media.ID,
 
 		Kind:                    media.Kind,
@@ -112,6 +125,19 @@ func newDBMedia(media models.Media) dbMedia {
 
 		InstagramCode: media.InstagramCode,
 	}
+
+	m.LensID = sql.NullInt64{
+		// default to setting to null unless set
+		Valid: false,
+	}
+	if media.LensID != 0 {
+		m.LensID = sql.NullInt64{
+			Valid: true,
+			Int64: media.LensID,
+		}
+	}
+
+	return m
 }
 
 func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, err error) {

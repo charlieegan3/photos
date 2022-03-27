@@ -1,4 +1,4 @@
-package devices
+package lenses
 
 import (
 	"database/sql"
@@ -39,7 +39,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		devices, err := database.AllDevices(db)
+		lenses, err := database.AllLenses(db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -47,7 +47,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		}
 
 		ctx := plush.NewContext()
-		ctx.Set("devices", devices)
+		ctx.Set("lenses", lenses)
 
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
@@ -63,7 +63,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		ctx := plush.NewContext()
-		ctx.Set("device", models.Device{})
+		ctx.Set("lens", models.Lens{})
 
 		w.WriteHeader(http.StatusOK)
 		err := renderer(ctx, newTemplate, w)
@@ -79,34 +79,34 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		rawID, ok := mux.Vars(r)["deviceID"]
+		rawID, ok := mux.Vars(r)["lensID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device id is required"))
+			w.Write([]byte("lens id is required"))
 			return
 		}
 
-		id, err := strconv.Atoi(rawID)
+		id, err := strconv.ParseInt(rawID, 10, 0)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse device ID"))
+			w.Write([]byte("failed to parse lens ID"))
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int{id})
+		lenses, err := database.FindLensesByID(db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		if len(devices) == 0 {
+		if len(lenses) == 0 {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 
 		ctx := plush.NewContext()
-		ctx.Set("device", devices[0])
+		ctx.Set("lens", lenses[0])
 
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
@@ -134,7 +134,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		device := models.Device{Name: strings.TrimSpace(r.Form.Get("Name"))}
+		lens := models.Lens{Name: strings.TrimSpace(r.Form.Get("Name"))}
 
 		f, header, err := r.FormFile("Icon")
 		if err != nil {
@@ -145,32 +145,31 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 
 		lowerFilename := strings.ToLower(header.Filename)
 		if parts := strings.Split(lowerFilename, "."); len(parts) > 0 {
-			device.IconKind = parts[len(parts)-1]
+			if fe := parts[len(parts)-1]; fe != "png" {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(fmt.Sprintf("icon file must be png, got: %s", fe)))
+				return
+			}
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("icon file missing extension"))
 			return
 		}
-		if device.IconKind != "jpg" && device.IconKind != "jpeg" && device.IconKind != "png" {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(fmt.Sprintf("icon file must be jpg or png, got: %s", device.IconKind)))
-			return
-		}
 
-		persistedDevices, err := database.CreateDevices(db, []models.Device{device})
+		persistedLenses, err := database.CreateLenses(db, []models.Lens{lens})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		if len(persistedDevices) != 1 {
+		if len(persistedLenses) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of persistedDevices"))
+			w.Write([]byte("unexpected number of persistedLenses"))
 			return
 		}
 
-		key := fmt.Sprintf("device_icons/%s.%s", persistedDevices[0].Slug, persistedDevices[0].IconKind)
+		key := fmt.Sprintf("lens_icons/%d.png", persistedLenses[0].ID)
 
 		bw, err := bucket.NewWriter(r.Context(), key, nil)
 		if err != nil {
@@ -193,7 +192,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		http.Redirect(w, r, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID), http.StatusSeeOther)
 	}
 }
 
@@ -208,28 +207,28 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		rawID, ok := mux.Vars(r)["deviceID"]
+		rawID, ok := mux.Vars(r)["lensID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device id is required"))
+			w.Write([]byte("lens id is required"))
 			return
 		}
 
-		id, err := strconv.Atoi(rawID)
+		id, err := strconv.ParseInt(rawID, 10, 0)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse device ID"))
+			w.Write([]byte("failed to parse lens ID"))
 			return
 		}
 
-		existingDevices, err := database.FindDevicesByID(db, []int{id})
+		existingLenses, err := database.FindLensesByID(db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		if len(existingDevices) == 0 {
+		if len(existingLenses) == 0 {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -249,14 +248,14 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				return
 			}
 
-			err = database.DeleteDevices(db, []models.Device{existingDevices[0]})
+			err = database.DeleteLenses(db, []models.Lens{existingLenses[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
 
-			iconKey := fmt.Sprintf("device_icons/%s.%s", existingDevices[0].Slug, existingDevices[0].IconKind)
+			iconKey := fmt.Sprintf("lens_icons/%d.png", existingLenses[0].ID)
 			err = bucket.Delete(r.Context(), iconKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -264,7 +263,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				return
 			}
 
-			http.Redirect(w, r, "/admin/devices", http.StatusSeeOther)
+			http.Redirect(w, r, "/admin/lenses", http.StatusSeeOther)
 			return
 		}
 
@@ -287,92 +286,45 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		device := models.Device{
-			ID:       existingDevices[0].ID,
-			Name:     strings.TrimSpace(r.PostForm.Get("Name")),
-			IconKind: existingDevices[0].IconKind,
+		lens := models.Lens{
+			ID:   existingLenses[0].ID,
+			Name: strings.TrimSpace(r.PostForm.Get("Name")),
 		}
 
 		f, header, err := r.FormFile("Icon")
 		if err == nil {
 			lowerFilename := strings.ToLower(header.Filename)
 			if parts := strings.Split(lowerFilename, "."); len(parts) > 0 {
-				device.IconKind = parts[len(parts)-1]
+				if fe := parts[len(parts)-1]; fe != "png" {
+					w.WriteHeader(http.StatusBadRequest)
+					w.Write([]byte(fmt.Sprintf("icon file must be png, got: %s", fe)))
+					return
+				}
 			} else {
 				w.WriteHeader(http.StatusBadRequest)
 				w.Write([]byte("icon file missing extension"))
 				return
 			}
-			if device.IconKind != "jpg" && device.IconKind != "jpeg" && device.IconKind != "png" {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("icon file must be jpg or png, got: %s", device.IconKind)))
-				return
-			}
 		}
 
-		updatedDevices, err := database.UpdateDevices(db, []models.Device{device})
+		updatedLenses, err := database.UpdateLenses(db, []models.Lens{lens})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		if len(updatedDevices) != 1 {
+		if len(updatedLenses) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of updatedDevices"))
+			w.Write([]byte("unexpected number of updatedLenses"))
 			return
-		}
-
-		// move the icon, if the slug or iconkind has changed
-		if existingDevices[0].Slug != updatedDevices[0].Slug || existingDevices[0].IconKind != updatedDevices[0].IconKind {
-			existingIconKey := fmt.Sprintf("device_icons/%s.%s", existingDevices[0].Slug, existingDevices[0].IconKind)
-			br, err := bucket.NewReader(r.Context(), existingIconKey, nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed initialize icon storage: %s", err)))
-				return
-			}
-
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, updatedDevices[0].IconKind), nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed to open new writer for object: %s", err)))
-				return
-			}
-
-			_, err = io.Copy(bw, br)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to save to icon storage"))
-				return
-			}
-
-			err = bucket.Delete(r.Context(), existingIconKey)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
-
-			err = bw.Close()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to icon storage"))
-				return
-			}
-			err = br.Close()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to icon storage"))
-				return
-			}
 		}
 
 		// only handle the file when it's present, file might not be submitted
 		// every time the form is sent
 		f, header, err = r.FormFile("Icon")
 		if err == nil {
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, device.IconKind), nil)
+			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("lens_icons/%d.png", updatedLenses[0].ID), nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed initialize icon storage"))
@@ -397,7 +349,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		http.Redirect(
 			w,
 			r,
-			fmt.Sprintf("/admin/devices/%d", updatedDevices[0].ID),
+			fmt.Sprintf("/admin/lenses/%d", updatedLenses[0].ID),
 			http.StatusSeeOther,
 		)
 	}

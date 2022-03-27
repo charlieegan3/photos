@@ -201,13 +201,16 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	}
 
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	if err != nil {
-		s.T().Fatalf("failed to create devices: %s", err)
-	}
+	require.NoError(s.T(), err)
+
+	lenses := []models.Lens{{Name: "Example Lens"}}
+	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	require.NoError(s.T(), err)
 
 	testData := []models.Media{
 		{
 			DeviceID: returnedDevices[0].ID,
+			LensID:   returnedLenses[0].ID,
 
 			Make:  "FujiFilm",
 			Model: "X100F",
@@ -248,6 +251,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		"Make":     strings.NewReader("Fuji"),
 		"File":     imageFile,
 		"DeviceID": strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
+		"LensID":   strings.NewReader("0"), // remove the previously set lens
 		"_method":  strings.NewReader("PUT"),
 	}
 	var b bytes.Buffer
@@ -298,8 +302,9 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Media{
-					ID:   persistedMedias[0].ID,
-					Make: "Fuji",
+					ID:     persistedMedias[0].ID,
+					Make:   "Fuji",
+					LensID: 0,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

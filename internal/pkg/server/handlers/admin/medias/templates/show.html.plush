@@ -1,4 +1,4 @@
-<h1><%= media.ID %></h1>
+<h1 xmlns:2006-01-02T15="http://www.w3.org/1999/xhtml" xmlns:2006-01-02T15="http://www.w3.org/1999/xhtml"><%= media.ID %></h1>
 <p>Kind: <%= media.Kind %></p>
 
 <%= if (media.Kind == "jpg") { %>
@@ -62,11 +62,19 @@
   <div class="mb1">
     <%= f.SelectTag("DeviceID", {options: devices}) %>
   </div>
-  <div class="mb3">
+  <div class="mb1">
     <a href="/admin/devices/<%= media.DeviceID %>">View Device</a>
   </div>
+  <div class="mb1">
+    <%= f.SelectTag("LensID", {options: lenses}) %>
+  </div>
+  <%= if (media.LensID != int64(0)) { %>
+    <div class="mb1">
+      <a href="/admin/lenses/<%= media.LensID %>">View Lens</a>
+    </div>
+  <% } %>
 
-  <%= f.SubmitTag("Update Media") %>
+  <%= f.SubmitTag("Update Media", { class: "mt2" }) %>
 <% } %>
 
 <%= form_for(media, {action:"/admin/medias/"+to_string(media.ID), method: "DELETE"}) { %>

@@ -1,0 +1,19 @@
+<h1><%= lens.Name %></h1>
+<p>ID: <%= lens.ID %></p>
+
+<img class="mb1 w-100 db" src="/lenses/<%= lens.ID %>.png"/>
+
+<%= form_for(lens, {class: "mb3", action:"/admin/lenses/"+lens.ID, method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Name") %>
+  </div>
+  <div class="mb2">
+    <%= f.FileTag("Icon") %>
+  </div>
+
+  <%= f.SubmitTag("Update Lens") %>
+<% } %>
+
+<%= form_for(lens, {action:"/admin/lenses/"+lens.ID, method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete Lens") %>
+<% } %>

@@ -1,0 +1,12 @@
+<h1>New Lens</h1>
+
+<%= form_for(lens, {action:"/admin/lenses", method: "POST"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Name") %>
+  </div>
+  <div class="mb2">
+    <%= f.FileTag("Icon") %>
+  </div>
+
+  <%= f.SubmitTag("Create Lens") %>
+<% } %>

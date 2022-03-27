@@ -113,6 +113,20 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			deviceOptionMap[d.Name] = d.ID
 		}
 
+		lenses, err := database.AllLenses(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		lensOptionMap := map[string]interface{}{
+			"No Lens": 0,
+		}
+		for _, l := range lenses {
+			lensOptionMap[l.Name] = l.ID
+		}
+
 		posts, err := database.FindPostsByMediaID(db, medias[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -123,6 +137,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx := plush.NewContext()
 		ctx.Set("media", medias[0])
 		ctx.Set("devices", deviceOptionMap)
+		ctx.Set("lenses", lensOptionMap)
 		ctx.Set("posts", posts)
 
 		err = renderer(ctx, showTemplate, w)
@@ -299,6 +314,18 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("failed to parse device ID"))
 			return
+		}
+
+		// only handle the lens if set, it's optional
+		rawLensID := r.Form.Get("LensID")
+		fmt.Println(rawLensID)
+		if rawLensID != "" && rawLensID != "0" {
+			media.LensID, err = strconv.ParseInt(rawLensID, 10, 0)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to parse lens ID"))
+				return
+			}
 		}
 
 		updatedMedias, err := database.UpdateMedias(db, []models.Media{media})

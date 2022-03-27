@@ -27,5 +27,7 @@ type Media struct {
 
 	DeviceID int
 
+	LensID int64
+
 	InstagramCode string
 }

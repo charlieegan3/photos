@@ -1,0 +1,4 @@
+ALTER TABLE medias DROP COLUMN IF EXISTS lens_id;
+ALTER TABLE medias DROP CONSTRAINT IF EXISTS fk_medias_lenses;
+
+DROP TABLE IF EXISTS lenses;

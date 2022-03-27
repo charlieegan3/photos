@@ -1,0 +1,11 @@
+<h1>Lenses</h1>
+<p><a href="./lenses/new">New Lens</a></p>
+<ul>
+<%= for (lens) in lenses { %>
+  <li>
+    <a href="/admin/lenses/<%= lens.ID %>">
+      <%= lens.Name %>
+    </a>
+  </li>
+<% } %>
+</ul>

@@ -3,7 +3,6 @@ package server
 import (
 	"database/sql"
 	"fmt"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/menu"
 	"log"
 	"net/http"
 	"time"
@@ -15,16 +14,20 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/devices"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/lenses"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/locations"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/menu"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+
 	publicdevices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/devices"
+	publicLenses "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/lenses"
 	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
 	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
 	publictags "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/tags"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 )
 
 func Serve(
@@ -75,17 +78,25 @@ func Serve(
 	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods("GET")
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
+	router.HandleFunc("/lenses/{lensID}.png", publicLenses.BuildIconHandler(db, bucket)).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 
 	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/", handlers.BuildRedirectHandler("/admin")).Methods("GET")
+
 	adminRouter.HandleFunc("/devices", devices.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, rendererAdmin)).Methods("POST")
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildFormHandler(db, bucket, rendererAdmin)).Methods("POST")
+
+	adminRouter.HandleFunc("/lenses", lenses.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/lenses", lenses.BuildCreateHandler(db, bucket, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/lenses/new", lenses.BuildNewHandler(rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/lenses/{lensID}", lenses.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/lenses/{lensID}", lenses.BuildFormHandler(db, bucket, rendererAdmin)).Methods("POST")
 
 	adminRouter.HandleFunc("/tags", tags.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/tags", tags.BuildCreateHandler(db, rendererAdmin)).Methods("POST")

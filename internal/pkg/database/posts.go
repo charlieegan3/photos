@@ -419,6 +419,36 @@ func PostsInDateRange(db *sql.DB, after, before time.Time) (results []models.Pos
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
 	results = []models.Post{}
+
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
+}
+
+func PostsOnThisDay(db *sql.DB, month time.Month, day int) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	query := goquDB.From("posts").
+		Select(
+			"*",
+		).
+		Where(
+			goqu.L(`EXTRACT(MONTH from publish_date)`).Eq(month),
+			goqu.L(`EXTRACT(DAY from publish_date)`).Eq(day),
+		).
+		Order(goqu.I("publish_date").Desc())
+
+	if err := query.Executor().ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	results = []models.Post{}
+
 	for _, v := range dbPosts {
 		results = append(results, newPost(v))
 	}

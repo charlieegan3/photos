@@ -42,6 +42,9 @@ var periodMissingTemplate string
 //go:embed templates/show.html.plush
 var showTemplate string
 
+//go:embed templates/on-this-day.html.plush
+var onThisDayTemplate string
+
 var pageSize uint = 42
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
@@ -607,5 +610,72 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		w.Write([]byte(output))
 
 		w.Write([]byte("\n</rss>"))
+	}
+}
+
+func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		rawMonth, monthOk := mux.Vars(r)["month"]
+		rawDay, dayOk := mux.Vars(r)["day"]
+		day, err := strconv.Atoi(rawDay)
+		month, err := time.Parse("January", rawMonth)
+		if err != nil || !monthOk || !dayOk {
+			http.Redirect(
+				w, r,
+				fmt.Sprintf(
+					"/posts/on-this-day/%s-%d",
+					time.Now().Month().String(),
+					time.Now().Day(),
+				),
+				http.StatusSeeOther,
+			)
+			return
+		}
+
+		posts, err := database.PostsOnThisDay(db, month.Month(), day)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(posts) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		var locationIDs []int
+		for _, p := range posts {
+			locationIDs = append(locationIDs, p.LocationID)
+		}
+
+		locations, err := database.FindLocationsByID(db, locationIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		locationMap := make(map[int]models.Location)
+		for _, l := range locations {
+			locationMap[l.ID] = l
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("posts", posts)
+		ctx.Set("locations", locationMap)
+		ctx.Set("month", month.Month())
+		ctx.Set("day", day)
+
+		err = renderer(ctx, onThisDayTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		return
 	}
 }

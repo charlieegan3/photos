@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -553,4 +554,93 @@ func (s *PostsSuite) TestSearchPosts() {
 
 	assert.Contains(s.T(), string(body), "post1")
 	assert.NotContains(s.T(), string(body), "post2")
+}
+
+func (s *PostsSuite) TestPostsOnThisDay() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+		{DeviceID: returnedDevices[0].ID},
+	}
+	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{
+			Name: "London",
+		},
+	}
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "post from 2022",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post from 2021",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "other post",
+			PublishDate: time.Date(2021, time.January, 2, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	_, err = database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/posts/on-this-day", BuildOnThisDayHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
+	router.HandleFunc("/posts/on-this-day/{month}-{day}", BuildOnThisDayHandler(s.DB, templating.BuildPageRenderFunc(true))).Methods("GET")
+
+	// check that redirects to current day
+	req, err := http.NewRequest("GET", "/posts/on-this-day", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+	if !strings.HasPrefix(rr.Result().Header["Location"][0], fmt.Sprintf("/posts/on-this-day/%s-%d", time.Now().Month().String(), time.Now().Day())) {
+		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
+	}
+
+	// check the correct contents is returned
+	req, err = http.NewRequest("GET", "/posts/on-this-day/January-1", nil)
+	require.NoError(s.T(), err)
+	rr = httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), "post from 2022")
+	assert.Contains(s.T(), string(body), "post from 2021")
+	assert.NotContains(s.T(), string(body), "other post")
 }

@@ -67,7 +67,19 @@
         </p>
 
         <div class="f6">
-          <a href="/posts/period/<%= post.PublishDate.Format("2006-01-02") %>">View <%= post.PublishDate.Format("January 2, 2006") %></a>
+          <p></p>
+          <ul class="pl3">
+           <li>
+             <a class="db" href="/posts/period/<%= post.PublishDate.Format("2006-01-02") %>">
+               View all from <%= post.PublishDate.Format("January 2, 2006") %>
+             </a>
+           </li>
+           <li>
+             <a class="db" href="/posts/on-this-day/<%= post.PublishDate.Format("January-02") %>">
+               'On This Day' <%= post.PublishDate.Format("January 2") %>
+             </a>
+           </li>
+          </ul>
         </div>
       </div>
     </div>

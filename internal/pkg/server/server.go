@@ -66,9 +66,12 @@ func Serve(
 	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(renderer)).Methods("GET")
 	router.HandleFunc("/posts/search", publicposts.BuildSearchHandler(db, renderer)).Methods("GET")
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods("GET")
+	router.HandleFunc("/posts/on-this-day/{month}-{day}", publicposts.BuildOnThisDayHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/posts/on-this-day", publicposts.BuildOnThisDayHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods("GET")
+
 	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods("GET")
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")

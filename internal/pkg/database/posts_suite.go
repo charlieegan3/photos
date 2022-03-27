@@ -1077,3 +1077,75 @@ func (s *PostsSuite) TestSearchPosts() {
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 	})
 }
+
+func (s *PostsSuite) TestPostsOnThisDay() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+		{DeviceID: returnedDevices[0].ID},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{
+			Name: "London",
+		},
+	}
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "post from 2022",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post from 2021",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "other post",
+			PublishDate: time.Date(2021, time.January, 2, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	expectPostIDs := func(posts []models.Post, ids []int) {
+		s.T().Helper()
+		if len(posts) != len(ids) {
+			s.T().Errorf("unexpected number of posts: %d, want %d", len(posts), len(ids))
+		}
+		for _, id := range ids {
+			found := false
+			for _, v := range posts {
+				if v.ID == id {
+					found = true
+					break
+				}
+			}
+			if !found {
+				s.T().Errorf("expected to have post id: %d", id)
+			}
+		}
+	}
+
+	results, err := PostsOnThisDay(s.DB, time.January, 1)
+	require.NoError(s.T(), err)
+	expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
+}

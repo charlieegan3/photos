@@ -300,8 +300,8 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
-	if !strings.HasPrefix(rr.HeaderMap["Location"][0], "/admin/posts/") {
-		s.T().Fatalf("%v doesn't appear to be the correct path", rr.HeaderMap["Location"])
+	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/posts/") {
+		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct

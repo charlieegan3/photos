@@ -12,6 +12,10 @@
     <div class="f4 underline">Date Range</div>
     <div class="pt1 f6 f5-ns silver">View posts between two dates or for a specific day</div>
   </a>
+  <a class="mt2 db no-underline" href="/posts/on-this-day">
+    <div class="f4 underline">'On This Day'</div>
+    <div class="pt1 f6 f5-ns silver">View posts taken on this day in years gone by</div>
+  </a>
   <a class="mt2 db no-underline" href="/rss.xml">
     <div class="f4 underline">RSS</div>
     <div class="pt1 f6 f5-ns silver">Subscribe in a feed reader (opens in new tab)</div>

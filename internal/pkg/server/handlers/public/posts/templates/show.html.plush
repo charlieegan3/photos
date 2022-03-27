@@ -42,6 +42,14 @@
           <span class="v-mid dib f7 silver"><%= device.Name %></span>
         </div>
 
+        <%=if (len(lenses) > 0) { %>
+          <% let lens = lenses[0] %>
+          <div class="mb2 mw5 center ml0-l">
+            <img alt="<%= lens.Name %>" loading="lazy" class="h2 dib v-mid" src="/lenses/<%= lens.ID %>.png?o=100x"/>
+            <span class="v-mid dib f7 silver"><%= lens.Name %></span>
+          </div>
+        <% } %>
+
         <%= if (media.ISOSpeed != 0) { %>
         <div class="mb2 f7 silver mw5 center">
           <div class="flex justify-between">

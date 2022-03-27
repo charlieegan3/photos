@@ -21,11 +21,11 @@ func TestRenderPage(t *testing.T) {
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="center ph2-l pv3-l mw8">
+    <div class="center ph2-l pb3 pv3-l mw8 mb4">
       <p>bar</p>
     </div>
     
-    <a class="absolute bottom-0 tc w-100 pa2 db bt b--silver hover-bg-light-gray" href="/menu">Menu</a>
+    <a class="fixed bottom-0 right-0 z-max tc w-100 mw4-ns bl-ns pa2 db bt bg-white b--light-gray hover-bg-light-gray" href="/menu">Menu</a>
     
   </body>
 </html>

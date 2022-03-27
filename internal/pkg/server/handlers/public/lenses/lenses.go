@@ -105,6 +105,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 
 		// otherwise, if there are options set, look for a suitable thumb
 		br, err := bucket.NewReader(r.Context(), thumbIconPath, nil)
+		fmt.Println(err)
 		// if there is not an existing thumb for these size options
 		if gcerrors.Code(err) == gcerrors.NotFound {
 			// create a reader to get the full size media from the bucket

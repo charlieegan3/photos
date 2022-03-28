@@ -46,6 +46,10 @@
   <%= f.SubmitTag("Update Post") %>
 <% } %>
 
-<%= form_for(post, {action:"/admin/posts/"+post.ID, method: "DELETE"}) { %>
-  <%= f.SubmitTag("Delete Post") %>
+<%= if (post.IsDraft) { %>
+  <%= form_for(post, {action:"/admin/posts/"+post.ID, method: "DELETE"}) { %>
+    <%= f.SubmitTag("Delete Post") %>
+  <% } %>
+<% } else { %>
+  <p class="mt2 silver">Mark post as draft to delete it</p>
 <% } %>

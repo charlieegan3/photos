@@ -1,5 +1,5 @@
 <div class="w-100">
-  <div class="mv3 pt2 pl3 pl0-ns f3 f3-ns"><%= title %></div>
+  <div class="mv3 pt2 pl3 f3 f3-ns"><%= title %></div>
   <div class="pa2-ns">
     <%= for (i, date) in postGroupKeys { %>
       <% let posts = postGroups[date] %>
@@ -9,7 +9,7 @@
       <%= for (i, post) in posts { %>
         <% let location = locations[post.LocationID] %>
         <article class="cf mb3 mb0-ns">
-          <div class="f7 fl w-100 w-third-ns pa2-l pa1-m">
+          <div class="f7 fl w-100 w-third-ns pa2-ns">
             <a href="/posts/<%= post.ID %>">
               <picture>
                 <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
@@ -22,11 +22,13 @@
               </picture>
             </a>
           </div>
-          <div class="fl dib w-100 w-two-thirds-ns pa2-l pa1-m">
-            <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-l">
-              <div class="mb3 f6 f5-ns md"><%= raw(markdown(post.Description)) %></div>
+          <div class="fl dib w-100 w-two-thirds-ns pt1-ns ph0 ph2-ns">
+            <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-ns">
+              <%= if (post.Description != "") { %>
+                <div class="mt1 mb3 f6 f5-ns md"><%= raw(markdown(post.Description)) %></div>
+              <% } %>
 
-              <p class="mb3 f6 silver">
+              <p class="mt1 mb3 f6 silver">
                 <em>
                   <%= raw(location.Name) %>
                   &horbar;

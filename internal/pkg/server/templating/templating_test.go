@@ -36,7 +36,7 @@ func TestRenderPage(t *testing.T) {
 	ctx := plush.NewContext()
 	ctx.Set("foo", "bar")
 
-	renderFunc := BuildPageRenderFunc(true)
+	renderFunc := BuildPageRenderFunc(true, "")
 
 	err := renderFunc(ctx, nestedTemplate, b)
 	require.NoError(t, err)

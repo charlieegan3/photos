@@ -5,10 +5,10 @@ import "time"
 type Location struct {
 	ID        int
 	Name      string
-	Slug      string
+	Slug      string `json:"-"`
 	Latitude  float64
 	Longitude float64
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 }

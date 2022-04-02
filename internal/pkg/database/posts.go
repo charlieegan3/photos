@@ -122,6 +122,22 @@ func FindPostsByID(db *sql.DB, id []int) (results []models.Post, err error) {
 	return results, nil
 }
 
+func FindPostsByLocation(db *sql.DB, id []int) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"location_id": id}).Executor()
+	if err := insert.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts by id")
+	}
+
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
+}
+
 func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
 	var dbPosts []dbPost
 

@@ -1,0 +1,29 @@
+<div id="my-map" class="left-0 top-0 vh-100 w-100" style="position: fixed;"></div>
+
+<script type="text/javascript">
+    var myAPIKey = "<%= api_key %>";
+
+    var map = new maplibregl.Map({
+        container: 'my-map',
+        style: `https://maps.geoapify.com/v1/styles/osm-bright/style.json?apiKey=${myAPIKey}`,
+        attributionControl: false,
+        zoomControl: false,
+    });
+    var nav = new maplibregl.NavigationControl({ showCompass: false });
+    map.addControl(nav, 'top-left');
+    map.addControl(new maplibregl.AttributionControl({
+        compact: true,
+    }), 'bottom-right');
+
+    var locations = <%= raw(locations) %>;
+    for (let i = 0; i < locations.length; i++) {
+        var marker = new maplibregl.Marker()
+            .setLngLat([locations[i].Longitude, locations[i].Latitude])
+            .setPopup(new maplibregl.Popup().setHTML(
+                '<a class="mv0">'+
+                '<a href="/locations/' + locations[i].ID.toString() + '"/>' + locations[i].Name + '</a>' +
+                "</p>"
+            ))
+            .addTo(map);
+    }
+</script>

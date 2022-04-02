@@ -6,10 +6,12 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
@@ -31,8 +33,123 @@ type LocationsSuite struct {
 }
 
 func (s *LocationsSuite) SetupTest() {
-	err := database.Truncate(s.DB, "locations")
+	var err error
+	err = database.Truncate(s.DB, "posts")
 	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "medias")
+	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "locations")
+	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "devices")
+	require.NoError(s.T(), err)
+}
+
+func (s *LocationsSuite) TestLocationsMapIndex() {
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	_, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc(
+		"/locations",
+		BuildIndexHandler(
+			s.DB,
+			"",
+			templating.BuildPageRenderFunc(true, HeadContent),
+		),
+	).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/locations", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), `"London"`)
+}
+
+func (s *LocationsSuite) TestGetLocation() {
+	devices := []models.Device{{Name: "Example Device"}}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+		{DeviceID: returnedDevices[0].ID},
+	}
+	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{Name: "London"},
+		{Name: "New York"},
+	}
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "post from london",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post from new york",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[1].ID,
+		},
+	}
+	_, err = database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc(
+		"/locations/{locationID}",
+		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
+	).Methods("GET")
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), `London`)
+	assert.Contains(s.T(), string(body), `post from london`)
+	assert.NotContains(s.T(), string(body), `New York`)
 }
 
 func (s *LocationsSuite) TestGetLocationMap() {

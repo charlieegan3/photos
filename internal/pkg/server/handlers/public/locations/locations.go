@@ -2,7 +2,11 @@ package public
 
 import (
 	"database/sql"
+	_ "embed"
+	"encoding/json"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/gobuffalo/plush"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,6 +17,18 @@ import (
 	"github.com/pkg/errors"
 	"gocloud.dev/blob"
 )
+
+//go:embed templates/index.html.plush
+var indexTemplate string
+
+//go:embed templates/show.html.plush
+var showTemplate string
+
+// HeadContent is appended to the head of the base template
+const HeadContent = `
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css">
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+`
 
 func mapURL(serverURL, apiKey string, latitude, longitude float64) (string, error) {
 	mapURL, err := url.Parse(serverURL)
@@ -32,6 +48,88 @@ func mapURL(serverURL, apiKey string, latitude, longitude float64) (string, erro
 	mapURL.RawQuery = values.Encode()
 
 	return mapURL.String(), nil
+}
+
+func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		rawID, ok := mux.Vars(r)["locationID"]
+		if !ok {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("location id is required"))
+			return
+		}
+
+		id, err := strconv.Atoi(rawID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse location ID"))
+			return
+		}
+
+		locations, err := database.FindLocationsByID(db, []int{id})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(locations) != 1 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		posts, err := database.FindPostsByLocation(db, []int{id})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("location", locations[0])
+		ctx.Set("posts", posts)
+
+		err = renderer(ctx, showTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+	}
+}
+
+func BuildIndexHandler(db *sql.DB, mapServerAPIKey string, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		locations, err := database.AllLocations(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(locations) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		locationsJSON, err := json.Marshal(locations)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("locations", string(locationsJSON))
+		ctx.Set("api_key", mapServerAPIKey)
+
+		err = renderer(ctx, indexTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+	}
 }
 
 func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPIKey string) func(http.ResponseWriter, *http.Request) {

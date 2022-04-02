@@ -36,9 +36,10 @@ func Serve(
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
 ) {
-	renderer := templating.BuildPageRenderFunc(true)
-	rendererMenu := templating.BuildPageRenderFunc(false)
-	rendererAdmin := templating.BuildPageRenderFunc(true, "admin")
+	renderer := templating.BuildPageRenderFunc(true, "")
+	rendererMenu := templating.BuildPageRenderFunc(false, "")
+	rendererMap := templating.BuildPageRenderFunc(true, publiclocations.HeadContent)
+	rendererAdmin := templating.BuildPageRenderFunc(true, "", "admin")
 
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
@@ -75,7 +76,10 @@ func Serve(
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods("GET")
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods("GET")
 
+	router.HandleFunc("/locations", publiclocations.BuildIndexHandler(db, mapServerAPIKey, rendererMap)).Methods("GET")
+	router.HandleFunc("/locations/{locationID}", publiclocations.BuildGetHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods("GET")
+
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/lenses/{lensID}.png", publicLenses.BuildIconHandler(db, bucket)).Methods("GET")

@@ -1,6 +1,11 @@
 <div id="my-map" class="left-0 top-0 vh-100 w-100" style="position: fixed;"></div>
 
 <script type="text/javascript">
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const paramCenter = urlParams.get('c');
+    const paramZoom = urlParams.get('z');
+
     var myAPIKey = "<%= api_key %>";
 
     var map = new maplibregl.Map({
@@ -26,4 +31,38 @@
             ))
             .addTo(map);
     }
+
+
+    if (paramZoom != null) {
+        map.setZoom(parseFloat(paramZoom));
+    }
+    if (paramCenter != null) {
+        var values = paramCenter.split(",");
+        map.setCenter({ lat: parseFloat(values[0]), lon: parseFloat(values[1])});
+    }
+
+    var currentBounds = map.getBounds();
+    var urlBounds = map.getBounds();
+    map.on('move', function() { currentBounds = map.getBounds(); });
+    map.on('zoom', function() { currentBounds = map.getBounds(); });
+
+    setInterval(function () {
+      if (currentBounds == urlBounds) {
+          return
+      }
+      var {lng, lat} = map.getCenter();
+      history.replaceState(
+          null,
+          "",
+          window.location.origin +
+            window.location.pathname +
+            "?c=" +
+            lat.toString() +
+            "," +
+            lng.toString() +
+            "&z=" +
+            map.getZoom().toString()
+      )
+      urlBounds = currentBounds;
+    },500);
 </script>

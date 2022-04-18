@@ -115,11 +115,12 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 	goquDB := goqu.New("postgres", db)
 	selectDevices := goquDB.From("devices").
 		FullOuterJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+		FullOuterJoin(goqu.T("posts"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
 		Select(
 			"devices.*",
 		).
 		Order(
-			goqu.L("MAX(coalesce(medias.taken_at, timestamp with time zone 'epoch'))").Desc(),
+			goqu.L("MAX(coalesce(posts.publish_date, timestamp with time zone 'epoch'))").Desc(),
 		).
 		GroupBy(goqu.I("devices.id")).
 		Executor()

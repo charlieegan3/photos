@@ -1,0 +1,27 @@
+<div class="w-100">
+  <div class="mv3 pt2 pl3 f3 f3-ns">Browse Posts by Device/Camera</div>
+
+  <div class="cf pa2-ns f7 ph2">
+    <%= for (device) in devices { %>
+      <div class="flex items-center">
+        <div class="w-20-ns w-30 tc w-pa3 mr2">
+          <a href="/devices/<%= device.ID %>">
+            <picture>
+              <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=500x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=1000x 2x" media="(min-width: 60em)">
+              <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=250x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=500x 2x" media="(min-width: 30em)">
+              <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=100x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=200x 2x">
+              <img
+                      loading="lazy"
+                      alt="<%= device.Name %>"
+                      src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=500x"
+                      class="object-contain mh3" />
+            </picture>
+          </a>
+        </div>
+        <div class="f5">
+          <a href="/devices/<%= device.ID %>"><%= device.Name %></a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

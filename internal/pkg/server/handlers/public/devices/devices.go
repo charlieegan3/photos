@@ -3,7 +3,10 @@ package public
 import (
 	"bytes"
 	"database/sql"
+	_ "embed"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/gobuffalo/plush"
 	"io"
 	"net/http"
 	"strconv"
@@ -14,6 +17,96 @@ import (
 
 	"github.com/charlieegan3/photos/cms/internal/pkg/database"
 )
+
+//go:embed templates/index.html.plush
+var indexTemplate string
+
+//go:embed templates/show.html.plush
+var showTemplate string
+
+func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		devices, err := database.AllDevices(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(devices) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("devices", devices)
+
+		err = renderer(ctx, indexTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+	}
+}
+
+func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+
+		rawID, ok := mux.Vars(r)["deviceID"]
+		if !ok {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("device ID is required"))
+			return
+		}
+
+		id, err := strconv.Atoi(rawID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("device ID was not integer"))
+			return
+		}
+
+		devices, err := database.FindDevicesByID(db, []int{id})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(devices) == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		if len(devices) != 1 {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("unexpected number of devices found"))
+			return
+		}
+
+		posts, err := database.DevicePosts(db, devices[0].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("device", devices[0])
+		ctx.Set("posts", posts)
+
+		err = renderer(ctx, showTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+	}
+}
 
 func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {

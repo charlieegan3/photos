@@ -114,9 +114,16 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 
 	goquDB := goqu.New("postgres", db)
 	selectDevices := goquDB.From("devices").
-		Select("*").
-		Order(goqu.I("name").Asc()).
+		FullOuterJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+		Select(
+			"devices.*",
+		).
+		Order(
+			goqu.L("MAX(coalesce(medias.taken_at, timestamp with time zone 'epoch'))").Desc(),
+		).
+		GroupBy(goqu.I("devices.id")).
 		Executor()
+
 	if err := selectDevices.ScanStructs(&dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices")
 	}
@@ -214,6 +221,30 @@ func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	}
 	if err = tx.Commit(); err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
+	}
+
+	return results, nil
+}
+
+func DevicePosts(db *sql.DB, deviceID int) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	selectPosts := goquDB.From("devices").
+		InnerJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+		InnerJoin(goqu.T("posts"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
+		Select("posts.*").
+		Where(goqu.Ex{"devices.id": deviceID}).
+		Order(goqu.I("posts.publish_date").Desc()).
+		Executor()
+	if err := selectPosts.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
 	}
 
 	return results, nil

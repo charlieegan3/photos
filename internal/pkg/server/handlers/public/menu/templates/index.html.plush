@@ -21,6 +21,10 @@
     <div class="pt1 f6 f5-ns silver">Map view of all posts.</div>
     <div class="pt1 silver" style="font-size: 0.7rem;">Note, this page requires JavaScript and serves map tiles from an external source</div>
   </a>
+  <a class="mt2 db no-underline" href="/devices">
+    <div class="f4 underline">Cameras &amp; Devices</div>
+    <div class="pt1 f6 f5-ns silver">View posts by which camera or device was used to take the photo</div>
+  </a>
   <a class="mt2 db no-underline" href="/rss.xml">
     <div class="f4 underline">RSS</div>
     <div class="pt1 f6 f5-ns silver">Subscribe in a feed reader (opens in new tab)</div>

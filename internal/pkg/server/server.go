@@ -82,6 +82,8 @@ func Serve(
 
 	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods("GET")
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods("GET")
+	router.HandleFunc("/devices/{deviceID}", publicdevices.BuildShowHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/devices", publicdevices.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/lenses/{lensID}.png", publicLenses.BuildIconHandler(db, bucket)).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()

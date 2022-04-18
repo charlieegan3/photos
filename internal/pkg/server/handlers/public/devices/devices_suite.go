@@ -6,11 +6,13 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
@@ -32,8 +34,115 @@ type DevicesSuite struct {
 }
 
 func (s *DevicesSuite) SetupTest() {
-	err := database.Truncate(s.DB, "devices")
+	var err error
+	err = database.Truncate(s.DB, "posts")
 	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "locations")
+	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "medias")
+	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "devices")
+	require.NoError(s.T(), err)
+}
+
+func (s *DevicesSuite) TestIndex() {
+	devices := []models.Device{
+		{
+			Name:     "iPhone",
+			IconKind: "jpg",
+		},
+		{
+			Name:     "X100F",
+			IconKind: "png",
+		},
+	}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/devices", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), fmt.Sprintf("/devices/%d", returnedDevices[0].ID))
+	assert.Contains(s.T(), string(body), fmt.Sprintf("/devices/%d", returnedDevices[1].ID))
+	assert.Contains(s.T(), string(body), returnedDevices[0].Name)
+	assert.Contains(s.T(), string(body), returnedDevices[0].Name)
+}
+
+func (s *DevicesSuite) TestShow() {
+	devices := []models.Device{
+		{
+			Name:     "iPhone",
+			IconKind: "jpg",
+		},
+	}
+	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+		{DeviceID: returnedDevices[0].ID},
+	}
+	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+
+	locations := []models.Location{
+		{Name: "London"},
+	}
+	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "post from 2022",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post from 2021",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+	returnedPosts, err := database.CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/devices/{deviceID}", BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		bodyString, err := ioutil.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	body, err := ioutil.ReadAll(rr.Body)
+	require.NoError(s.T(), err)
+
+	assert.Contains(s.T(), string(body), fmt.Sprintf("/posts/%d", returnedPosts[0].ID))
+	assert.Contains(s.T(), string(body), fmt.Sprintf("/posts/%d", returnedPosts[1].ID))
 }
 
 func (s *DevicesSuite) TestGetIcon() {

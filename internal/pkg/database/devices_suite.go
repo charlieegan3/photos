@@ -222,14 +222,14 @@ func (s *DevicesSuite) TestAllDevices() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Device{
-					Name: "IPhone",
+					Name: "X100F",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),
 				}),
 			1: td.SStruct(
 				models.Device{
-					Name: "X100F",
+					Name: "IPhone",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),
@@ -367,4 +367,72 @@ func (s *DevicesSuite) TestDeleteDevices() {
 	)
 
 	td.Cmp(s.T(), allDevices, expectedResult)
+}
+
+func (s *DevicesSuite) TestDevicePosts() {
+	devices := []models.Device{
+		{
+			Name: "iPhone",
+		},
+		{
+			Name: "X100F",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID},
+		{DeviceID: returnedDevices[1].ID},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	if err != nil {
+		s.T().Fatalf("failed to create medias: %s", err)
+	}
+
+	locations := []models.Location{
+		{Name: "London"},
+	}
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "post from 2022",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "post from 2021",
+			PublishDate: time.Date(2021, time.January, 1, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+	returnedPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	result, err := DevicePosts(s.DB, returnedDevices[0].ID)
+	if err != nil {
+		s.T().Fatalf("failed to get posts for devices: %s", err)
+	}
+
+	expectedResult := td.Slice(
+		[]models.Post{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Post{
+					ID: returnedPosts[0].ID,
+				},
+				td.StructFields{
+					"=*": td.Ignore(),
+				}),
+		},
+	)
+
+	td.Cmp(s.T(), result, expectedResult)
 }

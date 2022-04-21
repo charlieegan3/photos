@@ -299,6 +299,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			Kind:                    existingMedias[0].Kind,
 			Make:                    r.PostForm.Get("Make"),
 			Model:                   r.PostForm.Get("Model"),
+			Lens:                    r.PostForm.Get("Lens"),
 			TakenAt:                 takenAt,
 			ISOSpeed:                isoSpeed,
 			ExposureTimeNumerator:   uint32(exposureTimeNumerator),
@@ -492,6 +493,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 
 		media.Make = exifData.Make
 		media.Model = exifData.Model
+		media.Lens = exifData.Lens
 		media.TakenAt = exifData.DateTime
 		// TODO handle exif errors
 		media.FNumber, err = exifData.FNumber.ToDecimal()

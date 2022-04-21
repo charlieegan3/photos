@@ -10,6 +10,7 @@ type Media struct {
 
 	Make  string
 	Model string
+	Lens  string
 
 	TakenAt time.Time
 

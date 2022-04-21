@@ -18,6 +18,7 @@ type dbMedia struct {
 
 	Make  string `db:"make"`
 	Model string `db:"model"`
+	Lens  string `db:"lens"`
 
 	TakenAt time.Time `db:"taken_at"`
 
@@ -45,6 +46,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"kind":                      d.Kind,
 		"make":                      d.Make,
 		"model":                     d.Model,
+		"lens":                      d.Lens,
 		"taken_at":                  d.TakenAt.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
 		"f_number":                  d.FNumber,
 		"exposure_time_numerator":   d.ExposureTimeNumerator,
@@ -77,6 +79,7 @@ func newMedia(media dbMedia) models.Media {
 
 		Make:  media.Make,
 		Model: media.Model,
+		Lens:  media.Lens,
 		// present as UTC since zone information is missing in EXIF
 		TakenAt:                 media.TakenAt.UTC(),
 		FNumber:                 media.FNumber,
@@ -109,6 +112,7 @@ func newDBMedia(media models.Media) dbMedia {
 		Kind:                    media.Kind,
 		Make:                    media.Make,
 		Model:                   media.Model,
+		Lens:                    media.Lens,
 		TakenAt:                 media.TakenAt,
 		FNumber:                 media.FNumber,
 		ExposureTimeNumerator:   media.ExposureTimeNumerator,

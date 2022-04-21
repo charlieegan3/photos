@@ -11,6 +11,7 @@ import (
 type Metadata struct {
 	Make  string
 	Model string
+	Lens  string
 
 	DateTime time.Time
 
@@ -131,6 +132,20 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			}
 
 			metadata.Model = val
+		}
+
+		if ite.TagName() == "LensModel" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw Make value")
+			}
+
+			val, ok := rawValue.(string)
+			if !ok {
+				return fmt.Errorf("Lens was not in expected format: %#v", rawValue)
+			}
+
+			metadata.Lens = val
 		}
 
 		if ite.TagName() == "DateTimeOriginal" {

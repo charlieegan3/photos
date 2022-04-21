@@ -19,6 +19,7 @@ func TestExtract(t *testing.T) {
 			expectedMetadata: Metadata{
 				Make:     "Apple",
 				Model:    "iPhone 11 Pro Max",
+				Lens:     "iPhone 11 Pro Max back triple camera 6mm f/2",
 				DateTime: time.Date(2021, time.November, 9, 8, 33, 11, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 2, Denominator: 1,
@@ -72,6 +73,7 @@ func TestExtract(t *testing.T) {
 			expectedMetadata: Metadata{
 				Make:     "FUJIFILM",
 				Model:    "X100F",
+				Lens:     "",
 				DateTime: time.Date(2021, time.November, 13, 15, 38, 02, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 56, Denominator: 10,
@@ -81,6 +83,23 @@ func TestExtract(t *testing.T) {
 					Denominator: 1500,
 				},
 				ISOSpeed: 400,
+			},
+		},
+		"xt20 with lens": {
+			sourceFile: "./samples/xt20-with-lens.jpg",
+			expectedMetadata: Metadata{
+				Make:     "FUJIFILM",
+				Model:    "X-T20",
+				Lens:     "XC16-50mmF3.5-5.6 OIS II",
+				DateTime: time.Date(2022, time.April, 21, 12, 2, 30, 0, time.UTC),
+				FNumber: Fraction{
+					Numerator: 56, Denominator: 10,
+				},
+				ExposureTime: Fraction{
+					Numerator:   1,
+					Denominator: 70,
+				},
+				ISOSpeed: 1600,
 			},
 		},
 	}

@@ -23,8 +23,11 @@
   <div class="mb3">
     <%= f.InputTag("Model") %>
   </div>
+  <div class="mb1">
+    <%= f.InputTag("Lens") %>
+  </div>
 
-  <div class="mb3">
+<div class="mb3">
     <label for="TakenAt">TakenAt</label>
     <input type="datetime-local" name="TakenAt" value="<%= media.TakenAt.Format("2006-01-02T15:04") %>">
   </div>

@@ -2,6 +2,7 @@ package mediametadata
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/dsoprea/go-exif/v3"
@@ -107,6 +108,9 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		return metadata, fmt.Errorf("failed to collect exif data: %s", err)
 	}
 
+	var focalLength string
+	var focalLength35mm string
+
 	cb := func(ifd *exif.Ifd, ite *exif.IfdTagEntry) error {
 		if ite.TagName() == "Make" {
 			rawValue, err := ite.Value()
@@ -153,7 +157,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "FocalLengthIn35mmFilm" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw FocalLength value")
+				return fmt.Errorf("could not get raw FocalLengthIn35mmFilm value")
 			}
 
 			val, ok := rawValue.([]uint16)
@@ -162,7 +166,27 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			}
 
 			if len(val) == 1 {
-				metadata.FocalLength = fmt.Sprintf("%vmm", val[0])
+				focalLength35mm = fmt.Sprintf("%d", val[0])
+			}
+		}
+
+		if ite.TagName() == "FocalLength" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw FocalLength value")
+			}
+
+			val, ok := rawValue.([]exifcommon.Rational)
+			if !ok {
+				return fmt.Errorf("FocalLength was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) == 1 {
+				value := float64(val[0].Numerator) / float64(val[0].Denominator)
+
+				focalLength := fmt.Sprintf("%.2f", value)
+				focalLength = strings.TrimSuffix(focalLength, ".00")
+				focalLength = strings.TrimSuffix(focalLength, "0")
 			}
 		}
 
@@ -357,10 +381,22 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		return metadata, fmt.Errorf("failed to walk exif data tree: %s", err)
 	}
 
+	if focalLength != "" {
+		metadata.FocalLength = fmt.Sprintf("%smm", focalLength)
+
+		if focalLength35mm != "" {
+			metadata.FocalLength = fmt.Sprintf("%smm (%smm in 35mm format)", focalLength, focalLength35mm)
+		}
+	} else if focalLength35mm != "" {
+		if focalLength35mm != "" {
+			metadata.FocalLength = fmt.Sprintf("%smm in 35mm format", focalLength35mm)
+		}
+	}
+
 	// special case for X100F which does not set 35mm equiv focal length
 	if metadata.Make == "FUJIFILM" && metadata.Model == "X100F" {
 		if metadata.FocalLength == "" {
-			metadata.FocalLength = "35mm"
+			metadata.FocalLength = "23mm (35mm in 35mm format)"
 		}
 		if metadata.Lens == "" {
 			metadata.Lens = "FUJINON single focal length lens"

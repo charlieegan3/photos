@@ -20,7 +20,7 @@ func TestExtract(t *testing.T) {
 				Make:        "Apple",
 				Model:       "iPhone 11 Pro Max",
 				Lens:        "iPhone 11 Pro Max back triple camera 6mm f/2",
-				FocalLength: "52mm",
+				FocalLength: "52mm in 35mm format",
 				DateTime:    time.Date(2021, time.November, 9, 8, 33, 11, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 2, Denominator: 1,
@@ -75,7 +75,7 @@ func TestExtract(t *testing.T) {
 				Make:        "FUJIFILM",
 				Model:       "X100F",
 				Lens:        "FUJINON single focal length lens",
-				FocalLength: "35mm",
+				FocalLength: "23mm (35mm in 35mm format)",
 				DateTime:    time.Date(2021, time.November, 13, 15, 38, 02, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 56, Denominator: 10,
@@ -93,7 +93,7 @@ func TestExtract(t *testing.T) {
 				Make:        "FUJIFILM",
 				Model:       "X-T20",
 				Lens:        "XC16-50mmF3.5-5.6 OIS II",
-				FocalLength: "68mm",
+				FocalLength: "68mm in 35mm format",
 				DateTime:    time.Date(2022, time.April, 21, 12, 2, 30, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 56, Denominator: 10,

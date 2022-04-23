@@ -11,7 +11,9 @@ import (
 type Metadata struct {
 	Make  string
 	Model string
-	Lens  string
+
+	Lens        string
+	FocalLength string
 
 	DateTime time.Time
 
@@ -146,6 +148,22 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			}
 
 			metadata.Lens = val
+		}
+
+		if ite.TagName() == "FocalLengthIn35mmFilm" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw FocalLength value")
+			}
+
+			val, ok := rawValue.([]uint16)
+			if !ok {
+				return fmt.Errorf("FocalLengthIn35mmFilm was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) == 1 {
+				metadata.FocalLength = fmt.Sprintf("%vmm", val[0])
+			}
 		}
 
 		if ite.TagName() == "DateTimeOriginal" {
@@ -337,6 +355,16 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	err = index.RootIfd.EnumerateTagsRecursively(cb)
 	if err != nil {
 		return metadata, fmt.Errorf("failed to walk exif data tree: %s", err)
+	}
+
+	// special case for X100F which does not set 35mm equiv focal length
+	if metadata.Make == "FUJIFILM" && metadata.Model == "X100F" {
+		if metadata.FocalLength == "" {
+			metadata.FocalLength = "35mm"
+		}
+		if metadata.Lens == "" {
+			metadata.Lens = "FUJINON single focal length lens"
+		}
 	}
 
 	return metadata, nil

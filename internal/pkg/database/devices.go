@@ -12,7 +12,7 @@ import (
 )
 
 type dbDevice struct {
-	ID       int    `db:"id"`
+	ID       int64  `db:"id"`
 	Name     string `db:"name"`
 	Slug     string `db:"slug"`
 	IconKind string `db:"icon_kind"`
@@ -77,7 +77,7 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	return results, nil
 }
 
-func FindDevicesByID(db *sql.DB, id []int) (results []models.Device, err error) {
+func FindDevicesByID(db *sql.DB, id []int64) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
@@ -168,7 +168,7 @@ func MostRecentlyUsedDevice(db *sql.DB) (result models.Device, err error) {
 }
 
 func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
-	var ids []int
+	var ids []int64
 	for _, d := range devices {
 		ids = append(ids, d.ID)
 	}
@@ -227,7 +227,7 @@ func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	return results, nil
 }
 
-func DevicePosts(db *sql.DB, deviceID int) (results []models.Post, err error) {
+func DevicePosts(db *sql.DB, deviceID int64) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)

@@ -140,7 +140,7 @@ func (s *DevicesSuite) TestFindDevicesByID() {
 		s.T().Fatalf("failed to create devices needed for test: %s", err)
 	}
 
-	returnedDevices, err = FindDevicesByID(s.DB, []int{returnedDevices[0].ID})
+	returnedDevices, err = FindDevicesByID(s.DB, []int64{returnedDevices[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -307,7 +307,7 @@ func (s *DevicesSuite) TestUpdateDevices() {
 
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
 
-	returnedDevices, err = FindDevicesByID(s.DB, []int{returnedDevices[0].ID})
+	returnedDevices, err = FindDevicesByID(s.DB, []int64{returnedDevices[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}

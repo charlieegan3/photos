@@ -7,7 +7,7 @@ import (
 // Device represents data for devices used to take photos such as cameras and
 // phones
 type Device struct {
-	ID   int
+	ID   int64
 	Name string
 	Slug string
 

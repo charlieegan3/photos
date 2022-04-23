@@ -300,6 +300,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			Make:                    r.PostForm.Get("Make"),
 			Model:                   r.PostForm.Get("Model"),
 			Lens:                    r.PostForm.Get("Lens"),
+			FocalLength:             r.PostForm.Get("FocalLength"),
 			TakenAt:                 takenAt,
 			ISOSpeed:                isoSpeed,
 			ExposureTimeNumerator:   uint32(exposureTimeNumerator),
@@ -310,7 +311,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			Altitude:                floatMap["Altitude"],
 		}
 
-		media.DeviceID, err = strconv.Atoi(r.Form.Get("DeviceID"))
+		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("failed to parse device ID"))
@@ -319,7 +320,6 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 
 		// only handle the lens if set, it's optional
 		rawLensID := r.Form.Get("LensID")
-		fmt.Println(rawLensID)
 		if rawLensID != "" && rawLensID != "0" {
 			media.LensID, err = strconv.ParseInt(rawLensID, 10, 0)
 			if err != nil {
@@ -410,9 +410,24 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
+		lenses, err := database.AllLenses(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		lensOptionMap := map[string]interface{}{
+			"No Lens": 0,
+		}
+		for _, l := range lenses {
+			lensOptionMap[l.Name] = l.ID
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("media", models.Media{DeviceID: device.ID})
 		ctx.Set("devices", deviceOptionMap)
+		ctx.Set("lenses", lensOptionMap)
 
 		err = renderer(ctx, newTemplate, w)
 		if err != nil {
@@ -444,11 +459,20 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			Make: r.Form.Get("Make"),
 		}
 
-		media.DeviceID, err = strconv.Atoi(r.Form.Get("DeviceID"))
+		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("failed to parse device ID"))
 			return
+		}
+
+		if r.Form.Get("LensID") != "" {
+			media.LensID, err = strconv.ParseInt(r.Form.Get("LensID"), 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("failed to parse lens ID"))
+				return
+			}
 		}
 
 		f, header, err := r.FormFile("File")
@@ -494,6 +518,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		media.Make = exifData.Make
 		media.Model = exifData.Model
 		media.Lens = exifData.Lens
+		media.FocalLength = exifData.FocalLength
 		media.TakenAt = exifData.DateTime
 		// TODO handle exif errors
 		media.FNumber, err = exifData.FNumber.ToDecimal()

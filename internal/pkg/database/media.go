@@ -18,7 +18,9 @@ type dbMedia struct {
 
 	Make  string `db:"make"`
 	Model string `db:"model"`
-	Lens  string `db:"lens"`
+
+	Lens        string `db:"lens"`
+	FocalLength string `db:"focal_length"`
 
 	TakenAt time.Time `db:"taken_at"`
 
@@ -36,7 +38,7 @@ type dbMedia struct {
 
 	InstagramCode string `db:"instagram_code"`
 
-	DeviceID int `db:"device_id"`
+	DeviceID int64 `db:"device_id"`
 
 	LensID sql.NullInt64 `db:"lens_id"`
 }
@@ -47,6 +49,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"make":                      d.Make,
 		"model":                     d.Model,
 		"lens":                      d.Lens,
+		"focal_length":              d.FocalLength,
 		"taken_at":                  d.TakenAt.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
 		"f_number":                  d.FNumber,
 		"exposure_time_numerator":   d.ExposureTimeNumerator,
@@ -79,7 +82,10 @@ func newMedia(media dbMedia) models.Media {
 
 		Make:  media.Make,
 		Model: media.Model,
-		Lens:  media.Lens,
+
+		Lens:        media.Lens,
+		FocalLength: media.FocalLength,
+
 		// present as UTC since zone information is missing in EXIF
 		TakenAt:                 media.TakenAt.UTC(),
 		FNumber:                 media.FNumber,
@@ -113,6 +119,7 @@ func newDBMedia(media models.Media) dbMedia {
 		Make:                    media.Make,
 		Model:                   media.Model,
 		Lens:                    media.Lens,
+		FocalLength:             media.FocalLength,
 		TakenAt:                 media.TakenAt,
 		FNumber:                 media.FNumber,
 		ExposureTimeNumerator:   media.ExposureTimeNumerator,

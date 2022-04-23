@@ -10,7 +10,9 @@ type Media struct {
 
 	Make  string
 	Model string
-	Lens  string
+
+	Lens        string
+	FocalLength string
 
 	TakenAt time.Time
 
@@ -26,7 +28,7 @@ type Media struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
-	DeviceID int
+	DeviceID int64
 
 	LensID int64
 

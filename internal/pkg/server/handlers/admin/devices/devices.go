@@ -86,14 +86,14 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		id, err := strconv.Atoi(rawID)
+		id, err := strconv.ParseInt(rawID, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to parse device ID"))
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int{id})
+		devices, err := database.FindDevicesByID(db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -215,14 +215,14 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		id, err := strconv.Atoi(rawID)
+		id, err := strconv.ParseInt(rawID, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to parse device ID"))
 			return
 		}
 
-		existingDevices, err := database.FindDevicesByID(db, []int{id})
+		existingDevices, err := database.FindDevicesByID(db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

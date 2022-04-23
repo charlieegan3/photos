@@ -222,7 +222,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int{medias[0].DeviceID})
+		devices, err := database.FindDevicesByID(db, []int64{medias[0].DeviceID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -570,7 +570,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		deviceMap := make(map[int]models.Device)
+		deviceMap := make(map[int64]models.Device)
 		for _, l := range devices {
 			deviceMap[l.ID] = l
 		}

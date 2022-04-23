@@ -63,14 +63,14 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		id, err := strconv.Atoi(rawID)
+		id, err := strconv.ParseInt(rawID, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("device ID was not integer"))
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int{id})
+		devices, err := database.FindDevicesByID(db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -119,14 +119,14 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			return
 		}
 
-		id, err := strconv.Atoi(rawID)
+		id, err := strconv.ParseInt(rawID, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("device ID was not integer"))
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int{id})
+		devices, err := database.FindDevicesByID(db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

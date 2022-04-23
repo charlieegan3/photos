@@ -7,6 +7,9 @@
   <div class="mb1">
     <%= f.SelectTag("DeviceID", {label: "Device", options: devices}) %>
   </div>
+  <div class="mb1">
+    <%= f.SelectTag("LensID", {label: "Lens", options: lenses}) %>
+  </div>
 
-  <%= f.SubmitTag("Create Media") %>
+<%= f.SubmitTag("Create Media") %>
 <% } %>

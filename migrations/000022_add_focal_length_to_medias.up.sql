@@ -1,0 +1,2 @@
+ALTER TABLE medias
+    ADD COLUMN focal_length TEXT NOT NULL DEFAULT '';

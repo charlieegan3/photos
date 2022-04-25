@@ -133,8 +133,8 @@ func Serve(
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         fmt.Sprintf("%s:%s", addr, port),
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		ReadTimeout:  30 * time.Second,
 	}
 
 	log.Fatal(srv.ListenAndServe())

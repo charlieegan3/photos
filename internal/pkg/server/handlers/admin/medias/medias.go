@@ -451,7 +451,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		err := r.ParseMultipartForm(32 << 20)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			w.Write([]byte(fmt.Sprintf("failed to parse multipart form: %s", err.Error())))
 			return
 		}
 
@@ -547,21 +547,21 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		bw, err := bucket.NewWriter(r.Context(), key, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed initialize icon storage"))
+			w.Write([]byte("failed initialize media storage"))
 			return
 		}
 
 		_, err = io.Copy(bw, bytes.NewReader(fileBytes))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to save to icon storage"))
+			w.Write([]byte("failed to save to media storage"))
 			return
 		}
 
 		err = bw.Close()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close connection to icon storage"))
+			w.Write([]byte("failed to close connection to media storage"))
 			return
 		}
 

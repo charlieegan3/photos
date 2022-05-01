@@ -88,7 +88,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			_, err = io.Copy(w, br)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy map into bucket"))
+				w.Write([]byte("failed to copy media into bucket"))
 				return
 			}
 
@@ -176,7 +176,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			_, err = io.Copy(w, bytes.NewReader(imageBytes))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy map into bucket"))
+				w.Write([]byte("failed to copy media into bucket"))
 				return
 			}
 			return

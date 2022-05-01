@@ -15,16 +15,16 @@ CREATE TRIGGER set_timestamp
 
 -- callers are the names of devices or programs which invoke importers
 CREATE TABLE locations.callers (
-    id SERIAL NOT NULL PRIMARY KEY,
-    name text CONSTRAINT name_present CHECK ((name != '') IS TRUE),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (name)
+  id SERIAL NOT NULL PRIMARY KEY,
+  name text CONSTRAINT name_present CHECK ((name != '') IS TRUE),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (name)
 );
 CREATE TRIGGER set_timestamp
-    BEFORE UPDATE ON locations.callers
-    FOR EACH ROW
-    EXECUTE PROCEDURE trigger_set_timestamp();
+  BEFORE UPDATE ON locations.callers
+  FOR EACH ROW
+  EXECUTE PROCEDURE trigger_set_timestamp();
 
 -- reasons are strings which explain why a location point was logged
 CREATE TABLE locations.reasons (
@@ -49,9 +49,9 @@ CREATE TABLE locations.activities (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE TRIGGER set_timestamp
-    BEFORE UPDATE ON locations.activities
-    FOR EACH ROW
-    EXECUTE PROCEDURE trigger_set_timestamp();
+  BEFORE UPDATE ON locations.activities
+  FOR EACH ROW
+  EXECUTE PROCEDURE trigger_set_timestamp();
 
 -- points are records of a location for a given timestamp
 CREATE TABLE locations.points (
@@ -79,6 +79,6 @@ CREATE TABLE locations.points (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE TRIGGER set_timestamp
-    BEFORE UPDATE ON locations.points
-    FOR EACH ROW
-    EXECUTE PROCEDURE trigger_set_timestamp();
+  BEFORE UPDATE ON locations.points
+  FOR EACH ROW
+  EXECUTE PROCEDURE trigger_set_timestamp();

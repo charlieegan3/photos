@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
@@ -114,7 +115,7 @@ func CreatePoints(
 	// create importer
 	createOrUpdateImporter := tx.Insert("locations.importers").
 		Rows(goqu.Record{"name": importer}).
-		OnConflict(goqu.DoNothing()).
+		OnConflict(goqu.DoUpdate("name", goqu.Record{"name": importer})).
 		Returning("id").
 		Executor()
 	_, err = createOrUpdateImporter.ScanVal(&importerID)
@@ -128,7 +129,7 @@ func CreatePoints(
 	// create caller
 	createOrUpdateCaller := tx.Insert("locations.callers").
 		Rows(goqu.Record{"name": caller}).
-		OnConflict(goqu.DoNothing()).
+		OnConflict(goqu.DoUpdate("name", goqu.Record{"name": caller})).
 		Returning("id").
 		Executor()
 	_, err = createOrUpdateCaller.ScanVal(&callerID)
@@ -142,7 +143,7 @@ func CreatePoints(
 	// create reason
 	createOrUpdateReasons := tx.Insert("locations.reasons").
 		Rows(goqu.Record{"reference": reason}).
-		OnConflict(goqu.DoNothing()).
+		OnConflict(goqu.DoUpdate("reference", goqu.Record{"reference": reason})).
 		Returning("id").
 		Executor()
 	_, err = createOrUpdateReasons.ScanVal(&reasonID)
@@ -153,6 +154,7 @@ func CreatePoints(
 		return returnedPoints, errors.Wrap(err, "failed to find or create reason")
 	}
 
+	fmt.Println(importerID)
 	// create points
 	var pointRecords []goqu.Record
 	for _, p := range points {

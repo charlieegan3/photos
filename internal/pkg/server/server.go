@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/private/points"
 	"log"
 	"net/http"
 	"time"
@@ -129,6 +130,10 @@ func Serve(
 	adminRouter.HandleFunc("/posts/new", posts.BuildNewHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
+
+	privateRouter := router.PathPrefix("/private").Subrouter()
+	privateRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
+	privateRouter.HandleFunc("/points", points.BuildCreateHandler(db)).Methods("POST")
 
 	srv := &http.Server{
 		Handler:      router,

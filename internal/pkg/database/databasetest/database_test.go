@@ -21,6 +21,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
+	privatepoints "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/private/points"
 	publicdevices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/devices"
 	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
 	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
@@ -267,4 +268,8 @@ func (s *DatabaseSuite) TestEndpointsMediasSuite() {
 		Bucket:        bucket,
 		BucketBaseURL: bucketBaseURL,
 	})
+}
+
+func (s *DatabaseSuite) TestEndpointsPointsSuite() {
+	suite.Run(s.T(), &privatepoints.EndpointsPointsSuite{DB: s.DB})
 }

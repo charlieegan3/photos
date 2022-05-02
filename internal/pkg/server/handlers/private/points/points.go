@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func BuildCreateHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+func BuildOwnTracksEndpointHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 

@@ -38,9 +38,9 @@ func (s *EndpointsPointsSuite) SetupTest() {
 	require.NoError(s.T(), err)
 }
 
-func (s *EndpointsPointsSuite) TestCreatePoint() {
+func (s *EndpointsPointsSuite) TestOwnTracksCreatePoint() {
 	router := mux.NewRouter()
-	router.HandleFunc("/private/points", BuildCreateHandler(s.DB)).Methods("POST")
+	router.HandleFunc("/private/points", BuildOwnTracksEndpointHandler(s.DB)).Methods("POST")
 
 	// make the request to the handler
 	req, err := http.NewRequest(

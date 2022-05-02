@@ -133,7 +133,7 @@ func Serve(
 
 	privateRouter := router.PathPrefix("/private").Subrouter()
 	privateRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
-	privateRouter.HandleFunc("/points", points.BuildCreateHandler(db)).Methods("POST")
+	privateRouter.HandleFunc("/points", points.BuildOwnTracksEndpointHandler(db)).Methods("POST")
 
 	srv := &http.Server{
 		Handler:      router,

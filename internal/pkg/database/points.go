@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
@@ -154,7 +153,6 @@ func CreatePoints(
 		return returnedPoints, errors.Wrap(err, "failed to find or create reason")
 	}
 
-	fmt.Println(importerID)
 	// create points
 	var pointRecords []goqu.Record
 	for _, p := range points {

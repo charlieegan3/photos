@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/philhofer/tcx"
 	"github.com/tkrajina/gpxgo/gpx"
 	"github.com/tormoder/fit"
@@ -11,12 +12,12 @@ import (
 	"strings"
 )
 
-func ParseActivity(inputFile string) ([]Point, error) {
+func ParseActivity(inputFile string) (models.Activity, []Point, error) {
 	points := []Point{}
 
 	rawData, err := ioutil.ReadFile(inputFile)
 	if err != nil {
-		return points, fmt.Errorf("failed to read file: %w", err)
+		return models.Activity{}, points, fmt.Errorf("failed to read file: %w", err)
 	}
 
 	parts := strings.Split(inputFile, ".")
@@ -30,30 +31,51 @@ func ParseActivity(inputFile string) ([]Point, error) {
 	case "tcx":
 		return parseTCX(rawData)
 	default:
-		return points, fmt.Errorf("unknown format for input file: %s", fileType)
+		return models.Activity{}, points, fmt.Errorf("unknown format for input file: %s", fileType)
 	}
 }
 
-func parseTCX(rawData []byte) ([]Point, error) {
+func parseTCX(rawData []byte) (models.Activity, []Point, error) {
+	activity := models.Activity{}
 	points := []Point{}
+
 	db := new(tcx.TCXDB)
 	err := xml.Unmarshal(rawData, db)
 	if err != nil {
-		return points, fmt.Errorf("failed to parse TCX data: %w", err)
+		return activity, points, fmt.Errorf("failed to parse TCX data: %w", err)
 	}
 
-	for _, activity := range db.Acts.Act {
-		if activity.Creator.Name == "KinomapVirtualRide" ||
-			activity.Creator.Name == "TrainerRoad" {
-			continue
+	creator := "Unknown Creator"
+	sport := "Unknown Sport"
+	for _, act := range db.Acts.Act {
+		if act.Creator.Name != "" {
+			creator = act.Creator.Name
 		}
-		for _, lap := range activity.Laps {
-			for _, trackpoint := range lap.Trk.Pt {
+
+		if act.Sport != "" {
+			sport = act.Sport
+		}
+
+		for i, lap := range act.Laps {
+			for j, trackpoint := range lap.Trk.Pt {
+				if i == 0 && j == 0 {
+					activity.StartTime = trackpoint.Time.UTC()
+				}
+				if i == len(act.Laps)-1 && j == (len(lap.Trk.Pt))-1 {
+					activity.EndTime = trackpoint.Time.UTC()
+				}
+
 				if trackpoint.Lat == 0 || trackpoint.Long == 0 {
 					continue
 				}
+
+				// don't save points for virtual rides
+				if act.Creator.Name == "KinomapVirtualRide" ||
+					act.Creator.Name == "TrainerRoad" {
+					continue
+				}
 				points = append(points, Point{
-					Timestamp: trackpoint.Time,
+					Timestamp: trackpoint.Time.UTC(),
 					Latitude:  trackpoint.Lat,
 					Longitude: trackpoint.Long,
 					Altitude:  trackpoint.Alt,
@@ -63,18 +85,31 @@ func parseTCX(rawData []byte) ([]Point, error) {
 		}
 	}
 
-	return points, nil
+	if sport == "Biking" {
+		if creator == "TrainerRoad" || creator == "KinomapVirtualRide" {
+			sport = "Indoor Cycling"
+		}
+	}
+
+	activity.Title = sport
+	activity.Description = fmt.Sprintf("Created by %s", creator)
+
+	return activity, points, nil
 }
 
-func parseGPX(rawData []byte) ([]Point, error) {
+func parseGPX(rawData []byte) (models.Activity, []Point, error) {
+	activity := models.Activity{}
 	points := []Point{}
 
 	gpxData, err := gpx.ParseBytes(rawData)
 	if err != nil {
-		return points, fmt.Errorf("failed to parse GPX data: %w", err)
+		return activity, points, fmt.Errorf("failed to parse GPX data: %w", err)
 	}
 
+	activity.Description = fmt.Sprintf("Created by %s", gpxData.Creator)
+
 	for _, track := range gpxData.Tracks {
+		activity.Title = track.Name
 		for _, segment := range track.Segments {
 			for _, point := range segment.Points {
 				points = append(points, Point{
@@ -89,34 +124,86 @@ func parseGPX(rawData []byte) ([]Point, error) {
 		}
 	}
 
-	return points, nil
+	if len(points) > 1 {
+		activity.StartTime = points[0].Timestamp
+		activity.EndTime = points[len(points)-1].Timestamp
+	}
+
+	return activity, points, nil
 }
 
-func parseFit(rawData []byte) ([]Point, error) {
+func parseFit(rawData []byte) (models.Activity, []Point, error) {
+	activity := models.Activity{}
 	points := []Point{}
 
 	fitData, err := fit.Decode(bytes.NewReader(rawData))
 	if err != nil {
-		return points, fmt.Errorf("failed to parse data: %w", err)
+		return activity, points, fmt.Errorf("failed to parse data: %w", err)
 	}
 
-	// Only accept gpx activities from Wahoo and Garmin
-	if fitData.FileId.Manufacturer != fit.ManufacturerGarmin &&
-		fitData.FileId.Manufacturer != fit.ManufacturerWahooFitness {
-		return points, nil
-	}
+	fitData.FileId.Manufacturer.String()
 
-	activity, err := fitData.Activity()
+	fitActivity, err := fitData.Activity()
 	if err != nil {
-		return points, fmt.Errorf("failed to get activity from fit file: %w", err)
+		return activity, points, fmt.Errorf("failed to get activity from fit file: %w", err)
 	}
 
-	for _, r := range activity.Records {
+	typeName := "Unknown Type"
+	activityTypes := []string{}
+	for _, s := range fitActivity.Sessions {
+		sport := s.Sport.String()
+		subSport := s.SubSport.String()
+
+		if subSport != "" && subSport != "Generic" {
+			if subSport == "VirtualActivity" {
+				subSport = "Indoor"
+			}
+			if subSport == "IndoorCycling" {
+				subSport = "Indoor"
+			}
+			sport = fmt.Sprintf("%s %s", subSport, sport)
+		}
+
+		activityTypes = append(activityTypes, sport)
+	}
+	if len(activityTypes) > 0 {
+		typeName = strings.Join(activityTypes, ", ")
+	}
+
+	deviceName := "Unknown Device"
+	for _, d := range fitActivity.DeviceInfos {
+		if d.DeviceIndex == 0 {
+			if d.ProductName != "" {
+				deviceName = d.ProductName
+			}
+			// garmin forerunner 745 watch
+			if d.GetProduct() == fit.GarminProduct(3589) {
+				deviceName = "Forerunner 745"
+			}
+			break
+		}
+	}
+
+	activity.Title = strings.Title(typeName)
+	activity.Description = fmt.Sprintf("Recorded on %s %s", fitData.FileId.Manufacturer.String(), deviceName)
+
+	for i, r := range fitActivity.Records {
+		if i == 0 {
+			activity.StartTime = r.Timestamp
+		}
+		if i == len(fitActivity.Records)-1 {
+			activity.EndTime = r.Timestamp
+		}
 		if r.PositionLat.Invalid() || r.PositionLong.Invalid() {
 			continue
 		}
+		// Only accept gpx activities from Wahoo and Garmin
+		if fitData.FileId.Manufacturer != fit.ManufacturerGarmin &&
+			fitData.FileId.Manufacturer != fit.ManufacturerWahooFitness {
+			continue
+		}
 		points = append(points, Point{
-			Timestamp:        r.Timestamp.UTC(),
+			Timestamp:        r.Timestamp,
 			Latitude:         r.PositionLat.Degrees(),
 			Longitude:        r.PositionLong.Degrees(),
 			Altitude:         float64(r.Altitude),
@@ -126,5 +213,5 @@ func parseFit(rawData []byte) ([]Point, error) {
 		})
 	}
 
-	return points, nil
+	return activity, points, nil
 }

@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
@@ -70,7 +71,7 @@ func newPoint(point dbPoint) models.Point {
 		CallerID:         point.CallerID,
 		ReasonID:         point.ReasonID,
 		ActivityID:       point.ActivityID,
-		CreatedAt:        point.CreatedAt,
+		CreatedAt:        point.CreatedAt.UTC(),
 		UpdatedAt:        point.UpdatedAt,
 	}
 }
@@ -183,6 +184,52 @@ func CreatePoints(
 
 	if err = tx.Commit(); err != nil {
 		return returnedPoints, errors.Wrap(err, "failed to commit transaction")
+	}
+
+	return returnedPoints, nil
+}
+
+func PointsNearTime(db *sql.DB, t time.Time) ([]models.Point, error) {
+	var returnedPoints []models.Point
+
+	var dbPoints []dbPoint
+
+	goquDB := goqu.New("postgres", db)
+
+	near := goqu.L("?::timestamp with time zone <-> points.created_at", t.Format(time.RFC3339))
+
+	sub := goquDB.From("locations.points").As("points").
+		Select("*", near.As("_")).
+		Distinct().
+		Order(near.Asc()).
+		Limit(5)
+
+	sel := goquDB.From(sub).As("sub").
+		Select(
+			// TODO, do some magic to not set these manually
+			"id",
+			"latitude",
+			"longitude",
+			"altitude",
+			"accuracy",
+			"vertical_accuracy",
+			"velocity",
+			"was_offline",
+			"importer_id",
+			"caller_id",
+			"reason_id",
+			"activity_id",
+			"created_at",
+			"updated_at",
+		)
+
+	fmt.Println(sel.ToSQL())
+	if err := sel.Executor().ScanStructs(&dbPoints); err != nil {
+		return returnedPoints, errors.Wrap(err, "failed to select points")
+	}
+
+	for _, v := range dbPoints {
+		returnedPoints = append(returnedPoints, newPoint(v))
 	}
 
 	return returnedPoints, nil

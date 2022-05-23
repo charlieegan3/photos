@@ -290,8 +290,6 @@ func NearbyLocations(db *sql.DB, lat, lon float64) (results []models.Location, e
 			"updated_at").
 		Limit(10)
 
-	fmt.Println(sel.ToSQL())
-
 	if err := sel.Executor().ScanStructs(&dbLocations); err != nil {
 		return results, errors.Wrap(err, "failed to select locations")
 	}

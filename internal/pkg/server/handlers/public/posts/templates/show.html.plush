@@ -32,7 +32,7 @@
         <p class="mt0 mb2 f6 silver"><em>Posted <%= post.PublishDate.Format("January 2, 2006") %> from <%= raw(location.Name) %></em></p>
 
         <div class="mb2">
-          <a target="_blank" href="http://www.openstreetmap.org/?lat=<%= location.Latitude %>&lon=<%= location.Longitude %>&zoom=17&layers=M">
+          <a target="_blank" href="http://www.openstreetmap.org/?mlat=<%= location.Latitude %>&mlon=<%= location.Longitude %>&zoom=17&layers=M">
             <img loading="lazy" class="mw5 mw6-l w-100 br1 db center ml0-l" src="/locations/<%= location.ID %>/map.jpg"/>
           </a>
         </div>

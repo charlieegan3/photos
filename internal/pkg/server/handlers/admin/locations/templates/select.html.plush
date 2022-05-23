@@ -1,4 +1,22 @@
-<h1>Select a location</h1>
+<h1>Select from nearby</h1>
+<a target="_blank" href="http://www.openstreetmap.org/?mlat=<%= lat %>&mlon=<%= long %>&zoom=17&layers=M">
+  View Location Estimate
+</a>
+<br/>
+<br/>
+<a href="/admin/locations/new?lat=<%= lat %>&long=<%= long %>">
+  Create Location from Estimate
+</a>
+<ul>
+  <%= for (location) in nearbyLocations { %>
+  <li>
+    <a href="<%= raw(redirectTo) %>&locationID=<%= location.ID %>">
+      <%= truncate(location.Name, 40, false) %>
+    </a>
+  </li>
+  <% } %>
+</ul>
+<h1>Select another location</h1>
 <ul>
 <%= for (location) in locations { %>
   <li>

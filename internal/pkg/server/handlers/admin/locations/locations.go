@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
@@ -357,6 +358,40 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 		redirectToURL += "?" + params.Encode()
 
+		timestampRaw := r.URL.Query().Get("timestamp")
+		if redirectToRaw == "" {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("missing timestamp param"))
+			return
+		}
+
+		i, err := strconv.ParseInt(timestampRaw, 10, 64)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("invalid timestamp"))
+			return
+		}
+		points, err := database.PointsNearTime(db, time.Unix(i, 0))
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to get points at that timestamp"))
+			return
+		}
+
+		nearbyLocations := []models.Location{}
+		var lat, long float64
+		if len(points) > 0 {
+			best := points[0]
+			lat = best.Latitude
+			long = best.Longitude
+			nearbyLocations, err = database.NearbyLocations(db, best.Latitude, best.Longitude)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to get points at that timestamp"))
+				return
+			}
+		}
+
 		locations, err := database.AllLocations(db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -366,6 +401,9 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 		ctx := plush.NewContext()
 		ctx.Set("locations", locations)
+		ctx.Set("nearbyLocations", nearbyLocations)
+		ctx.Set("lat", lat)
+		ctx.Set("long", long)
 		ctx.Set("redirectTo", redirectToURL)
 
 		err = renderer(ctx, selectTemplate, w)

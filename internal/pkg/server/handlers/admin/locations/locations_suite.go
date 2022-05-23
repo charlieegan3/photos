@@ -407,19 +407,21 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/locations/select", BuildSelectHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
 
-	req, err := http.NewRequest("GET", "/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2", nil)
+	req, err := http.NewRequest("GET", "/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2&timestamp=1234", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
-
 	body, err := ioutil.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
+
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		s.T().Fatalf("request failed with: %s", string(body))
+	}
 
 	assert.Contains(s.T(), string(body), "London")
 	assert.Contains(s.T(), string(body), "New York")
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf(`<a href="/admin/posts/new?param1=1&param2=2&locationID=%d">`, persistedLocations[0].ID))
+	assert.Contains(s.T(), string(body), fmt.Sprintf(`<a href="/admin/posts/new?param1=1&param2=2&timestamp=1234&locationID=%d">`, persistedLocations[0].ID))
 }

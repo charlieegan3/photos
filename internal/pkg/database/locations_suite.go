@@ -396,3 +396,63 @@ func (s *PostsSuite) TestMergeLocations() {
 		assert.Equal(t, 1, len(locations))
 	})
 }
+
+func (s *LocationsSuite) TestNearbyLocations() {
+	locations := []models.Location{
+		{
+			Name:      "Whittington Hospital",
+			Latitude:  51.5657752,
+			Longitude: -0.1388468,
+		},
+		{
+			Name:      "Archway Station",
+			Latitude:  51.565462952567,
+			Longitude: -0.13486676038084,
+		},
+		{
+			Name:      "Tokyo National Museum",
+			Latitude:  35.718889,
+			Longitude: 139.775833,
+		},
+		{
+			Name:      "Highgate Hill",
+			Latitude:  51.567761,
+			Longitude: -0.138742,
+		},
+	}
+
+	_, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	nearbyLocations, err := NearbyLocations(s.DB, 51.56748, -0.138666)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Location{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Location{
+					Name:      "Highgate Hill",
+					Latitude:  51.567761,
+					Longitude: -0.138742,
+				},
+				td.StructFields{"=*": td.Ignore()}),
+			1: td.SStruct(
+				models.Location{
+					Name:      "Whittington Hospital",
+					Latitude:  51.5657752,
+					Longitude: -0.1388468,
+				},
+				td.StructFields{"=*": td.Ignore()}),
+			2: td.SStruct(
+				models.Location{
+					Name:      "Archway Station",
+					Latitude:  51.565462952567,
+					Longitude: -0.13486676038084,
+				},
+				td.StructFields{"=*": td.Ignore()}),
+		},
+	)
+
+	td.Cmp(s.T(), nearbyLocations, expectedResult)
+}

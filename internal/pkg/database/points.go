@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/charlieegan3/photos/cms/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
@@ -223,7 +222,6 @@ func PointsNearTime(db *sql.DB, t time.Time) ([]models.Point, error) {
 			"updated_at",
 		)
 
-	fmt.Println(sel.ToSQL())
 	if err := sel.Executor().ScanStructs(&dbPoints); err != nil {
 		return returnedPoints, errors.Wrap(err, "failed to select points")
 	}

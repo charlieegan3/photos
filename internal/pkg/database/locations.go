@@ -266,3 +266,42 @@ func MergeLocations(db *sql.DB, locationName, oldLocationName string) (id int, e
 
 	return id, nil
 }
+
+func NearbyLocations(db *sql.DB, lat, lon float64) (results []models.Location, err error) {
+	var dbLocations []dbLocation
+
+	goquDB := goqu.New("postgres", db)
+	sub1 := goquDB.From(goqu.T("locations")).
+		Select("*", goqu.L("calculate_distance(?,?, locations.latitude,locations.longitude, 'K')", lat, lon))
+
+	sub2 := goquDB.From(sub1).
+		Select("*").
+		Where(goqu.I("calculate_distance").Lt(10)).
+		Order(goqu.I("calculate_distance").Asc()).
+		Limit(10)
+
+	sel := goquDB.From(sub2).
+		Select("id",
+			"name",
+			"slug",
+			"latitude",
+			"longitude",
+			"created_at",
+			"updated_at").
+		Limit(10)
+
+	fmt.Println(sel.ToSQL())
+
+	if err := sel.Executor().ScanStructs(&dbLocations); err != nil {
+		return results, errors.Wrap(err, "failed to select locations")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	results = []models.Location{}
+	for _, v := range dbLocations {
+		results = append(results, newLocation(v))
+	}
+
+	return results, nil
+}

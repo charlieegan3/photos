@@ -459,6 +459,7 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			Make: r.Form.Get("Make"),
 		}
 
+		// may be overridden if the EXIF data matches an existing device
 		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -528,6 +529,14 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		media.Latitude, err = exifData.Latitude.ToDecimal()
 		media.Longitude, err = exifData.Longitude.ToDecimal()
 		media.Altitude, err = exifData.Altitude.ToDecimal()
+
+		// if there's a match from the EXIF data, then use that to set the device ID
+		modelMatchedDevice, err := database.FindDeviceByModelMatches(db, exifData.Model)
+		if err == nil {
+			if modelMatchedDevice != nil {
+				media.DeviceID = modelMatchedDevice.ID
+			}
+		}
 
 		persistedMedias, err := database.CreateMedias(db, []models.Media{media})
 		if err != nil {

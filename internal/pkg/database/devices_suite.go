@@ -436,3 +436,28 @@ func (s *DevicesSuite) TestDevicePosts() {
 
 	td.Cmp(s.T(), result, expectedResult)
 }
+
+func (s *DevicesSuite) TestFindDeviceByModelMatches() {
+	devices := []models.Device{
+		{
+			Name:         "iPhone",
+			ModelMatches: "iPhone 11 Pro Max",
+		},
+		{
+			Name:         "X100F",
+			ModelMatches: "X100F",
+		},
+	}
+
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	device, err := FindDeviceByModelMatches(s.DB, "iPhone 11 Pro Max")
+	if err != nil {
+		s.T().Fatalf("failed to find devices by model matches: %s", err)
+	}
+
+	td.Cmp(s.T(), *device, returnedDevices[0])
+}

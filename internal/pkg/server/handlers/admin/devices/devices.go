@@ -288,9 +288,10 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		}
 
 		device := models.Device{
-			ID:       existingDevices[0].ID,
-			Name:     strings.TrimSpace(r.PostForm.Get("Name")),
-			IconKind: existingDevices[0].IconKind,
+			ID:           existingDevices[0].ID,
+			Name:         strings.TrimSpace(r.PostForm.Get("Name")),
+			ModelMatches: strings.TrimSpace(r.PostForm.Get("ModelMatches")),
+			IconKind:     existingDevices[0].IconKind,
 		}
 
 		f, header, err := r.FormFile("Icon")

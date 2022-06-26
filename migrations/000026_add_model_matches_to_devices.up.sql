@@ -1,0 +1,2 @@
+ALTER TABLE devices
+  ADD COLUMN model_matches TEXT NOT NULL DEFAULT '';

@@ -4,6 +4,9 @@
   <div class="mb1">
     <%= f.InputTag("Name") %>
   </div>
+  <div class="mb1">
+    <%= f.InputTag("ModelMatches") %>
+  </div>
   <div class="mb2">
     <%= f.FileTag("Icon") %>
   </div>

@@ -12,10 +12,11 @@ import (
 )
 
 type dbDevice struct {
-	ID       int64  `db:"id"`
-	Name     string `db:"name"`
-	Slug     string `db:"slug"`
-	IconKind string `db:"icon_kind"`
+	ID           int64  `db:"id"`
+	Name         string `db:"name"`
+	Slug         string `db:"slug"`
+	ModelMatches string `db:"model_matches"`
+	IconKind     string `db:"icon_kind"`
 
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
@@ -23,8 +24,9 @@ type dbDevice struct {
 
 func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
-		"name":      d.Name,
-		"icon_kind": d.IconKind,
+		"name":          d.Name,
+		"icon_kind":     d.IconKind,
+		"model_matches": d.ModelMatches,
 	}
 
 	if includeID {
@@ -36,22 +38,24 @@ func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
 
 func newDevice(device dbDevice) models.Device {
 	return models.Device{
-		ID:        device.ID,
-		Name:      device.Name,
-		Slug:      device.Slug,
-		IconKind:  device.IconKind,
-		CreatedAt: device.CreatedAt,
-		UpdatedAt: device.UpdatedAt,
+		ID:           device.ID,
+		Name:         device.Name,
+		Slug:         device.Slug,
+		ModelMatches: device.ModelMatches,
+		IconKind:     device.IconKind,
+		CreatedAt:    device.CreatedAt,
+		UpdatedAt:    device.UpdatedAt,
 	}
 }
 
 func newDBDevice(device models.Device) dbDevice {
 	return dbDevice{
-		ID:        device.ID,
-		Name:      device.Name,
-		IconKind:  device.IconKind,
-		CreatedAt: device.CreatedAt,
-		UpdatedAt: device.UpdatedAt,
+		ID:           device.ID,
+		Name:         device.Name,
+		ModelMatches: device.ModelMatches,
+		IconKind:     device.IconKind,
+		CreatedAt:    device.CreatedAt,
+		UpdatedAt:    device.UpdatedAt,
 	}
 }
 
@@ -107,6 +111,27 @@ func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err er
 	}
 
 	return results, nil
+}
+
+func FindDeviceByModelMatches(db *sql.DB, modelMatch string) (result *models.Device, err error) {
+	var dbDevices []dbDevice
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("devices").
+		Select("*").
+		Where(goqu.L(`"model_matches" ILIKE ?`, modelMatch)).
+		Limit(1).
+		Executor()
+	if err := insert.ScanStructs(&dbDevices); err != nil {
+		return nil, errors.Wrap(err, "failed to select devices by slug")
+	}
+
+	for _, v := range dbDevices {
+		d := newDevice(v)
+		return &d, nil
+	}
+
+	return nil, nil
 }
 
 func AllDevices(db *sql.DB) (results []models.Device, err error) {

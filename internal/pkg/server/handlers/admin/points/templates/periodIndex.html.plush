@@ -1,0 +1,19 @@
+<div class="w-100">
+  <div class="pa2">
+    <div class="mv3 f4 f3-ns">Get GPX for a date range</div>
+
+    <form action="/admin/points/period/gpx" method="get">
+      <div class="mt2">
+        <label class="dib w3" for="from">From:</label>
+        <input type="date" id="from" name="from" required>
+      </div>
+      <div class="mt2">
+        <label class="dib w3" for="to">To:</label>
+        <input type="date" id="to" name="to" required>
+      </div>
+      <div class="mt2">
+        <input class="w-100 pa2 mw5-ns" type="submit" value="Download">
+      </div>
+    </form>
+  </div>
+</div>

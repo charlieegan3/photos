@@ -3,7 +3,6 @@ package server
 import (
 	"database/sql"
 	"fmt"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/private/points"
 	"log"
 	"net/http"
 	"time"
@@ -18,6 +17,7 @@ import (
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/lenses"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/locations"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/points"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
 	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/menu"
@@ -131,9 +131,12 @@ func Serve(
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
+	adminRouter.HandleFunc("/points/period/gpx", points.BuildPeriodGPXHandler(db)).Methods("GET")
+	adminRouter.HandleFunc("/points/period", points.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+
 	privateRouter := router.PathPrefix("/private").Subrouter()
 	privateRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
-	privateRouter.HandleFunc("/points", points.BuildOwnTracksEndpointHandler(db)).Methods("POST")
+	privateRouter.HandleFunc("/points", points.BuildIndexHandler(db, rendererAdmin)).Methods("POST")
 
 	srv := &http.Server{
 		Handler:      router,

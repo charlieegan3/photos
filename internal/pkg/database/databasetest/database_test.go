@@ -3,6 +3,7 @@ package databasetest
 import (
 	"context"
 	"database/sql"
+	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/points"
 	"testing"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -208,6 +209,10 @@ func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 	})
 }
 
+func (s *DatabaseSuite) TestEndpointsPointsSuite() {
+	suite.Run(s.T(), &points.EndpointsPointsSuite{DB: s.DB})
+}
+
 func (s *DatabaseSuite) TestPublicPostsSuite() {
 	suite.Run(s.T(), &publicposts.PostsSuite{
 		DB: s.DB,
@@ -270,6 +275,6 @@ func (s *DatabaseSuite) TestEndpointsMediasSuite() {
 	})
 }
 
-func (s *DatabaseSuite) TestEndpointsPointsSuite() {
+func (s *DatabaseSuite) TestPrivateEndpointsPointsSuite() {
 	suite.Run(s.T(), &privatepoints.EndpointsPointsSuite{DB: s.DB})
 }

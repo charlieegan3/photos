@@ -232,3 +232,35 @@ func PointsNearTime(db *sql.DB, t time.Time) ([]models.Point, error) {
 
 	return returnedPoints, nil
 }
+
+func PointsInRange(db *sql.DB, notBefore, notAfter time.Time) ([]models.Point, error) {
+	var returnedPoints []models.Point
+
+	var dbPoints []dbPoint
+
+	goquDB := goqu.New("postgres", db)
+
+	sel := goquDB.From("locations.points").As("points").
+		Select("*").
+		Where(
+			goqu.And(
+				goqu.Ex{
+					"created_at": goqu.Op{"gt": notBefore},
+				},
+				goqu.Ex{
+					"created_at": goqu.Op{"lt": notAfter},
+				},
+			),
+		).
+		Order(goqu.I("points.created_at").Asc())
+
+	if err := sel.Executor().ScanStructs(&dbPoints); err != nil {
+		return returnedPoints, errors.Wrap(err, "failed to select points")
+	}
+
+	for _, v := range dbPoints {
+		returnedPoints = append(returnedPoints, newPoint(v))
+	}
+
+	return returnedPoints, nil
+}

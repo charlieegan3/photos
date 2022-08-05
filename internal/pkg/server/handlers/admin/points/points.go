@@ -76,10 +76,12 @@ func BuildPeriodGPXHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) 
 		segment := gpx.GPXTrackSegment{}
 
 		for _, point := range points {
+			alt := gpx.NewNullableFloat64(point.Altitude)
 			segment.Points = append(segment.Points, gpx.GPXPoint{
 				Point: gpx.Point{
 					Latitude:  point.Latitude,
 					Longitude: point.Longitude,
+					Elevation: *alt,
 				},
 				Timestamp: point.CreatedAt,
 			})

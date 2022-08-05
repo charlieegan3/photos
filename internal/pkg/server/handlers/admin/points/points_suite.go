@@ -36,21 +36,25 @@ func (s *EndpointsPointsSuite) TestPeriodGPXHandler() {
 		{
 			Latitude:  3.0,
 			Longitude: 4.0,
+			Altitude:  1.0,
 			CreatedAt: time.Date(1994, 4, 23, 13, 22, 0, 0, time.UTC),
 		},
 		{
 			Latitude:  3.0,
 			Longitude: 4.0,
+			Altitude:  2.0,
 			CreatedAt: time.Date(2021, 4, 23, 13, 22, 0, 0, time.UTC),
 		},
 		{
 			Latitude:  1.0,
 			Longitude: 2.0,
+			Altitude:  3.0,
 			CreatedAt: time.Date(2021, 5, 23, 13, 19, 0, 0, time.UTC),
 		},
 		{
 			Latitude:  3.0,
 			Longitude: 4.0,
+			Altitude:  4.0,
 			CreatedAt: time.Date(2022, 4, 23, 13, 22, 0, 0, time.UTC),
 		},
 	}
@@ -89,14 +93,17 @@ func (s *EndpointsPointsSuite) TestPeriodGPXHandler() {
 		<name>2021-01-01 to 2022-12-31</name>
 		<trkseg>
 			<trkpt lat="3" lon="4">
+				<ele>2</ele>
 				<time>2021-04-23T13:22:00Z</time>
 				<Speed></Speed>
 			</trkpt>
 			<trkpt lat="1" lon="2">
+				<ele>3</ele>
 				<time>2021-05-23T13:19:00Z</time>
 				<Speed></Speed>
 			</trkpt>
 			<trkpt lat="3" lon="4">
+				<ele>4</ele>
 				<time>2022-04-23T13:22:00Z</time>
 				<Speed></Speed>
 			</trkpt>

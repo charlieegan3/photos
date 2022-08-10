@@ -457,6 +457,8 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 
 		media := models.Media{
 			Make: r.Form.Get("Make"),
+			// new uploads from 2022-08-10 will have this set to true since we can only now trust the time
+			UTCCorrect: true,
 		}
 
 		// may be overridden if the EXIF data matches an existing device
@@ -516,6 +518,8 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
+		// location information is now required for all uploaded images.
+		// images are now updated with https://github.com/charlieegan3/gpxif
 		latValue, _ := exifData.Latitude.ToDecimal()
 		longValue, _ := exifData.Longitude.ToDecimal()
 		if latValue == 0 && longValue == 0 {

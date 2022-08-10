@@ -33,4 +33,8 @@ type Media struct {
 	LensID int64
 
 	InstagramCode string
+
+	// UTCCorrect is true when the UTC time is known to be correct from the time of upload.
+	// Older imported images will not have this set since the data was imported from Instagram
+	UTCCorrect bool
 }

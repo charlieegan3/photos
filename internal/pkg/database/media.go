@@ -41,6 +41,8 @@ type dbMedia struct {
 	DeviceID int64 `db:"device_id"`
 
 	LensID sql.NullInt64 `db:"lens_id"`
+
+	UTCCorrect bool `db:"utc_correct"`
 }
 
 func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
@@ -60,6 +62,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"altitude":                  d.Altitude,
 		"device_id":                 d.DeviceID,
 		"instagram_code":            d.InstagramCode,
+		"utc_correct":               d.UTCCorrect,
 	}
 
 	record["lens_id"] = nil
@@ -102,6 +105,8 @@ func newMedia(media dbMedia) models.Media {
 		DeviceID: media.DeviceID,
 
 		InstagramCode: media.InstagramCode,
+
+		UTCCorrect: media.UTCCorrect,
 	}
 
 	if media.LensID.Valid {
@@ -135,6 +140,8 @@ func newDBMedia(media models.Media) dbMedia {
 		DeviceID: media.DeviceID,
 
 		InstagramCode: media.InstagramCode,
+
+		UTCCorrect: media.UTCCorrect,
 	}
 
 	m.LensID = sql.NullInt64{

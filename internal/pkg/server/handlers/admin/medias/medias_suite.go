@@ -503,6 +503,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 					FNumber:                 2.0,
 					ExposureTimeDenominator: 122,
 					ExposureTimeNumerator:   1,
+					UTCCorrect:              true,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

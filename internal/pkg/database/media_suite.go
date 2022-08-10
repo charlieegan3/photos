@@ -55,6 +55,8 @@ func (s *MediasSuite) TestCreateMedias() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			UTCCorrect: true,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -70,6 +72,8 @@ func (s *MediasSuite) TestCreateMedias() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			UTCCorrect: false,
 		},
 	}
 

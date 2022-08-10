@@ -9,17 +9,20 @@ require (
 	github.com/gobuffalo/plush v3.8.3+incompatible
 	github.com/golang-migrate/migrate/v4 v4.15.1
 	github.com/gomarkdown/markdown v0.0.0-20211212230626-5af6ad2f47df
+	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/schema v1.2.0
 	github.com/lib/pq v1.10.6
 	github.com/maxatome/go-testdeep v1.10.1
+	github.com/philhofer/tcx v0.0.0-20140422172628-84b8274e31dc
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.8.0
+	github.com/tkrajina/gpxgo v1.2.1
+	github.com/tormoder/fit v0.13.0
 	gocloud.dev v0.24.0
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	willnorris.com/go/imageproxy v0.11.2
 )
 
@@ -27,12 +30,14 @@ require (
 	cloud.google.com/go v0.94.0 // indirect
 	cloud.google.com/go/storage v1.16.1 // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/client9/misspell v0.3.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/disintegration/imaging v1.6.2 // indirect
+	github.com/docker/docker v20.10.17+incompatible // indirect
 	github.com/dsoprea/go-logging v0.0.0-20200710184922-b02d349568dd // indirect
 	github.com/dsoprea/go-utility/v2 v2.0.0-20200717064901-2fccff4aa15e // indirect
 	github.com/fatih/structs v1.1.0 // indirect
@@ -54,7 +59,6 @@ require (
 	github.com/googleapis/gax-go/v2 v2.1.0 // indirect
 	github.com/gordonklaus/ineffassign v0.0.0-20210914165742-4cc7213b9bc8 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
-	github.com/gorilla/feeds v1.1.1 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
@@ -68,8 +72,8 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/muesli/smartcrop v0.3.0 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
+	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.3 // indirect
-	github.com/philhofer/tcx v0.0.0-20140422172628-84b8274e31dc // indirect
 	github.com/philhofer/vec v0.0.0-20140421144027-536fc796d369 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
@@ -85,10 +89,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	github.com/tkrajina/gpxgo v1.2.1 // indirect
-	github.com/tormoder/fit v0.13.0 // indirect
-	github.com/twpayne/go-geom v1.4.2 // indirect
-	github.com/twpayne/go-gpx v1.2.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20220428152302-39d4317da171 // indirect
@@ -107,6 +107,7 @@ require (
 	google.golang.org/grpc v1.41.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.3.1 // indirect
 	mvdan.cc/gofumpt v0.0.0-20190427031043-b295af7664cd // indirect

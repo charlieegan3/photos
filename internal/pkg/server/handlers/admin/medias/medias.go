@@ -516,6 +516,14 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
+		latValue, _ := exifData.Latitude.ToDecimal()
+		longValue, _ := exifData.Longitude.ToDecimal()
+		if latValue == 0 && longValue == 0 {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("images must have a location set"))
+			return
+		}
+
 		media.Make = exifData.Make
 		media.Model = exifData.Model
 		media.Lens = exifData.Lens

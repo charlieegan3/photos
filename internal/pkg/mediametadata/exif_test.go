@@ -1,6 +1,7 @@
 package mediametadata
 
 import (
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -69,6 +70,61 @@ func TestExtract(t *testing.T) {
 				},
 			},
 		},
+		"iphone jpg non utc": {
+			sourceFile: "./samples/iphone-11-pro-max-non-utc.JPG",
+			expectedMetadata: Metadata{
+				Make:        "Apple",
+				Model:       "iPhone 11 Pro Max",
+				Lens:        "iPhone 11 Pro Max back triple camera 4.25mm f/1.8",
+				FocalLength: "26mm in 35mm format",
+				DateTime:    time.Date(2022, time.July, 31, 19, 32, 04, 0, time.UTC),
+				FNumber: Fraction{
+					Numerator: 9, Denominator: 5,
+				},
+				ExposureTime: Fraction{
+					Numerator:   1,
+					Denominator: 33,
+				},
+				ISOSpeed: 640,
+				Altitude: Altitude{
+					Value: Fraction{
+						Numerator:   24,
+						Denominator: 1,
+					},
+					Ref: 0,
+				},
+				Latitude: Coordinate{
+					Degrees: Fraction{
+						Numerator:   51,
+						Denominator: 1,
+					},
+					Minutes: Fraction{
+						Numerator:   30,
+						Denominator: 1,
+					},
+					Seconds: Fraction{
+						Numerator:   546,
+						Denominator: 100,
+					},
+					Ref: "N",
+				},
+				Longitude: Coordinate{
+					Degrees: Fraction{
+						Numerator:   0,
+						Denominator: 1,
+					},
+					Minutes: Fraction{
+						Numerator:   26,
+						Denominator: 1,
+					},
+					Seconds: Fraction{
+						Numerator:   4924,
+						Denominator: 100,
+					},
+					Ref: "W",
+				},
+			},
+		},
 		"fuji jpg": {
 			sourceFile: "./samples/x100f.jpg",
 			expectedMetadata: Metadata{
@@ -109,11 +165,15 @@ func TestExtract(t *testing.T) {
 
 	for description, testCase := range testCases {
 		t.Run(description, func(t *testing.T) {
+			fmt.Println(description)
 			b, err := os.ReadFile(testCase.sourceFile)
 			require.NoError(t, err)
 
 			metadata, err := ExtractMetadata(b)
 			require.NoError(t, err)
+
+			fmt.Println(metadata.DateTime)
+			fmt.Println(testCase.expectedMetadata.DateTime)
 
 			td.Cmp(t, metadata, testCase.expectedMetadata)
 		})

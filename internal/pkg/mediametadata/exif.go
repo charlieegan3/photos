@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dsoprea/go-exif/v3"
+	exif "github.com/dsoprea/go-exif/v3"
 	exifcommon "github.com/dsoprea/go-exif/v3/common"
 )
 
@@ -111,6 +111,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	var focalLength string
 	var focalLength35mm string
 
+	var offsetTimeOriginal string
 	cb := func(ifd *exif.Ifd, ite *exif.IfdTagEntry) error {
 		if ite.TagName() == "Make" {
 			rawValue, err := ite.Value()
@@ -204,6 +205,19 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			metadata.DateTime, err = time.Parse("2006:01:02 15:04:05", val)
 			if err != nil {
 				return fmt.Errorf("failed to parse time: %s", err)
+			}
+		}
+
+		if ite.TagName() == "OffsetTimeOriginal" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return fmt.Errorf("could not get raw OffsetTimeOriginal value")
+			}
+
+			var ok bool
+			offsetTimeOriginal, ok = rawValue.(string)
+			if !ok {
+				return fmt.Errorf("OffsetTimeOriginal was not in expected format: %#v", rawValue)
 			}
 		}
 
@@ -390,6 +404,24 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	} else if focalLength35mm != "" {
 		if focalLength35mm != "" {
 			metadata.FocalLength = fmt.Sprintf("%smm in 35mm format", focalLength35mm)
+		}
+	}
+
+	// handle non UTC images
+	if offsetTimeOriginal != "" {
+		offsetSign := 1
+		if strings.HasPrefix(offsetTimeOriginal, "+") {
+			// this is the reverse operation, so when the offset is +, we must subtract time to get back to UTC
+			offsetSign = -1
+		}
+		o := strings.TrimPrefix(strings.TrimPrefix(offsetTimeOriginal, "+"), "-")
+		parts := strings.Split(o, ":")
+		if len(parts) == 2 {
+			durationString := fmt.Sprintf("%sh%sm", parts[0], parts[1])
+			duration, err := time.ParseDuration(durationString)
+			if err == nil {
+				metadata.DateTime = metadata.DateTime.Add(duration * time.Duration(offsetSign))
+			}
 		}
 	}
 

@@ -37,7 +37,7 @@ var serverCmd = &cobra.Command{
 
 		driver, err := postgres.WithInstance(db, &postgres.Config{})
 		m, err := migrate.NewWithDatabaseInstance(
-			"file://migrations",
+			viper.GetString("database.migrationsPath"),
 			"postgres",
 			driver,
 		)

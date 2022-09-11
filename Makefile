@@ -1,5 +1,7 @@
 GO_TEST_ARGS := ""
 FILE_PATTERN := 'html\|plush\|go\|sql\|Makefile'
+TAG := $(shell git rev-parse --short HEAD)
+IMAGE := "eu.gcr.io/charlieegan3-photos/photos:$(TAG)"
 
 dev_server:
 	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config config.dev.yaml'
@@ -24,3 +26,8 @@ local_bucket:
 
 update_heroku_config:
 	heroku config:set -a charlieegan3-photos CONFIG_STRING="$$(cat config.prod.yaml | base64)"
+
+docker:
+	docker build . -t $(IMAGE)
+	docker push $(IMAGE)
+

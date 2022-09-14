@@ -1,3 +1,4 @@
 config.prod.yaml
 config.dev.yaml
 bucket/*
+northflank-secret.json

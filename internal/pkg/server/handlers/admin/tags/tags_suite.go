@@ -19,9 +19,9 @@ import (
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
 type EndpointsTagsSuite struct {

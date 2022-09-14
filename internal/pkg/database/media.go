@@ -8,7 +8,7 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 )
 
 type dbMedia struct {

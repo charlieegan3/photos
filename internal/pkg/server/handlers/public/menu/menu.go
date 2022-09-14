@@ -3,7 +3,7 @@ package menu
 import (
 	"database/sql"
 	_ "embed"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 	"github.com/gobuffalo/plush"
 	"net/http"
 )

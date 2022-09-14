@@ -2,7 +2,7 @@ package database
 
 import (
 	"database/sql"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"

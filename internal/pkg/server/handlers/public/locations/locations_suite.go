@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -21,8 +21,8 @@ import (
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 )
 
 type LocationsSuite struct {

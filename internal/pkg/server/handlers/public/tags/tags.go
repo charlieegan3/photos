@@ -8,8 +8,8 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
 //go:embed templates/index.html.plush

@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"net/http"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 	"github.com/gobuffalo/plush"
 )
 

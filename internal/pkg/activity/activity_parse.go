@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/philhofer/tcx"
 	"github.com/tkrajina/gpxgo/gpx"
 	"github.com/tormoder/fit"

@@ -1,6 +1,5 @@
-module github.com/charlieegan3/photos/cms
+module github.com/charlieegan3/photos
 
-// +heroku goVersion go1.17
 go 1.17
 
 require (

@@ -2,7 +2,7 @@ package points
 
 import (
 	"database/sql"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -15,7 +15,7 @@ import (
 	"net/http/httptest"
 	"time"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/database"
 )
 
 type EndpointsPointsSuite struct {

@@ -12,15 +12,15 @@ import (
 
 var cfgFile string
 
-// rootCmd represents the base for the CMS application
+// rootCmd represents the base for the Photos application
 var rootCmd = &cobra.Command{
-	Use:   "cms",
-	Short: "CMS is a web app to manage a photo library",
-	Long: `CMS has been built to replace a photo library system that once was
+	Use:   "photos",
+	Short: "Photos is a web app to manage a photo library",
+	Long: `Photos has been built to replace a photo library system that once was
 	populated using Instagram data.
 
 	It is designed to offer that functionality without the social features and
-	a few minor features in addition to the core Instagram featureset.`,
+	a few minor features in addition to the core Instagram feature set.`,
 }
 
 // Execute adds child commands to the root command and sets flags
@@ -37,18 +37,16 @@ func init() {
 		&cfgFile,
 		"config",
 		"",
-		"config file (default is $HOME/.cms.yaml)",
+		"config file (default is $HOME/.photos.yaml)",
 	)
 }
 
 // initConfig reads in config file and errors if fails
 func initConfig() {
-	if cfgFile == "" {
-		cfgFile = "$HOME/.cms.yaml"
-	}
-
 	// if there is a CONFIG_STRING var, then dump that to the config file location
 	if configString := os.Getenv("CONFIG_STRING"); configString != "" {
+		// CONFIG_STRING is used in serverless environments where /tmp is generally the only writable location
+		cfgFile = "/tmp/secrets/config.yaml"
 		yamlConfig, err := base64.StdEncoding.DecodeString(configString)
 		if err != nil {
 			log.Fatalf("Failed to decode CONFIG_STRING: %s", err)
@@ -59,6 +57,11 @@ func initConfig() {
 			log.Fatalf("Failed writing CONFIG_STRING: %s", err)
 			return
 		}
+	}
+
+	// if cfgFile is not set by flag or CONFIG_STRING logic, then use the HOME dir default
+	if cfgFile == "" {
+		cfgFile = "$HOME/.photos.yaml"
 	}
 
 	viper.SetConfigFile(cfgFile)

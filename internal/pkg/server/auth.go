@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/constants"
+	"github.com/charlieegan3/photos/internal/pkg/constants"
 )
 
 func InitMiddlewareAuth(username, password string) func(http.Handler) http.Handler {

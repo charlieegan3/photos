@@ -12,7 +12,7 @@ import (
 	"gocloud.dev/blob"
 	"willnorris.com/go/imageproxy"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/database"
 )
 
 func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter, *http.Request) {

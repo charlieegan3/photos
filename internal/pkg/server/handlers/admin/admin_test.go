@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
 func TestIndexPage(t *testing.T) {
@@ -33,6 +33,4 @@ func TestIndexPage(t *testing.T) {
 
 	// items from the shared header
 	assert.Contains(t, string(body), "Posts")
-	// items from the page
-	assert.Contains(t, string(body), "Manage...")
 }

@@ -3,8 +3,8 @@ package points
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 	"io/ioutil"
 	"net/http"
 	"strings"

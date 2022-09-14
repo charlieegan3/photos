@@ -14,14 +14,14 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/gcsblob"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server"
+	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/server"
 )
 
 // serverCmd wraps server.Serve and starts the cms webserver
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "start cms server",
+	Short: "start photos server",
 	Run: func(cmd *cobra.Command, args []string) {
 		environment := viper.GetString("environment")
 		if environment != "production" && environment != "development" && environment != "test" {
@@ -53,7 +53,7 @@ var serverCmd = &cobra.Command{
 		}
 
 		port := viper.GetString("server.port")
-		// PORT env var is used on heroku and should be used if set
+		// PORT env var will override config value
 		if p := os.Getenv("PORT"); p != "" {
 			port = p
 		}

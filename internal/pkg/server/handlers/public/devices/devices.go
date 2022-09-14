@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/templating"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 	"github.com/gobuffalo/plush"
 	"io"
 	"net/http"
@@ -15,7 +15,7 @@ import (
 	"gocloud.dev/blob"
 	"willnorris.com/go/imageproxy"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/database"
 )
 
 //go:embed templates/index.html.plush

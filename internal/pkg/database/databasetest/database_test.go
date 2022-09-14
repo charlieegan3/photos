@@ -3,7 +3,7 @@ package databasetest
 import (
 	"context"
 	"database/sql"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/points"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/points"
 	"testing"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -15,19 +15,19 @@ import (
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/devices"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/lenses"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/locations"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/medias"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/posts"
-	"github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/admin/tags"
-	privatepoints "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/private/points"
-	publicdevices "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/devices"
-	publiclocations "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/locations"
-	publicmedias "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/medias"
-	publicposts "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/posts"
-	publictags "github.com/charlieegan3/photos/cms/internal/pkg/server/handlers/public/tags"
+	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/devices"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/lenses"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/locations"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/medias"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/posts"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/tags"
+	privatepoints "github.com/charlieegan3/photos/internal/pkg/server/handlers/private/points"
+	publicdevices "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/devices"
+	publiclocations "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/locations"
+	publicmedias "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/medias"
+	publicposts "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/posts"
+	publictags "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/tags"
 )
 
 func TestDatabaseSuite(t *testing.T) {

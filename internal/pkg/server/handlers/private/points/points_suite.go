@@ -2,7 +2,7 @@ package points
 
 import (
 	"database/sql"
-	"github.com/charlieegan3/photos/cms/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/database"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"

@@ -1,4 +1,3 @@
-<p>Manage...</p>
 <ul>
   <li><a href="/admin/posts">Posts</a></li>
   <li><a href="/admin/medias">Medias</a></li>

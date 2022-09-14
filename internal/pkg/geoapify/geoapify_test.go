@@ -1,9 +1,9 @@
 package geoapify
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,7 +11,7 @@ import (
 
 func TestGeoapifyGeocoding(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadFile("./response.json")
+		body, err := os.ReadFile("./response.json")
 		if err != nil {
 			t.Fatalf("unable to read file: %v", err)
 		}

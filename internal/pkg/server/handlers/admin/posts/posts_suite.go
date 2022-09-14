@@ -3,7 +3,7 @@ package posts
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -114,7 +114,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "another photo")
@@ -197,12 +197,12 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "shot I took")
@@ -222,7 +222,7 @@ func (s *EndpointsPostsSuite) TestNewPost() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Description")
@@ -296,7 +296,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 
 	// check that we get a see other response to the right location
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -424,7 +424,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}

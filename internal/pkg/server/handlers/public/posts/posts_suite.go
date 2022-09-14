@@ -3,7 +3,7 @@ package public
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -112,7 +112,7 @@ func (s *PostsSuite) TestListPosts() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "shot")
@@ -186,12 +186,12 @@ func (s *PostsSuite) TestGetPost() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Here is a shot I took")
@@ -245,12 +245,12 @@ func (s *PostsSuite) TestPeriodHandler() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.NotContains(s.T(), string(body), "older post")
@@ -268,7 +268,7 @@ func (s *PostsSuite) TestLegacyPostPathRedirect() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -287,7 +287,7 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -302,12 +302,12 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "From:")
@@ -375,12 +375,12 @@ func (s *PostsSuite) TestLatestPost() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), `"location":"London"`)
@@ -450,12 +450,12 @@ func (s *PostsSuite) TestRSS() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	expectedBody := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8" ?>
@@ -544,12 +544,12 @@ func (s *PostsSuite) TestSearchPosts() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "post1")
@@ -616,7 +616,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -632,12 +632,12 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "post from 2022")

@@ -4,18 +4,21 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"os"
+	"strings"
+
 	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/philhofer/tcx"
 	"github.com/tkrajina/gpxgo/gpx"
 	"github.com/tormoder/fit"
-	"io/ioutil"
-	"strings"
 )
 
 func ParseActivity(inputFile string) (models.Activity, []Point, error) {
 	points := []Point{}
 
-	rawData, err := ioutil.ReadFile(inputFile)
+	rawData, err := os.ReadFile(inputFile)
 	if err != nil {
 		return models.Activity{}, points, fmt.Errorf("failed to read file: %w", err)
 	}
@@ -184,7 +187,7 @@ func parseFit(rawData []byte) (models.Activity, []Point, error) {
 		}
 	}
 
-	activity.Title = strings.Title(typeName)
+	activity.Title = cases.Title(language.English).String(typeName)
 	activity.Description = fmt.Sprintf("Recorded on %s %s", fitData.FileId.Manufacturer.String(), deviceName)
 
 	for i, r := range fitActivity.Records {

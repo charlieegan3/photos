@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -28,7 +28,7 @@ func TestIndexPage(t *testing.T) {
 
 	require.Equal(t, http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(t, err)
 
 	// items from the shared header

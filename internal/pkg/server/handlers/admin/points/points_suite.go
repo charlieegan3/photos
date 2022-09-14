@@ -10,7 +10,7 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"time"
@@ -79,12 +79,12 @@ func (s *EndpointsPointsSuite) TestPeriodGPXHandler() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	expectedGPX := `<?xml version="1.0" encoding="UTF-8"?>

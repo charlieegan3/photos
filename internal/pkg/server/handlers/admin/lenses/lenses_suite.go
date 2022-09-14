@@ -15,7 +15,6 @@ import (
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -66,7 +65,7 @@ func (s *EndpointsLensesSuite) TestListLenses() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "iPhone")
@@ -95,12 +94,12 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "iPhone")
@@ -170,7 +169,7 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -240,7 +239,7 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -271,7 +270,7 @@ func (s *EndpointsLensesSuite) TestNewLens() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Name")
@@ -326,7 +325,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 
 	// check that we get a see other response to the right location
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}

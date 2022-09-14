@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/charlieegan3/photos/internal/pkg/database"
 	"github.com/charlieegan3/photos/internal/pkg/models"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -33,7 +33,7 @@ func BuildOwnTracksEndpointHandler(db *sql.DB) func(http.ResponseWriter, *http.R
 			Time             int64   `json:"tst"`
 		}{}
 
-		bytes, err := ioutil.ReadAll(r.Body)
+		bytes, err := io.ReadAll(r.Body)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

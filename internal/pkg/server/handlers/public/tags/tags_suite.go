@@ -2,7 +2,7 @@ package public
 
 import (
 	"database/sql"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"time"
@@ -105,12 +105,12 @@ func (s *TagsSuite) TestListTags() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "tag1")
@@ -188,12 +188,12 @@ func (s *TagsSuite) TestGetTag() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Here is a shot")

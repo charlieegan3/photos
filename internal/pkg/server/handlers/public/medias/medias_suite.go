@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -80,12 +79,12 @@ func (s *MediasSuite) TestGetMedia() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	// validate that the images are the same
@@ -95,7 +94,7 @@ func (s *MediasSuite) TestGetMedia() {
 
 	// load the resized image to test the response content
 	imageFilePath = "../../../pkg/server/handlers/public/medias/fixtures/image-100x.jpg"
-	imageBytes, err := ioutil.ReadFile(imageFilePath)
+	imageBytes, err := os.ReadFile(imageFilePath)
 	require.NoError(s.T(), err)
 	h = sha1.New()
 	h.Write(imageBytes)

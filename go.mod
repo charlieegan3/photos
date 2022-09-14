@@ -1,6 +1,6 @@
 module github.com/charlieegan3/photos
 
-go 1.17
+go 1.19
 
 require (
 	github.com/doug-martin/goqu/v9 v9.16.0

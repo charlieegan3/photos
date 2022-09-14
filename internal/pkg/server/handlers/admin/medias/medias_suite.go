@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -130,7 +129,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), fmt.Sprintf("id: %d", returnedMedias[0].ID))
@@ -182,12 +181,12 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), fmt.Sprintf("%d", persistedMedias[0].ID))
@@ -287,7 +286,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -412,7 +411,7 @@ func (s *EndpointsMediasSuite) TestNewMedia() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "File")
@@ -479,12 +478,12 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 
 	// check that we get a see other response to the right location
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
-	if !strings.HasPrefix(rr.HeaderMap["Location"][0], "/admin/medias/") {
-		s.T().Fatalf("%v doesn't appear to be the correct path", rr.HeaderMap["Location"])
+	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/medias/") {
+		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct

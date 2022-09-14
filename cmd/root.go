@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/base64"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -52,7 +51,7 @@ func initConfig() {
 			log.Fatalf("Failed to decode CONFIG_STRING: %s", err)
 			return
 		}
-		err = ioutil.WriteFile(cfgFile, yamlConfig, 0644)
+		err = os.WriteFile(cfgFile, yamlConfig, 0644)
 		if err != nil {
 			log.Fatalf("Failed writing CONFIG_STRING: %s", err)
 			return
@@ -76,7 +75,7 @@ func initConfig() {
 
 	if viper.GetString("google.service_account_key") != "" {
 		// place google credentials on disk
-		tmpfile, err := ioutil.TempFile("", "google.*.json")
+		tmpfile, err := os.CreateTemp("", "google.*.json")
 		if err != nil {
 			log.Fatal(err)
 		}

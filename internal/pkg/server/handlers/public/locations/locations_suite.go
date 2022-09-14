@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -76,12 +76,12 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), `"London"`)
@@ -139,12 +139,12 @@ func (s *LocationsSuite) TestGetLocation() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), `London`)
@@ -154,7 +154,7 @@ func (s *LocationsSuite) TestGetLocation() {
 
 func (s *LocationsSuite) TestGetLocationMap() {
 	var requested int
-	mapBytes, err := ioutil.ReadFile("../../server/handlers/public/locations/fixtures/map.jpg")
+	mapBytes, err := os.ReadFile("../../server/handlers/public/locations/fixtures/map.jpg")
 	if err != nil {
 		s.T().Fatal(err)
 	}
@@ -198,12 +198,12 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	assert.Equal(s.T(), 1, requested)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	h = sha1.New()

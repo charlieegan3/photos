@@ -22,5 +22,5 @@ func TestBuildRedirectHandler(t *testing.T) {
 
 	require.Equal(t, http.StatusSeeOther, rr.Code)
 
-	td.Cmp(t, rr.HeaderMap["Location"], []string{"/admin"})
+	td.Cmp(t, rr.Result().Header["Location"], []string{"/admin"})
 }

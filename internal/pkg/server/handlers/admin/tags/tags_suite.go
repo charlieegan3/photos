@@ -3,7 +3,7 @@ package tags
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -73,7 +73,7 @@ func (s *EndpointsTagsSuite) TestListTags() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "x100f")
@@ -104,7 +104,7 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "nofilter")
@@ -123,7 +123,7 @@ func (s *EndpointsTagsSuite) TestNewTag() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Name")
@@ -153,7 +153,7 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 
 	// check that we get a see other response to the right location
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
-	td.Cmp(s.T(), rr.HeaderMap["Location"], []string{"/admin/tags/nofilter"})
+	td.Cmp(s.T(), rr.Result().Header["Location"], []string{"/admin/tags/nofilter"})
 
 	// check that the database content is also correct
 	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{})
@@ -295,7 +295,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}

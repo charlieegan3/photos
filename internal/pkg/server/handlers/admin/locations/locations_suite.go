@@ -3,7 +3,7 @@ package locations
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -66,7 +66,7 @@ func (s *EndpointsLocationsSuite) TestListLocations() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "London")
@@ -100,7 +100,7 @@ func (s *EndpointsLocationsSuite) TestGetLocation() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Inverness")
@@ -120,7 +120,7 @@ func (s *EndpointsLocationsSuite) TestNewLocation() {
 
 	require.Equal(s.T(), http.StatusOK, rr.Code)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	assert.Contains(s.T(), string(body), "Name")
@@ -148,8 +148,8 @@ func (s *EndpointsLocationsSuite) TestCreateLocation() {
 
 	// check that we get a see other response to the right location
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
-	if !strings.HasPrefix(rr.HeaderMap["Location"][0], "/admin/locations/") {
-		s.T().Fatalf("%v doesn't appear to be the correct path", rr.HeaderMap["Location"])
+	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/locations/") {
+		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
@@ -370,7 +370,7 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	router.ServeHTTP(rr, req)
 
 	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
-		bodyString, err := ioutil.ReadAll(rr.Body)
+		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
@@ -413,7 +413,7 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 
 	router.ServeHTTP(rr, req)
 
-	body, err := ioutil.ReadAll(rr.Body)
+	body, err := io.ReadAll(rr.Body)
 	require.NoError(s.T(), err)
 
 	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {

@@ -54,6 +54,8 @@ func Serve(
 	}
 	router.HandleFunc("/styles.css", stylesHandler).Methods("GET")
 
+	router.HandleFunc("/robots.txt", buildRobotsHandler()).Methods("GET")
+
 	router.HandleFunc("/favicon.ico", faviconHandler).Methods("GET")
 
 	router.HandleFunc("/rss.xml", publicposts.BuildRSSHandler(db)).Methods("GET")

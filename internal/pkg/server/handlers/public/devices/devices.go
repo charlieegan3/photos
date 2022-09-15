@@ -247,7 +247,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy media item into response"))
+				w.Write([]byte(fmt.Sprintf("failed to copy device image into response: %s", err)))
 				return
 			}
 
@@ -304,7 +304,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to copy thumbnail into response"))
+			w.Write([]byte(fmt.Sprintf("failed to copy device image into response: %s", err)))
 			return
 		}
 

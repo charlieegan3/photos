@@ -251,7 +251,7 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to copy map into response"))
+			w.Write([]byte(fmt.Sprintf("failed to copy map image into response: %s", err)))
 			return
 		}
 	}

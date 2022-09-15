@@ -84,6 +84,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 				w.Write([]byte(err.Error()))
 				return
 			}
+			defer br.Close()
 
 			_, err = io.Copy(w, br)
 			if err != nil {
@@ -116,6 +117,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 				w.Write([]byte(err.Error()))
 				return
 			}
+			defer br.Close()
 
 			// read the full size item
 			buf := bytes.NewBuffer([]byte{})
@@ -205,6 +207,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			w.Write([]byte(err.Error()))
 			return
 		}
+		defer br.Close()
 
 		_, err = io.Copy(w, br)
 		if err != nil {

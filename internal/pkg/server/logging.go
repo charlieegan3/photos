@@ -32,6 +32,12 @@ func InitMiddlewareLogging() func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			entry := logrus.NewEntry(logger)
 
+			if r == nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("request to logging middleware was nil"))
+				return
+			}
+
 			lw := &loggingResponseWriter{w, http.StatusOK, []byte{}}
 
 			method := r.Method

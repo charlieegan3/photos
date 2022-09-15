@@ -84,6 +84,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 				w.Write([]byte(err.Error()))
 				return
 			}
+			defer br.Close()
 
 			_, err = io.Copy(w, br)
 			if err != nil {
@@ -111,13 +112,12 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if !exists {
 			// create a reader to get the full size media from the bucket
 			br, err := bucket.NewReader(r.Context(), originalMediaPath, nil)
-			defer br.Close()
 			if err != nil {
-				br.Close()
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
+			defer br.Close()
 
 			// read the full size item
 			buf := bytes.NewBuffer([]byte{})
@@ -151,6 +151,8 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 				w.Write([]byte("failed to open bucket to stash resized image"))
 				return
 			}
+			defer bw.Close()
+
 			_, err = io.Copy(bw, bytes.NewReader(imageBytes))
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
@@ -207,6 +209,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			w.Write([]byte(err.Error()))
 			return
 		}
+		defer br.Close()
 
 		_, err = io.Copy(w, br)
 		if err != nil {

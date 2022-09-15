@@ -333,6 +333,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				w.Write([]byte(fmt.Sprintf("failed initialize icon storage: %s", err)))
 				return
 			}
+			defer br.Close()
 
 			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, updatedDevices[0].IconKind), nil)
 			if err != nil {

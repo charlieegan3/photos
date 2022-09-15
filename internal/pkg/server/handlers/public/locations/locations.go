@@ -226,8 +226,6 @@ func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPI
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		// defer close here in case we have a 304 response
 		defer br.Close()
 
 		attrs, err := bucket.Attributes(r.Context(), mapPath)

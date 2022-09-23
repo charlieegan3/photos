@@ -346,13 +346,13 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 
 		if len(posts) == 0 {
+			w.WriteHeader(http.StatusNotFound)
 			err := renderer(plush.NewContext(), periodMissingTemplate, w)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
-			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 

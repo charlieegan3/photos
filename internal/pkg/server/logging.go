@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -40,6 +41,7 @@ func InitMiddlewareLogging() func(http.Handler) http.Handler {
 
 			lw := &loggingResponseWriter{w, http.StatusOK, []byte{}}
 
+			// extract the HTTP from the form if present
 			method := r.Method
 			if val, ok := r.Header["Content-Type"]; ok && val[0] == "application/x-www-form-urlencoded" {
 				err := r.ParseForm()
@@ -63,13 +65,18 @@ func InitMiddlewareLogging() func(http.Handler) http.Handler {
 				"method": method,
 			})
 
+			// if the error response is html, then don't log the body
+			errorBody := string(lw.body)
+			if strings.HasPrefix(lw.Header().Get("Content-Type"), "text/html") {
+				errorBody = "html response"
+			}
 			switch {
 			case lw.statusCode > 0 && lw.statusCode < 400:
 				entry.Info()
 			case lw.statusCode >= 400 && lw.statusCode < 500:
-				entry.Warn(string(lw.body))
+				entry.Warn(errorBody)
 			case lw.statusCode >= 500:
-				entry.Error(string(lw.body))
+				entry.Error(errorBody)
 			default:
 				entry.Warnf("unknown code: %d", lw.statusCode)
 			}

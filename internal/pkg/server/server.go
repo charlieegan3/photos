@@ -54,10 +54,6 @@ func Serve(
 	}
 	router.HandleFunc("/styles.css", stylesHandler).Methods("GET")
 
-	router.HandleFunc("/robots.txt", buildRobotsHandler()).Methods("GET")
-
-	router.HandleFunc("/favicon.ico", faviconHandler).Methods("GET")
-
 	router.HandleFunc("/rss.xml", publicposts.BuildRSSHandler(db)).Methods("GET")
 
 	router.HandleFunc("", handlers.BuildRedirectHandler("/")).Methods("GET")
@@ -142,6 +138,9 @@ func Serve(
 	privateRouter := router.PathPrefix("/private").Subrouter()
 	privateRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 	privateRouter.HandleFunc("/points", privatepoints.BuildOwnTracksEndpointHandler(db)).Methods("POST")
+
+	// catch all handlers to serve static files
+	router.HandleFunc("/{.*}", buildStaticHandler()).Methods("GET")
 
 	srv := &http.Server{
 		Handler:      router,

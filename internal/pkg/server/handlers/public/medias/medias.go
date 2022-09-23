@@ -22,12 +22,14 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		rawID, ok := mux.Vars(r)["mediaID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Header().Set("Content-Type", "application/text")
 			w.Write([]byte("media ID is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("media ID was not integer"))
 			return
@@ -35,6 +37,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 		medias, err := database.FindMediasByID(db, []int{id})
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
@@ -46,6 +49,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		}
 
 		if len(medias) != 1 {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("unexpected number of medias found"))
 			return
@@ -63,6 +67,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if imageResizeString == "" {
 			attrs, err := bucket.Attributes(r.Context(), originalMediaPath)
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
@@ -80,6 +85,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 			br, err := bucket.NewReader(r.Context(), originalMediaPath, nil)
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
@@ -88,6 +94,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 			_, err = io.Copy(w, br)
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to copy media into bucket"))
 				return
@@ -95,6 +102,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 			err = br.Close()
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to close bucket reader"))
 				return
@@ -105,6 +113,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 		exists, err := bucket.Exists(r.Context(), thumbMediaPath)
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
@@ -113,6 +122,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			// create a reader to get the full size media from the bucket
 			br, err := bucket.NewReader(r.Context(), originalMediaPath, nil)
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
@@ -147,6 +157,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			// create a writer for the new thumb
 			bw, err := bucket.NewWriter(r.Context(), thumbMediaPath, nil)
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to open bucket to stash resized image"))
 				return
@@ -163,6 +174,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 			err = bw.Close()
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to close bucket after writing"))
 				return
@@ -170,6 +182,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 			attrs, err := bucket.Attributes(r.Context(), thumbMediaPath)
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
@@ -179,6 +192,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			// return the resized image in the response
 			_, err = io.Copy(w, bytes.NewReader(imageBytes))
 			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to copy media into bucket"))
 				return
@@ -189,6 +203,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		// if there is a thumb, then return the contents in the response
 		attrs, err := bucket.Attributes(r.Context(), thumbMediaPath)
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
@@ -205,6 +220,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 		br, err := bucket.NewReader(r.Context(), thumbMediaPath, nil)
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
@@ -221,6 +237,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 		err = br.Close()
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to close bucket after reading"))
 			return

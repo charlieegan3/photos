@@ -74,6 +74,7 @@ func Serve(
 	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(renderer)).Methods("GET")
 	router.HandleFunc("/posts/search", publicposts.BuildSearchHandler(db, renderer)).Methods("GET")
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods("GET")
+	router.HandleFunc(`/photos/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods("GET")
 	router.HandleFunc("/posts/on-this-day/{month}-{day}", publicposts.BuildOnThisDayHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/on-this-day", publicposts.BuildOnThisDayHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods("GET")

@@ -287,7 +287,33 @@ func BuildLegacyPostRedirect() func(http.ResponseWriter, *http.Request) {
 			w.Write([]byte("failed to parse date from legacy URL"))
 			return
 		}
-		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", date), http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", date), http.StatusMovedPermanently)
+		return
+	}
+}
+
+// BuildLegacyPeriodRedirect will transform requests for /archive to /posts/period paths
+func BuildLegacyPeriodRedirect() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		month, monthOk := mux.Vars(r)["month"]
+		day, dayOk := mux.Vars(r)["day"]
+		if !monthOk || !dayOk {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse legacy archive URL"))
+			return
+		}
+		date, err := time.Parse("01-02", fmt.Sprintf("%s-%s", month, day))
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse date in legacy URL"))
+			return
+		}
+		http.Redirect(
+			w,
+			r,
+			fmt.Sprintf("/posts/on-this-day/%s-%s", date.Format("January"), date.Format("2")),
+			http.StatusMovedPermanently,
+		)
 		return
 	}
 }

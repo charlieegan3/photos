@@ -257,6 +257,7 @@ func (s *PostsSuite) TestPeriodHandler() {
 	assert.Contains(s.T(), string(body), "post in range")
 	assert.NotContains(s.T(), string(body), "future post")
 }
+
 func (s *PostsSuite) TestLegacyPostPathRedirect() {
 	router := mux.NewRouter()
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, BuildLegacyPostRedirect()).Methods("GET")
@@ -267,13 +268,32 @@ func (s *PostsSuite) TestLegacyPostPathRedirect() {
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !assert.Equal(s.T(), http.StatusMovedPermanently, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		require.NoError(s.T(), err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	assert.Equal(s.T(), "/posts/period/2018-07-08", rr.Header().Get("Location"))
+}
+
+func (s *PostsSuite) TestLegacyPeriodRedirect() {
+	router := mux.NewRouter()
+	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`, BuildLegacyPeriodRedirect()).Methods("GET")
+
+	req, err := http.NewRequest("GET", "/archive/09-01", nil)
+	require.NoError(s.T(), err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	if !assert.Equal(s.T(), http.StatusMovedPermanently, rr.Code) {
+		bodyString, err := io.ReadAll(rr.Body)
+		require.NoError(s.T(), err)
+		s.T().Fatalf("request failed with: %s", bodyString)
+	}
+
+	assert.Equal(s.T(), "/posts/on-this-day/September-1", rr.Header().Get("Location"))
 }
 
 func (s *PostsSuite) TestPeriodIndexHandler() {

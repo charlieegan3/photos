@@ -134,7 +134,10 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		device := models.Device{Name: strings.TrimSpace(r.Form.Get("Name"))}
+		device := models.Device{
+			Name:         strings.TrimSpace(r.Form.Get("Name")),
+			ModelMatches: strings.TrimSpace(r.PostForm.Get("ModelMatches")),
+		}
 
 		f, header, err := r.FormFile("Icon")
 		if err != nil {

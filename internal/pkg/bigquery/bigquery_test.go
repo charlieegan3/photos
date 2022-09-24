@@ -14,6 +14,48 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestInsertPoints(t *testing.T) {
+	points := []models.Point{
+		{
+			ID:        1,
+			Latitude:  1,
+			Longitude: 2,
+			CreatedAt: time.Date(2022, 9, 23, 1, 2, 3, 4, time.UTC),
+			UpdatedAt: time.Date(2022, 9, 23, 1, 2, 3, 4, time.UTC),
+		},
+		{
+			ID:        2,
+			Latitude:  3,
+			Longitude: 4,
+			CreatedAt: time.Date(2021, 9, 23, 1, 2, 3, 4, time.UTC),
+			UpdatedAt: time.Date(2021, 9, 23, 1, 2, 3, 4, time.UTC),
+		},
+	}
+
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// response showing that only point 1's time is new
+		response := `{
+  "kind": "bigquery#tableDataInsertAllResponse",
+  "insertErrors": [ ]
+}`
+
+		w.Write([]byte(response))
+	}))
+	defer testServer.Close()
+
+	ctx := context.Background()
+	client, err := bigquery.NewClient(
+		ctx,
+		"test-project",
+		option.WithEndpoint(testServer.URL),
+		option.WithoutAuthentication(),
+	)
+	require.NoError(t, err)
+
+	err = InsertPoints(ctx, client, points, "dataset", "table")
+	require.NoError(t, err)
+}
+
 func TestUnarchivedPoints(t *testing.T) {
 	points := []models.Point{
 		{

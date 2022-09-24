@@ -100,7 +100,7 @@ func UnarchivedPoints(
 		timestamps = append(
 			timestamps,
 			fmt.Sprintf(
-				"TIMESTAMP_SECONDS('%d')",
+				"TIMESTAMP_SECONDS(%d)",
 				p.CreatedAt.Unix(),
 			),
 		)

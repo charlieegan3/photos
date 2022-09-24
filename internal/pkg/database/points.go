@@ -94,6 +94,30 @@ func newDBPoint(point models.Point) dbPoint {
 	}
 }
 
+func AllPoints(db *sql.DB) (results []models.Point, err error) {
+	var dbPoints []dbPoint
+
+	goquDB := goqu.New("postgres", db)
+	selectPoints := goquDB.From("locations.points").
+		Order(
+			goqu.L("created_at").Asc(),
+		).
+		Executor()
+
+	if err := selectPoints.ScanStructs(&dbPoints); err != nil {
+		return results, errors.Wrap(err, "failed to select points")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	results = []models.Point{}
+	for _, v := range dbPoints {
+		results = append(results, newPoint(v))
+	}
+
+	return results, nil
+}
+
 func CreatePoints(
 	db *sql.DB,
 	importer, caller, reason string,

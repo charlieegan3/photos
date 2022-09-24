@@ -87,6 +87,56 @@ func (s *PointsSuite) TestCreatePoints() {
 	td.Cmp(s.T(), returnedPoints, expectedResult)
 }
 
+func (s *PointsSuite) TestAllPoints() {
+	points := []models.Point{
+		{
+			Latitude:  3.0,
+			Longitude: 4.0,
+			CreatedAt: time.Date(1994, 4, 23, 13, 22, 0, 0, time.UTC),
+		},
+		{
+			Latitude:  3.0,
+			Longitude: 4.0,
+			CreatedAt: time.Date(2022, 4, 23, 13, 22, 0, 0, time.UTC),
+		},
+	}
+
+	_, err := CreatePoints(
+		s.DB,
+		"example_importer",
+		"example_caller",
+		"example_reason",
+		nil, // no activity set
+		points,
+	)
+	require.NoError(s.T(), err)
+
+	returnedPoints, err := AllPoints(s.DB)
+	require.NoError(s.T(), err)
+
+	expectedResult := td.Slice(
+		[]models.Point{},
+		td.ArrayEntries{
+			0: td.SStruct(
+				models.Point{
+					Latitude:  3.0,
+					Longitude: 4.0,
+					CreatedAt: time.Date(1994, 4, 23, 13, 22, 0, 0, time.UTC),
+				},
+				td.StructFields{"=*": td.Ignore()}),
+			1: td.SStruct(
+				models.Point{
+					Latitude:  3.0,
+					Longitude: 4.0,
+					CreatedAt: time.Date(2022, 4, 23, 13, 22, 0, 0, time.UTC),
+				},
+				td.StructFields{"=*": td.Ignore()}),
+		},
+	)
+
+	td.Cmp(s.T(), returnedPoints, expectedResult)
+}
+
 func (s *PointsSuite) TestPointsNearTime() {
 	points := []models.Point{
 		{

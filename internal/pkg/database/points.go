@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
@@ -287,4 +288,33 @@ func PointsInRange(db *sql.DB, notBefore, notAfter time.Time) ([]models.Point, e
 	}
 
 	return returnedPoints, nil
+}
+
+func CountPoints(db *sql.DB) (count int64, err error) {
+	goquDB := goqu.New("postgres", db)
+
+	count, err = goquDB.From("locations.points").Count()
+	if err != nil {
+		return count, fmt.Errorf("failed to count points: %s", err)
+	}
+
+	return count, nil
+}
+
+func DeletePointsBefore(db *sql.DB, olderThan time.Time) (err error) {
+	goquDB := goqu.New("postgres", db)
+	del, _, err := goquDB.Delete("locations.points").Where(
+		goqu.Ex{
+			"created_at": goqu.Op{"lt": olderThan},
+		},
+	).ToSQL()
+	if err != nil {
+		return fmt.Errorf("failed to build points query: %s", err)
+	}
+	_, err = db.Exec(del)
+	if err != nil {
+		return fmt.Errorf("failed to delete points: %s", err)
+	}
+
+	return nil
 }

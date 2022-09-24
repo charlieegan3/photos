@@ -32,7 +32,6 @@ func init() {
 				fromTime = time.Now().AddDate(0, 0, -days)
 				toTime = time.Now()
 			} else {
-				from := cmd.Flag("from").Value.String()
 				fromTime, err = time.Parse("2006-01-02", from)
 				if err != nil {
 					log.Fatalf("failed to parse from date: %s", err)

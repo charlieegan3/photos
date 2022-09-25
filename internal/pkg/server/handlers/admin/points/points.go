@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"time"
 
+	bq "cloud.google.com/go/bigquery"
 	"github.com/gobuffalo/plush"
 	"github.com/tkrajina/gpxgo/gpx"
 
-	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/bigquery"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
@@ -32,12 +33,17 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	}
 }
 
-func BuildPeriodGPXHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+func BuildPeriodGPXHandler(
+	client *bq.Client,
+	dataset string,
+	table string,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		fromValues, ok := r.URL.Query()["from"]
 		if !ok || len(fromValues) != 1 {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("from param required"))
 			return
@@ -45,6 +51,7 @@ func BuildPeriodGPXHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) 
 
 		fromTime, err := time.Parse("2006-01-02", fromValues[0])
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("invalid from date format"))
 			return
@@ -52,6 +59,7 @@ func BuildPeriodGPXHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) 
 
 		toValues, ok := r.URL.Query()["to"]
 		if !ok || len(toValues) != 1 {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("to param required"))
 			return
@@ -59,6 +67,7 @@ func BuildPeriodGPXHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) 
 
 		toTime, err := time.Parse("2006-01-02", toValues[0])
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("invalid to date format"))
 			return
@@ -66,8 +75,9 @@ func BuildPeriodGPXHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) 
 		// make it to the end of the day
 		toTime = toTime.Add(24 * time.Hour).Add(-time.Second)
 
-		points, err := database.PointsInRange(db, fromTime, toTime)
+		points, err := bigquery.PointsInRange(r.Context(), client, dataset, table, fromTime, toTime)
 		if err != nil {
+			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return

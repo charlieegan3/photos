@@ -1,6 +1,7 @@
 package server
 
 import (
+	bq "cloud.google.com/go/bigquery"
 	"database/sql"
 	"fmt"
 	privatepoints "github.com/charlieegan3/photos/internal/pkg/server/handlers/private/points"
@@ -36,6 +37,7 @@ func Serve(
 	environment, hostname, addr, port, adminUsername, adminPassword string,
 	db *sql.DB,
 	bucket *blob.Bucket,
+	pointsBigQueryClient *bq.Client, pointsBigQueryDataset string, pointsBigQueryTable string,
 	mapServerURL, mapServerAPIKey string,
 ) {
 	renderer := templating.BuildPageRenderFunc(true, "")
@@ -132,7 +134,7 @@ func Serve(
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
-	adminRouter.HandleFunc("/points/period/gpx", points.BuildPeriodGPXHandler(db)).Methods("GET")
+	adminRouter.HandleFunc("/points/period/gpx", points.BuildPeriodGPXHandler(pointsBigQueryClient, pointsBigQueryDataset, pointsBigQueryTable)).Methods("GET")
 	adminRouter.HandleFunc("/points/period", points.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
 
 	privateRouter := router.PathPrefix("/private").Subrouter()

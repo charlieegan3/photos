@@ -1,7 +1,10 @@
 package points
 
 import (
+	"cloud.google.com/go/bigquery"
+	"context"
 	"database/sql"
+	"fmt"
 	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
@@ -10,6 +13,7 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
+	"google.golang.org/api/option"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -59,18 +63,118 @@ func (s *EndpointsPointsSuite) TestPeriodGPXHandler() {
 		},
 	}
 
-	_, err := database.CreatePoints(
-		s.DB,
-		"example_importer",
-		"example_caller",
-		"example_reason",
-		nil, // no activity set
-		points,
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		response := fmt.Sprintf(`
+{
+  "kind": "result",
+  "schema": {
+	"fields": [
+  { "name": "created_at", "type": "TIMESTAMP" },
+  { "name": "latitude", "type": "FLOAT" },
+  { "name": "longitude", "type": "FLOAT" },
+  { "name": "altitude", "type": "FLOAT" },
+  { "name": "accuracy", "type": "FLOAT" },
+  { "name": "vertical_accuracy", "type": "FLOAT" },
+  { "name": "velocity", "type": "FLOAT" },
+  { "name": "was_offline", "type": "BOOLEAN" },
+  { "name": "importer_id", "type": "INTEGER" },
+  { "name": "caller_id", "type": "INTEGER" },
+  { "name": "reason_id", "type": "INTEGER" },
+  { "mode": "NULLABLE", "name": "activity_id", "type": "INTEGER" }
+]
+  },
+  "jobReference": {
+    "projectId": "example",
+    "jobId": "example",
+    "location":  "example"	
+  },
+  "totalRows": "3",
+  "pageToken": "",
+  "rows": [
+    {
+      "f": [
+        { "v" : "%d" },
+        { "v" : "%f" },
+        { "v" : "%f" },
+        { "v" : "%f" },
+        { "v" : "0.0" },
+        { "v" : "0.0" },
+        { "v" : "0.0" },
+        { "v" : "false" },
+        { "v" : "0" },
+        { "v" : "0" },
+        { "v" : "0" },
+        { "v" : null }
+      ]
+    },
+    {
+      "f": [
+        { "v" : "%d" },
+        { "v" : "%f" },
+        { "v" : "%f" },
+        { "v" : "%f" },
+        { "v" : "0.0" },
+        { "v" : "0.0" },
+        { "v" : "0.0" },
+        { "v" : "false" },
+        { "v" : "0" },
+        { "v" : "0" },
+        { "v" : "0" },
+        { "v" : null }
+      ]
+    },
+    {
+      "f": [
+        { "v" : "%d" },
+        { "v" : "%f" },
+        { "v" : "%f" },
+        { "v" : "%f" },
+        { "v" : "0.0" },
+        { "v" : "0.0" },
+        { "v" : "0.0" },
+        { "v" : "false" },
+        { "v" : "0" },
+        { "v" : "0" },
+        { "v" : "0" },
+        { "v" : null }
+      ]
+    }
+  ],
+  "totalBytesProcessed": "100",
+  "jobComplete": true,
+  "errors": [],
+  "cacheHit": false
+}`,
+			points[1].CreatedAt.Unix(),
+			points[1].Latitude,
+			points[1].Longitude,
+			points[1].Altitude,
+			points[2].CreatedAt.Unix(),
+			points[2].Latitude,
+			points[2].Longitude,
+			points[2].Altitude,
+			points[3].CreatedAt.Unix(),
+			points[3].Latitude,
+			points[3].Longitude,
+			points[3].Altitude,
+		)
+
+		w.Write([]byte(response))
+	}))
+
+	client, err := bigquery.NewClient(
+		context.Background(),
+		"test-project",
+		option.WithEndpoint(testServer.URL),
+		option.WithoutAuthentication(),
 	)
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/points/period/gpx", BuildPeriodGPXHandler(s.DB)).Methods("GET")
+	router.HandleFunc(
+		"/admin/points/period/gpx",
+		BuildPeriodGPXHandler(client, "dataset", "table"),
+	).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/admin/points/period/gpx?from=2021-01-01&to=2022-12-31", nil)
 	require.NoError(s.T(), err)

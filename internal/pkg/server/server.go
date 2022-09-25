@@ -148,7 +148,8 @@ func Serve(
 		Handler:      router,
 		Addr:         fmt.Sprintf("%s:%s", addr, port),
 		WriteTimeout: 30 * time.Second,
-		ReadTimeout:  30 * time.Second,
+		// this is set to 3 mins to allow many images to resized in a queue
+		ReadTimeout: 180 * time.Second,
 	}
 
 	log.Fatal(srv.ListenAndServe())

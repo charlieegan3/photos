@@ -11,17 +11,26 @@ import (
 
 func init() {
 	var olderThan string
+	var days int
+
 	var expirePointsCmd = &cobra.Command{
 		Use:   "expire-points",
 		Short: "Delete old points data",
 		Run: func(cmd *cobra.Command, args []string) {
-			if olderThan == "" {
-				log.Fatalf("--older-than must be set to a value")
+			if olderThan == "" && days == 0 {
+				log.Fatalf("--older-than or --days must be set to a value")
 			}
 
-			olderThanDate, err := time.Parse("2006-01-02", olderThan)
-			if err != nil {
-				log.Fatalf("failed to parse older-than date value: %s", err)
+			var olderThanDate time.Time
+			if days > 0 {
+				olderThanDate = time.Now().AddDate(0, 0, -days)
+			} else {
+				var err error
+				olderThanDate, err = time.Parse("2006-01-02", olderThan)
+				if err != nil {
+					log.Fatalf("failed to parse older-than date: %s", err)
+				}
+
 			}
 
 			log.Println("Removing points older than", olderThanDate)
@@ -53,6 +62,7 @@ func init() {
 	}
 
 	expirePointsCmd.Flags().StringVarP(&olderThan, "older-than", "", "", "older-than date")
+	expirePointsCmd.Flags().IntVarP(&days, "days", "", 0, "more than N days ago")
 
 	jobsCmd.AddCommand(expirePointsCmd)
 }

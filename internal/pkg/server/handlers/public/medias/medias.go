@@ -2,20 +2,23 @@ package public
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"fmt"
+	"github.com/gorilla/mux"
+	"gocloud.dev/blob"
 	"io"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
-	"gocloud.dev/blob"
+	"sync"
 	"willnorris.com/go/imageproxy"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
 )
 
 func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter, *http.Request) {
+	ir := imageResizer{}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -65,49 +68,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 		// if there are no options, serve the image from the media upload path
 		if imageResizeString == "" {
-			attrs, err := bucket.Attributes(r.Context(), originalMediaPath)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
-
-			w.Header().Set("ETag", attrs.ETag)
-
-			// handle potential 304 response
-			if ifNoneMatch := r.Header.Get("If-None-Match"); ifNoneMatch != "" {
-				if ifNoneMatch == attrs.ETag {
-					w.WriteHeader(http.StatusNotModified)
-					return
-				}
-			}
-
-			br, err := bucket.NewReader(r.Context(), originalMediaPath, nil)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
-			defer br.Close()
-
-			_, err = io.Copy(w, br)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy media into bucket"))
-				return
-			}
-
-			err = br.Close()
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close bucket reader"))
-				return
-			}
-
+			serveImageFromBucket(w, r, bucket, originalMediaPath)
 			return
 		}
 
@@ -119,128 +80,123 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			return
 		}
 		if !exists {
-			// create a reader to get the full size media from the bucket
-			br, err := bucket.NewReader(r.Context(), originalMediaPath, nil)
+			err := ir.ResizeInBucket(r.Context(), bucket, originalMediaPath, imageResizeString, thumbMediaPath)
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
-			defer br.Close()
+		}
 
-			// read the full size item
-			buf := bytes.NewBuffer([]byte{})
-			_, err = io.Copy(buf, br)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed to copy media item into byte buffer for image processing: %s", err)))
-				return
-			}
+		serveImageFromBucket(w, r, bucket, thumbMediaPath)
+	}
+}
 
-			err = br.Close()
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close handle loading image from backing store"))
-				return
-			}
+type imageResizer struct {
+	mu sync.Mutex
+}
 
-			// resize the image based on the current settings
-			imageOptions := imageproxy.ParseOptions(imageResizeString)
-			imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
+// ResizeInBucket resizes an image in a bucket and saves it to a new path. One at a time to reduce load on the server.
+// When a batch of images are uploaded, there are many that need to be resized. This function is a throttler to ensure
+// that only one image is resized at a time and the RAM usage is contained. Original images are quite large and quickly
+// consume all available RAM leading to OOMKills.
+func (ir *imageResizer) ResizeInBucket(
+	ctx context.Context,
+	bucket *blob.Bucket,
+	originalMediaPath string,
+	imageResizeString string,
+	thumbMediaPath string,
+) error {
+	ir.mu.Lock()
+	defer ir.mu.Unlock()
 
-			imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
-			buf = bytes.NewBuffer(imageBytes)
+	// create a reader to get the full size media from the bucket
+	br, err := bucket.NewReader(ctx, originalMediaPath, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create reader for original media: %w", err)
+	}
+	defer br.Close()
 
-			// create a writer for the new thumb
-			bw, err := bucket.NewWriter(r.Context(), thumbMediaPath, nil)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to open bucket to stash resized image"))
-				return
-			}
-			defer bw.Close()
+	// read the full size item
+	buf := bytes.NewBuffer([]byte{})
+	_, err = io.Copy(buf, br)
+	if err != nil {
+		fmt.Errorf("failed to copy original media into buffer: %w", err)
+	}
 
-			_, err = io.Copy(bw, bytes.NewReader(imageBytes))
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed to copy media image into response: %s", err)))
-				return
-			}
+	err = br.Close()
+	if err != nil {
+		return fmt.Errorf("failed to close bucket reader: %w", err)
+	}
 
-			err = bw.Close()
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close bucket after writing"))
-				return
-			}
+	// resize the image based on the current settings
+	imageOptions := imageproxy.ParseOptions(imageResizeString)
+	imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
 
-			attrs, err := bucket.Attributes(r.Context(), thumbMediaPath)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
-				return
-			}
-			w.Header().Set("ETag", attrs.ETag)
+	imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
+	buf = bytes.NewBuffer(imageBytes)
 
-			// return the resized image in the response
-			_, err = io.Copy(w, bytes.NewReader(imageBytes))
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy media into bucket"))
-				return
-			}
+	// create a writer for the new thumb
+	bw, err := bucket.NewWriter(ctx, thumbMediaPath, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create writer for thumb media: %w", err)
+	}
+	defer bw.Close()
+
+	_, err = io.Copy(bw, bytes.NewReader(imageBytes))
+	if err != nil {
+		return fmt.Errorf("failed to copy thumb media into bucket: %w", err)
+	}
+	err = bw.Close()
+	if err != nil {
+		return fmt.Errorf("failed to close bucket writer: %w", err)
+	}
+
+	return nil
+}
+
+func serveImageFromBucket(w http.ResponseWriter, r *http.Request, bucket *blob.Bucket, path string) {
+	attrs, err := bucket.Attributes(r.Context(), path)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/text")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.Header().Set("ETag", attrs.ETag)
+
+	// handle potential 304 response
+	if ifNoneMatch := r.Header.Get("If-None-Match"); ifNoneMatch != "" {
+		if ifNoneMatch == attrs.ETag {
+			w.WriteHeader(http.StatusNotModified)
 			return
 		}
+	}
 
-		// if there is a thumb, then return the contents in the response
-		attrs, err := bucket.Attributes(r.Context(), thumbMediaPath)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/text")
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-		w.Header().Set("ETag", attrs.ETag)
+	br, err := bucket.NewReader(r.Context(), path, nil)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/text")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	defer br.Close()
 
-		// handle potential 304 response
-		if ifNoneMatch := r.Header.Get("If-None-Match"); ifNoneMatch != "" {
-			if ifNoneMatch == attrs.ETag {
-				w.WriteHeader(http.StatusNotModified)
-				return
-			}
-		}
+	_, err = io.Copy(w, br)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/text")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("failed to copy media into bucket"))
+		return
+	}
 
-		br, err := bucket.NewReader(r.Context(), thumbMediaPath, nil)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/text")
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-		defer br.Close()
-
-		_, err = io.Copy(w, br)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/text")
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("failed to copy media image into response: %s", err)))
-			return
-		}
-
-		err = br.Close()
-		if err != nil {
-			w.Header().Set("Content-Type", "application/text")
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close bucket after reading"))
-			return
-		}
+	err = br.Close()
+	if err != nil {
+		w.Header().Set("Content-Type", "application/text")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("failed to close bucket reader"))
+		return
 	}
 }

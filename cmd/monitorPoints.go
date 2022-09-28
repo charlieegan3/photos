@@ -17,10 +17,12 @@ import (
 
 func notify(title, message string) {
 	log.Println("notifying", title, message)
-	datab := map[string]string{
-		"Title": title,
-		"Body":  message,
-		"URL":   "",
+	datab := []map[string]string{
+		{
+			"title": title,
+			"body":  message,
+			"url":   "",
+		},
 	}
 
 	b, err := json.Marshal(datab)

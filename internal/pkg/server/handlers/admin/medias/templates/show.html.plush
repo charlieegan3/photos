@@ -1,3 +1,5 @@
+<p><a href="./new">New Media</a></p>
+
 <h1 xmlns:2006-01-02T15="http://www.w3.org/1999/xhtml" xmlns:2006-01-02T15="http://www.w3.org/1999/xhtml"><%= media.ID %></h1>
 <p>Kind: <%= media.Kind %></p>
 

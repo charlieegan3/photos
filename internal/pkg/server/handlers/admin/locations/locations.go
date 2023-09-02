@@ -4,14 +4,13 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
-	"gocloud.dev/blob"
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
+	"gocloud.dev/blob"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
 	"github.com/charlieegan3/photos/internal/pkg/geoapify"
@@ -358,38 +357,41 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 		redirectToURL += "?" + params.Encode()
 
-		timestampRaw := r.URL.Query().Get("timestamp")
-		if redirectToRaw == "" {
+		mediaIDRaw := r.URL.Query().Get("mediaID")
+		if mediaIDRaw == "" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("missing timestamp param"))
+			w.Write([]byte("missing mediaID param"))
 			return
 		}
 
-		i, err := strconv.ParseInt(timestampRaw, 10, 64)
+		mediaID, err := strconv.ParseInt(mediaIDRaw, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("invalid timestamp"))
+			w.Write([]byte("invalid mediaID"))
 			return
 		}
-		points, err := database.PointsNearTime(db, time.Unix(i, 0))
+
+		medias, err := database.FindMediasByID(db, []int{int(mediaID)})
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		if len(medias) != 1 {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("unexpected number of medias"))
+			return
+		}
+
+		media := medias[0]
+
+		nearbyLocations := []models.Location{}
+		nearbyLocations, err = database.NearbyLocations(db, media.Latitude, media.Longitude)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to get points at that timestamp"))
 			return
-		}
-
-		nearbyLocations := []models.Location{}
-		var lat, long float64
-		if len(points) > 0 {
-			best := points[0]
-			lat = best.Latitude
-			long = best.Longitude
-			nearbyLocations, err = database.NearbyLocations(db, best.Latitude, best.Longitude)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to get points at that timestamp"))
-				return
-			}
 		}
 
 		locations, err := database.AllLocations(db)
@@ -402,8 +404,8 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		ctx := plush.NewContext()
 		ctx.Set("locations", locations)
 		ctx.Set("nearbyLocations", nearbyLocations)
-		ctx.Set("lat", lat)
-		ctx.Set("long", long)
+		ctx.Set("lat", media.Latitude)
+		ctx.Set("long", media.Longitude)
 		ctx.Set("redirectTo", redirectToURL)
 
 		err = renderer(ctx, selectTemplate, w)

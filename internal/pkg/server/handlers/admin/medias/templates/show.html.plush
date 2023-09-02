@@ -9,7 +9,7 @@
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
 <div class="mv3">
-  <a href="/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&mediaID=<%= media.ID %>&timestamp=<%= media.TakenAt.Unix() %>">Create Post</a>
+  <a href="/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&mediaID=<%= media.ID %>">Create Post</a>
   <%= if (len(posts) > 0) { %>
     - Used in posts:
     <%= for (p) in posts { %>

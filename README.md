@@ -34,24 +34,6 @@ bucket:
   # I use gocloud.dev so it should be possible to use other cloud providers
   url: gs://example-bucket
   webUrl: https://storage.googleapis.com/example-bucket/
-google:
-  bigquery:
-    project_id: example
-    dataset_id: example
-    table_id: example
-  service_account_key: |
-    {
-      "type": "service_account",
-      "project_id": "",
-      "private_key_id": "",
-      "private_key": "",
-      "client_email": "",
-      "client_id": "",
-      "auth_uri": "",
-      "token_uri": "",
-      "auth_provider_x509_cert_url": "",
-      "client_x509_cert_url": ""
-    }
 notification_webhook:
   endpoint: https://example.com/
 ```

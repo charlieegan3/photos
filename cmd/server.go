@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	bq "cloud.google.com/go/bigquery"
 	"context"
-	"google.golang.org/api/option"
 	"log"
 	"os"
 
@@ -65,15 +63,6 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to open bucket: %s", err)
 		}
 
-		bigqueryClient, err := bq.NewClient(
-			cmd.Context(),
-			viper.GetString("google.bigquery.project_id"),
-			option.WithCredentialsJSON([]byte(viper.GetString("google.service_account_key"))),
-		)
-		if err != nil {
-			log.Fatalf("failed to create bigquery client: %s", err)
-		}
-
 		log.Println("Listening on", port)
 
 		server.Serve(
@@ -85,9 +74,6 @@ var serverCmd = &cobra.Command{
 			viper.GetString("server.adminPassword"),
 			db,
 			bucket,
-			bigqueryClient,
-			viper.GetString("google.bigquery.dataset_id"),
-			viper.GetString("google.bigquery.table_id"),
 			viper.GetString("geoapify.url"),
 			viper.GetString("geoapify.key"),
 		)

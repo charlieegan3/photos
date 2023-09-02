@@ -3,7 +3,6 @@ module github.com/charlieegan3/photos
 go 1.19
 
 require (
-	cloud.google.com/go/bigquery v1.42.0
 	github.com/doug-martin/goqu/v9 v9.16.0
 	github.com/dsoprea/go-exif/v3 v3.0.0-20210625224831-a6301f85c82b
 	github.com/gobuffalo/plush v3.8.3+incompatible
@@ -23,9 +22,7 @@ require (
 	github.com/tkrajina/gpxgo v1.2.1
 	github.com/tormoder/fit v0.13.0
 	gocloud.dev v0.24.0
-	golang.org/x/net v0.0.0-20220921203646-d300de134e69
 	golang.org/x/text v0.3.7
-	google.golang.org/api v0.97.0
 	willnorris.com/go/imageproxy v0.11.2
 )
 
@@ -104,10 +101,12 @@ require (
 	golang.org/x/image v0.0.0-20210216034530-4410531fe030 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
+	golang.org/x/net v0.0.0-20220921203646-d300de134e69 // indirect
 	golang.org/x/oauth2 v0.0.0-20220909003341-f21342109be1 // indirect
 	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 // indirect
 	golang.org/x/tools v0.1.11-0.20220316014157-77aa08bb151a // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
+	google.golang.org/api v0.97.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220921223823-23cae91e6737 // indirect
 	google.golang.org/grpc v1.49.0 // indirect

@@ -1,10 +1,8 @@
 package server
 
 import (
-	bq "cloud.google.com/go/bigquery"
 	"database/sql"
 	"fmt"
-	privatepoints "github.com/charlieegan3/photos/internal/pkg/server/handlers/private/points"
 	"log"
 	"net/http"
 	"time"
@@ -19,7 +17,6 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/lenses"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/locations"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/medias"
-	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/points"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/tags"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/public/menu"
@@ -37,7 +34,6 @@ func Serve(
 	environment, hostname, addr, port, adminUsername, adminPassword string,
 	db *sql.DB,
 	bucket *blob.Bucket,
-	pointsBigQueryClient *bq.Client, pointsBigQueryDataset string, pointsBigQueryTable string,
 	mapServerURL, mapServerAPIKey string,
 ) {
 	renderer := templating.BuildPageRenderFunc(true, "")
@@ -133,13 +129,6 @@ func Serve(
 	adminRouter.HandleFunc("/posts/new", posts.BuildNewHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
-
-	adminRouter.HandleFunc("/points/period/gpx", points.BuildPeriodGPXHandler(pointsBigQueryClient, pointsBigQueryDataset, pointsBigQueryTable)).Methods("GET")
-	adminRouter.HandleFunc("/points/period", points.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
-
-	privateRouter := router.PathPrefix("/private").Subrouter()
-	privateRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
-	privateRouter.HandleFunc("/points", privatepoints.BuildOwnTracksEndpointHandler(db)).Methods("POST")
 
 	// catch all handlers to serve static files
 	router.HandleFunc("/{.*}", buildStaticHandler()).Methods("GET")

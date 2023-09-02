@@ -203,10 +203,6 @@ func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 	})
 }
 
-func (s *DatabaseSuite) TestEndpointsPointsSuite() {
-	suite.Run(s.T(), &points.EndpointsPointsSuite{DB: s.DB})
-}
-
 func (s *DatabaseSuite) TestPublicPostsSuite() {
 	suite.Run(s.T(), &publicposts.PostsSuite{
 		DB: s.DB,
@@ -267,8 +263,4 @@ func (s *DatabaseSuite) TestEndpointsMediasSuite() {
 		Bucket:        bucket,
 		BucketBaseURL: bucketBaseURL,
 	})
-}
-
-func (s *DatabaseSuite) TestPrivateEndpointsPointsSuite() {
-	suite.Run(s.T(), &privatepoints.EndpointsPointsSuite{DB: s.DB})
 }

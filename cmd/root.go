@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"encoding/base64"
 	"log"
-	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -42,22 +40,6 @@ func init() {
 
 // initConfig reads in config file and errors if fails
 func initConfig() {
-	// if there is a CONFIG_STRING var, then dump that to the config file location
-	if configString := os.Getenv("CONFIG_STRING"); configString != "" {
-		// CONFIG_STRING is used in serverless environments where /tmp is generally the only writable location
-		cfgFile = "/tmp/secrets/config.yaml"
-		yamlConfig, err := base64.StdEncoding.DecodeString(configString)
-		if err != nil {
-			log.Fatalf("Failed to decode CONFIG_STRING: %s", err)
-			return
-		}
-		err = os.WriteFile(cfgFile, yamlConfig, 0644)
-		if err != nil {
-			log.Fatalf("Failed writing CONFIG_STRING: %s", err)
-			return
-		}
-	}
-
 	// if cfgFile is not set by flag or CONFIG_STRING logic, then use the HOME dir default
 	if cfgFile == "" {
 		cfgFile = "$HOME/.photos.yaml"
@@ -72,22 +54,4 @@ func initConfig() {
 	}
 
 	log.Printf("Using config file: %s", viper.ConfigFileUsed())
-
-	if viper.GetString("google.service_account_key") != "" {
-		// place google credentials on disk
-		tmpfile, err := os.CreateTemp("", "google.*.json")
-		if err != nil {
-			log.Fatal(err)
-		}
-		content := []byte(viper.GetString("google.service_account_key"))
-		if _, err := tmpfile.Write(content); err != nil {
-			tmpfile.Close()
-			log.Fatal(err)
-		}
-		if err := tmpfile.Close(); err != nil {
-			log.Fatal(err)
-		}
-
-		os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", tmpfile.Name())
-	}
 }

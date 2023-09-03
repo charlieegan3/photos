@@ -4,15 +4,20 @@ import (
 	"context"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"gocloud.dev/blob"
+	"gocloud.dev/blob/gcsblob"
 	_ "gocloud.dev/blob/gcsblob"
+	"gocloud.dev/gcp"
+	"golang.org/x/oauth2/google"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
 	"github.com/charlieegan3/photos/internal/pkg/server"
@@ -35,12 +40,20 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to init DB: %s", err)
 		}
 
-		driver, err := postgres.WithInstance(db, &postgres.Config{})
-		m, err := migrate.NewWithDatabaseInstance(
-			viper.GetString("database.migrationsPath"),
-			"postgres",
-			driver,
-		)
+		conn, err := db.Conn(context.Background())
+		if err != nil {
+			log.Fatalf("failed to get DB connection: %s", err)
+		}
+
+		migrations := database.Migrations
+
+		driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{})
+		if err != nil {
+			log.Fatalf("failed to init DB driver: %s", err)
+		}
+
+		source, err := iofs.New(migrations, "migrations")
+		m, err := migrate.NewWithInstance("iofs", source, "postgres", driver)
 		if err != nil {
 			log.Fatalf("failed to load migrations: %s", err)
 		}
@@ -58,9 +71,40 @@ var serverCmd = &cobra.Command{
 			port = p
 		}
 
-		bucket, err := blob.OpenBucket(context.Background(), viper.GetString("bucket.url"))
-		if err != nil {
-			log.Fatalf("failed to open bucket: %s", err)
+		var bucket *blob.Bucket
+		if strings.HasPrefix(viper.GetString("bucket.url"), "gs://") {
+			keyString := viper.GetString("google.service_account_key")
+			if keyString == "" {
+				log.Fatalf("failed to get default GCP credentials: %s", err)
+			}
+
+			creds, err := google.CredentialsFromJSON(
+				context.Background(),
+				[]byte(keyString),
+				"https://www.googleapis.com/auth/cloud-platform",
+			)
+			if err != nil {
+				log.Fatalf("failed to get default GCP credentials: %s", err)
+			}
+
+			client, err := gcp.NewHTTPClient(
+				gcp.DefaultTransport(),
+				gcp.CredentialsTokenSource(creds))
+			if err != nil {
+				log.Fatalf("failed to create bucket HTTP client: %s", err)
+			}
+
+			bucketName := strings.TrimPrefix(viper.GetString("bucket.url"), "gs://")
+
+			bucket, err = gcsblob.OpenBucket(context.Background(), client, bucketName, nil)
+			if err != nil {
+				log.Fatalf("failed to open bucket: %s", err)
+			}
+		} else {
+			bucket, err = blob.OpenBucket(context.Background(), viper.GetString("bucket.url"))
+			if err != nil {
+				log.Fatalf("failed to open bucket: %s", err)
+			}
 		}
 
 		log.Println("Listening on", port)

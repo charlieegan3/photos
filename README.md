@@ -25,7 +25,6 @@ geoapify:
   url: https://maps.geoapify.com/v1/staticmap
   key: xxx
 database:
-  migrationsPath: file:///etc/config/migrations
   createDatabase: false
   connectionString: postgres://example:example@example.com
   params:

@@ -9,7 +9,8 @@
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
 <div class="mv3">
-  <a href="/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&mediaID=<%= media.ID %>">Create Post</a>
+  <a href="/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&mediaID=<%= media.ID %>&timestamp=<%= media.TakenAt.Unix() %>">Create Post</a>
+
   <%= if (len(posts) > 0) { %>
     - Used in posts:
     <%= for (p) in posts { %>
@@ -32,7 +33,7 @@
     <%= f.InputTag("FocalLength") %>
   </div>
 
-<div class="mb3">
+  <div class="mb3">
     <label for="TakenAt">TakenAt</label>
     <input id="TakenAt" type="datetime-local" name="TakenAt" value="<%= media.TakenAt.Format("2006-01-02T15:04") %>">
   </div>

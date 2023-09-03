@@ -171,6 +171,30 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 		}
 	}
 
+	path = "geoapify.url"
+	p.mapServerURL, ok = p.config.Path(path).Data().(string)
+	if !ok {
+		return fmt.Errorf("config value %s not set", path)
+	}
+
+	path = "geoapify.key"
+	p.mapServerAPIKey, ok = p.config.Path(path).Data().(string)
+	if !ok {
+		return fmt.Errorf("config value %s not set", path)
+	}
+
+	path = "admin.username"
+	p.adminUserName, ok = p.config.Path(path).Data().(string)
+	if !ok {
+		return fmt.Errorf("config value %s not set", path)
+	}
+
+	path = "admin.password"
+	p.adminPassword, ok = p.config.Path(path).Data().(string)
+	if !ok {
+		return fmt.Errorf("config value %s not set", path)
+	}
+
 	return nil
 }
 

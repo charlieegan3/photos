@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"embed"
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -61,14 +60,6 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 	var err error
 	var path string
 	p.config = gabs.Wrap(config)
-
-	bs, err := json.MarshalIndent(config, "", "  ")
-	if err != nil {
-
-		return fmt.Errorf("failed to marshal config: %s", err)
-	}
-
-	fmt.Println(string(bs))
 
 	path = "environment"
 	p.environment, ok = p.config.Path(path).Data().(string)

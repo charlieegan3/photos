@@ -30,25 +30,26 @@ import (
 	publictags "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/tags"
 )
 
-func Serve(
-	environment, hostname, addr, port, adminUsername, adminPassword string,
+// Attach adds all routes to the router, this is used in other projects to run
+// an instance of the server.
+func Attach(
+	router *mux.Router,
+	adminUsername, adminPassword string,
 	db *sql.DB,
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
-) {
+) error {
 	renderer := templating.BuildPageRenderFunc(true, "")
 	rendererMenu := templating.BuildPageRenderFunc(false, "")
 	rendererMap := templating.BuildPageRenderFunc(true, publiclocations.HeadContent)
 	rendererAdmin := templating.BuildPageRenderFunc(true, "", "admin")
 
-	router := mux.NewRouter()
 	router.Use(InitMiddlewareLogging())
-	router.Use(InitMiddlewareHTTPS(hostname, environment))
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 
 	stylesHandler, err := buildStylesHandler()
 	if err != nil {
-		log.Fatalf("failed to build styles handler: %s", err)
+		return fmt.Errorf("failed to build styles handler: %s", err)
 	}
 	router.HandleFunc("/styles.css", stylesHandler).Methods("GET")
 
@@ -132,6 +133,31 @@ func Serve(
 
 	// catch all handlers to serve static files
 	router.HandleFunc("/{.*}", buildStaticHandler()).Methods("GET")
+
+	return nil
+}
+
+func Serve(
+	environment, hostname, addr, port, adminUsername, adminPassword string,
+	db *sql.DB,
+	bucket *blob.Bucket,
+	mapServerURL, mapServerAPIKey string,
+) {
+	router := mux.NewRouter()
+	router.Use(InitMiddlewareHTTPS(hostname, environment))
+
+	err := Attach(
+		router,
+		adminUsername,
+		adminPassword,
+		db,
+		bucket,
+		mapServerURL,
+		mapServerAPIKey,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	srv := &http.Server{
 		Handler:      router,

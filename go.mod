@@ -3,7 +3,9 @@ module github.com/charlieegan3/photos
 go 1.19
 
 require (
-	github.com/doug-martin/goqu/v9 v9.16.0
+	github.com/Jeffail/gabs/v2 v2.7.0
+	github.com/charlieegan3/toolbelt v0.0.0-20230902111404-a1294f8c1e26
+	github.com/doug-martin/goqu/v9 v9.18.0
 	github.com/dsoprea/go-exif/v3 v3.0.0-20210625224831-a6301f85c82b
 	github.com/gobuffalo/plush v3.8.3+incompatible
 	github.com/golang-migrate/migrate/v4 v4.16.2
@@ -11,13 +13,13 @@ require (
 	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/schema v1.2.0
-	github.com/lib/pq v1.10.6
+	github.com/lib/pq v1.10.7
 	github.com/maxatome/go-testdeep v1.10.1
 	github.com/philhofer/tcx v0.0.0-20140422172628-84b8274e31dc
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.2
 	github.com/spf13/cobra v1.2.1
-	github.com/spf13/viper v1.8.1
+	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.1
 	github.com/tkrajina/gpxgo v1.2.1
 	github.com/tormoder/fit v0.13.0
@@ -46,7 +48,7 @@ require (
 	github.com/dsoprea/go-utility/v2 v2.0.0-20200717064901-2fccff4aa15e // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fcjr/aia-transport-go v1.2.2 // indirect
-	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-errors/errors v1.4.1 // indirect
 	github.com/gobuffalo/flect v0.2.4 // indirect
 	github.com/gobuffalo/github_flavored_markdown v1.1.1 // indirect
@@ -71,29 +73,31 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/kisielk/errcheck v1.6.0 // indirect
-	github.com/magiconair/properties v1.8.5 // indirect
+	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mdempsky/unconvert v0.0.0-20200228143138-95ecdbfc0b5f // indirect
 	github.com/microcosm-cc/bluemonday v1.0.17 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/muesli/smartcrop v0.3.0 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
-	github.com/pelletier/go-toml v1.9.3 // indirect
+	github.com/pelletier/go-toml v1.9.5 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/philhofer/vec v0.0.0-20140421144027-536fc796d369 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.26.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
+	github.com/robfig/cron v1.2.0 // indirect
 	github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e // indirect
-	github.com/spf13/afero v1.6.0 // indirect
-	github.com/spf13/cast v1.3.1 // indirect
+	github.com/spf13/afero v1.8.2 // indirect
+	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/subosito/gotenv v1.4.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20220428152302-39d4317da171 // indirect
@@ -109,7 +113,7 @@ require (
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 	google.golang.org/grpc v1.51.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
-	gopkg.in/ini.v1 v1.62.0 // indirect
+	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.3.1 // indirect

@@ -30,9 +30,8 @@ database:
   params:
     dbname: example
 bucket:
-  # I use gocloud.dev so it should be possible to use other cloud providers
-  url: gs://example-bucket
-  webUrl: https://storage.googleapis.com/example-bucket/
+  # I use gocloud.dev, so it should be possible to use various cloud providers
+  url: gs://example-bucket # file:///tmp/photos
 notification_webhook:
   endpoint: https://example.com/
 ```

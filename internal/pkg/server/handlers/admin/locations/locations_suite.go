@@ -32,7 +32,12 @@ type EndpointsLocationsSuite struct {
 }
 
 func (s *EndpointsLocationsSuite) SetupTest() {
-	err := database.Truncate(s.DB, "locations")
+	var err error
+	err = database.Truncate(s.DB, "locations")
+	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "medias")
+	require.NoError(s.T(), err)
+	err = database.Truncate(s.DB, "devices")
 	require.NoError(s.T(), err)
 }
 
@@ -386,7 +391,7 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 }
 
 func (s *EndpointsLocationsSuite) TestLocationSelector() {
-	testData := []models.Location{
+	testDataLocations := []models.Location{
 		{
 			Name:      "London",
 			Latitude:  1.1,
@@ -399,15 +404,43 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 		},
 	}
 
-	persistedLocations, err := database.CreateLocations(s.DB, testData)
+	persistedLocations, err := database.CreateLocations(s.DB, testDataLocations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
+	}
+
+	persistedDevices, err := database.CreateDevices(s.DB, []models.Device{
+		{
+			Name: "Example",
+			Slug: "example",
+		},
+	})
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
+	testDataMedias := []models.Media{
+		{
+			DeviceID:  persistedDevices[0].ID,
+			Latitude:  1.1,
+			Longitude: 1.1,
+		},
+	}
+
+	persistedMedias, err := database.CreateMedias(s.DB, testDataMedias)
+	if err != nil {
+		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/locations/select", BuildSelectHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
 
-	req, err := http.NewRequest("GET", "/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2&timestamp=1234", nil)
+	req, err := http.NewRequest(
+		"GET",
+		"/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2&timestamp=1234&mediaID="+
+			fmt.Sprintf("%d", persistedMedias[0].ID),
+		nil,
+	)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -423,5 +456,9 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 	assert.Contains(s.T(), string(body), "London")
 	assert.Contains(s.T(), string(body), "New York")
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf(`<a href="/admin/posts/new?param1=1&param2=2&timestamp=1234&locationID=%d">`, persistedLocations[0].ID))
+	assert.Contains(s.T(), string(body), fmt.Sprintf(
+		`/admin/posts/new?mediaID=%d&param1=1&param2=2&timestamp=1234&locationID=%d`,
+		persistedMedias[0].ID,
+		persistedLocations[0].ID,
+	))
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
@@ -91,15 +92,24 @@ func (s *DatabaseSuite) SetupSuite() {
 		s.T().Fatalf("failed to init DB: %s", err)
 	}
 
-	// prepare to run the migrations
-	driver, err := postgres.WithInstance(s.DB, &postgres.Config{})
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://../../../../migrations",
-		"postgres",
-		driver,
-	)
+	conn, err := s.DB.Conn(context.Background())
 	if err != nil {
-		s.T().Fatalf("failed to load migrations: %s", err)
+		s.T().Fatalf("failed to get connection: %s", err)
+	}
+	// close to avoid leaking connection for migrations
+	defer conn.Close()
+
+	migrations := database.Migrations
+
+	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{})
+	if err != nil {
+		s.T().Fatalf("failed to init migrations driver: %s", err)
+	}
+
+	source, err := iofs.New(migrations, "migrations")
+	m, err := migrate.NewWithInstance("iofs", source, "postgres", driver)
+	if err != nil {
+		s.T().Fatalf("failed to init migrations: %s", err)
 	}
 
 	// migrate up, down and up again to test that both directions work

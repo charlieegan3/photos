@@ -341,7 +341,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 		redirectToRaw := r.URL.Query().Get("redirectTo")
 		if redirectToRaw == "" {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("missing redirectTo param"))
 			return
 		}
@@ -359,14 +359,14 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 		mediaIDRaw := r.URL.Query().Get("mediaID")
 		if mediaIDRaw == "" {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("missing mediaID param"))
 			return
 		}
 
 		mediaID, err := strconv.ParseInt(mediaIDRaw, 10, 64)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("invalid mediaID"))
 			return
 		}

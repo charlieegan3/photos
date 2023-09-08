@@ -107,7 +107,7 @@ var serverCmd = &cobra.Command{
 			}
 		}
 
-		log.Println("Listening on", port)
+		log.Printf("starting server on http://%s:%s", viper.GetString("hostname"), port)
 
 		server.Serve(
 			environment,

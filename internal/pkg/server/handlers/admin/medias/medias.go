@@ -541,6 +541,8 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 		media.Latitude, err = exifData.Latitude.ToDecimal()
 		media.Longitude, err = exifData.Longitude.ToDecimal()
 		media.Altitude, err = exifData.Altitude.ToDecimal()
+		media.Width = exifData.Width
+		media.Height = exifData.Height
 
 		// if there's a match from the EXIF data, then use that to set the device ID
 		modelMatchedDevice, err := database.FindDeviceByModelMatches(db, exifData.Model)

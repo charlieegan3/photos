@@ -1,11 +1,14 @@
 package mediametadata
 
 import (
+	"bytes"
 	"fmt"
+	"image"
+	_ "image/jpeg"
 	"strings"
 	"time"
 
-	exif "github.com/dsoprea/go-exif/v3"
+	"github.com/dsoprea/go-exif/v3"
 	exifcommon "github.com/dsoprea/go-exif/v3/common"
 )
 
@@ -25,6 +28,9 @@ type Metadata struct {
 	Latitude  Coordinate
 	Longitude Coordinate
 	Altitude  Altitude
+
+	Height int
+	Width  int
 }
 
 type Coordinate struct {
@@ -434,6 +440,14 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			metadata.Lens = "FUJINON single focal length lens"
 		}
 	}
+
+	m, _, err := image.Decode(bytes.NewReader(b))
+	if err != nil {
+		return metadata, fmt.Errorf("failed to decode image for size check: %s", err)
+	}
+	bounds := m.Bounds()
+	metadata.Width = bounds.Dx()
+	metadata.Height = bounds.Dy()
 
 	return metadata, nil
 }

@@ -64,6 +64,16 @@
     <a href="/admin/locations/new?lat=<%= media.Latitude %>&long=<%= media.Longitude %>">Create Location</a>
   </div>
 
+  <div class="mb1">
+    Width: <%= media.Width %>
+  </div>
+  <div class="mb1">
+    Height: <%= media.Height %>
+  </div>
+  <div class="mb1">
+    <%= (media.Width * media.Height) / 1000000 %>MP
+  </div>
+
   <div class="mb3">
     <%= f.FileTag("File") %>
   </div>

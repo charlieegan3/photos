@@ -1,7 +1,6 @@
 package mediametadata
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -68,6 +67,8 @@ func TestExtract(t *testing.T) {
 					},
 					Ref: "W",
 				},
+				Width:  4032,
+				Height: 3024,
 			},
 		},
 		"iphone jpg non utc": {
@@ -123,6 +124,8 @@ func TestExtract(t *testing.T) {
 					},
 					Ref: "W",
 				},
+				Width:  3024,
+				Height: 4032,
 			},
 		},
 		"fuji jpg": {
@@ -141,6 +144,8 @@ func TestExtract(t *testing.T) {
 					Denominator: 1500,
 				},
 				ISOSpeed: 400,
+				Width:    6000,
+				Height:   4000,
 			},
 		},
 		"xt20 with lens": {
@@ -159,21 +164,19 @@ func TestExtract(t *testing.T) {
 					Denominator: 70,
 				},
 				ISOSpeed: 1600,
+				Width:    1717,
+				Height:   1717,
 			},
 		},
 	}
 
 	for description, testCase := range testCases {
 		t.Run(description, func(t *testing.T) {
-			fmt.Println(description)
 			b, err := os.ReadFile(testCase.sourceFile)
 			require.NoError(t, err)
 
 			metadata, err := ExtractMetadata(b)
 			require.NoError(t, err)
-
-			fmt.Println(metadata.DateTime)
-			fmt.Println(testCase.expectedMetadata.DateTime)
 
 			td.Cmp(t, metadata, testCase.expectedMetadata)
 		})

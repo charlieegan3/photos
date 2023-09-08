@@ -7,7 +7,7 @@ dev_server:
 	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config config.dev.yaml'
 
 new_migration:
-	 migrate create -dir migrations -ext sql $(MIGRATION_NAME)
+	 migrate create -dir internal/pkg/database/migrations -ext sql $(MIGRATION_NAME)
 
 import:
 	go run main.go import --config config.dev.yaml

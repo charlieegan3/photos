@@ -54,6 +54,6 @@ func main() {
 
 	port := 3000
 	address := "localhost"
-	fmt.Printf("Starting server on http://%s:%d\n", address, port)
+	log.Printf("Starting server on http://%s:%d\n", address, port)
 	tb.RunServer(ctx, address, fmt.Sprintf("%d", port))
 }

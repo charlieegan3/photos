@@ -496,13 +496,17 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 			0: td.SStruct(
 				models.Media{
 					// set from image exif data
-					Make:                    "Apple",
-					Lens:                    "iPhone 11 Pro Max back triple camera 6mm f/2",
-					Altitude:                97.99822998046875,
-					FNumber:                 2.0,
+					Make:       "Apple",
+					Lens:       "iPhone 11 Pro Max back triple camera 6mm f/2",
+					Altitude:   97.99822998046875,
+					FNumber:    2.0,
+					UTCCorrect: true,
+
+					Width:  4032,
+					Height: 3024,
+
 					ExposureTimeDenominator: 122,
 					ExposureTimeNumerator:   1,
-					UTCCorrect:              true,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

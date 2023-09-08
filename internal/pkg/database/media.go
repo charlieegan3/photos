@@ -43,6 +43,9 @@ type dbMedia struct {
 	LensID sql.NullInt64 `db:"lens_id"`
 
 	UTCCorrect bool `db:"utc_correct"`
+
+	Width  int `db:"width"`
+	Height int `db:"height"`
 }
 
 func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
@@ -63,6 +66,8 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"device_id":                 d.DeviceID,
 		"instagram_code":            d.InstagramCode,
 		"utc_correct":               d.UTCCorrect,
+		"width":                     d.Width,
+		"height":                    d.Height,
 	}
 
 	record["lens_id"] = nil
@@ -107,6 +112,9 @@ func newMedia(media dbMedia) models.Media {
 		InstagramCode: media.InstagramCode,
 
 		UTCCorrect: media.UTCCorrect,
+
+		Width:  media.Width,
+		Height: media.Height,
 	}
 
 	if media.LensID.Valid {
@@ -142,6 +150,9 @@ func newDBMedia(media models.Media) dbMedia {
 		InstagramCode: media.InstagramCode,
 
 		UTCCorrect: media.UTCCorrect,
+
+		Width:  media.Width,
+		Height: media.Height,
 	}
 
 	m.LensID = sql.NullInt64{
@@ -159,7 +170,7 @@ func newDBMedia(media models.Media) dbMedia {
 }
 
 func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, err error) {
-	records := []goqu.Record{}
+	var records []goqu.Record
 	for _, v := range medias {
 		d := newDBMedia(v)
 		records = append(records, d.ToRecord(false))

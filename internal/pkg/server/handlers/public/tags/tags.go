@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
@@ -98,8 +99,26 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
+		var mediaIDs []int
+		for _, p := range posts {
+			mediaIDs = append(mediaIDs, p.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediasByID := make(map[int]models.Media)
+		for _, m := range medias {
+			mediasByID[m.ID] = m
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("tagName", tagName)
+		ctx.Set("medias", mediasByID)
 		ctx.Set("posts", posts)
 
 		err = renderer(ctx, showTemplate, w)

@@ -1,24 +1,23 @@
 <div class="w-100">
   <div class="cf pa2-ns f7">
-    <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns bt bw1 b--light-gray"><%= tagName %></div>
+    <div class="mv3 pt2 pl3 pl0-ns f4 f3-ns">#<%= tagName %></div>
 
-    <%= for (post) in posts { %>
-    <article class="fl w-third pa2-l pa1-m">
-      <div class="aspect-ratio aspect-ratio--1x1">
+    <div class="pa3-ns image-grid">
+      <%= for (post) in posts { %>
+      <div>
         <a href="/posts/<%= post.ID %>">
           <picture>
             <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
             <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=250x 1x, /medias/<%= post.MediaID %>/image.jpg?o=500x 2x" media="(min-width: 30em)">
             <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=100x 1x, /medias/<%= post.MediaID %>/image.jpg?o=200x 2x">
-            <img
-                    loading="lazy"
-                    alt="<%= post.Description %>"
-                    src="/medias/<%= post.MediaID %>/image.jpg"
-                    class="db bg-center cover aspect-ratio--object br1-ns" />
+            <img loading="lazy"
+              alt="<%= post.Description %>"
+              src="/medias/<%= post.MediaID %>/image.jpg"
+              style="object-position: <%= display_offset(medias[post.MediaID]) %>"/>
           </picture>
         </a>
       </div>
-    </article>
-    <% } %>
+      <% } %>
+    </div>
   </div>
 </div>

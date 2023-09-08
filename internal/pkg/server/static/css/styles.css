@@ -16,3 +16,52 @@ body {
 .mh3 {
   max-height: 4rem;
 }
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.image-grid.one {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.image-grid div {
+  aspect-ratio: 1/ 1;
+  display: flex;
+  align-items: center;
+}
+
+.image-grid div a, .image-grid div a picture {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.image-grid div a picture img {
+  object-fit: cover;
+  height: auto;
+  width: 100%;
+}
+/* ns */
+@media screen and (min-width: 30em) {
+  .image-grid {
+
+  }
+  .image-grid div a picture img {
+    border-radius: 0.15rem;
+  }
+}
+/* m */
+@media screen and (min-width: 30em) and (max-width: 60em) {
+  .image-grid {
+    gap: 0.5rem;
+  }
+}
+/* l */
+@media screen and (min-width: 60em) {
+  .image-grid {
+    gap: 1rem;
+  }
+}

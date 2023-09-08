@@ -1,0 +1,2 @@
+ALTER TABLE medias
+    ADD COLUMN display_offset INTEGER NOT NULL DEFAULT 0;

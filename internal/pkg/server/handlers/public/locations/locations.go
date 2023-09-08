@@ -5,17 +5,21 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
-	"github.com/charlieegan3/photos/internal/pkg/server/templating"
-	"github.com/gobuffalo/plush"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 
-	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/gobuffalo/plush"
+
+	"github.com/charlieegan3/photos/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
+
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"gocloud.dev/blob"
+
+	"github.com/charlieegan3/photos/internal/pkg/database"
 )
 
 //go:embed templates/index.html.plush
@@ -85,9 +89,27 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
+		var mediaIDs []int
+		for _, post := range posts {
+			mediaIDs = append(mediaIDs, post.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediasByID := make(map[int]models.Media)
+		for _, media := range medias {
+			mediasByID[media.ID] = media
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("location", locations[0])
 		ctx.Set("posts", posts)
+		ctx.Set("medias", mediasByID)
 
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {

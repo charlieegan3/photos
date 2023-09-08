@@ -46,6 +46,8 @@ type dbMedia struct {
 
 	Width  int `db:"width"`
 	Height int `db:"height"`
+
+	DisplayOffset int `db:"display_offset"`
 }
 
 func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
@@ -68,6 +70,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 		"utc_correct":               d.UTCCorrect,
 		"width":                     d.Width,
 		"height":                    d.Height,
+		"display_offset":            d.DisplayOffset,
 	}
 
 	record["lens_id"] = nil
@@ -115,6 +118,8 @@ func newMedia(media dbMedia) models.Media {
 
 		Width:  media.Width,
 		Height: media.Height,
+
+		DisplayOffset: media.DisplayOffset,
 	}
 
 	if media.LensID.Valid {
@@ -153,6 +158,8 @@ func newDBMedia(media models.Media) dbMedia {
 
 		Width:  media.Width,
 		Height: media.Height,
+
+		DisplayOffset: media.DisplayOffset,
 	}
 
 	m.LensID = sql.NullInt64{

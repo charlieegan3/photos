@@ -5,6 +5,22 @@
 
 <%= if (media.Kind == "jpg") { %>
   <img class="w-100 mw6" src="/medias/<%= media.ID %>/file.jpg"/>
+
+  <div class="pa3-ns image-grid">
+    <div>
+      <a href="/medias/<%= media.ID %>/file.jpg">
+        <picture>
+          <source srcset="/medias/<%= media.ID %>/image.jpg?o=500x 1x, /medias/<%= media.ID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
+          <source srcset="/medias/<%= media.ID %>/image.jpg?o=250x 1x, /medias/<%= media.ID %>/image.jpg?o=500x 2x" media="(min-width: 30em)">
+          <source srcset="/medias/<%= media.ID %>/image.jpg?o=100x 1x, /medias/<%= media.ID %>/image.jpg?o=200x 2x">
+          <img loading="lazy"
+               alt="media desc"
+               src="/medias/<%= media.ID %>/image.jpg"
+               style="object-position: <%= display_offset(media) %>"/>
+        </picture>
+      </a>
+    </div>
+  </div>
 <% } else { %>
   Cannot display media of kind: <%= media.Kind %>
 <% } %>
@@ -72,6 +88,9 @@
   </div>
   <div class="mb1">
     <%= (media.Width * media.Height) / 1000000 %>MP
+  </div>
+  <div class="mb3">
+    <%= f.InputTag("DisplayOffset") %>
   </div>
 
   <div class="mb3">

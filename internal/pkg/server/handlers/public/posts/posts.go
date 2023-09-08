@@ -91,6 +91,23 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			return
 		}
 
+		var mediaIDs []int
+		for _, post := range posts {
+			mediaIDs = append(mediaIDs, post.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediasByID := make(map[int]models.Media)
+		for _, media := range medias {
+			mediasByID[media.ID] = media
+		}
+
 		lastPage := postsCount/int64(pageSize) + 1
 		if int64(page) > lastPage {
 			http.Redirect(w, r, fmt.Sprintf("/?page=%d", lastPage), http.StatusSeeOther)
@@ -99,6 +116,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 		ctx := plush.NewContext()
 		ctx.Set("posts", posts)
+		ctx.Set("medias", mediasByID)
 		ctx.Set("page", int(page))
 		ctx.Set("lastPage", int(lastPage))
 
@@ -394,9 +412,9 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			w.Write([]byte(err.Error()))
 			return
 		}
-		locationMap := make(map[int]models.Location)
+		locationsByID := make(map[int]models.Location)
 		for _, l := range locations {
-			locationMap[l.ID] = l
+			locationsByID[l.ID] = l
 		}
 
 		// TODO fetch these with posts
@@ -412,9 +430,9 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		mediaMap := make(map[int]models.Media)
+		mediasByID := make(map[int]models.Media)
 		for _, m := range medias {
-			mediaMap[m.ID] = m
+			mediasByID[m.ID] = m
 		}
 
 		postGroupKeys := []string{}
@@ -431,7 +449,8 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		ctx := plush.NewContext()
 		ctx.Set("postGroupKeys", postGroupKeys)
 		ctx.Set("postGroups", postGroups)
-		ctx.Set("locations", locationMap)
+		ctx.Set("locations", locationsByID)
+		ctx.Set("medias", mediasByID)
 		ctx.Set("title", title)
 		ctx.Set("showDates", showDates)
 
@@ -680,6 +699,23 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 			return
 		}
 
+		var mediaIDs []int
+		for _, post := range posts {
+			mediaIDs = append(mediaIDs, post.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediasByID := make(map[int]models.Media)
+		for _, media := range medias {
+			mediasByID[media.ID] = media
+		}
+
 		var locationIDs []int
 		for _, p := range posts {
 			locationIDs = append(locationIDs, p.LocationID)
@@ -692,14 +728,15 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 			return
 		}
 
-		locationMap := make(map[int]models.Location)
+		locationsByID := make(map[int]models.Location)
 		for _, l := range locations {
-			locationMap[l.ID] = l
+			locationsByID[l.ID] = l
 		}
 
 		ctx := plush.NewContext()
 		ctx.Set("posts", posts)
-		ctx.Set("locations", locationMap)
+		ctx.Set("locations", locationsByID)
+		ctx.Set("medias", mediasByID)
 		ctx.Set("month", month.Month())
 		ctx.Set("day", day)
 

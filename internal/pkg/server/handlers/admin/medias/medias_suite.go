@@ -222,6 +222,8 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			DisplayOffset: 10,
 		},
 	}
 
@@ -230,7 +232,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
-	// store the an icon in the bucket
+	// store an icon in the bucket
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageFile, err := os.Open(imageFilePath)
 	require.NoError(s.T(), err)
@@ -247,11 +249,12 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 
 	// build the form to be posted
 	values := map[string]io.Reader{
-		"Make":     strings.NewReader("Fuji"),
-		"File":     imageFile,
-		"DeviceID": strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
-		"LensID":   strings.NewReader("0"), // remove the previously set lens
-		"_method":  strings.NewReader("PUT"),
+		"Make":          strings.NewReader("Fuji"),
+		"File":          imageFile,
+		"DeviceID":      strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
+		"DisplayOffset": strings.NewReader("50"),
+		"LensID":        strings.NewReader("0"), // remove the previously set lens
+		"_method":       strings.NewReader("PUT"),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -301,9 +304,10 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Media{
-					ID:     persistedMedias[0].ID,
-					Make:   "Fuji",
-					LensID: 0,
+					ID:            persistedMedias[0].ID,
+					Make:          "Fuji",
+					LensID:        0,
+					DisplayOffset: 50,
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

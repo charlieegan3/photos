@@ -1,10 +1,10 @@
 GO_TEST_ARGS := ""
-FILE_PATTERN := 'html\|plush\|go\|sql\|Makefile'
+FILE_PATTERN := 'html\|css\|plush\|go\|sql\|Makefile'
 TAG := $(shell git rev-parse --short HEAD)
 IMAGE := "eu.gcr.io/charlieegan3-photos/photos:$(TAG)"
 
 dev_server:
-	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config config.dev.yaml'
+	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config config.prod.yaml'
 
 new_migration:
 	 migrate create -dir internal/pkg/database/migrations -ext sql $(MIGRATION_NAME)

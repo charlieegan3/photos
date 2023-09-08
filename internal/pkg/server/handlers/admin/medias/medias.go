@@ -264,6 +264,16 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			}
 		}
 
+		var displayOffset int
+		if val := r.PostForm.Get("DisplayOffset"); val != "" {
+			displayOffset, err = strconv.Atoi(val)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(fmt.Sprintf("int value %v was invalid", val)))
+				return
+			}
+		}
+
 		var exposureTimeNumerator uint64
 		if val := r.PostForm.Get("ExposureTimeNumerator"); val != "" {
 			exposureTimeNumerator, err = strconv.ParseUint(val, 10, 32)
@@ -309,6 +319,9 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			Latitude:                floatMap["Latitude"],
 			Longitude:               floatMap["Longitude"],
 			Altitude:                floatMap["Altitude"],
+			DisplayOffset:           displayOffset,
+			Width:                   existingMedias[0].Width,
+			Height:                  existingMedias[0].Height,
 		}
 
 		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)

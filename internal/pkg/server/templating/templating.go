@@ -10,6 +10,8 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gomarkdown/markdown"
 	"github.com/pkg/errors"
+
+	"github.com/charlieegan3/photos/internal/pkg/models"
 )
 
 //go:embed base.html
@@ -42,6 +44,19 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 				return s[:length] + "..."
 			}
 			return s[:length]
+		})
+
+		ctx.Set("display_offset", func(media models.Media) string {
+			x := 50
+			y := 50
+			if media.Width > media.Height {
+				x = media.DisplayOffset
+				y = 0
+			} else if media.Width < media.Height {
+				y = media.DisplayOffset
+				x = 0
+			}
+			return fmt.Sprintf("%d%% %d%%", x, y)
 		})
 
 		body, err := plush.Render(t, ctx)

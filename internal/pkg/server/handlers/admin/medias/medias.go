@@ -19,6 +19,7 @@ import (
 	_ "gocloud.dev/blob/memblob"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/imageproxy"
 	"github.com/charlieegan3/photos/internal/pkg/mediametadata"
 	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
@@ -35,6 +36,10 @@ var showTemplate string
 
 // gorilla decoder can be safely shared and caches data on structs used
 var decoder = schema.NewDecoder()
+
+// requiredThumbs is a list of the required thumbnail sizes
+// Note: this must be ordered
+var requiredThumbs = []int{2000, 1000, 500, 200}
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -150,6 +155,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 }
 
 func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	ir := imageproxy.Resizer{}
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -186,7 +192,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		// handle delete
+		// handle delete, of database item and blob
 		if contentType[0] == "application/x-www-form-urlencoded" {
 			err := r.ParseForm()
 			if err != nil {
@@ -214,6 +220,29 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
+			}
+
+			listOptions := &blob.ListOptions{
+				Prefix: fmt.Sprintf("thumbs/%d-", existingMedias[0].ID),
+			}
+			iter := bucket.List(listOptions)
+			for {
+				obj, err := iter.Next(r.Context())
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
+
+				err = bucket.Delete(r.Context(), obj.Key)
+				if err != nil {
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
 			}
 
 			http.Redirect(w, r, "/admin/medias", http.StatusSeeOther)
@@ -368,7 +397,9 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				return
 			}
 
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("media/%d.%s", updatedMedias[0].ID, updatedMedias[0].Kind), nil)
+			key := fmt.Sprintf("media/%d.%s", updatedMedias[0].ID, updatedMedias[0].Kind)
+
+			bw, err := bucket.NewWriter(r.Context(), key, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed initialize media storage"))
@@ -387,6 +418,50 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed to close connection to media storage"))
 				return
+			}
+
+			br, err := bucket.NewReader(r.Context(), key, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to read from media storage"))
+				return
+			}
+			defer br.Close()
+
+			imageBytes, err := io.ReadAll(br)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to read from media storage"))
+				return
+			}
+
+			for _, thumbSize := range requiredThumbs {
+				var err error
+				imageResizeString := fmt.Sprintf("%dx", thumbSize)
+				if media.Width != 0 && media.Height != 0 {
+					imageResizeString = fmt.Sprintf("%d,fit", thumbSize)
+				}
+				thumbMediaPath := fmt.Sprintf(
+					"thumbs/media/%d-%s.%s",
+					updatedMedias[0].ID,
+					strings.Replace(imageResizeString, ",", "-", 1),
+					updatedMedias[0].Kind,
+				)
+
+				// use the downsampled bytes from for the next thumb to save time
+				imageBytes, err = ir.CreateThumbInBucket(
+					r.Context(),
+					bytes.NewReader(imageBytes),
+					bucket,
+					imageResizeString,
+					thumbMediaPath,
+				)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/text")
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(err.Error()))
+					return
+				}
 			}
 		}
 
@@ -452,6 +527,8 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 }
 
 func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	ir := imageproxy.Resizer{}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -599,6 +676,50 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to close connection to media storage"))
 			return
+		}
+
+		br, err := bucket.NewReader(r.Context(), key, nil)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to read from media storage"))
+			return
+		}
+		defer br.Close()
+
+		imageBytes, err := io.ReadAll(br)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to read from media storage"))
+			return
+		}
+
+		for _, thumbSize := range requiredThumbs {
+			var err error
+			imageResizeString := fmt.Sprintf("%dx", thumbSize)
+			if media.Width != 0 && media.Height != 0 {
+				imageResizeString = fmt.Sprintf("%d,fit", thumbSize)
+			}
+			thumbMediaPath := fmt.Sprintf(
+				"thumbs/media/%d-%s.%s",
+				persistedMedias[0].ID,
+				strings.Replace(imageResizeString, ",", "-", 1),
+				persistedMedias[0].Kind,
+			)
+
+			// use the downsampled bytes from for the next thumb to save time
+			imageBytes, err = ir.CreateThumbInBucket(
+				r.Context(),
+				bytes.NewReader(imageBytes),
+				bucket,
+				imageResizeString,
+				thumbMediaPath,
+			)
+			if err != nil {
+				w.Header().Set("Content-Type", "application/text")
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
 		}
 
 		http.Redirect(w, r, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), http.StatusSeeOther)

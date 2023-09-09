@@ -631,7 +631,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		for _, p := range posts {
 			md := fmt.Sprintf("%s\n\n%s\n\n%s",
 				p.Description,
-				fmt.Sprintf("![post image](https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000x)", p.MediaID),
+				fmt.Sprintf("![post image](https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000,fit)", p.MediaID),
 				fmt.Sprintf("Taken on %s", deviceMap[mediaMap[p.MediaID].DeviceID].Name),
 			)
 

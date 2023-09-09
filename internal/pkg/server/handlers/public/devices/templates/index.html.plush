@@ -8,7 +8,7 @@
           <a href="/devices/<%= device.ID %>">
             <picture>
               <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=500x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=1000x 2x" media="(min-width: 60em)">
-              <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=250x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=500x 2x" media="(min-width: 30em)">
+              <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=200x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=500x 2x" media="(min-width: 30em)">
               <source srcset="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=100x 1x, /devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=200x 2x">
               <img
                       loading="lazy"

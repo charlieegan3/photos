@@ -15,8 +15,8 @@
               <div>
                 <a href="/posts/<%= post.ID %>">
                   <picture>
-                    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500x 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000x 2x" media="(min-width: 60em)">
-                    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=250x 1x, /medias/<%= post.MediaID %>/image.jpg?o=500x 2x">
+                    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000,fit 2x" media="(min-width: 60em)">
+                    <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=200,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=500,fit 2x">
                     <img loading="lazy"
                          alt="<%= post.Description %>"
                          src="/medias/<%= post.MediaID %>/image.jpg"

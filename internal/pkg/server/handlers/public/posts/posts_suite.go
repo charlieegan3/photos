@@ -488,7 +488,7 @@ func (s *PostsSuite) TestRSS() {
     <item>
         <title>November 25, 2021 - London</title>
         <link>https://photos.charlieegan3.com/posts/%d</link>
-        <description>&lt;p&gt;Here is photo I took&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000x&#34; alt=&#34;post image&#34; /&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Taken on Example Device&lt;/p&gt;&#xA;</description>
+        <description>&lt;p&gt;Here is photo I took&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000,fit&#34; alt=&#34;post image&#34; /&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Taken on Example Device&lt;/p&gt;&#xA;</description>
         <guid>https://photos.charlieegan3.com/posts/%d</guid>
         <pubDate>Thu, 25 Nov 2021 19:56:00 +0000</pubDate>
     </item>

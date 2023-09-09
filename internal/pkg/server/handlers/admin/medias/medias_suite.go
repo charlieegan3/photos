@@ -355,7 +355,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
-	// store the an icon in the bucket, check it's deleted
+	// store the image in the bucket, check it's deleted
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageFile, err := os.Open(imageFilePath)
 	require.NoError(s.T(), err)
@@ -364,6 +364,17 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	_, err = io.Copy(bw, imageFile)
 	err = bw.Close()
 	require.NoError(s.T(), err)
+	imageFile.Close()
+
+	// write a thumbnail to test these are also deleted, in this case there's only one thumb
+	imageFile, err = os.Open(imageFilePath)
+	require.NoError(s.T(), err)
+	bw, err = s.Bucket.NewWriter(context.Background(), fmt.Sprintf("thumbs/%d-foobar.jpg", persistedMedias[0].ID), nil)
+	require.NoError(s.T(), err)
+	_, err = io.Copy(bw, imageFile)
+	err = bw.Close()
+	require.NoError(s.T(), err)
+	imageFile.Close()
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -401,6 +412,26 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	// should have a not found error as the icon should have been deleted
 	_, err = s.Bucket.Attributes(context.Background(), "media/iphone.jpg")
 	require.Error(s.T(), err)
+
+	var thumbs []string
+	listOptions := &blob.ListOptions{
+		Prefix: fmt.Sprintf("thumbs/media/%d-", persistedMedias[0].ID),
+	}
+	iter := s.Bucket.List(listOptions)
+	for {
+		obj, err := iter.Next(context.Background())
+		if err == io.EOF {
+			break
+		}
+		require.NoError(s.T(), err)
+
+		thumbs = append(thumbs, obj.Key)
+	}
+
+	if len(thumbs) > 0 {
+		s.T().Fatalf("thumbs not deleted correctly")
+	}
+
 }
 
 func (s *EndpointsMediasSuite) TestNewMedia() {
@@ -540,4 +571,28 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
 	require.Equal(s.T(), bucketMD5, sourceMD5)
+
+	// check that the thumbs have been created too
+	var thumbs []string
+	listOptions := &blob.ListOptions{
+		Prefix: fmt.Sprintf("thumbs/media/%d-", returnedMedias[0].ID),
+	}
+	iter := s.Bucket.List(listOptions)
+	for {
+		obj, err := iter.Next(context.Background())
+		if err == io.EOF {
+			break
+		}
+		require.NoError(s.T(), err)
+
+		thumbs = append(thumbs, obj.Key)
+	}
+
+	require.ElementsMatchf(s.T(), thumbs, []string{
+		fmt.Sprintf("thumbs/media/%d-200-fit.jpg", returnedMedias[0].ID),
+		fmt.Sprintf("thumbs/media/%d-500-fit.jpg", returnedMedias[0].ID),
+		fmt.Sprintf("thumbs/media/%d-1000-fit.jpg", returnedMedias[0].ID),
+		fmt.Sprintf("thumbs/media/%d-2000-fit.jpg", returnedMedias[0].ID),
+	}, "thumbs not created correctly")
+
 }

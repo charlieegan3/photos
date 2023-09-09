@@ -1,23 +1,22 @@
 package public
 
 import (
-	"bytes"
-	"context"
 	"database/sql"
 	"fmt"
-	"github.com/gorilla/mux"
-	"gocloud.dev/blob"
 	"io"
 	"net/http"
 	"strconv"
-	"sync"
-	"willnorris.com/go/imageproxy"
+	"strings"
+
+	"github.com/gorilla/mux"
+	"gocloud.dev/blob"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/imageproxy"
 )
 
 func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter, *http.Request) {
-	ir := imageResizer{}
+	ir := imageproxy.Resizer{}
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
@@ -61,16 +60,24 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		w.Header().Set("Cache-Control", "public, max-age=604800")
 		w.Header().Set("Content-Type", "image/jpeg")
 
-		// TODO validate this matches a basic regex
-		imageResizeString := r.URL.Query().Get("o")
 		originalMediaPath := fmt.Sprintf("media/%d.%s", medias[0].ID, medias[0].Kind)
-		thumbMediaPath := fmt.Sprintf("thumbs/media/%d-%s.jpg", medias[0].ID, imageResizeString)
 
+		imageResizeString := r.URL.Query().Get("o")
 		// if there are no options, serve the image from the media upload path
 		if imageResizeString == "" {
 			serveImageFromBucket(w, r, bucket, originalMediaPath)
 			return
 		}
+
+		// if the image is an old, '0x0' image with no size information. Replace
+		// requests for 'fit' with 'x' to use the old existing thumbs
+		if medias[0].Width == 0 || medias[0].Height == 0 {
+			imageResizeString = strings.Replace(imageResizeString, ",fit", "x", 1)
+		} else {
+			imageResizeString = strings.Replace(imageResizeString, ",", "-", 1)
+		}
+
+		thumbMediaPath := fmt.Sprintf("thumbs/media/%d-%s.jpg", medias[0].ID, imageResizeString)
 
 		exists, err := bucket.Exists(r.Context(), thumbMediaPath)
 		if err != nil {
@@ -80,7 +87,13 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			return
 		}
 		if !exists {
-			err := ir.ResizeInBucket(r.Context(), bucket, originalMediaPath, imageResizeString, thumbMediaPath)
+			err := ir.ResizeInBucket(
+				r.Context(),
+				bucket,
+				originalMediaPath,
+				strings.Replace(imageResizeString, "-", ",", 1),
+				thumbMediaPath,
+			)
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
@@ -91,69 +104,6 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 
 		serveImageFromBucket(w, r, bucket, thumbMediaPath)
 	}
-}
-
-type imageResizer struct {
-	mu sync.Mutex
-}
-
-// ResizeInBucket resizes an image in a bucket and saves it to a new path. One at a time to reduce load on the server.
-// When a batch of images are uploaded, there are many that need to be resized. This function is a throttler to ensure
-// that only one image is resized at a time and the RAM usage is contained. Original images are quite large and quickly
-// consume all available RAM leading to OOMKills.
-func (ir *imageResizer) ResizeInBucket(
-	ctx context.Context,
-	bucket *blob.Bucket,
-	originalMediaPath string,
-	imageResizeString string,
-	thumbMediaPath string,
-) error {
-	ir.mu.Lock()
-	defer ir.mu.Unlock()
-
-	// create a reader to get the full size media from the bucket
-	br, err := bucket.NewReader(ctx, originalMediaPath, nil)
-	if err != nil {
-		return fmt.Errorf("failed to create reader for original media: %w", err)
-	}
-	defer br.Close()
-
-	// read the full size item
-	buf := bytes.NewBuffer([]byte{})
-	_, err = io.Copy(buf, br)
-	if err != nil {
-		fmt.Errorf("failed to copy original media into buffer: %w", err)
-	}
-
-	err = br.Close()
-	if err != nil {
-		return fmt.Errorf("failed to close bucket reader: %w", err)
-	}
-
-	// resize the image based on the current settings
-	imageOptions := imageproxy.ParseOptions(imageResizeString)
-	imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
-
-	imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
-	buf = bytes.NewBuffer(imageBytes)
-
-	// create a writer for the new thumb
-	bw, err := bucket.NewWriter(ctx, thumbMediaPath, nil)
-	if err != nil {
-		return fmt.Errorf("failed to create writer for thumb media: %w", err)
-	}
-	defer bw.Close()
-
-	_, err = io.Copy(bw, bytes.NewReader(imageBytes))
-	if err != nil {
-		return fmt.Errorf("failed to copy thumb media into bucket: %w", err)
-	}
-	err = bw.Close()
-	if err != nil {
-		return fmt.Errorf("failed to close bucket writer: %w", err)
-	}
-
-	return nil
 }
 
 func serveImageFromBucket(w http.ResponseWriter, r *http.Request, bucket *blob.Bucket, path string) {

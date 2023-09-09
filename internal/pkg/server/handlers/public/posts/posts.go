@@ -42,6 +42,9 @@ var periodMissingTemplate string
 //go:embed templates/show.html.plush
 var showTemplate string
 
+//go:embed templates/show-wide.html.plush
+var showWideTemplate string
+
 //go:embed templates/on-this-day.html.plush
 var onThisDayTemplate string
 
@@ -287,7 +290,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("location", locations[0])
 		ctx.Set("tags", tags)
 
-		err = renderer(ctx, showTemplate, w)
+		if medias[0].Width > medias[0].Height {
+			err = renderer(ctx, showWideTemplate, w)
+		} else {
+			err = renderer(ctx, showTemplate, w)
+		}
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

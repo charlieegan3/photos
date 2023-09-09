@@ -1,0 +1,95 @@
+<div class="mw6 mw9-l center ph3-ns">
+  <div class="ph2-ns">
+    <div class="w-100">
+      <picture>
+        <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=1000,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000,fit 2x" media="(min-width: 60em)">
+        <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000,fit 2x" media="(min-width: 30em)">
+        <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000,fit 2x">
+        <img class="mb1 db center w-100 br0 br1-l" src="/medias/<%= post.MediaID %>/image.jpg?o=1000,fit" alt="<%= post.Description %>">
+      </picture>
+    </div>
+    <div class="flex flex-wrap-reverse flex-wrap-l w-100 mt2 mt3-l pl3-l ph3 pt2 pt0-l">
+      <div class="w-100 w-third-l">
+        <div class="mb2 mw5 center ml0-l">
+          <img alt="<%= device.Name %>" loading="lazy" class="h2 dib v-mid" src="/devices/<%= device.ID %>/icon.<%= device.IconKind %>?o=100x"/>
+          <span class="v-mid dib f7 silver"><%= device.Name %></span>
+        </div>
+
+        <%=if (len(lenses) > 0) { %>
+        <% let lens = lenses[0] %>
+        <div class="mb2 mw5 center ml0-l">
+          <img alt="<%= lens.Name %>" loading="lazy" class="h2 dib v-mid" src="/lenses/<%= lens.ID %>.png?o=100x"/>
+          <span class="v-mid dib f7 silver"><%= lens.Name %></span>
+        </div>
+        <% } %>
+
+        <%= if (media.ISOSpeed != 0) { %>
+        <div class="mb2 f7 silver mw5 center">
+          <div class="flex justify-between">
+            <div class="tc w-third">
+              <span>&#119943;/<%= media.FNumber %></span>
+            </div>
+            <div class="tc bl bw1 tc b--light-gray w-third">
+              <span><%= media.ExposureTimeNumerator %>/<%= media.ExposureTimeDenominator %></span>
+            </div>
+            <div class="tc bl bw1 tr b--light-gray w-third">
+              <span>ISO <%= media.ISOSpeed %></span>
+            </div>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="">
+          <a href="/locations/<%= location.ID %>">
+            <img loading="lazy" class="mw5 mw6-l w-100 br1 db center ml0-l" src="/locations/<%= location.ID %>/map.jpg"/>
+          </a>
+        </div>
+      </div>
+      <div class="w-100 w-two-thirds-l pl3-l">
+        <div class="mt0 mb2 md"><%= raw(markdown(post.Description)) %></div>
+        <p class="mt0 mb2 f6 silver"><em>Posted <%= post.PublishDate.Format("January 2, 2006") %> from <%= raw(location.Name) %></em></p>
+        <p class="mb2 f7 moon-gray tc tl-l">
+          <%= for (tag) in tags { %>
+          <%= if (!tag.Hidden) { %>
+          #<%= tag.Name %>
+          <% } %>
+          <% } %>
+        </p>
+        <div class="">
+          <div class="f6">
+            <p></p>
+            <ul class="pl3">
+              <li>
+                <a class="db" href="/posts/period/<%= post.PublishDate.Format("2006-01-02") %>">
+                  View all from <%= post.PublishDate.Format("January 2, 2006") %>
+                </a>
+              </li>
+              <li>
+                <a class="db" href="/posts/on-this-day/<%= post.PublishDate.Format("January-02") %>">
+                  'On This Day' <%= post.PublishDate.Format("January 2") %>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex w-100 justify-between f6 mv3 ph3">
+    <div class="tl w-50">
+      <%= if (nextPost != 0) { %>
+        <a href="/posts/<%= nextPost %>">Next</a>
+      <% } else { %>
+        <span class="moon-gray">Next</span>
+      <% } %>
+    </div>
+    <div class="tr w-50 bl bw1 b--light-gray">
+      <%= if (previousPost != 0) { %>
+        <a href="/posts/<%= previousPost %>">Previous</a>
+      <% } else { %>
+        <span class="moon-gray">Previous</span>
+      <% } %>
+    </div>
+  </div>
+</div>

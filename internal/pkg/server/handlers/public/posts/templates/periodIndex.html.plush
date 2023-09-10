@@ -1,6 +1,6 @@
 <div class="w-100">
   <div class="pa2">
-    <div class="mv3 f4 f3-ns">View Posts from a Date Range</div>
+    <div class="mv3 f4 f3-ns">View Posts from a Trip or Date Range</div>
 
     <p class="mt0 mb3">
       Select a date and an optional end date to view posts within a given date range. Not selecting an
@@ -21,23 +21,17 @@
       </div>
     </form>
 
-    <p class="mt4 mb3">Or look at some of my trips:</p>
-    <ul>
-      <li><a href="/posts/period/2022-07-28-to-2022-07-30">Nida July 2022</a></li>
-      <li><a href="/posts/period/2022-07-08-to-2022-07-11">Briançon July 2022</a></li>
-      <li><a href="/posts/period/2022-06-17-to-2022-06-19">Black Isle June 2022</a></li>
-      <li><a href="/posts/period/2022-05-14-to-2022-05-20">Valencia May 2022</a></li>
-      <li><a href="/posts/period/2022-04-21-to-2022-04-26">Black Isle April 2022</a></li>
-      <li><a href="/posts/period/2022-03-19-to-2022-03-20">Paris March 2022</a></li>
-      <li><a href="/posts/period/2022-02-12-to-2022-02-17">Black Isle Feb 2022</a></li>
-      <li><a href="/posts/period/2021-11-14-to-2021-11-18">Lake District Nov 2021</a></li>
-      <li><a href="/posts/period/2021-08-25-to-2021-08-28">St Ives Aug 2021</a></li>
-      <li><a href="/posts/period/2020-03-14-to-2020-03-15">Liverpool 2020</a></li>
-      <li><a href="/posts/period/2019-12-31-to-2020-01-02">Mey 2020</a></li>
-      <li><a href="/posts/period/2019-11-07-to-2019-11-10">München 2019</a></li>
-      <li><a href="/posts/period/2019-09-28-to-2019-09-29">Warszawa 2019</a></li>
-      <li><a href="/posts/period/2019-09-12-to-2019-09-22">Japan 2019</a></li>
-      <li>...</li>
-    </ul>
+    </div>
+    <h2>Trips</h2>
+    <div>
+      <%= for (trip) in trips { %>
+        <a class="mt2 db no-underline" href="/trips/<%= trip.ID %>">
+          <div class="f5 underline"><%= trip.Title %></div>
+          <div class="pt1 f6 f6-ns silver">
+            <%= trip.StartDate.Format("January 2006") %>,
+            <%= days_diff(trip.EndDate, trip.StartDate) %>
+          </div>
+        </a>
+      <% } %>
   </div>
 </div>

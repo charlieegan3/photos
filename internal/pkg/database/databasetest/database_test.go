@@ -22,11 +22,13 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/tags"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/trips"
 	publicdevices "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/devices"
 	publiclocations "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/locations"
 	publicmedias "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/posts"
 	publictags "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/tags"
+	publictrips "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/trips"
 )
 
 func TestDatabaseSuite(t *testing.T) {
@@ -162,6 +164,10 @@ func (s *DatabaseSuite) TestTaggingsSuite() {
 	suite.Run(s.T(), &database.TaggingsSuite{DB: s.DB})
 }
 
+func (s *DatabaseSuite) TestTripsSuite() {
+	suite.Run(s.T(), &database.TripsSuite{DB: s.DB})
+}
+
 func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 	// TODO move to suite to be shared
 	bucketBaseURL := "mem://test_bucket/"
@@ -173,6 +179,12 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 		DB:            s.DB,
 		Bucket:        bucket,
 		BucketBaseURL: bucketBaseURL,
+	})
+}
+
+func (s *DatabaseSuite) TestEndpointsTripsSuite() {
+	suite.Run(s.T(), &trips.EndpointsTripsSuite{
+		DB: s.DB,
 	})
 }
 
@@ -234,6 +246,12 @@ func (s *DatabaseSuite) TestPublicLocationsSuite() {
 	suite.Run(s.T(), &publiclocations.LocationsSuite{
 		DB:     s.DB,
 		Bucket: bucket,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicTripsSuite() {
+	suite.Run(s.T(), &publictrips.TripsSuite{
+		DB: s.DB,
 	})
 }
 

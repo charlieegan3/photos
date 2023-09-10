@@ -1,0 +1,31 @@
+<h1><%= trip.Title %></h1>
+<p>ID: <%= trip.ID %></p>
+<p><a href="/trips/<%= trip.ID %>">View Trip</a></p>
+
+<%= form_for(trip, {class: "mb3", action:"/admin/trips/"+trip.ID, method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Title") %>
+  </div>
+  <div class="mb1">
+    <label for="Description">Description</label>
+    <div><%= raw(markdown(trip.Description)) %></div>
+    <textarea class="w-100" name="Description" rows="4"><%= trip.Description %></textarea>
+  </div>
+  <div class="mb3">
+    <label for="StartDate">StartDate</label>
+    <input id="StartDate" type="date" name="StartDate" value="<%= trip.StartDate.Format("2006-01-02") %>">
+  </div>
+  <div class="mb3">
+    <label for="EndDate">EndDate</label>
+    <input id="EndDate" type="date" name="EndDate" value="<%= trip.EndDate.Format("2006-01-02") %>">
+  </div>
+
+<%= f.SubmitTag("Update Trip") %>
+<% } %>
+
+<details>
+  <summary>Delete</summary>
+  <%= form_for(trip, {action:"/admin/trips/"+trip.ID, method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete trip") %>
+  <% } %>
+</details>

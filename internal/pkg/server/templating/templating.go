@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"math"
 	"strings"
+	"time"
 
 	"github.com/gobuffalo/plush"
 	"github.com/gomarkdown/markdown"
@@ -57,6 +59,13 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 				x = 0
 			}
 			return fmt.Sprintf("%d%% %d%%", x, y)
+		})
+
+		ctx.Set("days_diff", func(t1, t2 time.Time) string {
+			t1 = t1.Truncate(time.Hour * 24)
+			t2 = t2.Truncate(time.Hour * 24)
+
+			return fmt.Sprintf("%v days", math.Abs(math.Ceil(t2.Sub(t1).Hours()/24)))
 		})
 
 		body, err := plush.Render(t, ctx)

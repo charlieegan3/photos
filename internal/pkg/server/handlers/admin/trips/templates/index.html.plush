@@ -1,0 +1,21 @@
+<h1>Trips</h1>
+<p><a href="/admin/trips/new">New Trip</a></p>
+<p><%= len(trips) %> trips</p>
+<table>
+<thead>
+  <tr>
+    <th>Title</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+  </tr>
+</thead>
+<tbody>
+<%= for (trip) in trips { %>
+  <tr>
+    <td><a href="/admin/trips/<%= trip.ID %>"><%= truncate(trip.Title, 20, false) %></a></td>
+    <td><%= trip.StartDate.Format("2006-01-02") %></td>
+    <td><%= trip.EndDate.Format("2006-01-02") %></td>
+  </tr>
+<% } %>
+</tbody>
+</table>

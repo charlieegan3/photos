@@ -16,7 +16,7 @@ test:
 	go test ./... $(GO_TEST_ARGS)
 
 test_watch:
-	find . | grep $(FILE_PATTERN) | entr bash -c 'clear; make test'
+	find . | grep $(FILE_PATTERN) | entr bash -c 'clear; make GO_TEST_ARGS="$(GO_TEST_ARGS)" test'
 
 test_db:
 	docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres

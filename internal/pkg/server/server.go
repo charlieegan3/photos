@@ -19,7 +19,9 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/medias"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/tags"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/trips"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/public/menu"
+	publictrips "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/trips"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 
 	publicdevices "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/devices"
@@ -66,7 +68,7 @@ func Attach(
 	router.HandleFunc("/posts/latest.json", publicposts.BuildLatestHandler(db)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}-to-{to}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/period/{from}", publicposts.BuildPeriodHandler(db, renderer)).Methods("GET")
-	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(renderer)).Methods("GET")
+	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/posts/search", publicposts.BuildSearchHandler(db, renderer)).Methods("GET")
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods("GET")
 	router.HandleFunc(`/photos/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods("GET")
@@ -86,6 +88,8 @@ func Attach(
 	router.HandleFunc("/devices/{deviceID}", publicdevices.BuildShowHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/devices", publicdevices.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/lenses/{lensID}.png", publicLenses.BuildIconHandler(db, bucket)).Methods("GET")
+
+	router.HandleFunc("/trips/{tripID}", publictrips.BuildGetHandler(db, renderer)).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
@@ -130,6 +134,12 @@ func Attach(
 	adminRouter.HandleFunc("/posts/new", posts.BuildNewHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildGetHandler(db, rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/posts/{postID}", posts.BuildFormHandler(db, rendererAdmin)).Methods("POST")
+
+	adminRouter.HandleFunc("/trips", trips.BuildIndexHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/trips", trips.BuildCreateHandler(db, rendererAdmin)).Methods("POST")
+	adminRouter.HandleFunc("/trips/new", trips.BuildNewHandler(rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/trips/{tripID}", trips.BuildGetHandler(db, rendererAdmin)).Methods("GET")
+	adminRouter.HandleFunc("/trips/{tripID}", trips.BuildFormHandler(db, rendererAdmin)).Methods("POST")
 
 	// catch all handlers to serve static files
 	router.HandleFunc("/{.*}", buildStaticHandler()).Methods("GET")

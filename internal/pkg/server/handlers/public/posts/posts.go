@@ -470,13 +470,23 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 	}
 }
 
-func BuildPeriodIndexHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		fromString := r.URL.Query().Get("from")
 		if fromString == "" {
-			err := renderer(plush.NewContext(), periodIndexTemplate, w)
+			trips, err := database.AllTrips(db)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			ctx := plush.NewContext()
+			ctx.Set("trips", trips)
+
+			err = renderer(ctx, periodIndexTemplate, w)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))

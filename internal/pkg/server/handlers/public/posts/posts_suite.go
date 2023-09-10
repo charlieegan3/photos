@@ -298,7 +298,7 @@ func (s *PostsSuite) TestLegacyPeriodRedirect() {
 
 func (s *PostsSuite) TestPeriodIndexHandler() {
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
 
 	req, err := http.NewRequest("GET", "/posts/period?from=2021-10-01&to=2021-11-01", nil)
 	require.NoError(s.T(), err)

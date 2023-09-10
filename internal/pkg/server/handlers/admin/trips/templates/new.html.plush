@@ -1,0 +1,17 @@
+<h1>New Trip</h1>
+
+<%= form_for(trip, {action:"/admin/trips", method: "POST"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Title") %>
+  </div>
+  <div class="mb3">
+    <label for="StartDate">StartDate</label>
+    <input id="StartDate" type="date" name="StartDate" value="<%= trip.StartDate.Format("2006-01-02") %>">
+  </div>
+  <div class="mb3">
+    <label for="EndDate">StartDate</label>
+    <input id="EndDate" type="date" name="EndDate" value="<%= trip.StartDate.Format("2006-01-02") %>">
+  </div>
+
+  <%= f.SubmitTag("Create Trip") %>
+<% } %>

@@ -1,12 +1,12 @@
 <div class="w-100">
-  <div class="mv3 pt2 pl3 pl0-ns f3"><%= trip.Title %></div>
-  <div class="mv3 pl3 pl0-ns f5"><%= raw(markdown(trip.Description)) %></div>
-  <div class="mt3 mb2 mb0-ns pl3 pl0-ns f5 silver"><%= trip.StartDate.Format(timeFormat) %> - <%= trip.EndDate.Format("January 1, 2006") %></div>
-  <div class="pa2-ns">
+  <div class="mv3 pt2 pl3 pl0-l f3"><%= trip.Title %></div>
+  <div class="mv3 pl3 pl0-l f5"><%= raw(markdown(trip.Description)) %></div>
+  <div class="mt3 mb2 mb0-ns pl3 pl0-l f5 silver"><%= trip.StartDate.Format(timeFormat) %> - <%= trip.EndDate.Format("January 1, 2006") %></div>
+  <div class="ph3 pl0-l">
     <%= for (i, date) in postGroupKeys { %>
     <% let posts = postGroups[date] %>
     <%= if (showDates) { %>
-    <div class="mv3 pt2 pl3 pl0-ns f5 f4-ns <%= if (i != 0) { %>bt<% } %> bw1 b--light-gray"><%= date %></div>
+    <div class="mv3 pt2 f5 f4-ns <%= if (i != 0) { %>bt<% } %> bw1 b--light-gray"><%= date %></div>
     <% } %>
     <%= for (i, post) in posts { %>
     <% let location = locations[post.LocationID] %>

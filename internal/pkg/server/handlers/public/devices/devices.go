@@ -5,17 +5,18 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
-	"github.com/charlieegan3/photos/internal/pkg/server/templating"
-	"github.com/gobuffalo/plush"
 	"io"
 	"net/http"
 	"strconv"
 
+	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
 	"gocloud.dev/blob"
 	"willnorris.com/go/imageproxy"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
 //go:embed templates/index.html.plush
@@ -95,9 +96,27 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
+		mediaIDs := []int{}
+		for _, post := range posts {
+			mediaIDs = append(mediaIDs, post.MediaID)
+		}
+
+		medias, err := database.FindMediasByID(db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediasByID := make(map[int]models.Media)
+		for _, m := range medias {
+			mediasByID[m.ID] = m
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("device", devices[0])
 		ctx.Set("posts", posts)
+		ctx.Set("medias", mediasByID)
 
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {

@@ -642,6 +642,13 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			}
 		}
 
+		lensMatchLens, err := database.FindLensByLensMatches(db, exifData.Lens)
+		if err == nil {
+			if lensMatchLens != nil {
+				media.LensID = lensMatchLens.ID
+			}
+		}
+
 		persistedMedias, err := database.CreateMedias(db, []models.Media{media})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

@@ -9,6 +9,8 @@ type Lens struct {
 	ID   int64
 	Name string
 
+	LensMatches string
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

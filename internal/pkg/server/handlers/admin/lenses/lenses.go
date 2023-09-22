@@ -134,10 +134,14 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 			return
 		}
 
-		lens := models.Lens{Name: strings.TrimSpace(r.Form.Get("Name"))}
+		lens := models.Lens{
+			Name:        strings.TrimSpace(r.Form.Get("Name")),
+			LensMatches: strings.TrimSpace(r.Form.Get("LensMatches")),
+		}
 
 		f, header, err := r.FormFile("Icon")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("failed to read uploaded icon file"))
 			return
@@ -287,8 +291,9 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		}
 
 		lens := models.Lens{
-			ID:   existingLenses[0].ID,
-			Name: strings.TrimSpace(r.PostForm.Get("Name")),
+			ID:          existingLenses[0].ID,
+			Name:        strings.TrimSpace(r.PostForm.Get("Name")),
+			LensMatches: strings.TrimSpace(r.PostForm.Get("LensMatches")),
 		}
 
 		f, header, err := r.FormFile("Icon")

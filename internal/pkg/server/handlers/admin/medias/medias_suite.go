@@ -466,6 +466,22 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
 
+	lenses := []models.Lens{
+		{
+			Name:        "Dummy Lens",
+			LensMatches: "back camera",
+		},
+		{
+			Name:        "Dummy Lens 2",
+			LensMatches: "iPhone 11 Pro Max back triple camera 6mm f/2",
+		},
+	}
+
+	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	if err != nil {
+		s.T().Fatalf("failed to create lenses: %s", err)
+	}
+
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/medias", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
 
@@ -536,6 +552,9 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 					Altitude:   97.99822998046875,
 					FNumber:    2.0,
 					UTCCorrect: true,
+
+					DeviceID: returnedDevices[0].ID,
+					LensID:   returnedLenses[1].ID,
 
 					Width:  4032,
 					Height: 3024,

@@ -368,3 +368,28 @@ func (s *LensesSuite) TestDeleteLenses() {
 
 	td.Cmp(s.T(), allLenses, expectedResult)
 }
+
+func (s *LensesSuite) TestFindLensByLensMatches() {
+	lenses := []models.Lens{
+		{
+			Name:        "iPhone",
+			LensMatches: "foobar",
+		},
+		{
+			Name:        "X100F",
+			LensMatches: "iPhone 11 Pro Max back triple camera 6mm f/2",
+		},
+	}
+
+	returnedLenses, err := CreateLenses(s.DB, lenses)
+	if err != nil {
+		s.T().Fatalf("failed to create lenses needed for test: %s", err)
+	}
+
+	lens, err := FindLensByLensMatches(s.DB, "back triple camera")
+	if err != nil {
+		s.T().Fatalf("failed to find devices by model matches: %s", err)
+	}
+
+	td.Cmp(s.T(), *lens, returnedLenses[1])
+}

@@ -15,13 +15,16 @@ type dbLens struct {
 	ID   int64  `db:"id"`
 	Name string `db:"name"`
 
+	LensMatches string `db:"lens_matches"`
+
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (d *dbLens) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
-		"name": d.Name,
+		"name":         d.Name,
+		"lens_matches": d.LensMatches,
 	}
 
 	if includeID {
@@ -33,19 +36,21 @@ func (d *dbLens) ToRecord(includeID bool) goqu.Record {
 
 func newLens(lens dbLens) models.Lens {
 	return models.Lens{
-		ID:        lens.ID,
-		Name:      lens.Name,
-		CreatedAt: lens.CreatedAt,
-		UpdatedAt: lens.UpdatedAt,
+		ID:          lens.ID,
+		Name:        lens.Name,
+		LensMatches: lens.LensMatches,
+		CreatedAt:   lens.CreatedAt,
+		UpdatedAt:   lens.UpdatedAt,
 	}
 }
 
 func newDBLens(lens models.Lens) dbLens {
 	return dbLens{
-		ID:        lens.ID,
-		Name:      lens.Name,
-		CreatedAt: lens.CreatedAt,
-		UpdatedAt: lens.UpdatedAt,
+		ID:          lens.ID,
+		Name:        lens.Name,
+		LensMatches: lens.LensMatches,
+		CreatedAt:   lens.CreatedAt,
+		UpdatedAt:   lens.UpdatedAt,
 	}
 }
 
@@ -211,4 +216,25 @@ func UpdateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 	}
 
 	return results, nil
+}
+
+func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, err error) {
+	var dbLenses []dbLens
+
+	goquDB := goqu.New("postgres", db)
+	insert := goquDB.From("lenses").
+		Select("*").
+		Where(goqu.L(`"lens_matches" ILIKE ?`, lensMatch)).
+		Limit(1).
+		Executor()
+	if err := insert.ScanStructs(&dbLenses); err != nil {
+		return nil, errors.Wrap(err, "failed to select devices by slug")
+	}
+
+	for _, v := range dbLenses {
+		l := newLens(v)
+		return &l, nil
+	}
+
+	return nil, nil
 }

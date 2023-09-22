@@ -6,6 +6,14 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"os"
+	"strings"
+
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/assert"
@@ -14,13 +22,6 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
-	"io"
-	"mime/multipart"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"os"
-	"strings"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -108,7 +109,8 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 func (s *EndpointsLensesSuite) TestUpdateLens() {
 	testData := []models.Lens{
 		{
-			Name: "iPhone",
+			Name:        "iPhone",
+			LensMatches: "",
 		},
 	}
 
@@ -134,8 +136,9 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 
 	// build the form to be posted
 	values := map[string]io.Reader{
-		"Name":    strings.NewReader("iPad"),
-		"_method": strings.NewReader("PUT"),
+		"Name":        strings.NewReader("iPad"),
+		"LensMatches": strings.NewReader("wow"),
+		"_method":     strings.NewReader("PUT"),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -184,8 +187,9 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Lens{
-					ID:   persistedLenses[0].ID,
-					Name: "iPad",
+					ID:          persistedLenses[0].ID,
+					Name:        "iPad",
+					LensMatches: "wow",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),
@@ -288,8 +292,9 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 
 	// build the form to be posted
 	values := map[string]io.Reader{
-		"Icon": imageFile,
-		"Name": strings.NewReader("X100F"),
+		"Icon":        imageFile,
+		"Name":        strings.NewReader("X100F"),
+		"LensMatches": strings.NewReader("wow"),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -342,7 +347,8 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 		td.ArrayEntries{
 			0: td.SStruct(
 				models.Lens{
-					Name: "X100F",
+					Name:        "X100F",
+					LensMatches: "wow",
 				},
 				td.StructFields{
 					"=*": td.Ignore(),

@@ -3,12 +3,12 @@ package public
 import (
 	"database/sql"
 	_ "embed"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gobuffalo/plush"
-
 	"github.com/gorilla/mux"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
@@ -54,9 +54,32 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 
 		toTime := trip.EndDate.Add(24 * time.Hour).Add(-time.Second)
 
-		timeFormat := "January 2, 2006"
-		if trip.StartDate.Year() == toTime.Year() {
-			timeFormat = "January 2"
+		timeFormat := "January 2"
+
+		dateTitle := fmt.Sprintf(
+			"%s - %s",
+			trip.StartDate.Format(timeFormat),
+			trip.EndDate.Format(timeFormat+", 2006"),
+		)
+		if trip.StartDate.Year() != trip.EndDate.Year() {
+			dateTitle = fmt.Sprintf(
+				"%s - %s",
+				trip.StartDate.Format(timeFormat+", 2006"),
+				trip.EndDate.Format(timeFormat+", 2006"),
+			)
+		}
+
+		if trip.StartDate.Equal(trip.EndDate) {
+			dateTitle = trip.StartDate.Format(timeFormat)
+		}
+		if trip.StartDate.Month() == trip.EndDate.Month() {
+			dateTitle = trip.StartDate.Format("January 2006")
+			dateTitle = fmt.Sprintf(
+				"%s-%s, %s",
+				trip.StartDate.Format("January 2"),
+				trip.EndDate.Format("2"),
+				trip.EndDate.Format("2006"),
+			)
 		}
 
 		posts, err := database.PostsInDateRange(db, trip.StartDate, toTime)
@@ -120,6 +143,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			showDates = false
 		}
 
+		if len(postGroupKeys) == 1 {
+			dateTitle = postGroupKeys[0]
+			showDates = false
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("postGroupKeys", postGroupKeys)
 		ctx.Set("postGroups", postGroups)
@@ -127,6 +155,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("medias", mediasByID)
 		ctx.Set("trip", trip)
 		ctx.Set("timeFormat", timeFormat)
+		ctx.Set("dateTitle", dateTitle)
 		ctx.Set("showDates", showDates)
 
 		err = renderer(ctx, showTemplate, w)

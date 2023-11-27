@@ -1,7 +1,7 @@
 <div class="w-100">
   <div class="mv3 pt2 pl3 pl0-l f3"><%= trip.Title %></div>
   <div class="mv3 pl3 pl0-l f5"><%= raw(markdown(trip.Description)) %></div>
-  <div class="mt3 mb2 mb0-ns pl3 pl0-l f5 silver"><%= trip.StartDate.Format(timeFormat) %> - <%= trip.EndDate.Format("January 1, 2006") %></div>
+  <div class="mt3 mb2 mb0-ns pl3 pl0-l f5 silver"><%= trip.StartDate.Format(timeFormat) %> - <%= trip.EndDate.Format("January 2, 2006") %></div>
   <div class="ph3 pl0-l">
     <%= for (i, date) in postGroupKeys { %>
     <% let posts = postGroups[date] %>

@@ -1,12 +1,17 @@
 # photos
 
-This is the source code for the application running at
-[photos.charlieegan3.com](https://photos.charlieegan3.com/).
-The app is a Go application and runs on
-[Northflank](https://northflank.com).
+[photos.charlieegan3.com](https://photos.charlieegan3.com) is a personal, single user photo sharing site
+which I built and host for myself. The application has a number of features I find valuable:
 
-The project is a natural continuation of a project I built to
-back up my Instagram account
+* [Photo Map](https://photos.charlieegan3.com/locations)
+* [Trips](https://photos.charlieegan3.com/posts/period)
+* [Search](https://photos.charlieegan3.com/posts/search)
+* [Browse by Device](https://photos.charlieegan3.com/devices)
+* [RSS](https://photos.charlieegan3.com/rss.xml)
+
+The app is formed of a Go application and runs on
+[Northflank](https://northflank.com). The project is the
+spiritual successor of a project I built to back up my Instagram account
 [in 2018](https://charlieegan3.com/posts/2018-03-04-backing-up-instagram).
 
 ## Config

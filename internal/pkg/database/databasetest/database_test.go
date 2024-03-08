@@ -56,6 +56,7 @@ func (s *DatabaseSuite) SetupSuite() {
 	// initialize a database connection to init the db
 	params := viper.GetStringMapString("database.params")
 	connectionString := viper.GetString("database.connectionString")
+	migrationsTable := viper.GetString("database.migrationsTable")
 	db, err := database.Init(connectionString, params, "postgres", false)
 	if err != nil {
 		s.T().Fatalf("failed to init DB: %s", err)
@@ -103,7 +104,9 @@ func (s *DatabaseSuite) SetupSuite() {
 
 	migrations := database.Migrations
 
-	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{})
+	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{
+		MigrationsTable: migrationsTable,
+	})
 	if err != nil {
 		s.T().Fatalf("failed to init migrations driver: %s", err)
 	}

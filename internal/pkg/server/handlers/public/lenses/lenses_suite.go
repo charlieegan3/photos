@@ -31,7 +31,7 @@ type LensesSuite struct {
 }
 
 func (s *LensesSuite) SetupTest() {
-	err := database.Truncate(s.DB, "lenses")
+	err := database.Truncate(s.DB, "photos.lenses")
 	require.NoError(s.T(), err)
 }
 

@@ -70,7 +70,7 @@ func CreateLocations(db *sql.DB, locations []models.Location) (results []models.
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("locations").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.locations").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbLocations); err != nil {
 		return results, errors.Wrap(err, "failed to insert locations")
 	}
@@ -86,7 +86,7 @@ func FindLocationsByID(db *sql.DB, id []int) (results []models.Location, err err
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("locations").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbLocations); err != nil {
 		return results, errors.Wrap(err, "failed to select locations by id")
 	}
@@ -102,7 +102,7 @@ func FindLocationsByName(db *sql.DB, name string) (results []models.Location, er
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("locations").Select("*").Where(goqu.Ex{"name": name}).Executor()
+	insert := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"name": name}).Executor()
 	if err := insert.ScanStructs(&dbLocations); err != nil {
 		return results, errors.Wrap(err, "failed to select locations by name")
 	}
@@ -118,7 +118,7 @@ func AllLocations(db *sql.DB) (results []models.Location, err error) {
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("locations").Select("*").Order(goqu.I("name").Asc()).Executor()
+	insert := goquDB.From("photos.locations").Select("*").Order(goqu.I("name").Asc()).Executor()
 
 	if err := insert.ScanStructs(&dbLocations); err != nil {
 		return results, errors.Wrap(err, "failed to select locations")
@@ -141,7 +141,7 @@ func DeleteLocations(db *sql.DB, locations []models.Location) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("locations").Where(
+	del, _, err := goquDB.Delete("photos.locations").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -172,7 +172,7 @@ func UpdateLocations(db *sql.DB, locations []models.Location) (results []models.
 
 	for _, record := range records {
 		var result dbLocation
-		update := tx.From("locations").
+		update := tx.From("photos.locations").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).
@@ -204,7 +204,7 @@ func MergeLocations(db *sql.DB, locationName, oldLocationName string) (id int, e
 		return 0, errors.Wrap(err, "failed to open transaction")
 	}
 
-	newLocationID := tx.From("locations").
+	newLocationID := tx.From("photos.locations").
 		Select("id").
 		Where(goqu.Ex{"name": locationName}).Executor()
 	result, err := newLocationID.ScanVal(&id)
@@ -221,7 +221,7 @@ func MergeLocations(db *sql.DB, locationName, oldLocationName string) (id int, e
 		return 0, errors.Wrap(err, "failed to get new location from queried row")
 	}
 
-	oldLocationID := tx.From("locations").
+	oldLocationID := tx.From("photos.locations").
 		Select("id").
 		Where(goqu.Ex{"name": oldLocationName}).Executor()
 	result, err = oldLocationID.ScanVal(&oldID)
@@ -238,7 +238,7 @@ func MergeLocations(db *sql.DB, locationName, oldLocationName string) (id int, e
 		return 0, errors.Wrap(err, "failed to get old location from queried row")
 	}
 
-	updatePosts := tx.Update("posts").
+	updatePosts := tx.Update("photos.posts").
 		Where(goqu.Ex{"location_id": oldID}).
 		Set(map[string]interface{}{"location_id": id}).
 		Executor()
@@ -250,7 +250,7 @@ func MergeLocations(db *sql.DB, locationName, oldLocationName string) (id int, e
 		return 0, errors.Wrap(err, "failed to update posts to merged location")
 	}
 
-	deleteLocation := tx.Delete("locations").
+	deleteLocation := tx.Delete("photos.locations").
 		Where(goqu.Ex{"id": oldID}).Executor()
 	_, err = deleteLocation.Exec()
 	if err != nil {
@@ -271,7 +271,7 @@ func NearbyLocations(db *sql.DB, lat, lon float64) (results []models.Location, e
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	sub1 := goquDB.From(goqu.T("locations")).
+	sub1 := goquDB.From(goqu.T("locations").Schema("photos")).
 		Select("*", goqu.L("calculate_distance(?,?, locations.latitude,locations.longitude, 'K')", lat, lon))
 
 	sub2 := goquDB.From(sub1).

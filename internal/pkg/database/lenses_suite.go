@@ -19,7 +19,7 @@ type LensesSuite struct {
 }
 
 func (s *LensesSuite) SetupTest() {
-	err := Truncate(s.DB, "lenses")
+	err := Truncate(s.DB, "photos.lenses")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}

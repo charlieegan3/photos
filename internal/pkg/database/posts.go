@@ -94,7 +94,7 @@ func CreatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("posts").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.posts").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to insert posts")
 	}
@@ -110,7 +110,7 @@ func FindPostsByID(db *sql.DB, id []int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
@@ -126,7 +126,7 @@ func FindPostsByLocation(db *sql.DB, id []int) (results []models.Post, err error
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"location_id": id}).Executor()
+	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"location_id": id}).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
@@ -145,12 +145,12 @@ func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
 	matcher := regexp.MustCompile(fmt.Sprintf(`(^|\W)%s(s|\W|$)`, strings.ToLower(safeQuery)))
 
 	goquDB := goqu.New("postgres", db)
-	inner := goquDB.From("posts").
+	inner := goquDB.From("photos.posts").
 		Select("posts.*").
 		Distinct("posts.id").
-		LeftJoin(goqu.T("locations"), goqu.On(goqu.Ex{"posts.location_id": goqu.I("locations.id")})).
-		LeftJoin(goqu.T("taggings"), goqu.On(goqu.Ex{"posts.id": goqu.I("taggings.post_id")})).
-		LeftJoin(goqu.T("tags"), goqu.On(goqu.Ex{"taggings.tag_id": goqu.I("tags.id")})).
+		LeftJoin(goqu.T("locations").Schema("photos"), goqu.On(goqu.Ex{"posts.location_id": goqu.I("locations.id")})).
+		LeftJoin(goqu.T("taggings").Schema("photos"), goqu.On(goqu.Ex{"posts.id": goqu.I("taggings.post_id")})).
+		LeftJoin(goqu.T("tags").Schema("photos"), goqu.On(goqu.Ex{"taggings.tag_id": goqu.I("tags.id")})).
 		GroupBy("posts.id", "locations.id", "tags.id").
 		Having(
 			goqu.Or(
@@ -175,7 +175,7 @@ func FindPostsByInstagramCode(db *sql.DB, code string) (results []models.Post, e
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
+	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by instagram_code")
 	}
@@ -191,7 +191,7 @@ func FindPostsByMediaID(db *sql.DB, id int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*").Where(goqu.Ex{"media_id": id}).Executor()
+	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"media_id": id}).Executor()
 	if err := insert.ScanStructs(&dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by media_id")
 	}
@@ -217,7 +217,7 @@ func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models
 	}
 
 	goquDB := goqu.New("postgres", db)
-	operation := goquDB.From("posts").Select("*").
+	operation := goquDB.From("photos.posts").Select("*").
 		Where(query).
 		Order(order).
 		Limit(1).
@@ -287,7 +287,7 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("posts").Select("*")
+	query := goquDB.From("photos.posts").Select("*")
 
 	if !includeDrafts {
 		query = query.Where(goqu.Ex{"is_draft": false})
@@ -324,7 +324,7 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 
 func CountPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (int64, error) {
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("posts").Select("*")
+	insert := goquDB.From("photos.posts").Select("*")
 
 	if !includeDrafts {
 		insert = insert.Where(goqu.Ex{"is_draft": false})
@@ -357,7 +357,7 @@ func DeletePosts(db *sql.DB, posts []models.Post) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("posts").Where(
+	del, _, err := goquDB.Delete("photos.posts").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -388,7 +388,7 @@ func UpdatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 
 	for _, record := range records {
 		var result dbPost
-		update := tx.From("posts").
+		update := tx.From("photos.posts").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).
@@ -414,7 +414,7 @@ func PostsInDateRange(db *sql.DB, after, before time.Time) (results []models.Pos
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("posts").
+	query := goquDB.From("photos.posts").
 		Select("*").
 		Where(
 			goqu.And(
@@ -447,7 +447,7 @@ func PostsOnThisDay(db *sql.DB, month time.Month, day int) (results []models.Pos
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("posts").
+	query := goquDB.From("photos.posts").
 		Select(
 			"*",
 		).

@@ -2,12 +2,14 @@ package database
 
 import (
 	"database/sql"
-	"github.com/charlieegan3/photos/internal/pkg/models"
+	"testing"
+
 	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"testing"
+
+	"github.com/charlieegan3/photos/internal/pkg/models"
 )
 
 // LocationsSuite is a number of tests to define the database integration for
@@ -18,7 +20,7 @@ type LocationsSuite struct {
 }
 
 func (s *LocationsSuite) SetupTest() {
-	err := Truncate(s.DB, "locations")
+	err := Truncate(s.DB, "photos.locations")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}

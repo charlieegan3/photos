@@ -69,7 +69,7 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("devices").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.devices").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to insert devices")
 	}
@@ -85,7 +85,7 @@ func FindDevicesByID(db *sql.DB, id []int64) (results []models.Device, err error
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("devices").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}
@@ -101,7 +101,7 @@ func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err er
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("devices").Select("*").Where(goqu.Ex{"name": name}).Executor()
+	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"name": name}).Executor()
 	if err := insert.ScanStructs(&dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}
@@ -117,7 +117,7 @@ func FindDeviceByModelMatches(db *sql.DB, modelMatch string) (result *models.Dev
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("devices").
+	insert := goquDB.From("photos.devices").
 		Select("*").
 		Where(goqu.L(`"model_matches" ILIKE ?`, modelMatch)).
 		Limit(1).
@@ -138,9 +138,9 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	selectDevices := goquDB.From("devices").
-		FullOuterJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
-		FullOuterJoin(goqu.T("posts"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
+	selectDevices := goquDB.From("photos.devices").
+		FullOuterJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+		FullOuterJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
 		Select(
 			"devices.*",
 		).
@@ -168,8 +168,8 @@ func MostRecentlyUsedDevice(db *sql.DB) (result models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
-	selectDevices := goquDB.From("devices").
-		InnerJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+	selectDevices := goquDB.From("photos.devices").
+		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
 		Select("devices.*").
 		Order(goqu.I("medias.taken_at").Desc()).
 		Executor()
@@ -199,7 +199,7 @@ func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("devices").Where(
+	del, _, err := goquDB.Delete("photos.devices").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -230,7 +230,7 @@ func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 
 	for _, record := range records {
 		var result dbDevice
-		update := tx.From("devices").
+		update := tx.From("photos.devices").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).
@@ -256,9 +256,9 @@ func DevicePosts(db *sql.DB, deviceID int64) (results []models.Post, err error) 
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
-	selectPosts := goquDB.From("devices").
-		InnerJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
-		InnerJoin(goqu.T("posts"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
+	selectPosts := goquDB.From("photos.devices").
+		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
+		InnerJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
 		Select("posts.*").
 		Where(goqu.Ex{"devices.id": deviceID}).
 		Order(goqu.I("posts.publish_date").Desc()).

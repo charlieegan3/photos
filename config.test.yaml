@@ -1,6 +1,7 @@
 environment: test
 test: "`1"
 database:
+  migrationsTable: schema_migrations_photos
   connectionString: postgresql://postgres:password@localhost:5432
   params:
     dbname: cms_test

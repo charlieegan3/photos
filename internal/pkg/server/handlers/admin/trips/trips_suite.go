@@ -30,7 +30,7 @@ type EndpointsTripsSuite struct {
 
 func (s *EndpointsTripsSuite) SetupTest() {
 	var err error
-	err = database.Truncate(s.DB, "trips")
+	err = database.Truncate(s.DB, "photos.trips")
 	require.NoError(s.T(), err)
 }
 

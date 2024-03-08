@@ -79,7 +79,7 @@ func CreateTrips(db *sql.DB, trips []models.Trip) (results []models.Trip, err er
 	var dbTrips []dbTrip
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("trips").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.trips").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbTrips); err != nil {
 		return results, errors.Wrap(err, "failed to insert trips")
 	}
@@ -95,7 +95,7 @@ func FindTripsByID(db *sql.DB, id []int) (results []models.Trip, err error) {
 	var dbTrips []dbTrip
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("trips").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.trips").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbTrips); err != nil {
 		return results, errors.Wrap(err, "failed to select trips by id")
 	}
@@ -111,7 +111,7 @@ func AllTrips(db *sql.DB) (results []models.Trip, err error) {
 	var dbTrips []dbTrip
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("trips").Select("*").Order(goqu.I("start_date").Desc()).Executor()
+	insert := goquDB.From("photos.trips").Select("*").Order(goqu.I("start_date").Desc()).Executor()
 
 	if err := insert.ScanStructs(&dbTrips); err != nil {
 		return results, errors.Wrap(err, "failed to select trips")
@@ -134,7 +134,7 @@ func DeleteTrips(db *sql.DB, trips []models.Trip) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("trips").Where(
+	del, _, err := goquDB.Delete("photos.trips").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -165,7 +165,7 @@ func UpdateTrips(db *sql.DB, trips []models.Trip) (results []models.Trip, err er
 
 	for _, record := range records {
 		var result dbTrip
-		update := tx.From("trips").
+		update := tx.From("photos.trips").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).

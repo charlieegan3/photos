@@ -19,7 +19,7 @@ type TripsSuite struct {
 }
 
 func (s *TripsSuite) SetupTest() {
-	err := Truncate(s.DB, "trips")
+	err := Truncate(s.DB, "photos.trips")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}

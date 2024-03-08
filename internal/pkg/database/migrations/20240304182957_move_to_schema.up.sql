@@ -1,0 +1,25 @@
+CREATE SCHEMA IF NOT EXISTS photos;
+
+ALTER TABLE IF EXISTS devices
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS lenses
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS locations
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS medias
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS posts
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS taggings
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS tags
+    SET SCHEMA photos;
+
+ALTER TABLE IF EXISTS trips
+    SET SCHEMA photos;

@@ -36,7 +36,7 @@ type EndpointsDevicesSuite struct {
 }
 
 func (s *EndpointsDevicesSuite) SetupTest() {
-	err := database.Truncate(s.DB, "devices")
+	err := database.Truncate(s.DB, "photos.devices")
 	require.NoError(s.T(), err)
 }
 

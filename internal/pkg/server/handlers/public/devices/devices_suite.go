@@ -6,12 +6,13 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
-	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"time"
+
+	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
@@ -34,13 +35,13 @@ type DevicesSuite struct {
 
 func (s *DevicesSuite) SetupTest() {
 	var err error
-	err = database.Truncate(s.DB, "posts")
+	err = database.Truncate(s.DB, "photos.posts")
 	require.NoError(s.T(), err)
-	err = database.Truncate(s.DB, "locations")
+	err = database.Truncate(s.DB, "photos.locations")
 	require.NoError(s.T(), err)
-	err = database.Truncate(s.DB, "medias")
+	err = database.Truncate(s.DB, "photos.medias")
 	require.NoError(s.T(), err)
-	err = database.Truncate(s.DB, "devices")
+	err = database.Truncate(s.DB, "photos.devices")
 	require.NoError(s.T(), err)
 }
 

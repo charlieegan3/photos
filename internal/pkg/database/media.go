@@ -186,7 +186,7 @@ func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, er
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("medias").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.medias").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to insert medias")
 	}
@@ -202,7 +202,7 @@ func FindMediasByID(db *sql.DB, id []int) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("medias").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias by id")
 	}
@@ -218,7 +218,7 @@ func FindMediasByInstagramCode(db *sql.DB, code string) (results []models.Media,
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("medias").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
+	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
 	if err := insert.ScanStructs(&dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias by id")
 	}
@@ -234,7 +234,7 @@ func AllMedias(db *sql.DB, descending bool) (results []models.Media, err error) 
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("medias").Select("*")
+	insert := goquDB.From("photos.medias").Select("*")
 
 	if descending {
 		insert = insert.Order(goqu.I("taken_at").Desc(), goqu.I("created_at").Desc())
@@ -261,7 +261,7 @@ func DeleteMedias(db *sql.DB, medias []models.Media) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("medias").Where(
+	del, _, err := goquDB.Delete("photos.medias").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -292,7 +292,7 @@ func UpdateMedias(db *sql.DB, medias []models.Media) (results []models.Media, er
 
 	for _, record := range records {
 		var result dbMedia
-		update := tx.From("medias").
+		update := tx.From("photos.medias").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).

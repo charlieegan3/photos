@@ -19,10 +19,10 @@ type MediasSuite struct {
 }
 
 func (s *MediasSuite) SetupTest() {
-	err := Truncate(s.DB, "medias")
+	err := Truncate(s.DB, "photos.medias")
 	require.NoError(s.T(), err)
 
-	err = Truncate(s.DB, "devices")
+	err = Truncate(s.DB, "photos.devices")
 	require.NoError(s.T(), err)
 }
 

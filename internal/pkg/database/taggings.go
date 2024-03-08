@@ -69,7 +69,7 @@ func CreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tag
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("taggings").
+	insert := goquDB.Insert("photos.taggings").
 		Returning(goqu.Star()).
 		Rows(records).
 		OnConflict(goqu.DoNothing()). // there are only two fields
@@ -97,7 +97,7 @@ func FindOrCreateTaggings(db *sql.DB, taggings []models.Tagging) (results []mode
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
-	sel := goquDB.From("taggings").Select("*").Where(goqu.Or(ex...)).Executor()
+	sel := goquDB.From("photos.taggings").Select("*").Where(goqu.Or(ex...)).Executor()
 	if err := sel.ScanStructs(&dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by post_id")
 	}
@@ -138,7 +138,7 @@ func FindTaggingsByPostID(db *sql.DB, id int) (results []models.Tagging, err err
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("taggings").Select("*").Where(goqu.Ex{"post_id": id}).Executor()
+	insert := goquDB.From("photos.taggings").Select("*").Where(goqu.Ex{"post_id": id}).Executor()
 	if err := insert.ScanStructs(&dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by post_id")
 	}
@@ -154,7 +154,7 @@ func FindTaggingsByTagID(db *sql.DB, id int) (results []models.Tagging, err erro
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("taggings").Select("*").Where(goqu.Ex{"tag_id": id}).Executor()
+	insert := goquDB.From("photos.taggings").Select("*").Where(goqu.Ex{"tag_id": id}).Executor()
 	if err := insert.ScanStructs(&dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by tag_id")
 	}
@@ -178,7 +178,7 @@ func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("taggings").Where(
+	del, _, err := goquDB.Delete("photos.taggings").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -195,7 +195,7 @@ func AllTaggings(db *sql.DB) (results []models.Tagging, err error) {
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("taggings").Select("*")
+	query := goquDB.From("photos.taggings").Select("*")
 
 	if err := query.Executor().ScanStructs(&dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select tags")

@@ -64,7 +64,7 @@ func CreateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("lenses").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.lenses").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to insert lenses")
 	}
@@ -80,7 +80,7 @@ func FindLensesByID(db *sql.DB, id []int64) (results []models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("lenses").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.lenses").Select("*").Where(goqu.Ex{"id": id}).Executor()
 	if err := insert.ScanStructs(&dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to select lenses by slug")
 	}
@@ -96,7 +96,7 @@ func FindLensesByName(db *sql.DB, name string) (results []models.Lens, err error
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("lenses").Select("*").Where(goqu.Ex{"name": name}).Executor()
+	insert := goquDB.From("photos.lenses").Select("*").Where(goqu.Ex{"name": name}).Executor()
 	if err := insert.ScanStructs(&dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to select lenses by slug")
 	}
@@ -112,7 +112,7 @@ func AllLenses(db *sql.DB) (results []models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
-	selectLenses := goquDB.From("lenses").
+	selectLenses := goquDB.From("photos.lenses").
 		Select("*").
 		Order(goqu.I("name").Asc()).
 		Executor()
@@ -134,8 +134,8 @@ func MostRecentlyUsedLens(db *sql.DB) (result models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
-	selectLenses := goquDB.From("lenses").
-		InnerJoin(goqu.T("medias"), goqu.On(goqu.Ex{"medias.lens_id": goqu.I("lenses.id")})).
+	selectLenses := goquDB.From("photos.lenses").
+		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.lens_id": goqu.I("lenses.id")})).
 		Select("lenses.*").
 		Order(goqu.I("medias.taken_at").Desc()).
 		Executor()
@@ -165,7 +165,7 @@ func DeleteLenses(db *sql.DB, lenses []models.Lens) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("lenses").Where(
+	del, _, err := goquDB.Delete("photos.lenses").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -196,7 +196,7 @@ func UpdateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 
 	for _, record := range records {
 		var result dbLens
-		update := tx.From("lenses").
+		update := tx.From("photos.lenses").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).
@@ -222,7 +222,7 @@ func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, e
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("lenses").
+	insert := goquDB.From("photos.lenses").
 		Select("*").
 		Where(goqu.L(`"lens_matches" ILIKE ?`, lensMatch)).
 		Limit(1).

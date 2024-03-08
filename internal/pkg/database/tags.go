@@ -69,7 +69,7 @@ func CreateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("tags").Returning(goqu.Star()).Rows(records).Executor()
+	insert := goquDB.Insert("photos.tags").Returning(goqu.Star()).Rows(records).Executor()
 	if err := insert.ScanStructs(&dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to insert tags")
 	}
@@ -85,7 +85,7 @@ func FindTagsByName(db *sql.DB, names []string) (results []models.Tag, err error
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("tags").Select("*").Where(goqu.I("name").In(names)).Executor()
+	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("name").In(names)).Executor()
 	if err := insert.ScanStructs(&dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags by name")
 	}
@@ -105,7 +105,7 @@ func FindTagsByID(db *sql.DB, ids []int) (results []models.Tag, err error) {
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("tags").Select("*").Where(goqu.I("id").In(ids)).Executor()
+	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("id").In(ids)).Executor()
 	if err := insert.ScanStructs(&dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags by id")
 	}
@@ -153,7 +153,7 @@ func AllTags(db *sql.DB, includeHidden bool, options SelectOptions) (results []m
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("tags").Select("*")
+	query := goquDB.From("photos.tags").Select("*")
 
 	if !includeHidden {
 		query = query.Where(goqu.Ex{"hidden": false})
@@ -195,7 +195,7 @@ func DeleteTags(db *sql.DB, tags []models.Tag) (err error) {
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("tags").Where(
+	del, _, err := goquDB.Delete("photos.tags").Where(
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
@@ -226,7 +226,7 @@ func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 
 	for _, record := range records {
 		var result dbTag
-		update := tx.From("tags").
+		update := tx.From("photos.tags").
 			Where(goqu.Ex{"id": record["id"]}).
 			Update().
 			Set(record).

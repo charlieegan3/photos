@@ -18,19 +18,19 @@ type TagsSuite struct {
 }
 
 func (s *TagsSuite) SetupTest() {
-	err := Truncate(s.DB, "tags")
+	err := Truncate(s.DB, "photos.tags")
 	require.NoError(s.T(), err)
 
-	err = Truncate(s.DB, "taggings")
+	err = Truncate(s.DB, "photos.taggings")
 	require.NoError(s.T(), err)
 
-	err = Truncate(s.DB, "medias")
+	err = Truncate(s.DB, "photos.medias")
 	require.NoError(s.T(), err)
 
-	err = Truncate(s.DB, "locations")
+	err = Truncate(s.DB, "photos.locations")
 	require.NoError(s.T(), err)
 
-	err = Truncate(s.DB, "devices")
+	err = Truncate(s.DB, "photos.devices")
 	require.NoError(s.T(), err)
 }
 

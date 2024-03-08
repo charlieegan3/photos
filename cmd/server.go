@@ -28,6 +28,8 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "start photos server",
 	Run: func(cmd *cobra.Command, args []string) {
+		ctx := context.Background()
+
 		environment := viper.GetString("environment")
 		if environment != "production" && environment != "development" && environment != "test" {
 			log.Fatalf("unknown environment %q", environment)
@@ -40,14 +42,25 @@ var serverCmd = &cobra.Command{
 			log.Fatalf("failed to init DB: %s", err)
 		}
 
-		conn, err := db.Conn(context.Background())
+		conn, err := db.Conn(ctx)
 		if err != nil {
 			log.Fatalf("failed to get DB connection: %s", err)
 		}
 
+		// if the schema migrations table has the old name, move it
+		_, err = conn.ExecContext(
+			ctx,
+			"ALTER TABLE IF EXISTS schema_migrations RENAME TO "+viper.GetString("database.migrationsTable"),
+		)
+		if err != nil {
+			log.Fatalf("failed to rename migrations table: %s", err)
+		}
+
 		migrations := database.Migrations
 
-		driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{})
+		driver, err := postgres.WithConnection(ctx, conn, &postgres.Config{
+			MigrationsTable: viper.GetString("database.migrationsTable"),
+		})
 		if err != nil {
 			log.Fatalf("failed to init DB driver: %s", err)
 		}
@@ -96,12 +109,12 @@ var serverCmd = &cobra.Command{
 
 			bucketName := strings.TrimPrefix(viper.GetString("bucket.url"), "gs://")
 
-			bucket, err = gcsblob.OpenBucket(context.Background(), client, bucketName, nil)
+			bucket, err = gcsblob.OpenBucket(ctx, client, bucketName, nil)
 			if err != nil {
 				log.Fatalf("failed to open bucket: %s", err)
 			}
 		} else {
-			bucket, err = blob.OpenBucket(context.Background(), viper.GetString("bucket.url"))
+			bucket, err = blob.OpenBucket(ctx, viper.GetString("bucket.url"))
 			if err != nil {
 				log.Fatalf("failed to open bucket: %s", err)
 			}

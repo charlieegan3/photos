@@ -198,11 +198,15 @@ func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, er
 	return results, nil
 }
 
-func FindMediasByID(db *sql.DB, id []int) (results []models.Media, err error) {
+func FindMediasByID(db *sql.DB, ids []int) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
+	if len(ids) == 0 {
+		return results, nil
+	}
+
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"id": id}).Executor()
+	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"id": ids}).Executor()
 	if err := insert.ScanStructs(&dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias by id")
 	}
@@ -220,7 +224,7 @@ func FindMediasByInstagramCode(db *sql.DB, code string) (results []models.Media,
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
 	if err := insert.ScanStructs(&dbMedias); err != nil {
-		return results, errors.Wrap(err, "failed to select medias by id")
+		return results, errors.Wrap(err, "failed to select medias by instagram code")
 	}
 
 	for _, v := range dbMedias {

@@ -90,20 +90,22 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		var mediaIDs []int
-		for _, post := range posts {
-			mediaIDs = append(mediaIDs, post.MediaID)
-		}
-
-		medias, err := database.FindMediasByID(db, mediaIDs)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
 		mediasByID := make(map[int]models.Media)
-		for _, media := range medias {
-			mediasByID[media.ID] = media
+		if len(posts) == 0 {
+			for _, post := range posts {
+				mediaIDs = append(mediaIDs, post.MediaID)
+			}
+
+			medias, err := database.FindMediasByID(db, mediaIDs)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			for _, media := range medias {
+				mediasByID[media.ID] = media
+			}
 		}
 
 		ctx := plush.NewContext()

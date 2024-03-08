@@ -159,20 +159,22 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 
 		mediaIDs := make([]int, len(posts))
-		for i, post := range posts {
-			mediaIDs[i] = post.MediaID
-		}
-
-		medias, err := database.FindMediasByID(db, mediaIDs)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
 		mediasByID := make(map[int]models.Media)
-		for _, media := range medias {
-			mediasByID[media.ID] = media
+		if len(posts) > 0 {
+			for i, post := range posts {
+				mediaIDs[i] = post.MediaID
+			}
+
+			medias, err := database.FindMediasByID(db, mediaIDs)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			for _, media := range medias {
+				mediasByID[media.ID] = media
+			}
 		}
 
 		ctx := plush.NewContext()

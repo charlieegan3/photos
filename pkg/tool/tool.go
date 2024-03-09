@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"embed"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/Jeffail/gabs/v2"
@@ -121,6 +122,15 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 	}
 	// close to avoid leaking connection for migrations
 	defer conn.Close()
+
+	// if the schema migrations table has the old name, move it
+	_, err = conn.ExecContext(
+		context.Background(),
+		"ALTER TABLE IF EXISTS schema_migrations RENAME TO "+p.migrationsTable,
+	)
+	if err != nil {
+		log.Fatalf("failed to rename migrations table: %s", err)
+	}
 
 	migrations := database.Migrations
 

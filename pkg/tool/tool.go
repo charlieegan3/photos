@@ -28,8 +28,9 @@ import (
 type PhotosWebsite struct {
 	config *gabs.Container
 
-	db     *sql.DB
-	bucket *blob.Bucket
+	db              *sql.DB
+	migrationsTable string
+	bucket          *blob.Bucket
 
 	environment, hostname         string
 	adminUserName, adminPassword  string
@@ -98,7 +99,18 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 		createDatabase = false
 	}
 
-	p.db, err = database.Init(connectionString, databaseParams, databaseParams["dbname"], createDatabase)
+	path = "database.migrations_table"
+	p.migrationsTable, ok = p.config.Path(path).Data().(string)
+	if !ok {
+		return fmt.Errorf("config value %s not set", path)
+	}
+
+	p.db, err = database.Init(
+		connectionString,
+		databaseParams,
+		databaseParams["dbname"],
+		createDatabase,
+	)
 	if err != nil {
 		return fmt.Errorf("failed to init database: %s", err)
 	}
@@ -112,7 +124,9 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 
 	migrations := database.Migrations
 
-	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{})
+	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{
+		MigrationsTable: p.migrationsTable,
+	})
 	if err != nil {
 		return fmt.Errorf("failed to init migrations driver: %s", err)
 	}

@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"embed"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/Jeffail/gabs/v2"
@@ -123,25 +122,10 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 	// close to avoid leaking connection for migrations
 	defer conn.Close()
 
-	// if the schema migrations table has the old name, move it
-	_, err = conn.ExecContext(
-		context.Background(),
-		"ALTER TABLE IF EXISTS schema_migrations RENAME TO "+p.migrationsTable,
-	)
-	if err != nil {
-		log.Fatalf("failed to rename migrations table: %s", err)
-	}
-
-	fmt.Println("migrations table", p.migrationsTable)
-
 	migrations := database.Migrations
 
-	migFiles, err := migrations.ReadDir("migrations")
-	if err != nil {
-		return fmt.Errorf("failed to read migrations: %s", err)
-	}
-	for _, f := range migFiles {
-		fmt.Println(f.Name())
+	if p.migrationsTable == "" {
+		return fmt.Errorf("migrations must be set")
 	}
 
 	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{

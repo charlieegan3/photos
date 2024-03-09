@@ -132,7 +132,17 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 		log.Fatalf("failed to rename migrations table: %s", err)
 	}
 
+	fmt.Println("migrations table", p.migrationsTable)
+
 	migrations := database.Migrations
+
+	migFiles, err := migrations.ReadDir("migrations")
+	if err != nil {
+		return fmt.Errorf("failed to read migrations: %s", err)
+	}
+	for _, f := range migFiles {
+		fmt.Println(f.Name())
+	}
 
 	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{
 		MigrationsTable: p.migrationsTable,

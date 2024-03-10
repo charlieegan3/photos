@@ -24,6 +24,7 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/tags"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/trips"
 	publicdevices "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/devices"
+	publiclenses "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/lenses"
 	publiclocations "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/locations"
 	publicmedias "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/medias"
 	publicposts "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/posts"
@@ -147,6 +148,10 @@ func (s *DatabaseSuite) TestDevicesSuite() {
 	suite.Run(s.T(), &database.DevicesSuite{DB: s.DB})
 }
 
+func (s *DatabaseSuite) TestLensesSuite() {
+	suite.Run(s.T(), &database.LensesSuite{DB: s.DB})
+}
+
 func (s *DatabaseSuite) TestTagsSuite() {
 	suite.Run(s.T(), &database.TagsSuite{DB: s.DB})
 }
@@ -265,6 +270,18 @@ func (s *DatabaseSuite) TestPublicDevicesSuite() {
 	defer bucket.Close()
 
 	suite.Run(s.T(), &publicdevices.DevicesSuite{
+		DB:     s.DB,
+		Bucket: bucket,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicLensesSuite() {
+	bucketBaseURL := "mem://test_bucket/"
+	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
+	require.NoError(s.T(), err)
+	defer bucket.Close()
+
+	suite.Run(s.T(), &publiclenses.LensesSuite{
 		DB:     s.DB,
 		Bucket: bucket,
 	})

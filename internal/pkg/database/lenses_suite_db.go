@@ -19,13 +19,38 @@ type LensesSuite struct {
 }
 
 func (s *LensesSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.lenses")
+	var err error
+
+	err = Truncate(s.DB, "photos.devices")
+	if err != nil {
+		s.T().Fatalf("failed to truncate table: %s", err)
+	}
+
+	err = Truncate(s.DB, "photos.medias")
+	if err != nil {
+		s.T().Fatalf("failed to truncate table: %s", err)
+	}
+
+	err = Truncate(s.DB, "photos.lenses")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
 }
 
 func (s *LensesSuite) TestMostRecentlyUsedLens() {
+	devices := []models.Device{
+		{
+			Name: "iPhone 11 Pro Max",
+		},
+		{
+			Name: "X100F",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	if err != nil {
+		s.T().Fatalf("failed to create devices: %s", err)
+	}
+
 	lenses := []models.Lens{
 		{
 			Name: "iPhone",
@@ -42,7 +67,8 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 
 	medias := []models.Media{
 		{
-			LensID: returnedLenses[0].ID,
+			LensID:   returnedLenses[0].ID,
+			DeviceID: returnedDevices[0].ID,
 
 			Make:  "FujiFilm",
 			Model: "X100F",
@@ -59,7 +85,8 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 			Altitude:  100.0,
 		},
 		{
-			LensID: returnedLenses[1].ID,
+			LensID:   returnedLenses[1].ID,
+			DeviceID: returnedDevices[1].ID,
 
 			Make:  "Apple",
 			Model: "iPhone",
@@ -389,6 +416,10 @@ func (s *LensesSuite) TestFindLensByLensMatches() {
 	lens, err := FindLensByLensMatches(s.DB, "back triple camera")
 	if err != nil {
 		s.T().Fatalf("failed to find devices by model matches: %s", err)
+	}
+
+	if lens == nil {
+		s.T().Fatalf("failed to find lens by lens matches")
 	}
 
 	td.Cmp(s.T(), *lens, returnedLenses[1])

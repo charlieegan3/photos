@@ -224,11 +224,14 @@ func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, e
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.lenses").
 		Select("*").
-		Where(goqu.L(`"lens_matches" ILIKE ?`, lensMatch)).
+		Where(goqu.L(
+			`"lens_matches" ILIKE ?`,
+			fmt.Sprintf("%%%s%%", lensMatch),
+		)).
 		Limit(1).
 		Executor()
 	if err := insert.ScanStructs(&dbLenses); err != nil {
-		return nil, errors.Wrap(err, "failed to select devices by slug")
+		return nil, errors.Wrap(err, "failed to select lenses by lens matches")
 	}
 
 	for _, v := range dbLenses {
@@ -237,4 +240,28 @@ func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, e
 	}
 
 	return nil, nil
+}
+
+func LensPosts(db *sql.DB, lensID int64) (results []models.Post, err error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	selectPosts := goquDB.From("photos.lenses").
+		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.lens_id": goqu.I("lenses.id")})).
+		InnerJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
+		Select("posts.*").
+		Where(goqu.Ex{"lenses.id": lensID}).
+		Order(goqu.I("posts.publish_date").Desc()).
+		Executor()
+	if err := selectPosts.ScanStructs(&dbPosts); err != nil {
+		return results, errors.Wrap(err, "failed to select posts")
+	}
+
+	// this is needed in case there are no items added, we don't want to return
+	// nil but rather an empty slice
+	for _, v := range dbPosts {
+		results = append(results, newPost(v))
+	}
+
+	return results, nil
 }

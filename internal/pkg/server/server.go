@@ -88,6 +88,8 @@ func Attach(
 	router.HandleFunc("/devices/{deviceID}", publicdevices.BuildShowHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/devices", publicdevices.BuildIndexHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/lenses/{lensID}.png", publicLenses.BuildIconHandler(db, bucket)).Methods("GET")
+	router.HandleFunc("/lenses/{lensID}", publicLenses.BuildShowHandler(db, renderer)).Methods("GET")
+	router.HandleFunc("/lenses", publicLenses.BuildIndexHandler(db, renderer)).Methods("GET")
 
 	router.HandleFunc("/trips/{tripID}", publictrips.BuildGetHandler(db, renderer)).Methods("GET")
 

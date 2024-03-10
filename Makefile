@@ -4,7 +4,7 @@ TAG := $(shell git rev-parse --short HEAD)
 IMAGE := "eu.gcr.io/charlieegan3-photos/photos:$(TAG)"
 
 dev_server:
-	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config config.dev.yaml'
+	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run cmd/tool/tool.go'
 
 new_migration:
 	 migrate create -dir internal/pkg/database/migrations -ext sql $(MIGRATION_NAME)

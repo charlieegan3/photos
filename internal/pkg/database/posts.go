@@ -106,6 +106,28 @@ func CreatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 	return results, nil
 }
 
+func RandomPostID(db *sql.DB) (int, error) {
+	var postID int
+
+	rows, err := db.Query("SELECT id from photos.posts ORDER BY RANDOM() LIMIT 1")
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to select random post")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&postID); err != nil {
+			return 0, errors.Wrap(err, "failed to scan random post")
+		}
+	}
+
+	if postID == 0 {
+		return 0, errors.New("no posts found")
+	}
+
+	return postID, nil
+}
+
 func FindPostsByID(db *sql.DB, id []int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 

@@ -91,6 +91,8 @@ func Attach(
 	router.HandleFunc("/lenses/{lensID}", publicLenses.BuildShowHandler(db, renderer)).Methods("GET")
 	router.HandleFunc("/lenses", publicLenses.BuildIndexHandler(db, renderer)).Methods("GET")
 
+	router.HandleFunc("/random", publicposts.BuildRandomHandler(db)).Methods("GET")
+
 	router.HandleFunc("/trips/{tripID}", publictrips.BuildGetHandler(db, renderer)).Methods("GET")
 
 	adminRouter := router.PathPrefix("/admin").Subrouter()

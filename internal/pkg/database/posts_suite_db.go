@@ -33,6 +33,79 @@ func (s *PostsSuite) SetupTest() {
 	require.NoError(s.T(), err)
 }
 
+func (s *PostsSuite) TestRandomPost() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.DB, devices)
+	require.NoError(s.T(), err)
+
+	medias := []models.Media{
+		{
+			DeviceID: returnedDevices[0].ID,
+
+			Make:  "FujiFilm",
+			Model: "X100F",
+
+			TakenAt: time.Date(2021, time.November, 23, 19, 56, 0, 0, time.UTC),
+
+			FNumber:  2.0,
+			ISOSpeed: 100,
+
+			Latitude:  51.1,
+			Longitude: 52.2,
+			Altitude:  100.0,
+		},
+	}
+	returnedMedias, err := CreateMedias(s.DB, medias)
+	require.NoError(s.T(), err)
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+
+	returnedLocations, err := CreateLocations(s.DB, locations)
+	require.NoError(s.T(), err)
+
+	posts := []models.Post{
+		{
+			Description: "Here is a photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+		{
+			Description: "Here is another photo I took",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+		},
+	}
+
+	createdPosts, err := CreatePosts(s.DB, posts)
+	require.NoError(s.T(), err)
+
+	returnedPostID, err := RandomPostID(s.DB)
+	require.NoError(s.T(), err)
+
+	var found bool
+	for _, p := range createdPosts {
+		if p.ID == returnedPostID {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		s.T().Fatalf("returned post not found in created posts")
+	}
+}
+
 func (s *PostsSuite) TestCreatePosts() {
 	devices := []models.Device{
 		{

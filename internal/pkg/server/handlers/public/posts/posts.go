@@ -787,3 +787,17 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		return
 	}
 }
+
+func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		postID, err := database.RandomPostID(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		http.Redirect(w, r, fmt.Sprintf("/posts/%d", postID), http.StatusSeeOther)
+		return
+	}
+}

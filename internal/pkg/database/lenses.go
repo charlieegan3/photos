@@ -113,9 +113,18 @@ func AllLenses(db *sql.DB) (results []models.Lens, err error) {
 
 	goquDB := goqu.New("postgres", db)
 	selectLenses := goquDB.From("photos.lenses").
-		Select("*").
-		Order(goqu.I("name").Asc()).
+		FullOuterJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.lens_id": goqu.I("lenses.id")})).
+		FullOuterJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
+		Select(
+			"lenses.*",
+		).
+		Where(goqu.L("lenses.id IS NOT NULL")).
+		Order(
+			goqu.L("MAX(coalesce(posts.publish_date, timestamp with time zone 'epoch'))").Desc(),
+		).
+		GroupBy(goqu.I("lenses.id")).
 		Executor()
+
 	if err := selectLenses.ScanStructs(&dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to select lenses")
 	}

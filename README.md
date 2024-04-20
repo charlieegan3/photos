@@ -16,7 +16,8 @@ spiritual successor of a project I built to back up my Instagram account
 
 ## Config
 
-Should you want to run an instance of this application yourself, the required configuration file looks like this:
+Should you want to run an instance of this application yourself,
+the required configuration file looks like this:
 
 ```yaml
 hostname: photos.charlieegan3.com
@@ -29,14 +30,11 @@ server:
 geoapify:
   url: https://maps.geoapify.com/v1/staticmap
   key: xxx
-database:
-  createDatabase: false
-  connectionString: postgres://example:example@example.com
-  params:
-    dbname: example
 bucket:
   # I use gocloud.dev, so it should be possible to use various cloud providers
   url: gs://example-bucket # file:///tmp/photos
 notification_webhook:
   endpoint: https://example.com/
 ```
+
+Note that a database will also need to be provided.

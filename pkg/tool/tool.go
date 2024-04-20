@@ -9,9 +9,6 @@ import (
 
 	"github.com/Jeffail/gabs/v2"
 	"github.com/charlieegan3/toolbelt/pkg/apis"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/gorilla/mux"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -46,15 +43,17 @@ func (p *PhotosWebsite) FeatureSet() apis.FeatureSet {
 		HTTP:     true,
 		HTTPHost: true,
 		Config:   true,
+		Database: true,
 	}
 }
 
-// Due to legacy reasons, photos manages it's own migrations
 func (p *PhotosWebsite) DatabaseMigrations() (*embed.FS, string, error) {
-	return nil, "migrations", nil
+	return &database.Migrations, "migrations", nil
 }
 
-func (p *PhotosWebsite) DatabaseSet(db *sql.DB) {}
+func (p *PhotosWebsite) DatabaseSet(db *sql.DB) {
+	p.db = db
+}
 
 func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 	var ok bool
@@ -70,80 +69,6 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 
 	if p.environment != "production" && p.environment != "development" && p.environment != "test" {
 		return fmt.Errorf("invalid environment %s", p.environment)
-	}
-
-	path = "database.params"
-
-	rawDatabaseParams, ok := p.config.Path(path).Data().(map[string]any)
-	if !ok {
-		return fmt.Errorf("config value %s not set", path)
-	}
-
-	databaseParams := make(map[string]string)
-	for k, v := range rawDatabaseParams {
-		databaseParams[k], ok = v.(string)
-		if !ok {
-			return fmt.Errorf("config value %s not set", path)
-		}
-	}
-
-	path = "database.connection_string"
-	connectionString, ok := p.config.Path(path).Data().(string)
-	if !ok {
-		return fmt.Errorf("config value %s not set", path)
-	}
-
-	path = "database.create_database"
-	createDatabase, ok := p.config.Path(path).Data().(bool)
-	if !ok {
-		createDatabase = false
-	}
-
-	path = "database.migrations_table"
-	p.migrationsTable, ok = p.config.Path(path).Data().(string)
-	if !ok {
-		return fmt.Errorf("config value %s not set", path)
-	}
-
-	p.db, err = database.Init(
-		connectionString,
-		databaseParams,
-		databaseParams["dbname"],
-		createDatabase,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to init database: %s", err)
-	}
-
-	conn, err := p.db.Conn(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to get DB connection: %s", err)
-	}
-	// close to avoid leaking connection for migrations
-	defer conn.Close()
-
-	migrations := database.Migrations
-
-	if p.migrationsTable == "" {
-		return fmt.Errorf("migrations must be set")
-	}
-
-	driver, err := postgres.WithConnection(context.Background(), conn, &postgres.Config{
-		MigrationsTable: p.migrationsTable,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to init migrations driver: %s", err)
-	}
-
-	source, err := iofs.New(migrations, "migrations")
-	m, err := migrate.NewWithInstance("iofs", source, "postgres", driver)
-	if err != nil {
-		return fmt.Errorf("failed to init migrations: %s", err)
-	}
-
-	err = m.Up()
-	if err != nil && err != migrate.ErrNoChange {
-		return fmt.Errorf("failed to migrate up: %s", err)
 	}
 
 	path = "bucket.url"
@@ -219,6 +144,10 @@ func (p *PhotosWebsite) SetConfig(config map[string]any) error {
 func (p *PhotosWebsite) Jobs() ([]apis.Job, error) { return []apis.Job{}, nil }
 
 func (p *PhotosWebsite) HTTPAttach(router *mux.Router) error {
+	if p.db == nil {
+		return fmt.Errorf("database not set")
+	}
+
 	err := server.Attach(
 		router,
 		p.adminUserName, p.adminPassword,

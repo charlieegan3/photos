@@ -4,7 +4,8 @@ go 1.19
 
 require (
 	github.com/Jeffail/gabs/v2 v2.7.0
-	github.com/charlieegan3/toolbelt v0.0.0-20230902111404-a1294f8c1e26
+	github.com/charlieegan3/toolbelt v0.0.0-20230903125731-9e3d19bf4fa9
+	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/doug-martin/goqu/v9 v9.18.0
 	github.com/dsoprea/go-exif/v3 v3.0.0-20210625224831-a6301f85c82b
 	github.com/gobuffalo/plush v3.8.3+incompatible
@@ -24,15 +25,14 @@ require (
 	github.com/tkrajina/gpxgo v1.2.1
 	github.com/tormoder/fit v0.13.0
 	gocloud.dev v0.24.0
-	golang.org/x/oauth2 v0.1.0
+	golang.org/x/oauth2 v0.21.0
 	golang.org/x/text v0.9.0
 	willnorris.com/go/imageproxy v0.11.2
 )
 
 require (
 	cloud.google.com/go v0.107.0 // indirect
-	cloud.google.com/go/compute v1.14.0 // indirect
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	cloud.google.com/go/iam v0.8.0 // indirect
 	cloud.google.com/go/storage v1.27.0 // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
@@ -84,6 +84,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/philhofer/vec v0.0.0-20140421144027-536fc796d369 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/pquerna/cachecontrol v0.2.0 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.26.0 // indirect
@@ -100,6 +101,7 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
+	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20220428152302-39d4317da171 // indirect
 	golang.org/x/image v0.0.0-20210216034530-4410531fe030 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
@@ -114,6 +116,7 @@ require (
 	google.golang.org/grpc v1.51.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
+	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.3.1 // indirect

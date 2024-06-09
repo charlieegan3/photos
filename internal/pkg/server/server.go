@@ -7,9 +7,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/coreos/go-oidc"
 	"github.com/gorilla/mux"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
+	"golang.org/x/oauth2"
 
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin"
@@ -36,10 +38,15 @@ import (
 // an instance of the server.
 func Attach(
 	router *mux.Router,
-	adminUsername, adminPassword string,
 	db *sql.DB,
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
+	adminUsername, adminPassword string,
+	oauth2Config *oauth2.Config,
+	idTokenVerifier *oidc.IDTokenVerifier,
+	adminPath string,
+	adminParam string,
+	permittedEmailSuffix string,
 ) error {
 	renderer := templating.BuildPageRenderFunc(true, "")
 	rendererMenu := templating.BuildPageRenderFunc(false, "")
@@ -95,8 +102,22 @@ func Attach(
 
 	router.HandleFunc("/trips/{tripID}", publictrips.BuildGetHandler(db, renderer)).Methods("GET")
 
-	adminRouter := router.PathPrefix("/admin").Subrouter()
-	adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
+	adminRouter := router.PathPrefix(adminPath).Subrouter()
+
+	if adminUsername != "" && adminPassword != "" {
+		adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
+	} else {
+		adminRouter.Use(InitMiddlewareOAuth(
+			oauth2Config,
+			idTokenVerifier,
+			adminPath,
+			adminParam,
+			permittedEmailSuffix,
+		))
+		adminRouter.HandleFunc("/auth/callback", func(w http.ResponseWriter, r *http.Request) {
+			// should be handled by middleware, but here to avoid 404
+		})
+	}
 
 	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(rendererAdmin)).Methods("GET")
 	adminRouter.HandleFunc("/", handlers.BuildRedirectHandler("/admin")).Methods("GET")
@@ -162,12 +183,17 @@ func Serve(
 
 	err := Attach(
 		router,
-		adminUsername,
-		adminPassword,
 		db,
 		bucket,
 		mapServerURL,
 		mapServerAPIKey,
+		adminUsername,
+		adminPassword,
+		&oauth2.Config{},
+		&oidc.IDTokenVerifier{},
+		"/admin",
+		"admin",
+		"",
 	)
 	if err != nil {
 		log.Fatal(err)

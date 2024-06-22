@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/coreos/go-oidc"
@@ -12,6 +13,8 @@ import (
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	"golang.org/x/oauth2"
+
+	"github.com/charlieegan3/oauth-middleware/pkg/oauthmiddleware"
 
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin"
@@ -107,15 +110,46 @@ func Attach(
 	if adminUsername != "" && adminPassword != "" {
 		adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
 	} else {
-		adminRouter.Use(InitMiddlewareOAuth(
-			oauth2Config,
-			idTokenVerifier,
-			adminPath,
-			adminParam,
-			permittedEmailSuffix,
-		))
+		mw, err := oauthmiddleware.Init(&oauthmiddleware.Config{
+			OAuth2Connector: oauth2Config,
+			IDTokenVerifier: idTokenVerifier,
+			Validators: []oauthmiddleware.IDTokenValidator{
+				func(token *oidc.IDToken) (map[any]any, bool) {
+					c := struct {
+						Email string `json:"email"`
+					}{}
+
+					err := token.Claims(&c)
+					if err != nil {
+						return nil, false
+					}
+
+					if permittedEmailSuffix == "" {
+						log.Println("email suffix was blank and so no emails are allowed")
+						return nil, false
+					}
+
+					if !strings.HasSuffix(c.Email, permittedEmailSuffix) {
+						log.Printf("email %s does not have suffix %s", c.Email, permittedEmailSuffix)
+
+						return nil, false
+					}
+
+					return map[any]any{"email": c.Email}, true
+				},
+			},
+			AuthBasePath:     adminPath,
+			CallbackBasePath: adminPath,
+			BeginParam:       adminParam,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to init oauth middleware: %w", err)
+		}
+
+		router.Use(mw)
 		adminRouter.HandleFunc("/auth/callback", func(w http.ResponseWriter, r *http.Request) {
-			// should be handled by middleware, but here to avoid 404
+			// should be handled by middleware, but here to avoid 404 and the middleware not
+			// being run
 		})
 	}
 

@@ -10,6 +10,8 @@ import (
 )
 
 func TestRenderPage(t *testing.T) {
+	t.Parallel()
+	
 	nestedTemplate := "<p><%= foo %></p>"
 
 	expectedResult := `<!DOCTYPE html>

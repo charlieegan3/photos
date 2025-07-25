@@ -10,6 +10,8 @@ import (
 )
 
 func TestExtract(t *testing.T) {
+	t.Parallel()
+	
 	testCases := map[string]struct {
 		sourceFile       string
 		expectedMetadata Metadata
@@ -172,6 +174,8 @@ func TestExtract(t *testing.T) {
 
 	for description, testCase := range testCases {
 		t.Run(description, func(t *testing.T) {
+			t.Parallel()
+			
 			b, err := os.ReadFile(testCase.sourceFile)
 			require.NoError(t, err)
 

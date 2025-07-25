@@ -8,6 +8,8 @@ import (
 )
 
 func TestBuildConnectionString(t *testing.T) {
+	t.Parallel()
+	
 	tests := []struct {
 		name                 string
 		connectionStringBase string
@@ -81,6 +83,8 @@ func TestBuildConnectionString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			
 			// Convert map to url.Values
 			params := url.Values{}
 			for k, v := range tt.params {

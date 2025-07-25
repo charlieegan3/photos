@@ -12,6 +12,8 @@ import (
 )
 
 func TestParseActivity(t *testing.T) {
+	t.Parallel()
+	
 	testCases := map[string]struct {
 		InputFile              string
 		ExpectedPointsJSONFile string
@@ -163,6 +165,8 @@ func TestParseActivity(t *testing.T) {
 
 	for testCaseName, testCaseData := range testCases {
 		t.Run(testCaseName, func(t *testing.T) {
+			t.Parallel()
+			
 			var expectedPoints []Point
 			expectedPointsJSONBytes, err := os.ReadFile(testCaseData.ExpectedPointsJSONFile)
 			require.NoError(t, err)

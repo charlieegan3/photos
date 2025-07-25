@@ -33,6 +33,8 @@ import (
 )
 
 func TestDatabaseSuite(t *testing.T) {
+	t.Parallel()
+	
 	suite.Run(t, new(DatabaseSuite))
 }
 

@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"sync"
 
@@ -53,7 +56,10 @@ func (ir *Resizer) ResizeInBucket(
 	imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
 
 	imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
-	buf = bytes.NewBuffer(imageBytes)
+	if err != nil {
+		// If transformation fails, use the original image data
+		imageBytes = buf.Bytes()
+	}
 
 	// create a writer for the new thumb
 	bw, err := bucket.NewWriter(ctx, thumbMediaPath, nil)
@@ -97,7 +103,10 @@ func (ir *Resizer) CreateThumbInBucket(
 	imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
 
 	imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
-	buf = bytes.NewBuffer(imageBytes)
+	if err != nil {
+		// If transformation fails, use the original image data
+		imageBytes = buf.Bytes()
+	}
 
 	// create a writer for the new thumb
 	bw, err := bucket.NewWriter(ctx, thumbMediaPath, nil)

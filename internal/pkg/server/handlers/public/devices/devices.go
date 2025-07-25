@@ -255,7 +255,11 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			imageOptions.ScaleUp = false // don't attempt to make images larger if not possible
 
 			imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
-			buf = bytes.NewBuffer(imageBytes)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("failed to transform image"))
+				return
+			}
 
 			// create a writer for the new thumb
 			bw, err := bucket.NewWriter(r.Context(), thumbIconPath, nil)
@@ -268,7 +272,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed to copy device image into response: %s", err)))
+				fmt.Fprintf(w, "failed to copy device image into response: %s", err)
 				return
 			}
 
@@ -326,7 +330,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("failed to copy device image into response: %s", err)))
+			fmt.Fprintf(w, "failed to copy device image into response: %s", err)
 			return
 		}
 

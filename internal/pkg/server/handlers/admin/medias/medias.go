@@ -276,7 +276,7 @@ func BuildFormHandler(
 				f, err := strconv.ParseFloat(val, 64)
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
-					w.Write([]byte(fmt.Sprintf("float value %v was invalid", val)))
+					fmt.Fprintf(w, "float value %v was invalid", val)
 					return
 				}
 				floatMap[key] = f
@@ -288,7 +288,7 @@ func BuildFormHandler(
 			isoSpeed, err = strconv.Atoi(val)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("int value %v was invalid", val)))
+				fmt.Fprintf(w, "int value %v was invalid", val)
 				return
 			}
 		}
@@ -298,7 +298,7 @@ func BuildFormHandler(
 			displayOffset, err = strconv.Atoi(val)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("int value %v was invalid", val)))
+				fmt.Fprintf(w, "int value %v was invalid", val)
 				return
 			}
 		}
@@ -308,7 +308,7 @@ func BuildFormHandler(
 			exposureTimeNumerator, err = strconv.ParseUint(val, 10, 32)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("exposureTimeNumerator int value %v was invalid", val)))
+				fmt.Fprintf(w, "exposureTimeNumerator int value %v was invalid", val)
 				return
 			}
 		}
@@ -318,7 +318,7 @@ func BuildFormHandler(
 			exposureTimeDenominator, err = strconv.ParseUint(val, 10, 32)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("exposureTimeDenominator int value %v was invalid", val)))
+				fmt.Fprintf(w, "exposureTimeDenominator int value %v was invalid", val)
 				return
 			}
 		}
@@ -328,7 +328,7 @@ func BuildFormHandler(
 			takenAt, err = time.Parse("2006-01-02T15:04", val)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("time value %v was invalid", val)))
+				fmt.Fprintf(w, "time value %v was invalid", val)
 				return
 			}
 		}
@@ -545,7 +545,7 @@ func BuildCreateHandler(
 		err := r.ParseMultipartForm(32 << 20)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(fmt.Sprintf("failed to parse multipart form: %s", err.Error())))
+			fmt.Fprintf(w, "failed to parse multipart form: %s", err.Error())
 			return
 		}
 
@@ -575,7 +575,7 @@ func BuildCreateHandler(
 		f, header, err := r.FormFile("File")
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(fmt.Sprintf("failed to open uploaded file: %s", err)))
+			fmt.Fprintf(w, "failed to open uploaded file: %s", err)
 			return
 		}
 
@@ -601,14 +601,14 @@ func BuildCreateHandler(
 		fileBytes, err := io.ReadAll(f)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(fmt.Sprintf("failed to read uploaded file data: %s", err)))
+			fmt.Fprintf(w, "failed to read uploaded file data: %s", err)
 			return
 		}
 
 		exifData, err := mediametadata.ExtractMetadata(fileBytes)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("failed to get exif data file: %s", err)))
+			fmt.Fprintf(w, "failed to get exif data file: %s", err)
 			return
 		}
 
@@ -628,13 +628,13 @@ func BuildCreateHandler(
 		media.FocalLength = exifData.FocalLength
 		media.TakenAt = exifData.DateTime
 		// TODO handle exif errors
-		media.FNumber, err = exifData.FNumber.ToDecimal()
+		media.FNumber, _ = exifData.FNumber.ToDecimal()
 		media.ExposureTimeNumerator = exifData.ExposureTime.Numerator
 		media.ExposureTimeDenominator = exifData.ExposureTime.Denominator
 		media.ISOSpeed = int(exifData.ISOSpeed)
-		media.Latitude, err = exifData.Latitude.ToDecimal()
-		media.Longitude, err = exifData.Longitude.ToDecimal()
-		media.Altitude, err = exifData.Altitude.ToDecimal()
+		media.Latitude, _ = exifData.Latitude.ToDecimal()
+		media.Longitude, _ = exifData.Longitude.ToDecimal()
+		media.Altitude, _ = exifData.Altitude.ToDecimal()
 		media.Width = exifData.Width
 		media.Height = exifData.Height
 

@@ -221,12 +221,12 @@ func BuildMapHandler(
 			resp, err := http.Get(mapImageURL)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("upstream map server request failed: %s", err)))
+				fmt.Fprintf(w, "upstream map server request failed: %s", err)
 				return
 			}
 			if resp.StatusCode != http.StatusOK {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("upstream map server request failed: %d", resp.StatusCode)))
+				fmt.Fprintf(w, "upstream map server request failed: %d", resp.StatusCode)
 				return
 			}
 
@@ -281,7 +281,7 @@ func BuildMapHandler(
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("failed to copy map image into response: %s", err)))
+			fmt.Fprintf(w, "failed to copy map image into response: %s", err)
 			return
 		}
 	}

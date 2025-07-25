@@ -129,6 +129,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 
@@ -222,6 +223,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 
@@ -362,8 +364,8 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	// check that the image has been uploaded ok
 	// get a digest for the image in the bucket
 	r, err := s.Bucket.NewReader(context.Background(), "device_icons/x100f.jpg", nil)
-	defer r.Close()
 	require.NoError(s.T(), err)
+	defer r.Close()
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
 	require.NoError(s.T(), err)

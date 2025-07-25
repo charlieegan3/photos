@@ -333,7 +333,6 @@ func BuildLegacyPostRedirect() func(http.ResponseWriter, *http.Request) {
 			return
 		}
 		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", date), http.StatusMovedPermanently)
-		return
 	}
 }
 
@@ -359,7 +358,6 @@ func BuildLegacyPeriodRedirect() func(http.ResponseWriter, *http.Request) {
 			fmt.Sprintf("/posts/on-this-day/%s-%s", date.Format("January"), date.Format("2")),
 			http.StatusMovedPermanently,
 		)
-		return
 	}
 }
 
@@ -524,7 +522,6 @@ func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(
 		}
 
 		http.Redirect(w, r, fmt.Sprintf("/posts/period/%s", fromString), http.StatusSeeOther)
-		return
 	}
 }
 
@@ -709,9 +706,9 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 
 		rawMonth, monthOk := mux.Vars(r)["month"]
 		rawDay, dayOk := mux.Vars(r)["day"]
-		day, err := strconv.Atoi(rawDay)
-		month, err := time.Parse("January", rawMonth)
-		if err != nil || !monthOk || !dayOk {
+		day, dayErr := strconv.Atoi(rawDay)
+		month, monthErr := time.Parse("January", rawMonth)
+		if dayErr != nil || monthErr != nil || !monthOk || !dayOk {
 			http.Redirect(
 				w, r,
 				fmt.Sprintf(
@@ -783,8 +780,6 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		return
 	}
 }
 
@@ -798,6 +793,5 @@ func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		http.Redirect(w, r, fmt.Sprintf("/posts/%d", postID), http.StatusSeeOther)
-		return
 	}
 }

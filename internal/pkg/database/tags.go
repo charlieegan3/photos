@@ -121,6 +121,9 @@ func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, e
 	resultMap := make(map[string]models.Tag)
 
 	foundTags, err := FindTagsByName(db, names)
+	if err != nil {
+		return results, err
+	}
 	for _, t := range foundTags {
 		resultMap[t.Name] = t
 	}
@@ -132,9 +135,14 @@ func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, e
 		}
 	}
 
-	createdTags, err := CreateTags(db, tagsToCreate)
-	for _, t := range createdTags {
-		resultMap[t.Name] = t
+	if len(tagsToCreate) > 0 {
+		createdTags, err := CreateTags(db, tagsToCreate)
+		if err != nil {
+			return results, err
+		}
+		for _, t := range createdTags {
+			resultMap[t.Name] = t
+		}
 	}
 
 	for _, t := range names {

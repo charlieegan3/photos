@@ -138,7 +138,7 @@ func serveImageFromBucket(w http.ResponseWriter, r *http.Request, bucket *blob.B
 	if err != nil {
 		w.Header().Set("Content-Type", "application/text")
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprintf("failed to copy image to response: %s", err.Error())))
+		fmt.Fprintf(w, "failed to copy image to response: %s", err.Error())
 		return
 	}
 

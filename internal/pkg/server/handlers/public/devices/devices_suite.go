@@ -168,6 +168,7 @@ func (s *DevicesSuite) TestGetIcon() {
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("device_icons/%s.jpg", returnedDevices[0].Slug), nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 

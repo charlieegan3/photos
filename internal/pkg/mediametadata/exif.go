@@ -127,7 +127,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			val, ok := rawValue.(string)
 			if !ok {
-				return fmt.Errorf("Make was not in expected format: %#v", rawValue)
+				return fmt.Errorf("make was not in expected format: %#v", rawValue)
 			}
 
 			metadata.Make = val
@@ -141,7 +141,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			val, ok := rawValue.(string)
 			if !ok {
-				return fmt.Errorf("Model was not in expected format: %#v", rawValue)
+				return fmt.Errorf("model was not in expected format: %#v", rawValue)
 			}
 
 			metadata.Model = val
@@ -155,7 +155,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			val, ok := rawValue.(string)
 			if !ok {
-				return fmt.Errorf("Lens was not in expected format: %#v", rawValue)
+				return fmt.Errorf("lens was not in expected format: %#v", rawValue)
 			}
 
 			metadata.Lens = val
@@ -191,7 +191,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			if len(val) == 1 {
 				value := float64(val[0].Numerator) / float64(val[0].Denominator)
 
-				focalLength := fmt.Sprintf("%.2f", value)
+				focalLength = fmt.Sprintf("%.2f", value)
 				focalLength = strings.TrimSuffix(focalLength, ".00")
 				focalLength = strings.TrimSuffix(focalLength, "0")
 			}
@@ -433,7 +433,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 	// special case for X100F which does not set 35mm equiv focal length
 	if metadata.Make == "FUJIFILM" && metadata.Model == "X100F" {
-		if metadata.FocalLength == "" {
+		if metadata.FocalLength == "" || metadata.FocalLength == "23mm" {
 			metadata.FocalLength = "23mm (35mm in 35mm format)"
 		}
 		if metadata.Lens == "" {

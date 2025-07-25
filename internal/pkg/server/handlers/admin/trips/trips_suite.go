@@ -29,8 +29,7 @@ type EndpointsTripsSuite struct {
 }
 
 func (s *EndpointsTripsSuite) SetupTest() {
-	var err error
-	err = database.Truncate(s.DB, "photos.trips")
+	err := database.Truncate(s.DB, "photos.trips")
 	require.NoError(s.T(), err)
 }
 
@@ -66,8 +65,8 @@ func (s *EndpointsTripsSuite) TestListTrips() {
 
 	router.ServeHTTP(rr, req)
 
-	if assert.Equal(s.T(), http.StatusOK, rr.Code) == false {
-		s.T().Log(string(rr.Body.Bytes()))
+	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+		s.T().Log(rr.Body.String())
 		s.T().Fatalf("failed to read response body: %s", err)
 	}
 
@@ -157,8 +156,8 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right trip
-	if assert.Equal(s.T(), http.StatusSeeOther, rr.Code) == false {
-		s.T().Log(string(rr.Body.Bytes()))
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		s.T().Log(rr.Body.String())
 	}
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/trips/") {
@@ -223,8 +222,8 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if assert.Equal(s.T(), http.StatusSeeOther, rr.Code) == false {
-		s.T().Log(string(rr.Body.Bytes()))
+	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+		s.T().Log(rr.Body.String())
 	}
 	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
 

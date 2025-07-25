@@ -263,7 +263,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			post.PublishDate, err = time.Parse("2006-01-02T15:04", val)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("time value '%v' was invalid", val)))
+				fmt.Fprintf(w, "time value '%v' was invalid", val)
 				return
 			}
 		}
@@ -384,7 +384,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			post.PublishDate, err = time.Parse("2006-01-02T15:04", val)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("time value '%v' was invalid", val)))
+				fmt.Fprintf(w, "time value '%v' was invalid", val)
 				return
 			}
 		}

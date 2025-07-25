@@ -390,8 +390,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 		media := medias[0]
 
-		nearbyLocations := []models.Location{}
-		nearbyLocations, err = database.NearbyLocations(db, media.Latitude, media.Longitude)
+		nearbyLocations, err := database.NearbyLocations(db, media.Latitude, media.Longitude)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to get points at that timestamp"))
@@ -460,6 +459,5 @@ func BuildLookupHandler(
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 		}
-		return
 	}
 }

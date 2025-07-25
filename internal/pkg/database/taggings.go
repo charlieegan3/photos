@@ -126,9 +126,7 @@ func FindOrCreateTaggings(db *sql.DB, taggings []models.Tagging) (results []mode
 			return results, errors.Wrap(err, "failed to create missing taggings")
 		}
 
-		for _, v := range newTaggings {
-			results = append(results, v)
-		}
+		results = append(results, newTaggings...)
 	}
 
 	return results, nil

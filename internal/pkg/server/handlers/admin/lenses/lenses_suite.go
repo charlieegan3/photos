@@ -130,6 +130,7 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 	bw, err := s.Bucket.NewWriter(context.Background(), "lens_icons/iphone.jpg", nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 
@@ -223,6 +224,7 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("lens_icons/%d.png", persistedLenses[0].ID), nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 
@@ -371,8 +373,8 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	// check that the image has been uploaded ok
 	// get a digest for the image in the bucket
 	r, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("lens_icons/%d.png", returnedLenses[0].ID), nil)
-	defer r.Close()
 	require.NoError(s.T(), err)
+	defer r.Close()
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
 	require.NoError(s.T(), err)

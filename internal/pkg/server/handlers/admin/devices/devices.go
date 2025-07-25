@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 	"strings"
@@ -156,7 +157,7 @@ func BuildCreateHandler(
 		}
 		if device.IconKind != "jpg" && device.IconKind != "jpeg" && device.IconKind != "png" {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(fmt.Sprintf("icon file must be jpg or png, got: %s", device.IconKind)))
+			fmt.Fprintf(w, "icon file must be jpg or png, got: %s", device.IconKind)
 			return
 		}
 
@@ -178,7 +179,7 @@ func BuildCreateHandler(
 		bw, err := bucket.NewWriter(r.Context(), key, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("failed to initialize icon storage: %s", err)))
+			fmt.Fprintf(w, "failed to initialize icon storage: %s", err)
 			return
 		}
 
@@ -301,7 +302,7 @@ func BuildFormHandler(
 			IconKind:     existingDevices[0].IconKind,
 		}
 
-		f, header, err := r.FormFile("Icon")
+		_, header, err := r.FormFile("Icon")
 		if err == nil {
 			lowerFilename := strings.ToLower(header.Filename)
 			if parts := strings.Split(lowerFilename, "."); len(parts) > 0 {
@@ -313,7 +314,7 @@ func BuildFormHandler(
 			}
 			if device.IconKind != "jpg" && device.IconKind != "jpeg" && device.IconKind != "png" {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("icon file must be jpg or png, got: %s", device.IconKind)))
+				fmt.Fprintf(w, "icon file must be jpg or png, got: %s", device.IconKind)
 				return
 			}
 		}
@@ -337,7 +338,7 @@ func BuildFormHandler(
 			br, err := bucket.NewReader(r.Context(), existingIconKey, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed initialize icon storage: %s", err)))
+				fmt.Fprintf(w, "failed initialize icon storage: %s", err)
 				return
 			}
 			defer br.Close()
@@ -346,7 +347,7 @@ func BuildFormHandler(
 			bw, err := bucket.NewWriter(r.Context(), iconPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(fmt.Sprintf("failed to open new writer for object: %s", err)))
+				fmt.Fprintf(w, "failed to open new writer for object: %s", err)
 				return
 			}
 
@@ -380,7 +381,8 @@ func BuildFormHandler(
 
 		// only handle the file when it's present, file might not be submitted
 		// every time the form is sent
-		f, header, err = r.FormFile("Icon")
+		var f multipart.File
+		f, _, err = r.FormFile("Icon")
 		if err == nil {
 			iconPath := fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, device.IconKind)
 			bw, err := bucket.NewWriter(r.Context(), iconPath, nil)

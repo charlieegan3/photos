@@ -73,7 +73,6 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			dateTitle = trip.StartDate.Format(timeFormat)
 		}
 		if trip.StartDate.Month() == trip.EndDate.Month() {
-			dateTitle = trip.StartDate.Format("January 2006")
 			dateTitle = fmt.Sprintf(
 				"%s-%s, %s",
 				trip.StartDate.Format("January 2"),
@@ -138,10 +137,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			postGroups[key] = append(postGroups[key], p)
 		}
 
-		showDates := true
-		if trip.StartDate.Add(24*time.Hour).After(toTime) || trip.StartDate.Add(24*time.Hour).Equal(toTime) {
-			showDates = false
-		}
+		showDates := trip.StartDate.Add(24 * time.Hour).Before(toTime)
 
 		if len(postGroupKeys) == 1 {
 			dateTitle = postGroupKeys[0]

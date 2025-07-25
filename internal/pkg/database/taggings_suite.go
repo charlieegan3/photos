@@ -270,10 +270,10 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 
-	returnedTaggings, err := CreateTaggings(s.DB, taggings)
+	_, err = CreateTaggings(s.DB, taggings)
 	require.NoError(s.T(), err)
 
-	returnedTaggings, err = FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
+	returnedTaggings, err := FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
 	require.NoError(s.T(), err)
 
 	expectedResult := td.Slice(

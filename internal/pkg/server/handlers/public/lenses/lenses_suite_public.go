@@ -187,6 +187,7 @@ func (s *LensesSuite) TestGetIcon() {
 	require.NoError(s.T(), err)
 
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 

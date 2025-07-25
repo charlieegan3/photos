@@ -15,7 +15,6 @@ import (
 	"github.com/spf13/viper"
 	"gocloud.dev/blob"
 	"gocloud.dev/blob/gcsblob"
-	_ "gocloud.dev/blob/gcsblob"
 	"gocloud.dev/gcp"
 	"golang.org/x/oauth2/google"
 
@@ -66,6 +65,9 @@ var serverCmd = &cobra.Command{
 		}
 
 		source, err := iofs.New(migrations, "migrations")
+		if err != nil {
+			log.Fatalf("failed to create migration source: %s", err)
+		}
 		m, err := migrate.NewWithInstance("iofs", source, "postgres", driver)
 		if err != nil {
 			log.Fatalf("failed to load migrations: %s", err)

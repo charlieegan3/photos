@@ -115,6 +115,9 @@ func (s *DatabaseSuite) SetupSuite() {
 	}
 
 	source, err := iofs.New(migrations, "migrations")
+	if err != nil {
+		s.T().Fatalf("failed to create migration source: %s", err)
+	}
 	m, err := migrate.NewWithInstance("iofs", source, "postgres", driver)
 	if err != nil {
 		s.T().Fatalf("failed to init migrations: %s", err)

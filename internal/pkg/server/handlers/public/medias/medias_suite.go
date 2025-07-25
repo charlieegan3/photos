@@ -68,6 +68,7 @@ func (s *MediasSuite) TestGetMedia() {
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("media/%d.jpg", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 
@@ -169,6 +170,7 @@ func (s *MediasSuite) TestGetMediaFit() {
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("media/%d.jpg", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
 	_, err = io.Copy(bw, imageFile)
+	require.NoError(s.T(), err)
 	err = bw.Close()
 	require.NoError(s.T(), err)
 

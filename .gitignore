@@ -1,3 +1,4 @@
 config.*.yaml
 bucket/*
 northflank-secret.json
+result

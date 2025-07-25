@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"net/url"
+	"os"
+	"strings"
 
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
@@ -37,10 +39,7 @@ func Init(
 		params.Add("dbname", "postgres")
 
 		// generate the final connectionString based on the params
-		connectionString := fmt.Sprintf(
-			"%s?%s",
-			connectionStringBase,
-			params.Encode())
+		connectionString := buildConnectionString(connectionStringBase, params)
 
 		// Open the connection and test that it's working
 		db, err := sql.Open("postgres", connectionString)
@@ -77,10 +76,7 @@ func Init(
 	}
 
 	// generate the final connectionString based on the params
-	connectionString := fmt.Sprintf(
-		"%s?%s",
-		connectionStringBase,
-		params.Encode())
+	connectionString := buildConnectionString(connectionStringBase, params)
 
 	// Open the connection and test that it's working
 	db, err := sql.Open("postgres", connectionString)
@@ -166,6 +162,29 @@ func Exists(db *sql.DB, databaseName string) (bool, error) {
 
 	// only return true if there was a matching row with 1 set for a name match
 	return result == 1, nil
+}
+
+// buildConnectionString constructs a PostgreSQL connection string supporting both
+// TCP connections (postgres://host:port/db) and Unix socket connections (postgres:///db?host=/path)
+func buildConnectionString(connectionStringBase string, params url.Values) string {
+	// Check if this is a Unix socket connection by looking for host parameter that starts with "/"
+	if hostParam := params.Get("host"); hostParam != "" && strings.HasPrefix(hostParam, "/") {
+		// Validate that the socket directory exists
+		if _, err := os.Stat(hostParam); os.IsNotExist(err) {
+			// Log warning but continue - PostgreSQL might create the socket
+			fmt.Printf("Warning: Unix socket directory %s does not exist\n", hostParam)
+		}
+
+		// Unix socket connection: postgres:///dbname?host=/socket/path&other=params
+		dbname := params.Get("dbname")
+		if dbname == "" {
+			dbname = "postgres"
+		}
+		return fmt.Sprintf("postgres:///%s?%s", dbname, params.Encode())
+	}
+
+	// Standard TCP connection: postgres://host:port/db?params
+	return fmt.Sprintf("%s?%s", connectionStringBase, params.Encode())
 }
 
 // Truncate the table with tableName

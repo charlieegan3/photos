@@ -20,6 +20,13 @@ make test_watch  # Run tests in watch mode
 make test_db     # Start local PostgreSQL test database in Docker
 ```
 
+### Code Quality
+
+```bash
+make lint        # Run Go linter (golangci-lint)
+make fmt         # Format code using goimports, gofumpt, dprint, and treefmt
+```
+
 ### Database Operations
 
 ```bash
@@ -78,6 +85,31 @@ make update_config  # Update Northflank production configuration
 - Environment-specific configs: `config.dev.yaml`, `config.prod.yaml`, `config.test.yaml`
 - Uses Viper for configuration management
 - OAuth and storage backends are configured via environment variables
+
+#### Database Connection Types
+
+The application supports both TCP and Unix socket connections to PostgreSQL:
+
+**TCP Connection (default):**
+
+```yaml
+database:
+  connectionString: postgres://localhost:5432/mydb
+  params:
+    dbname: mydb
+    sslmode: disable
+```
+
+**Unix Socket Connection:**
+
+```yaml
+database:
+  connectionString: postgres:///mydb  # Note: no host/port
+  params:
+    dbname: mydb
+    host: /var/run/postgresql  # Unix socket directory
+    sslmode: disable
+```
 
 ### Testing Approach
 

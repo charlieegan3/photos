@@ -96,9 +96,9 @@ func (s *TagsSuite) TestListTags() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/tags", nil)
+	req, err := http.NewRequest(http.MethodGet, "/tags", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -179,9 +179,9 @@ func (s *TagsSuite) TestGetTag() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/tags/tag1", nil)
+	req, err := http.NewRequest(http.MethodGet, "/tags/tag1", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 

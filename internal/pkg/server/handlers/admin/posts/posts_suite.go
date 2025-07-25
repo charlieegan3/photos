@@ -104,9 +104,9 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/posts", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/posts", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/posts", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -188,9 +188,9 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -212,9 +212,9 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 
 func (s *EndpointsPostsSuite) TestNewPost() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts/new", BuildNewHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/posts/new", BuildNewHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/posts/new", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/posts/new", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -271,7 +271,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/posts", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	form := url.Values{}
 	form.Add("Description", "foobar")
@@ -283,7 +283,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		"/admin/posts",
 		strings.NewReader(form.Encode()),
 	)
@@ -400,10 +400,10 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts/{postID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/posts/{postID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "PUT")
+	form.Add("_method", http.MethodPut)
 	form.Add("Description", "foobar")
 	form.Add("PublishDate", time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC).Format("2006-01-02T15:04"))
 	form.Add("IsDraft", "true")
@@ -413,7 +413,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID),
 		strings.NewReader(form.Encode()),
 	)
@@ -521,14 +521,14 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 	router.HandleFunc(
 		"/admin/posts/{postID}",
 		BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
-	).Methods("POST")
+	).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "DELETE")
+	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID),
 		strings.NewReader(form.Encode()),
 	)

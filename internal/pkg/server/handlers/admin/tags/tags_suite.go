@@ -63,9 +63,9 @@ func (s *EndpointsTagsSuite) TestListTags() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/tags", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/tags", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -94,9 +94,9 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -113,9 +113,9 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 
 func (s *EndpointsTagsSuite) TestNewTag() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/tags/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/tags/new", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/tags/new", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -132,7 +132,7 @@ func (s *EndpointsTagsSuite) TestNewTag() {
 
 func (s *EndpointsTagsSuite) TestCreateTag() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/tags", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	form := url.Values{}
 	form.Add("Name", "nofilter")
@@ -140,7 +140,7 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		"/admin/tags",
 		strings.NewReader(form.Encode()),
 	)
@@ -262,16 +262,16 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/tags/{tagName}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/tags/{tagName}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "PUT")
+	form.Add("_method", http.MethodPut)
 	form.Add("Name", "nofiltered")
 	form.Add("Hidden", "false")
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name),
 		strings.NewReader(form.Encode()),
 	)
@@ -282,12 +282,12 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	router.ServeHTTP(rr, req)
 
 	form = url.Values{}
-	form.Add("_method", "PUT")
+	form.Add("_method", http.MethodPut)
 	form.Add("Name", "tag1")
 	form.Add("Hidden", "false")
 
 	// make the request to the handler
-	req, err = http.NewRequest("POST", "/admin/tags/tag2", strings.NewReader(form.Encode()))
+	req, err = http.NewRequest(http.MethodPost, "/admin/tags/tag2", strings.NewReader(form.Encode()))
 	require.NoError(s.T(), err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -374,14 +374,14 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	router.HandleFunc(
 		"/admin/tags/{tagName}",
 		BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
-	).Methods("POST")
+	).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "DELETE")
+	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name),
 		strings.NewReader(form.Encode()),
 	)

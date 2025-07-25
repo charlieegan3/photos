@@ -65,9 +65,9 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 			"",
 			templating.BuildPageRenderFunc(true, HeadContent),
 		),
-	).Methods("GET")
+	).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/locations", nil)
+	req, err := http.NewRequest(http.MethodGet, "/locations", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -128,9 +128,9 @@ func (s *LocationsSuite) TestGetLocation() {
 	router.HandleFunc(
 		"/locations/{locationID}",
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
-	).Methods("GET")
+	).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -184,9 +184,9 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/locations/{locationID}/map.jpg", BuildMapHandler(s.DB, s.Bucket, mapServer.URL, "")).Methods("GET")
+	router.HandleFunc("/locations/{locationID}/map.jpg", BuildMapHandler(s.DB, s.Bucket, mapServer.URL, "")).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 

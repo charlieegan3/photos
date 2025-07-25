@@ -18,9 +18,9 @@ func TestIndexPage(t *testing.T) {
 
 	renderer := templating.BuildPageRenderFunc(true, "", "admin")
 
-	router.HandleFunc("/admin", BuildAdminIndexHandler(renderer)).Methods("GET")
+	router.HandleFunc("/admin", BuildAdminIndexHandler(renderer)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin", nil)
 	require.NoError(t, err)
 	rr := httptest.NewRecorder()
 

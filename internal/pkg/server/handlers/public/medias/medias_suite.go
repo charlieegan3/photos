@@ -72,9 +72,9 @@ func (s *MediasSuite) TestGetMedia() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods("GET")
+	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -170,9 +170,9 @@ func (s *MediasSuite) TestGetMediaFit() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods("GET")
+	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 

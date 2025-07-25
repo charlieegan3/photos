@@ -91,9 +91,9 @@ func (s *TripsSuite) TestGetTrip() {
 	router.HandleFunc(
 		"/trips/{tripID}",
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
-	).Methods("GET")
+	).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/trips/%d", returnedTrips[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/trips/%d", returnedTrips[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 

@@ -201,7 +201,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 				return
 			}
 
-			if r.Form.Get("_method") != "DELETE" {
+			if r.Form.Get("_method") != http.MethodDelete {
 				w.WriteHeader(http.StatusBadRequest)
 				w.Write([]byte("expected _method to be DELETE"))
 				return
@@ -262,7 +262,7 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			return
 		}
 
-		if r.PostForm.Get("_method") != "PUT" {
+		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return

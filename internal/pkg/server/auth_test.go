@@ -23,7 +23,7 @@ func TestAuthMiddleware(t *testing.T) {
 	})
 
 	// test the public request
-	req, err := http.NewRequest("GET", "/public", nil)
+	req, err := http.NewRequest(http.MethodGet, "/public", nil)
 	assert.NoError(t, err, "unexpected error getting public page")
 
 	rr := httptest.NewRecorder()
@@ -37,7 +37,7 @@ func TestAuthMiddleware(t *testing.T) {
 	assert.Equal(t, "public", string(body))
 
 	// test the admin request without credentials
-	req, err = http.NewRequest("GET", "/admin/secret", nil)
+	req, err = http.NewRequest(http.MethodGet, "/admin/secret", nil)
 	assert.NoError(t, err, "unexpected error getting admin page")
 
 	rr = httptest.NewRecorder()
@@ -51,7 +51,7 @@ func TestAuthMiddleware(t *testing.T) {
 	assert.Equal(t, "Unauthorised.\n", string(body))
 
 	// test the admin request with credentials set
-	req, err = http.NewRequest("GET", "/admin/secret", nil)
+	req, err = http.NewRequest(http.MethodGet, "/admin/secret", nil)
 	req.SetBasicAuth("username", "password")
 	assert.NoError(t, err, "unexpected error getting admin page")
 

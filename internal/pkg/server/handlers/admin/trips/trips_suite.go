@@ -56,9 +56,9 @@ func (s *EndpointsTripsSuite) TestListTrips() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/trips", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/trips", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/trips", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -90,9 +90,9 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips/{tripID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/trips/{tripID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -108,9 +108,9 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 
 func (s *EndpointsTripsSuite) TestNewTrip() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/trips/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/trips/new", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/trips/new", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -129,7 +129,7 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 	router.HandleFunc(
 		"/admin/trips",
 		BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
-	).Methods("POST")
+	).Methods(http.MethodPost)
 
 	form := url.Values{}
 	form.Add("Title", "London")
@@ -139,7 +139,7 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		"/admin/trips",
 		strings.NewReader(form.Encode()),
 	)
@@ -195,17 +195,17 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips/{tripID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/trips/{tripID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "PUT")
+	form.Add("_method", http.MethodPut)
 	form.Add("Title", "Berlin")
 	form.Add("StartDate", "2023-01-01")
 	form.Add("EndDate", "2023-01-02")
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID),
 		strings.NewReader(form.Encode()),
 	)
@@ -258,14 +258,14 @@ func (s *EndpointsTripsSuite) TestDeleteTrip() {
 	router.HandleFunc(
 		"/admin/trips/{tripID}",
 		BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
-	).Methods("POST")
+	).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "DELETE")
+	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID),
 		strings.NewReader(form.Encode()),
 	)

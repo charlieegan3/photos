@@ -102,9 +102,9 @@ func (s *PostsSuite) TestListPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/", nil)
+	req, err := http.NewRequest(http.MethodGet, "/", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -177,9 +177,9 @@ func (s *PostsSuite) TestGetPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -236,9 +236,9 @@ func (s *PostsSuite) TestPeriodHandler() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/period/{from}-to-{to}", BuildPeriodHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/posts/period/{from}-to-{to}", BuildPeriodHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/posts/period/2021-11-01-to-2021-11-29", nil)
+	req, err := http.NewRequest(http.MethodGet, "/posts/period/2021-11-01-to-2021-11-29", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -260,9 +260,9 @@ func (s *PostsSuite) TestPeriodHandler() {
 
 func (s *PostsSuite) TestLegacyPostPathRedirect() {
 	router := mux.NewRouter()
-	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, BuildLegacyPostRedirect()).Methods("GET")
+	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, BuildLegacyPostRedirect()).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/posts/2018-07-08-1819241500870030645", nil)
+	req, err := http.NewRequest(http.MethodGet, "/posts/2018-07-08-1819241500870030645", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -279,9 +279,9 @@ func (s *PostsSuite) TestLegacyPostPathRedirect() {
 
 func (s *PostsSuite) TestLegacyPeriodRedirect() {
 	router := mux.NewRouter()
-	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`, BuildLegacyPeriodRedirect()).Methods("GET")
+	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`, BuildLegacyPeriodRedirect()).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/archive/09-01", nil)
+	req, err := http.NewRequest(http.MethodGet, "/archive/09-01", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -298,9 +298,9 @@ func (s *PostsSuite) TestLegacyPeriodRedirect() {
 
 func (s *PostsSuite) TestPeriodIndexHandler() {
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/posts/period", BuildPeriodIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/posts/period?from=2021-10-01&to=2021-11-01", nil)
+	req, err := http.NewRequest(http.MethodGet, "/posts/period?from=2021-10-01&to=2021-11-01", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -315,7 +315,7 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 	assert.Equal(s.T(), "/posts/period/2021-10-01-to-2021-11-01", rr.Header().Get("Location"))
 
 	// getting with no params renders form page
-	req, err = http.NewRequest("GET", "/posts/period", nil)
+	req, err = http.NewRequest(http.MethodGet, "/posts/period", nil)
 	require.NoError(s.T(), err)
 	rr = httptest.NewRecorder()
 
@@ -386,9 +386,9 @@ func (s *PostsSuite) TestLatestPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/latest.json", BuildLatestHandler(s.DB)).Methods("GET")
+	router.HandleFunc("/posts/latest.json", BuildLatestHandler(s.DB)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/posts/latest.json", nil)
+	req, err := http.NewRequest(http.MethodGet, "/posts/latest.json", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -461,9 +461,9 @@ func (s *PostsSuite) TestRSS() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/rss.xml", BuildRSSHandler(s.DB)).Methods("GET")
+	router.HandleFunc("/rss.xml", BuildRSSHandler(s.DB)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/rss.xml", nil)
+	req, err := http.NewRequest(http.MethodGet, "/rss.xml", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -555,9 +555,9 @@ func (s *PostsSuite) TestSearchPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/search", BuildSearchHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/posts/search", BuildSearchHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/posts/search?query=post1", nil)
+	req, err := http.NewRequest(http.MethodGet, "/posts/search?query=post1", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -625,11 +625,11 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/posts/on-this-day", BuildOnThisDayHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
-	router.HandleFunc("/posts/on-this-day/{month}-{day}", BuildOnThisDayHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/posts/on-this-day", BuildOnThisDayHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/posts/on-this-day/{month}-{day}", BuildOnThisDayHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	// check that redirects to current day
-	req, err := http.NewRequest("GET", "/posts/on-this-day", nil)
+	req, err := http.NewRequest(http.MethodGet, "/posts/on-this-day", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -645,7 +645,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	}
 
 	// check the correct contents is returned
-	req, err = http.NewRequest("GET", "/posts/on-this-day/January-1", nil)
+	req, err = http.NewRequest(http.MethodGet, "/posts/on-this-day/January-1", nil)
 	require.NoError(s.T(), err)
 	rr = httptest.NewRecorder()
 

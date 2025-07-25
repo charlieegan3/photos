@@ -56,9 +56,9 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/devices", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/devices", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -86,9 +86,9 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/devices/{deviceID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -130,14 +130,14 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/devices/{deviceID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	// open the image to be uploaded in the form
 
 	// build the form to be posted
 	values := map[string]io.Reader{
 		"Name":    strings.NewReader("iPad"),
-		"_method": strings.NewReader("PUT"),
+		"_method": strings.NewReader(http.MethodPut),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -159,7 +159,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	w.Close()
 
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		&b,
 	)
@@ -225,14 +225,14 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	router.HandleFunc(
 		"/admin/devices/{deviceID}",
 		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, "")),
-	).Methods("POST")
+	).Methods(http.MethodPost)
 
 	form := url.Values{}
-	form.Add("_method", "DELETE")
+	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		strings.NewReader(form.Encode()),
 	)
@@ -265,9 +265,9 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods("GET")
+	router.HandleFunc("/admin/devices/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest("GET", "/admin/devices/new", nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/devices/new", nil)
 	require.NoError(s.T(), err)
 	rr := httptest.NewRecorder()
 
@@ -284,7 +284,7 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods("POST")
+	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
@@ -317,7 +317,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 
 	// make the request to the handler
 	req, err := http.NewRequest(
-		"POST",
+		http.MethodPost,
 		"/admin/devices",
 		&b,
 	)

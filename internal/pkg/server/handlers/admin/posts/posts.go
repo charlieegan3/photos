@@ -356,7 +356,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		if r.Form.Get("_method") == "DELETE" {
+		if r.Form.Get("_method") == http.MethodDelete {
 			err = database.DeletePosts(db, []models.Post{existingPosts[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -367,7 +367,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		if r.PostForm.Get("_method") != "PUT" {
+		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return

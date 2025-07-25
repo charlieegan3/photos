@@ -3,9 +3,7 @@ module github.com/charlieegan3/photos
 go 1.22.4
 
 require (
-	github.com/Jeffail/gabs/v2 v2.7.0
 	github.com/charlieegan3/oauth-middleware v0.0.0-20240622204233-c70d49cc30bf
-	github.com/charlieegan3/toolbelt v0.0.0-20230903125731-9e3d19bf4fa9
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/doug-martin/goqu/v9 v9.18.0
 	github.com/dsoprea/go-exif/v3 v3.0.0-20210625224831-a6301f85c82b
@@ -14,7 +12,7 @@ require (
 	github.com/gomarkdown/markdown v0.0.0-20211212230626-5af6ad2f47df
 	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/mux v1.8.0
-	github.com/gorilla/schema v1.2.0
+	github.com/gorilla/schema v1.4.1
 	github.com/lib/pq v1.10.7
 	github.com/maxatome/go-testdeep v1.10.1
 	github.com/philhofer/tcx v0.0.0-20140422172628-84b8274e31dc
@@ -90,7 +88,6 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.26.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
-	github.com/robfig/cron v1.2.0 // indirect
 	github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect

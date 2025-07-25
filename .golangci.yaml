@@ -1,0 +1,75 @@
+version: "2"
+linters:
+  default: all
+  disable:
+  - cyclop
+  - depguard
+  - err113
+  - exhaustive
+  - exhaustruct
+  - funlen
+  - gochecknoglobals
+  - gochecknoinits
+  - gocognit
+  - goconst
+  - gocyclo
+  - godox
+  - gomoddirectives
+  - inamedparam
+  - ireturn
+  - mnd
+  - nestif
+  - nlreturn
+  - nonamedreturns
+  - tagliatelle
+  - testpackage
+  - varnamelen
+  - wsl
+  - wsl_v5
+  settings:
+    errcheck:
+      exclude-functions: []
+    gocritic:
+      disabled-checks:
+      - hugeParam
+      enabled-checks:
+      - filepathJoin
+      - dupImport
+      - redundantSprint
+      - stringConcatSimplify
+      enabled-tags:
+      - performance
+    govet:
+      disable:
+      - shadow
+      - fieldalignment
+      enable-all: true
+    perfsprint:
+      err-error: true
+    revive:
+      rules:
+      - name: unused-parameter
+        arguments:
+        - allowRegex: ^_
+        severity: warning
+        disabled: false
+      - name: unused-receiver
+        arguments:
+        - allowRegex: ^_
+        severity: warning
+        disabled: false
+    staticcheck:
+      checks:
+      - all
+  exclusions:
+    rules:
+    - path: '(.+)_test\.go'
+      linters:
+      - forcetypeassert
+      - godot
+    generated: lax
+    presets:
+    - comments
+    - common-false-positives
+    - legacy
+    - std-error-handling

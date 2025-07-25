@@ -4,7 +4,7 @@ TAG := $(shell git rev-parse --short HEAD)
 IMAGE := "eu.gcr.io/charlieegan3-photos/photos:$(TAG)"
 
 dev_server:
-	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run cmd/tool/tool.go'
+	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config=config.dev.yaml'
 
 new_migration:
 	 migrate create -dir internal/pkg/database/migrations -ext sql $(MIGRATION_NAME)
@@ -23,6 +23,11 @@ test_watch:
 
 test_db:
 	docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres
+
+.PHONY: lint
+lint:
+	@echo "Running Go linter..."
+	golangci-lint run ./...
 
 local_bucket:
 	python -m SimpleHTTPServer 8000

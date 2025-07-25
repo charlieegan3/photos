@@ -2,12 +2,13 @@ package activity
 
 import (
 	"encoding/json"
-	"github.com/charlieegan3/photos/internal/pkg/models"
-	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/charlieegan3/photos/internal/pkg/models"
+	"github.com/maxatome/go-testdeep/td"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParseActivity(t *testing.T) {
@@ -93,8 +94,8 @@ func TestParseActivity(t *testing.T) {
 			ExpectedActivity: &models.Activity{
 				Title:       "Been a while...",
 				Description: "Created by StravaGPX Android",
-				StartTime:   time.Date(2019, 10, 2, 6, 37, 01, 0, time.UTC),
-				EndTime:     time.Date(2019, 10, 2, 7, 04, 23, 0, time.UTC),
+				StartTime:   time.Date(2019, 10, 2, 6, 37, 0o1, 0, time.UTC),
+				EndTime:     time.Date(2019, 10, 2, 7, 0o4, 23, 0, time.UTC),
 			},
 		},
 		"GPX nike plus export": {
@@ -134,7 +135,7 @@ func TestParseActivity(t *testing.T) {
 			ExpectedActivity: &models.Activity{
 				Title:       "Running",
 				Description: "Created by Unknown Creator",
-				StartTime:   time.Date(2015, 6, 27, 8, 02, 38, 0, time.UTC),
+				StartTime:   time.Date(2015, 6, 27, 8, 0o2, 38, 0, time.UTC),
 				EndTime:     time.Date(2015, 6, 27, 8, 20, 47, 0, time.UTC),
 			},
 		},
@@ -144,8 +145,8 @@ func TestParseActivity(t *testing.T) {
 			ExpectedActivity: &models.Activity{
 				Title:       "Indoor Cycling",
 				Description: "Created by KinomapVirtualRide",
-				StartTime:   time.Date(2020, 12, 05, 17, 47, 22, 0, time.UTC),
-				EndTime:     time.Date(2020, 12, 05, 17, 59, 53, 980000000, time.UTC),
+				StartTime:   time.Date(2020, 12, 0o5, 17, 47, 22, 0, time.UTC),
+				EndTime:     time.Date(2020, 12, 0o5, 17, 59, 53, 980000000, time.UTC),
 			},
 		},
 		"TCX nike": {

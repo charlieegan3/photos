@@ -537,7 +537,6 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 				Limit:          1,
 			},
 		)
-
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -574,7 +573,6 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			URL:       fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[0].ID),
 			CreatedAt: posts[0].PublishDate.Format(time.RFC3339),
 		})
-
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 	"os"
 	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
 	"github.com/philhofer/tcx"

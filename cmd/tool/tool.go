@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	ctx := context.Background()
 
 	viper.SetConfigName("config.dev")

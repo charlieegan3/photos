@@ -33,7 +33,10 @@ func TestRenderPage(t *testing.T) {
       <p>bar</p>
     </div>
     
-    <a class="fixed bottom-0 right-0 z-max tc w-100 mw4-ns bl-ns pa2 db bt bg-white b--light-gray hover-bg-light-gray" href="/menu">Menu</a>
+    <a
+      class="fixed bottom-0 right-0 z-max tc w-100 mw4-ns bl-ns pa2 db bt bg-white b--light-gray hover-bg-light-gray"
+      href="/menu"
+    >Menu</a>
     
   </body>
 </html>

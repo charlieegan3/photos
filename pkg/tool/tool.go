@@ -253,6 +253,7 @@ func (p *PhotosWebsite) HTTPAttach(router *mux.Router) error {
 
 	return err
 }
+
 func (p *PhotosWebsite) HTTPHost() string {
 	return p.host
 }

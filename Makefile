@@ -12,6 +12,9 @@ new_migration:
 import:
 	go run main.go import --config config.dev.yaml
 
+build:
+	go build -o photos main.go
+
 test:
 	go test ./... $(GO_TEST_ARGS)
 
@@ -23,6 +26,21 @@ test_db:
 
 local_bucket:
 	python -m SimpleHTTPServer 8000
+
+.PHONY: fmt
+fmt:
+	@echo "Running Go formatters..."
+	@echo "Running goimports..."
+	goimports -w .
+	@echo "Running gofumpt..."
+	gofumpt -w .
+	@echo "Running go mod tidy..."
+	go mod tidy
+	@echo "Running dprint for JSON, Markdown, and HTML files..."
+	dprint fmt
+	@echo "Running treefmt for Nix files..."
+	treefmt
+	@echo "Formatting complete!"
 
 .PHONY: update_config
 update_config:

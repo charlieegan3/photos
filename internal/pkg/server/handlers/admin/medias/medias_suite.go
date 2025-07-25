@@ -431,7 +431,6 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	if len(thumbs) > 0 {
 		s.T().Fatalf("thumbs not deleted correctly")
 	}
-
 }
 
 func (s *EndpointsMediasSuite) TestNewMedia() {
@@ -613,5 +612,4 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		fmt.Sprintf("thumbs/media/%d-1000-fit.jpg", returnedMedias[0].ID),
 		fmt.Sprintf("thumbs/media/%d-2000-fit.jpg", returnedMedias[0].ID),
 	}, "thumbs not created correctly")
-
 }

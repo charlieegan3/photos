@@ -191,6 +191,7 @@ func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
 
 	return nil
 }
+
 func AllTaggings(db *sql.DB) (results []models.Tagging, err error) {
 	var dbTaggings []dbTagging
 

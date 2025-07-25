@@ -1,4 +1,4 @@
-FROM golang:1.19 as builder
+FROM golang:1.19 AS builder
 
 WORKDIR /go/src/github.com/charlieegan3/photos
 

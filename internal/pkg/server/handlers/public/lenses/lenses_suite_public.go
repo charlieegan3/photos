@@ -88,7 +88,6 @@ func (s *LensesSuite) TestIndex() {
 }
 
 func (s *LensesSuite) TestShow() {
-
 	devices := []models.Device{
 		{
 			Name: "iPhone",

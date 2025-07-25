@@ -82,20 +82,18 @@
             inherit (self.checks.${system}.pre-commit-check) shellHook;
             buildInputs = self.checks.${system}.pre-commit-check.enabledPackages;
 
-            env = {
-              DOCKER_HOST = "unix:///Users/charlieegan3/.colima/default/docker.sock";
-              TESTCONTAINERS_RYUK_DISABLED = "true";
-            };
-
             packages = with pkgs; [
               go
-              golangci-lint
-
               exiftool
-
               dprint
               nixfmt-rfc-style
+              nixfmt-tree
               claude-code
+              gci
+              golangci-lint
+              gofumpt
+              gotools
+              google-cloud-sql-proxy
             ];
           };
         };

@@ -3,11 +3,11 @@
 [photos.charlieegan3.com](https://photos.charlieegan3.com) is a personal, single user photo sharing site
 which I built and host for myself. The application has a number of features I find valuable:
 
-* [Photo Map](https://photos.charlieegan3.com/locations)
-* [Trips](https://photos.charlieegan3.com/posts/period)
-* [Search](https://photos.charlieegan3.com/posts/search)
-* [Browse by Device](https://photos.charlieegan3.com/devices)
-* [RSS](https://photos.charlieegan3.com/rss.xml)
+- [Photo Map](https://photos.charlieegan3.com/locations)
+- [Trips](https://photos.charlieegan3.com/posts/period)
+- [Search](https://photos.charlieegan3.com/posts/search)
+- [Browse by Device](https://photos.charlieegan3.com/devices)
+- [RSS](https://photos.charlieegan3.com/rss.xml)
 
 The app is formed of a Go application and runs on
 [Northflank](https://northflank.com). The project is the

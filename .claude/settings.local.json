@@ -4,7 +4,8 @@
       "Bash(make test:*)",
       "Bash(go test:*)",
       "Bash(grep:*)",
-      "Bash(make fmt:*)"
+      "Bash(make fmt:*)",
+      "Bash(golangci-lint run:*)"
     ],
     "deny": []
   }

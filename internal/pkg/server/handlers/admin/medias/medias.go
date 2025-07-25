@@ -13,7 +13,6 @@ import (
 
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/schema"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
@@ -33,9 +32,6 @@ var newTemplate string
 
 //go:embed templates/show.html.plush
 var showTemplate string
-
-// gorilla decoder can be safely shared and caches data on structs used
-var decoder = schema.NewDecoder()
 
 // requiredThumbs is a list of the required thumbnail sizes
 // Note: this must be ordered

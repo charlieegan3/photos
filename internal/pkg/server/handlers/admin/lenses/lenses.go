@@ -11,7 +11,6 @@ import (
 
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/schema"
 
 	//"gocloud.dev/blob"
 	"gocloud.dev/blob"
@@ -31,9 +30,6 @@ var newTemplate string
 
 //go:embed templates/show.html.plush
 var showTemplate string
-
-// gorilla decoder can be safely shared and caches data on structs used
-var decoder = schema.NewDecoder()
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {

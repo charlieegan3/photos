@@ -19,8 +19,6 @@ var indexTemplate string
 //go:embed templates/show.html.plush
 var showTemplate string
 
-var pageSize uint = 42
-
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")

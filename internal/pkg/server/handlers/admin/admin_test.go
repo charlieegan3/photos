@@ -15,7 +15,7 @@ import (
 
 func TestIndexPage(t *testing.T) {
 	t.Parallel()
-	
+
 	router := mux.NewRouter()
 
 	renderer := templating.BuildPageRenderFunc(true, "", "admin")

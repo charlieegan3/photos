@@ -12,7 +12,7 @@ import (
 
 func TestBuildRedirectHandler(t *testing.T) {
 	t.Parallel()
-	
+
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/", BuildRedirectHandler("/admin")).Methods(http.MethodGet)
 

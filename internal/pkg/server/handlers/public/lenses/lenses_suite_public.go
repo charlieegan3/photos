@@ -64,7 +64,9 @@ func (s *LensesSuite) TestIndex() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/lenses", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/lenses",
+		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/lenses", nil)
 	require.NoError(s.T(), err)
@@ -141,7 +143,9 @@ func (s *LensesSuite) TestShow() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/lenses/{lensID}", BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/lenses/{lensID}",
+		BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/lenses/%d", returnedLenses[0].ID), nil)
 	require.NoError(s.T(), err)

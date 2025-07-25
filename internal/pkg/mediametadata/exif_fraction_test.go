@@ -9,7 +9,7 @@ import (
 
 func TestFractionToDecimal(t *testing.T) {
 	t.Parallel()
-	
+
 	testCases := map[string]struct {
 		fraction       Fraction
 		expectedResult float64
@@ -41,7 +41,7 @@ func TestFractionToDecimal(t *testing.T) {
 	for description, testCase := range testCases {
 		t.Run(description, func(t *testing.T) {
 			t.Parallel()
-			
+
 			result, err := testCase.fraction.ToDecimal()
 
 			if testCase.expectError != "" {

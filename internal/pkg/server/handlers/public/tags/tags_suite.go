@@ -179,7 +179,9 @@ func (s *TagsSuite) TestGetTag() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/tags/{tagName}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/tags/{tagName}",
+		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/tags/tag1", nil)
 	require.NoError(s.T(), err)

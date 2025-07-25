@@ -9,7 +9,7 @@ import (
 
 func TestCoordinateToDecimal(t *testing.T) {
 	t.Parallel()
-	
+
 	testCases := map[string]struct {
 		coordinate     Coordinate
 		expectedResult float64
@@ -74,7 +74,7 @@ func TestCoordinateToDecimal(t *testing.T) {
 	for description, testCase := range testCases {
 		t.Run(description, func(t *testing.T) {
 			t.Parallel()
-			
+
 			result, err := testCase.coordinate.ToDecimal()
 
 			if testCase.expectError != "" {

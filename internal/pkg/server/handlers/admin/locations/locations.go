@@ -183,7 +183,11 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 	}
 }
 
-func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -417,7 +421,10 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 	}
 }
 
-func BuildLookupHandler(mapServerAPIKey string, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildLookupHandler(
+	mapServerAPIKey string,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 

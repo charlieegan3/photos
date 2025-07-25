@@ -60,7 +60,9 @@ func (s *DevicesSuite) TestIndex() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/devices",
+		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/devices", nil)
 	require.NoError(s.T(), err)
@@ -124,7 +126,9 @@ func (s *DevicesSuite) TestShow() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/devices/{deviceID}", BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/devices/{deviceID}",
+		BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -168,7 +172,9 @@ func (s *DevicesSuite) TestGetIcon() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/devices/{deviceID}/icon.{kind}", BuildIconHandler(s.DB, s.Bucket)).Methods(http.MethodGet)
+	router.HandleFunc("/devices/{deviceID}/icon.{kind}",
+		BuildIconHandler(s.DB, s.Bucket)).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/devices/%d/icon.jpg", returnedDevices[0].ID), nil)
 	require.NoError(s.T(), err)

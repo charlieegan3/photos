@@ -56,7 +56,9 @@ func (s *EndpointsTripsSuite) TestListTrips() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/trips",
+		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/trips", nil)
 	require.NoError(s.T(), err)
@@ -90,7 +92,9 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips/{tripID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/trips/{tripID}",
+		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -108,7 +112,9 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 
 func (s *EndpointsTripsSuite) TestNewTrip() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/trips/new",
+		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/trips/new", nil)
 	require.NoError(s.T(), err)
@@ -195,7 +201,9 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/trips/{tripID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/trips/{tripID}",
+		BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodPost)
 
 	form := url.Values{}
 	form.Add("_method", http.MethodPut)

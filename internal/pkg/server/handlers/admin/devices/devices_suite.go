@@ -56,7 +56,9 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/devices",
+		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/devices", nil)
 	require.NoError(s.T(), err)
@@ -86,7 +88,8 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/devices/{deviceID}",
+		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -130,7 +133,8 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/{deviceID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/devices/{deviceID}",
+		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	// open the image to be uploaded in the form
 
@@ -265,7 +269,8 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/devices/new",
+		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/devices/new", nil)
 	require.NoError(s.T(), err)
@@ -284,7 +289,8 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/devices", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/devices",
+		BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
 
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"

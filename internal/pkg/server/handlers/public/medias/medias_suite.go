@@ -72,7 +72,9 @@ func (s *MediasSuite) TestGetMedia() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods(http.MethodGet)
+	router.HandleFunc("/medias/{mediaID}/{file}.{kind}",
+		BuildMediaHandler(s.DB, s.Bucket)).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -121,7 +123,8 @@ func (s *MediasSuite) TestGetMedia() {
 	assert.ElementsMatchf(s.T(), []string{expectedThumbKey}, thumbs, "expected thumb key not found in bucket")
 
 	// check that the image has been stashed in the bucket for future requests
-	br, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("thumbs/media/%d-100-fit.jpg", returnedMedias[0].ID), nil)
+	thumbPath := fmt.Sprintf("thumbs/media/%d-100-fit.jpg", returnedMedias[0].ID)
+	br, err := s.Bucket.NewReader(context.Background(), thumbPath, nil)
 	require.NoError(s.T(), err)
 	defer br.Close()
 
@@ -170,7 +173,9 @@ func (s *MediasSuite) TestGetMediaFit() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", BuildMediaHandler(s.DB, s.Bucket)).Methods(http.MethodGet)
+	router.HandleFunc("/medias/{mediaID}/{file}.{kind}",
+		BuildMediaHandler(s.DB, s.Bucket)).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
 	require.NoError(s.T(), err)

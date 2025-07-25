@@ -81,20 +81,29 @@ func Attach(
 	router.HandleFunc("/posts/period", publicposts.BuildPeriodIndexHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/search", publicposts.BuildSearchHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods(http.MethodGet)
-	router.HandleFunc(`/photos/{date:\d{4}-\d{2}-\d{2}}{.*}`, publicposts.BuildLegacyPostRedirect()).Methods(http.MethodGet)
-	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`, publicposts.BuildLegacyPeriodRedirect()).Methods(http.MethodGet)
-	router.HandleFunc("/posts/on-this-day/{month}-{day}", publicposts.BuildOnThisDayHandler(db, renderer)).Methods(http.MethodGet)
+	router.HandleFunc(`/photos/{date:\d{4}-\d{2}-\d{2}}{.*}`,
+		publicposts.BuildLegacyPostRedirect()).Methods(http.MethodGet)
+	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`,
+		publicposts.BuildLegacyPeriodRedirect()).Methods(http.MethodGet)
+	router.HandleFunc("/posts/on-this-day/{month}-{day}",
+		publicposts.BuildOnThisDayHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/on-this-day", publicposts.BuildOnThisDayHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods(http.MethodGet)
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods(http.MethodGet)
 
-	router.HandleFunc("/locations", publiclocations.BuildIndexHandler(db, mapServerAPIKey, rendererMap)).Methods(http.MethodGet)
+	router.HandleFunc("/locations",
+		publiclocations.BuildIndexHandler(db, mapServerAPIKey, rendererMap)).
+		Methods(http.MethodGet)
 	router.HandleFunc("/locations/{locationID}", publiclocations.BuildGetHandler(db, renderer)).Methods(http.MethodGet)
-	router.HandleFunc("/locations/{locationID}/map.jpg", publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).Methods(http.MethodGet)
+	router.HandleFunc("/locations/{locationID}/map.jpg",
+		publiclocations.BuildMapHandler(db, bucket, mapServerURL, mapServerAPIKey)).
+		Methods(http.MethodGet)
 
-	router.HandleFunc("/medias/{mediaID}/{file}.{kind}", publicmedias.BuildMediaHandler(db, bucket)).Methods(http.MethodGet)
-	router.HandleFunc("/devices/{deviceID}/icon.{kind}", publicdevices.BuildIconHandler(db, bucket)).Methods(http.MethodGet)
+	router.HandleFunc("/medias/{mediaID}/{file}.{kind}",
+		publicmedias.BuildMediaHandler(db, bucket)).Methods(http.MethodGet)
+	router.HandleFunc("/devices/{deviceID}/icon.{kind}",
+		publicdevices.BuildIconHandler(db, bucket)).Methods(http.MethodGet)
 	router.HandleFunc("/devices/{deviceID}", publicdevices.BuildShowHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/devices", publicdevices.BuildIndexHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/lenses/{lensID}.png", publicLenses.BuildIconHandler(db, bucket)).Methods(http.MethodGet)
@@ -160,7 +169,8 @@ func Attach(
 	adminRouter.HandleFunc("/devices", devices.BuildCreateHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
 	adminRouter.HandleFunc("/devices/new", devices.BuildNewHandler(rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildGetHandler(db, rendererAdmin)).Methods(http.MethodGet)
-	adminRouter.HandleFunc("/devices/{deviceID}", devices.BuildFormHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
+	adminRouter.HandleFunc("/devices/{deviceID}",
+		devices.BuildFormHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
 
 	adminRouter.HandleFunc("/lenses", lenses.BuildIndexHandler(db, rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/lenses", lenses.BuildCreateHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
@@ -178,15 +188,20 @@ func Attach(
 	adminRouter.HandleFunc("/locations", locations.BuildCreateHandler(db, rendererAdmin)).Methods(http.MethodPost)
 	adminRouter.HandleFunc("/locations/new", locations.BuildNewHandler(rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/locations/select", locations.BuildSelectHandler(db, rendererAdmin)).Methods(http.MethodGet)
-	adminRouter.HandleFunc("/locations/lookup", locations.BuildLookupHandler(mapServerAPIKey, rendererAdmin)).Methods(http.MethodGet)
+	adminRouter.HandleFunc("/locations/lookup",
+		locations.BuildLookupHandler(mapServerAPIKey, rendererAdmin)).
+		Methods(http.MethodGet)
 	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildGetHandler(db, rendererAdmin)).Methods(http.MethodGet)
-	adminRouter.HandleFunc("/locations/{locationID}", locations.BuildFormHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
+	adminRouter.HandleFunc("/locations/{locationID}",
+		locations.BuildFormHandler(db, bucket, rendererAdmin)).
+		Methods(http.MethodPost)
 
 	adminRouter.HandleFunc("/medias", medias.BuildIndexHandler(db, rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/medias", medias.BuildCreateHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
 	adminRouter.HandleFunc("/medias/new", medias.BuildNewHandler(db, rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildGetHandler(db, rendererAdmin)).Methods(http.MethodGet)
-	adminRouter.HandleFunc("/medias/{mediaID}", medias.BuildFormHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
+	adminRouter.HandleFunc("/medias/{mediaID}",
+		medias.BuildFormHandler(db, bucket, rendererAdmin)).Methods(http.MethodPost)
 
 	adminRouter.HandleFunc("/posts", posts.BuildIndexHandler(db, rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/posts", posts.BuildCreateHandler(db, rendererAdmin)).Methods(http.MethodPost)

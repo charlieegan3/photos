@@ -154,7 +154,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
-func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	ir := imageproxy.Resizer{}
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
@@ -526,7 +530,11 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
-func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	ir := imageproxy.Resizer{}
 
 	return func(w http.ResponseWriter, r *http.Request) {

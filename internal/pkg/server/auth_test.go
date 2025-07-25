@@ -12,7 +12,7 @@ import (
 
 func TestAuthMiddleware(t *testing.T) {
 	t.Parallel()
-	
+
 	router := mux.NewRouter()
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth("username", "password"))

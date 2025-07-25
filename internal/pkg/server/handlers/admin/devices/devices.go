@@ -117,7 +117,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
-func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -200,7 +204,11 @@ func BuildCreateHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.Pag
 	}
 }
 
-func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -338,7 +346,8 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 			}
 			defer br.Close()
 
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, updatedDevices[0].IconKind), nil)
+			iconPath := fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, updatedDevices[0].IconKind)
+			bw, err := bucket.NewWriter(r.Context(), iconPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(fmt.Sprintf("failed to open new writer for object: %s", err)))
@@ -377,7 +386,8 @@ func BuildFormHandler(db *sql.DB, bucket *blob.Bucket, renderer templating.PageR
 		// every time the form is sent
 		f, header, err = r.FormFile("Icon")
 		if err == nil {
-			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, device.IconKind), nil)
+			iconPath := fmt.Sprintf("device_icons/%s.%s", updatedDevices[0].Slug, device.IconKind)
+			bw, err := bucket.NewWriter(r.Context(), iconPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("failed initialize icon storage"))

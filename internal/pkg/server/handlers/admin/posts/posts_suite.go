@@ -104,7 +104,9 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/posts",
+		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/posts", nil)
 	require.NoError(s.T(), err)
@@ -188,7 +190,9 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts/{postID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/posts/{postID}",
+		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -212,7 +216,9 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 
 func (s *EndpointsPostsSuite) TestNewPost() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts/new", BuildNewHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/posts/new",
+		BuildNewHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/posts/new", nil)
 	require.NoError(s.T(), err)
@@ -271,7 +277,9 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts", BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/posts",
+		BuildCreateHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodPost)
 
 	form := url.Values{}
 	form.Add("Description", "foobar")
@@ -400,7 +408,9 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/posts/{postID}", BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/posts/{postID}",
+		BuildFormHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodPost)
 
 	form := url.Values{}
 	form.Add("_method", http.MethodPut)

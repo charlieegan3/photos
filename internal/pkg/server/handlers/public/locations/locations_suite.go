@@ -184,7 +184,9 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/locations/{locationID}/map.jpg", BuildMapHandler(s.DB, s.Bucket, mapServer.URL, "")).Methods(http.MethodGet)
+	router.HandleFunc("/locations/{locationID}/map.jpg",
+		BuildMapHandler(s.DB, s.Bucket, mapServer.URL, "")).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
 	require.NoError(s.T(), err)

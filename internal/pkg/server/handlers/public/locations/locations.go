@@ -122,7 +122,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
-func BuildIndexHandler(db *sql.DB, mapServerAPIKey string, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildIndexHandler(
+	db *sql.DB,
+	mapServerAPIKey string,
+	renderer templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		locations, err := database.AllLocations(db)
 		if err != nil {
@@ -156,7 +160,11 @@ func BuildIndexHandler(db *sql.DB, mapServerAPIKey string, renderer templating.P
 	}
 }
 
-func BuildMapHandler(db *sql.DB, bucket *blob.Bucket, mapServerURL, mapServerAPIKey string) func(http.ResponseWriter, *http.Request) {
+func BuildMapHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	mapServerURL, mapServerAPIKey string,
+) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "image/jpeg")
 		w.Header().Set("Cache-Control", "public, max-age=604800")

@@ -56,7 +56,9 @@ func (s *EndpointsLensesSuite) TestListLenses() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/lenses", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/lenses",
+		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/lenses", nil)
 	require.NoError(s.T(), err)
@@ -86,7 +88,9 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/lenses/{lensID}", BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/lenses/{lensID}",
+		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID), nil)
 	require.NoError(s.T(), err)
@@ -130,7 +134,9 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 	require.NoError(s.T(), err)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/lenses/{lensID}", BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/lenses/{lensID}",
+		BuildFormHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodPost)
 
 	// open the image to be uploaded in the form
 
@@ -264,7 +270,9 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 
 func (s *EndpointsLensesSuite) TestNewLens() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/lenses/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
+	router.HandleFunc("/admin/lenses/new",
+		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/lenses/new", nil)
 	require.NoError(s.T(), err)
@@ -283,7 +291,9 @@ func (s *EndpointsLensesSuite) TestNewLens() {
 
 func (s *EndpointsLensesSuite) TestCreateLens() {
 	router := mux.NewRouter()
-	router.HandleFunc("/admin/lenses", BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodPost)
+	router.HandleFunc("/admin/lenses",
+		BuildCreateHandler(s.DB, s.Bucket, templating.BuildPageRenderFunc(true, ""))).
+		Methods(http.MethodPost)
 
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/admin/lenses/testdata/fisheye.png"

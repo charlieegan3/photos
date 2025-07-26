@@ -96,6 +96,7 @@ func (f *Fraction) ToDecimal() (float64, error) {
 	return float64(f.Numerator) / float64(f.Denominator), nil
 }
 
+//nolint:maintidx
 func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	rawExif, err := exif.SearchAndExtractExif(b)
 	if errors.Is(err, exif.ErrNoExif) {

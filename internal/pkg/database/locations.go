@@ -37,16 +37,20 @@ func (d *dbLocation) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newLocation(location dbLocation) models.Location {
+func (d *dbLocation) ToModel() models.Location {
 	return models.Location{
-		ID:        location.ID,
-		Name:      location.Name,
-		Slug:      location.Slug,
-		Latitude:  location.Latitude,
-		Longitude: location.Longitude,
-		CreatedAt: location.CreatedAt,
-		UpdatedAt: location.UpdatedAt,
+		ID:        d.ID,
+		Name:      d.Name,
+		Slug:      d.Slug,
+		Latitude:  d.Latitude,
+		Longitude: d.Longitude,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
 	}
+}
+
+func newLocation(location dbLocation) models.Location {
+	return (&location).ToModel()
 }
 
 func newDBLocation(location models.Location) dbLocation {
@@ -170,44 +174,8 @@ func UpdateLocations(
 	ctx context.Context,
 	db *sql.DB,
 	locations []models.Location,
-) (results []models.Location, err error) {
-	records := []goqu.Record{}
-	for _, v := range locations {
-		d := newDBLocation(v)
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating locations")
-	}
-
-	for _, record := range records {
-		var result dbLocation
-		update := tx.From("photos.locations").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
-		}
-
-		results = append(results, newLocation(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
-	return results, nil
+) ([]models.Location, error) {
+	return BulkUpdate(ctx, db, "photos.locations", locations, newDBLocation)
 }
 
 func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationName string) (id int, err error) {

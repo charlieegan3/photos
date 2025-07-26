@@ -49,22 +49,26 @@ func (d *dbPost) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newPost(post dbPost) models.Post {
+func (d *dbPost) ToModel() models.Post {
 	return models.Post{
-		ID: post.ID,
+		ID: d.ID,
 
-		Description:   post.Description,
-		InstagramCode: post.InstagramCode,
-		PublishDate:   post.PublishDate.UTC(),
+		Description:   d.Description,
+		InstagramCode: d.InstagramCode,
+		PublishDate:   d.PublishDate.UTC(),
 
-		IsDraft: post.IsDraft,
+		IsDraft: d.IsDraft,
 
-		CreatedAt: post.CreatedAt,
-		UpdatedAt: post.UpdatedAt,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
 
-		MediaID:    post.MediaID,
-		LocationID: post.LocationID,
+		MediaID:    d.MediaID,
+		LocationID: d.LocationID,
 	}
+}
+
+func newPost(post dbPost) models.Post {
+	return (&post).ToModel()
 }
 
 func newDBPost(post models.Post) dbPost {
@@ -419,44 +423,8 @@ func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) (err erro
 
 // UpdatePosts is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results []models.Post, err error) {
-	records := []goqu.Record{}
-	for i := range posts {
-		d := newDBPost(posts[i])
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating posts")
-	}
-
-	for _, record := range records {
-		var result dbPost
-		update := tx.From("photos.posts").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
-		}
-
-		results = append(results, newPost(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
-	return results, nil
+func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) ([]models.Post, error) {
+	return BulkUpdate(ctx, db, "photos.posts", posts, newDBPost)
 }
 
 func PostsInDateRange(ctx context.Context, db *sql.DB, after, before time.Time) (results []models.Post, err error) {

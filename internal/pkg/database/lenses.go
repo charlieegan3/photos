@@ -37,14 +37,18 @@ func (d *dbLens) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newLens(lens dbLens) models.Lens {
+func (d *dbLens) ToModel() models.Lens {
 	return models.Lens{
-		ID:          lens.ID,
-		Name:        lens.Name,
-		LensMatches: lens.LensMatches,
-		CreatedAt:   lens.CreatedAt,
-		UpdatedAt:   lens.UpdatedAt,
+		ID:          d.ID,
+		Name:        d.Name,
+		LensMatches: d.LensMatches,
+		CreatedAt:   d.CreatedAt,
+		UpdatedAt:   d.UpdatedAt,
 	}
+}
+
+func newLens(lens dbLens) models.Lens {
+	return (&lens).ToModel()
 }
 
 func newDBLens(lens models.Lens) dbLens {
@@ -147,32 +151,7 @@ func AllLenses(ctx context.Context, db *sql.DB) (results []models.Lens, err erro
 }
 
 func MostRecentlyUsedLens(ctx context.Context, db *sql.DB) (result models.Lens, err error) {
-	var dbLenses []dbLens
-
-	goquDB := goqu.New("postgres", db)
-	selectLenses := goquDB.From("photos.lenses").
-		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.lens_id": goqu.I("lenses.id")})).
-		Select("lenses.*").
-		Order(goqu.I("medias.taken_at").Desc()).
-		Executor()
-	err = selectLenses.ScanStructsContext(ctx, &dbLenses)
-	if err != nil {
-		return result, errors.Wrap(err, "failed to select lenses")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results := []models.Lens{}
-	for _, v := range dbLenses {
-		results = append(results, newLens(v))
-	}
-
-	if len(results) < 1 {
-		return result, nil
-	}
-
-	result = results[0]
-	return result, nil
+	return mostRecentlyUsedEntity[models.Lens, dbLens](ctx, db, "lenses", "medias.lens_id", newLens)
 }
 
 func DeleteLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (err error) {
@@ -198,44 +177,8 @@ func DeleteLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (err er
 
 // UpdateLenses is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (results []models.Lens, err error) {
-	records := []goqu.Record{}
-	for _, v := range lenses {
-		d := newDBLens(v)
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating lenses")
-	}
-
-	for _, record := range records {
-		var result dbLens
-		update := tx.From("photos.lenses").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
-		}
-
-		results = append(results, newLens(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
-	return results, nil
+func UpdateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) ([]models.Lens, error) {
+	return BulkUpdate(ctx, db, "photos.lenses", lenses, newDBLens)
 }
 
 func FindLensByLensMatches(ctx context.Context, db *sql.DB, lensMatch string) (result *models.Lens, err error) {
@@ -264,26 +207,5 @@ func FindLensByLensMatches(ctx context.Context, db *sql.DB, lensMatch string) (r
 }
 
 func LensPosts(ctx context.Context, db *sql.DB, lensID int64) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	selectPosts := goquDB.From("photos.lenses").
-		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.lens_id": goqu.I("lenses.id")})).
-		InnerJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
-		Select("posts.*").
-		Where(goqu.Ex{"lenses.id": lensID}).
-		Order(goqu.I("posts.publish_date").Desc()).
-		Executor()
-	err = selectPosts.ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+	return entityPosts(ctx, db, "lenses", "medias.lens_id", "lenses.id", lensID)
 }

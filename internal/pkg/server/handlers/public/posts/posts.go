@@ -123,7 +123,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		ctx := plush.NewContext()
 		ctx.Set("posts", posts)
 		ctx.Set("medias", mediasByID)
-		
+
 		// Safe conversion of page to int
 		var pageInt int
 		if page > uint(math.MaxInt) {
@@ -132,7 +132,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			return
 		}
 		pageInt = int(page)
-		
+
 		// Safe conversion of lastPage to int
 		var lastPageInt int
 		if lastPage > uint(math.MaxInt) {
@@ -141,7 +141,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			return
 		}
 		lastPageInt = int(lastPage)
-		
+
 		ctx.Set("page", pageInt)
 		ctx.Set("lastPage", lastPageInt)
 

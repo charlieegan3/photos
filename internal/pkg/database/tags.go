@@ -34,14 +34,18 @@ func (d *dbTag) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newTag(tag dbTag) models.Tag {
+func (d *dbTag) ToModel() models.Tag {
 	return models.Tag{
-		ID:        tag.ID,
-		Name:      tag.Name,
-		Hidden:    tag.Hidden,
-		CreatedAt: tag.CreatedAt,
-		UpdatedAt: tag.UpdatedAt,
+		ID:        d.ID,
+		Name:      d.Name,
+		Hidden:    d.Hidden,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
 	}
+}
+
+func newTag(tag dbTag) models.Tag {
+	return (&tag).ToModel()
 }
 
 func newDBTag(tag models.Tag) dbTag {
@@ -229,44 +233,11 @@ func DeleteTags(ctx context.Context, db *sql.DB, tags []models.Tag) (err error) 
 
 // UpdateTags is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
-	records := []goqu.Record{}
-	for _, v := range tags {
-		d := newDBTag(v)
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
+func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) ([]models.Tag, error) {
+	results, err := BulkUpdate(ctx, db, "photos.tags", tags, newDBTag)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating tags")
+		return results, &TagNameConflictError{}
 	}
-
-	for _, record := range records {
-		var result dbTag
-		update := tx.From("photos.tags").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-
-			return results, &TagNameConflictError{}
-		}
-
-		results = append(results, newTag(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
 	return results, nil
 }
 

@@ -3,7 +3,6 @@ package public
 import (
 	"bytes"
 	"context"
-	//nolint:gosec
 	"crypto/sha1"
 	"database/sql"
 	"encoding/hex"

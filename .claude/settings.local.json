@@ -9,7 +9,8 @@
       "Bash(go build:*)",
       "Bash(sed:*)",
       "Bash(rg:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(make lint:*)"
     ],
     "deny": []
   }

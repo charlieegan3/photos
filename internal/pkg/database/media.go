@@ -86,48 +86,52 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newMedia(media dbMedia) models.Media {
-	m := models.Media{
-		ID: media.ID,
+func (d *dbMedia) ToModel() models.Media {
+	media := models.Media{
+		ID: d.ID,
 
-		Kind: media.Kind,
+		Kind: d.Kind,
 
-		Make:  media.Make,
-		Model: media.Model,
+		Make:  d.Make,
+		Model: d.Model,
 
-		Lens:        media.Lens,
-		FocalLength: media.FocalLength,
+		Lens:        d.Lens,
+		FocalLength: d.FocalLength,
 
 		// present as UTC since zone information is missing in EXIF
-		TakenAt:                 media.TakenAt.UTC(),
-		FNumber:                 media.FNumber,
-		ExposureTimeNumerator:   media.ExposureTimeNumerator,
-		ExposureTimeDenominator: media.ExposureTimeDenominator,
-		ISOSpeed:                media.ISOSpeed,
-		Latitude:                media.Latitude,
-		Longitude:               media.Longitude,
-		Altitude:                media.Altitude,
+		TakenAt:                 d.TakenAt.UTC(),
+		FNumber:                 d.FNumber,
+		ExposureTimeNumerator:   d.ExposureTimeNumerator,
+		ExposureTimeDenominator: d.ExposureTimeDenominator,
+		ISOSpeed:                d.ISOSpeed,
+		Latitude:                d.Latitude,
+		Longitude:               d.Longitude,
+		Altitude:                d.Altitude,
 
-		CreatedAt: media.CreatedAt,
-		UpdatedAt: media.UpdatedAt,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
 
-		DeviceID: media.DeviceID,
+		DeviceID: d.DeviceID,
 
-		InstagramCode: media.InstagramCode,
+		InstagramCode: d.InstagramCode,
 
-		UTCCorrect: media.UTCCorrect,
+		UTCCorrect: d.UTCCorrect,
 
-		Width:  media.Width,
-		Height: media.Height,
+		Width:  d.Width,
+		Height: d.Height,
 
-		DisplayOffset: media.DisplayOffset,
+		DisplayOffset: d.DisplayOffset,
 	}
 
-	if media.LensID.Valid {
-		m.LensID = media.LensID.Int64
+	if d.LensID.Valid {
+		media.LensID = d.LensID.Int64
 	}
 
-	return m
+	return media
+}
+
+func newMedia(media dbMedia) models.Media {
+	return (&media).ToModel()
 }
 
 func newDBMedia(media models.Media) dbMedia {
@@ -286,42 +290,6 @@ func DeleteMedias(ctx context.Context, db *sql.DB, medias []models.Media) (err e
 
 // UpdateMedias is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateMedias(ctx context.Context, db *sql.DB, medias []models.Media) (results []models.Media, err error) {
-	records := []goqu.Record{}
-	for i := range medias {
-		d := newDBMedia(medias[i])
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating medias")
-	}
-
-	for _, record := range records {
-		var result dbMedia
-		update := tx.From("photos.medias").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
-		}
-
-		results = append(results, newMedia(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
-	return results, nil
+func UpdateMedias(ctx context.Context, db *sql.DB, medias []models.Media) ([]models.Media, error) {
+	return BulkUpdate(ctx, db, "photos.medias", medias, newDBMedia)
 }

@@ -40,19 +40,23 @@ func (d *dbTrip) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newTrip(trip dbTrip) models.Trip {
+func (d *dbTrip) ToModel() models.Trip {
 	return models.Trip{
-		ID: trip.ID,
+		ID: d.ID,
 
-		Title:       trip.Title,
-		Description: trip.Description,
+		Title:       d.Title,
+		Description: d.Description,
 
-		StartDate: trip.StartDate.UTC(),
-		EndDate:   trip.EndDate.UTC(),
+		StartDate: d.StartDate.UTC(),
+		EndDate:   d.EndDate.UTC(),
 
-		CreatedAt: trip.CreatedAt,
-		UpdatedAt: trip.UpdatedAt,
+		CreatedAt: d.CreatedAt,
+		UpdatedAt: d.UpdatedAt,
 	}
+}
+
+func newTrip(trip dbTrip) models.Trip {
+	return (&trip).ToModel()
 }
 
 func newDBTrip(trip models.Trip) dbTrip {
@@ -154,42 +158,6 @@ func DeleteTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (err erro
 
 // UpdateTrips is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
-	records := []goqu.Record{}
-	for i := range trips {
-		d := newDBTrip(trips[i])
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating trips")
-	}
-
-	for _, record := range records {
-		var result dbTrip
-		update := tx.From("photos.trips").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
-		}
-
-		results = append(results, newTrip(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
-	return results, nil
+func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) ([]models.Trip, error) {
+	return BulkUpdate(ctx, db, "photos.trips", trips, newDBTrip)
 }

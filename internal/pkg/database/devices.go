@@ -39,16 +39,20 @@ func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func newDevice(device dbDevice) models.Device {
+func (d *dbDevice) ToModel() models.Device {
 	return models.Device{
-		ID:           device.ID,
-		Name:         device.Name,
-		Slug:         device.Slug,
-		ModelMatches: device.ModelMatches,
-		IconKind:     device.IconKind,
-		CreatedAt:    device.CreatedAt,
-		UpdatedAt:    device.UpdatedAt,
+		ID:           d.ID,
+		Name:         d.Name,
+		Slug:         d.Slug,
+		ModelMatches: d.ModelMatches,
+		IconKind:     d.IconKind,
+		CreatedAt:    d.CreatedAt,
+		UpdatedAt:    d.UpdatedAt,
 	}
+}
+
+func newDevice(device dbDevice) models.Device {
+	return (&device).ToModel()
 }
 
 func newDBDevice(device models.Device) dbDevice {
@@ -173,32 +177,7 @@ func AllDevices(ctx context.Context, db *sql.DB) (results []models.Device, err e
 }
 
 func MostRecentlyUsedDevice(ctx context.Context, db *sql.DB) (result models.Device, err error) {
-	var dbDevices []dbDevice
-
-	goquDB := goqu.New("postgres", db)
-	selectDevices := goquDB.From("photos.devices").
-		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
-		Select("devices.*").
-		Order(goqu.I("medias.taken_at").Desc()).
-		Executor()
-	err = selectDevices.ScanStructsContext(ctx, &dbDevices)
-	if err != nil {
-		return result, errors.Wrap(err, "failed to select devices")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results := []models.Device{}
-	for _, v := range dbDevices {
-		results = append(results, newDevice(v))
-	}
-
-	if len(results) < 1 {
-		return result, nil
-	}
-
-	result = results[0]
-	return result, nil
+	return mostRecentlyUsedEntity[models.Device, dbDevice](ctx, db, "devices", "medias.device_id", newDevice)
 }
 
 func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) (err error) {
@@ -224,67 +203,10 @@ func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) (er
 
 // UpdateDevices is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (results []models.Device, err error) {
-	records := []goqu.Record{}
-	for _, v := range devices {
-		d := newDBDevice(v)
-		records = append(records, d.ToRecord(true))
-	}
-
-	goquDB := goqu.New("postgres", db)
-	tx, err := goquDB.Begin()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to open tx for updating devices")
-	}
-
-	for _, record := range records {
-		var result dbDevice
-		update := tx.From("photos.devices").
-			Where(goqu.Ex{"id": record["id"]}).
-			Update().
-			Set(record).
-			Returning(goqu.Star()).
-			Executor()
-		_, err = update.ScanStructContext(ctx, &result)
-		if err != nil {
-			rErr := tx.Rollback()
-			if rErr != nil {
-				return results, errors.Wrap(err, "failed to rollback")
-			}
-			return results, errors.Wrap(err, "failed to update, rolled back")
-		}
-
-		results = append(results, newDevice(result))
-	}
-	err = tx.Commit()
-	if err != nil {
-		return results, errors.Wrap(err, "failed to commit transaction")
-	}
-
-	return results, nil
+func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) ([]models.Device, error) {
+	return BulkUpdate(ctx, db, "photos.devices", devices, newDBDevice)
 }
 
 func DevicePosts(ctx context.Context, db *sql.DB, deviceID int64) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	selectPosts := goquDB.From("photos.devices").
-		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
-		InnerJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
-		Select("posts.*").
-		Where(goqu.Ex{"devices.id": deviceID}).
-		Order(goqu.I("posts.publish_date").Desc()).
-		Executor()
-	err = selectPosts.ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+	return entityPosts(ctx, db, "devices", "medias.device_id", "devices.id", deviceID)
 }

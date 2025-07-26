@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/md5"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -13,6 +14,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -192,7 +194,7 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains(string(body), fmt.Sprintf("%d", persistedMedias[0].ID))
+	s.Contains(string(body), strconv.Itoa(persistedMedias[0].ID))
 }
 
 func (s *EndpointsMediasSuite) TestUpdateMedia() {
@@ -257,7 +259,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	values := map[string]io.Reader{
 		"Make":          strings.NewReader("Fuji"),
 		"File":          imageFile,
-		"DeviceID":      strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
+		"DeviceID":      strings.NewReader(strconv.FormatInt(int64(returnedDevices[0].ID), 10)),
 		"DisplayOffset": strings.NewReader("50"),
 		"LensID":        strings.NewReader("0"), // remove the previously set lens
 		"_method":       strings.NewReader(http.MethodPut),
@@ -504,7 +506,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	// build the form to be posted
 	values := map[string]io.Reader{
 		"File":     imageFile,
-		"DeviceID": strings.NewReader(fmt.Sprintf("%d", returnedDevices[0].ID)),
+		"DeviceID": strings.NewReader(strconv.FormatInt(int64(returnedDevices[0].ID), 10)),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -589,7 +591,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
 	s.Require().NoError(err)
-	bucketMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
+	bucketMD5 := hex.EncodeToString(bucketHash.Sum(nil))
 
 	// get a digest for the image originally uploaded
 	f, err := os.Open(imageFilePath)
@@ -598,7 +600,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	sourceHash := md5.New()
 	_, err = io.Copy(sourceHash, f)
 	s.Require().NoError(err)
-	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
+	sourceMD5 := hex.EncodeToString(sourceHash.Sum(nil))
 
 	s.Require().Equal(bucketMD5, sourceMD5)
 

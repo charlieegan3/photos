@@ -2,7 +2,6 @@ package tags
 
 import (
 	"database/sql"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -71,7 +70,7 @@ func (s *EndpointsTagsSuite) TestListTags() {
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -98,13 +97,13 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name), nil)
+	req, err := http.NewRequest(http.MethodGet, "/admin/tags/"+persistedTags[0].Name, nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -123,7 +122,7 @@ func (s *EndpointsTagsSuite) TestNewTag() {
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -156,7 +155,7 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 	td.Cmp(s.T(), rr.Result().Header["Location"], []string{"/admin/tags/nofilter"})
 
 	// check that the database content is also correct
@@ -278,7 +277,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	// make the request to the handler
 	req, err := http.NewRequest(
 		http.MethodPost,
-		fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name),
+		"/admin/tags/"+persistedTags[0].Name,
 		strings.NewReader(form.Encode()),
 	)
 	s.Require().NoError(err)
@@ -388,7 +387,7 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	// make the request to the handler
 	req, err := http.NewRequest(
 		http.MethodPost,
-		fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name),
+		"/admin/tags/"+persistedTags[0].Name,
 		strings.NewReader(form.Encode()),
 	)
 	s.Require().NoError(err)
@@ -398,7 +397,7 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedTags, err := database.AllTags(s.DB, false, database.SelectOptions{})

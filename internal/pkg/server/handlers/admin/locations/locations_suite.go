@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -450,7 +451,7 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 	req, err := http.NewRequest(
 		http.MethodGet,
 		"/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2&timestamp=1234&mediaID="+
-			fmt.Sprintf("%d", persistedMedias[0].ID),
+			strconv.Itoa(persistedMedias[0].ID),
 		nil,
 	)
 	s.Require().NoError(err)

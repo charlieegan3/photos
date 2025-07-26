@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -283,8 +284,8 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	form.Add("Description", "foobar")
 	form.Add("IsDraft", "true")
 	form.Add("PublishDate", time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC).Format("2006-01-02T15:04"))
-	form.Add("LocationID", fmt.Sprintf("%d", returnedLocations[0].ID))
-	form.Add("MediaID", fmt.Sprintf("%d", returnedMedias[0].ID))
+	form.Add("LocationID", strconv.Itoa(returnedLocations[0].ID))
+	form.Add("MediaID", strconv.Itoa(returnedMedias[0].ID))
 	form.Add("Tags", "tag_a tagb tag_c")
 
 	// make the request to the handler
@@ -415,8 +416,8 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	form.Add("Description", "foobar")
 	form.Add("PublishDate", time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC).Format("2006-01-02T15:04"))
 	form.Add("IsDraft", "true")
-	form.Add("MediaID", fmt.Sprint(returnedMedias[0].ID))
-	form.Add("LocationID", fmt.Sprint(returnedLocations[0].ID))
+	form.Add("MediaID", strconv.Itoa(returnedMedias[0].ID))
+	form.Add("LocationID", strconv.Itoa(returnedLocations[0].ID))
 	form.Add("Tags", " tag_d   \n")
 
 	// make the request to the handler

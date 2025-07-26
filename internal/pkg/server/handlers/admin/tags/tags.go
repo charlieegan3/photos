@@ -3,7 +3,6 @@ package tags
 import (
 	"database/sql"
 	_ "embed"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -136,7 +135,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		http.Redirect(w, r, fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name), http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/tags/"+persistedTags[0].Name, http.StatusSeeOther)
 	}
 }
 
@@ -234,7 +233,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 					w.Write([]byte(err.Error()))
 					return
 				}
-				redirectTo = fmt.Sprintf("/admin/tags/%s", conflictingTags[0].Name)
+				redirectTo = "/admin/tags/" + conflictingTags[0].Name
 			} else {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -246,7 +245,8 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 				w.Write([]byte("unexpected number of updatedTags"))
 				return
 			}
-			redirectTo = fmt.Sprintf("/admin/tags/%s", updatedTags[0].Name)
+
+			redirectTo = "/admin/tags/%s" + updatedTags[0].Name
 		}
 
 		// also possible to update from the index

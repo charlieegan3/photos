@@ -96,7 +96,7 @@ func parseTCX(rawData []byte) (models.Activity, []Point, error) {
 	}
 
 	activity.Title = sport
-	activity.Description = fmt.Sprintf("Created by %s", creator)
+	activity.Description = "Created by " + creator
 
 	return activity, points, nil
 }
@@ -110,7 +110,7 @@ func parseGPX(rawData []byte) (models.Activity, []Point, error) {
 		return activity, points, fmt.Errorf("failed to parse GPX data: %w", err)
 	}
 
-	activity.Description = fmt.Sprintf("Created by %s", gpxData.Creator)
+	activity.Description = "Created by " + gpxData.Creator
 
 	for _, track := range gpxData.Tracks {
 		activity.Title = track.Name

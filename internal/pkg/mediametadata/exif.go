@@ -2,9 +2,11 @@ package mediametadata
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"image"
 	_ "image/jpeg"
+	"strconv"
 	"strings"
 	"time"
 
@@ -88,7 +90,7 @@ type Fraction struct {
 
 func (f *Fraction) ToDecimal() (float64, error) {
 	if f.Denominator == 0 {
-		return 0, fmt.Errorf("fraction with 0 denominator cannot be converted to decimal")
+		return 0, errors.New("fraction with 0 denominator cannot be converted to decimal")
 	}
 
 	return float64(f.Numerator) / float64(f.Denominator), nil
@@ -122,7 +124,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "Make" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw Make value")
+				return errors.New("could not get raw Make value")
 			}
 
 			val, ok := rawValue.(string)
@@ -136,7 +138,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "Model" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw Model value")
+				return errors.New("could not get raw Model value")
 			}
 
 			val, ok := rawValue.(string)
@@ -150,7 +152,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "LensModel" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw Make value")
+				return errors.New("could not get raw Make value")
 			}
 
 			val, ok := rawValue.(string)
@@ -164,7 +166,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "FocalLengthIn35mmFilm" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw FocalLengthIn35mmFilm value")
+				return errors.New("could not get raw FocalLengthIn35mmFilm value")
 			}
 
 			val, ok := rawValue.([]uint16)
@@ -173,14 +175,14 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			}
 
 			if len(val) == 1 {
-				focalLength35mm = fmt.Sprintf("%d", val[0])
+				focalLength35mm = strconv.FormatUint(uint64(val[0]), 10)
 			}
 		}
 
 		if ite.TagName() == "FocalLength" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw FocalLength value")
+				return errors.New("could not get raw FocalLength value")
 			}
 
 			val, ok := rawValue.([]exifcommon.Rational)
@@ -200,7 +202,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "DateTimeOriginal" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw DateTimeOriginal value")
+				return errors.New("could not get raw DateTimeOriginal value")
 			}
 
 			val, ok := rawValue.(string)
@@ -217,7 +219,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "OffsetTimeOriginal" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw OffsetTimeOriginal value")
+				return errors.New("could not get raw OffsetTimeOriginal value")
 			}
 
 			var ok bool
@@ -230,7 +232,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "FNumber" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw FNumber value")
+				return errors.New("could not get raw FNumber value")
 			}
 			val, ok := rawValue.([]exifcommon.Rational)
 			if !ok {
@@ -248,7 +250,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "ExposureTime" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw ExposureTime value")
+				return errors.New("could not get raw ExposureTime value")
 			}
 
 			val, ok := rawValue.([]exifcommon.Rational)
@@ -267,7 +269,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "ISOSpeedRatings" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw ISOSpeedRatings value")
+				return errors.New("could not get raw ISOSpeedRatings value")
 			}
 
 			val, ok := rawValue.([]uint16)
@@ -285,7 +287,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "GPSLatitudeRef" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw GPSLatitudeRef value")
+				return errors.New("could not get raw GPSLatitudeRef value")
 			}
 
 			val, ok := rawValue.(string)
@@ -299,7 +301,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "GPSLatitude" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw GPSLatitude value")
+				return errors.New("could not get raw GPSLatitude value")
 			}
 
 			val, ok := rawValue.([]exifcommon.Rational)
@@ -322,7 +324,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "GPSLongitudeRef" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw GPSLongitudeRef value")
+				return errors.New("could not get raw GPSLongitudeRef value")
 			}
 
 			val, ok := rawValue.(string)
@@ -336,7 +338,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "GPSLongitude" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw GPSLongitude value")
+				return errors.New("could not get raw GPSLongitude value")
 			}
 
 			val, ok := rawValue.([]exifcommon.Rational)
@@ -359,7 +361,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "GPSAltitudeRef" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw GPSAltitudeRef value")
+				return errors.New("could not get raw GPSAltitudeRef value")
 			}
 
 			val, ok := rawValue.([]byte)
@@ -377,7 +379,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "GPSAltitude" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return fmt.Errorf("could not get raw GPSAltitude value")
+				return errors.New("could not get raw GPSAltitude value")
 			}
 
 			val, ok := rawValue.([]exifcommon.Rational)
@@ -402,14 +404,14 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	}
 
 	if focalLength != "" {
-		metadata.FocalLength = fmt.Sprintf("%smm", focalLength)
+		metadata.FocalLength = focalLength + "mm"
 
 		if focalLength35mm != "" {
 			metadata.FocalLength = fmt.Sprintf("%smm (%smm in 35mm format)", focalLength, focalLength35mm)
 		}
 	} else if focalLength35mm != "" {
 		if focalLength35mm != "" {
-			metadata.FocalLength = fmt.Sprintf("%smm in 35mm format", focalLength35mm)
+			metadata.FocalLength = focalLength35mm + "mm in 35mm format"
 		}
 	}
 

@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/md5"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -376,7 +377,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
 	s.Require().NoError(err)
-	bucketMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
+	bucketMD5 := hex.EncodeToString(bucketHash.Sum(nil))
 
 	// get a digest for the image originally uploaded
 	f, err := os.Open(imageIconPath)
@@ -385,7 +386,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	sourceHash := md5.New()
 	_, err = io.Copy(sourceHash, f)
 	s.Require().NoError(err)
-	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
+	sourceMD5 := hex.EncodeToString(sourceHash.Sum(nil))
 
 	s.Require().Equal( bucketMD5, sourceMD5)
 }

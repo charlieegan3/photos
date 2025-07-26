@@ -215,7 +215,8 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		updatedTags, err := database.UpdateTags(r.Context(), db, []models.Tag{tag})
 		var redirectTo string
 		if err != nil {
-			if errors.As(err, &database.TagNameConflictError{}) {
+			var tagConflictErr *database.TagNameConflictError
+			if errors.As(err, &tagConflictErr) {
 				conflictingTags, err := database.FindTagsByName(r.Context(), db, []string{tag.Name})
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
@@ -246,7 +247,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 				return
 			}
 
-			redirectTo = "/admin/tags/%s" + updatedTags[0].Name
+			redirectTo = "/admin/tags/" + updatedTags[0].Name
 		}
 
 		// also possible to update from the index

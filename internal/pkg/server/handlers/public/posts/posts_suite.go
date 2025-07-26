@@ -22,6 +22,7 @@ import (
 
 type PostsSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -179,7 +180,9 @@ func (s *PostsSuite) TestGetPost() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -304,7 +307,11 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 		BuildPeriodIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/period?from=2021-10-01&to=2021-11-01", nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
+		http.MethodGet,
+		"/posts/period?from=2021-10-01&to=2021-11-01", nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

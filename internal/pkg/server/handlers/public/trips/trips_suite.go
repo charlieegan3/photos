@@ -21,6 +21,7 @@ import (
 
 type TripsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 
@@ -91,7 +92,10 @@ func (s *TripsSuite) TestGetTrip() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
 	).Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/trips/%d", returnedTrips[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
+		http.MethodGet, fmt.Sprintf("/trips/%d", returnedTrips[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

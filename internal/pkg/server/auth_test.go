@@ -18,10 +18,10 @@ func TestAuthMiddleware(t *testing.T) {
 	adminRouter := router.PathPrefix("/admin").Subrouter()
 	adminRouter.Use(InitMiddlewareAuth("username", "password"))
 
-	router.HandleFunc("/public", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/public", func(w http.ResponseWriter, _ *http.Request) {
 		io.WriteString(w, "public")
 	})
-	adminRouter.HandleFunc("/secret", func(w http.ResponseWriter, r *http.Request) {
+	adminRouter.HandleFunc("/secret", func(w http.ResponseWriter, _ *http.Request) {
 		io.WriteString(w, "secret")
 	})
 

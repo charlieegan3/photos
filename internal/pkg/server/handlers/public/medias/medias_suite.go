@@ -6,6 +6,7 @@ import (
 	"crypto/sha1"
 	"database/sql"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,6 +25,7 @@ import (
 
 type MediasSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -75,7 +77,9 @@ func (s *MediasSuite) TestGetMedia() {
 		BuildMediaHandler(s.DB, s.Bucket)).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -111,7 +115,7 @@ func (s *MediasSuite) TestGetMedia() {
 	iter := s.Bucket.List(listOptions)
 	for {
 		obj, err := iter.Next(context.Background())
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		thumbs = append(thumbs, obj.Key)
@@ -177,7 +181,9 @@ func (s *MediasSuite) TestGetMediaFit() {
 		BuildMediaHandler(s.DB, s.Bucket)).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -213,7 +219,7 @@ func (s *MediasSuite) TestGetMediaFit() {
 	iter := s.Bucket.List(listOptions)
 	for {
 		obj, err := iter.Next(context.Background())
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		thumbs = append(thumbs, obj.Key)

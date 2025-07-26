@@ -12,7 +12,7 @@ import (
 func TestGeoapifyGeocoding(t *testing.T) {
 	t.Parallel()
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		body, err := os.ReadFile("./response.json")
 		if err != nil {
 			t.Fatalf("unable to read file: %v", err)

@@ -51,15 +51,15 @@ func (c *Coordinate) ToDecimal() (float64, error) {
 
 	degrees, err := c.Degrees.ToDecimal()
 	if err != nil {
-		return 0, fmt.Errorf("coordinate can't be converted to decimal: %s", err)
+		return 0, fmt.Errorf("coordinate can't be converted to decimal: %w", err)
 	}
 	minutes, err := c.Minutes.ToDecimal()
 	if err != nil {
-		return 0, fmt.Errorf("coordinate can't be converted to decimal: %s", err)
+		return 0, fmt.Errorf("coordinate can't be converted to decimal: %w", err)
 	}
 	seconds, err := c.Seconds.ToDecimal()
 	if err != nil {
-		return 0, fmt.Errorf("coordinate can't be converted to decimal: %s", err)
+		return 0, fmt.Errorf("coordinate can't be converted to decimal: %w", err)
 	}
 
 	return (degrees + minutes/float64(60) + seconds/float64(3600)) * multiplier, nil
@@ -73,7 +73,7 @@ type Altitude struct {
 func (a *Altitude) ToDecimal() (float64, error) {
 	value, err := a.Value.ToDecimal()
 	if err != nil {
-		return 0, fmt.Errorf("altitude can't be converted to decimal: %s", err)
+		return 0, fmt.Errorf("altitude can't be converted to decimal: %w", err)
 	}
 
 	multiplier := 1.0
@@ -98,29 +98,29 @@ func (f *Fraction) ToDecimal() (float64, error) {
 
 func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 	rawExif, err := exif.SearchAndExtractExif(b)
-	if err == exif.ErrNoExif {
+	if errors.Is(err, exif.ErrNoExif) {
 		return metadata, nil
 	} else if err != nil {
-		return metadata, fmt.Errorf("failed to get raw exif data: %s", err)
+		return metadata, fmt.Errorf("failed to get raw exif data: %w", err)
 	}
 
 	im, err := exifcommon.NewIfdMappingWithStandard()
 	if err != nil {
-		return metadata, fmt.Errorf("failed to create idfmapping: %s", err)
+		return metadata, fmt.Errorf("failed to create idfmapping: %w", err)
 	}
 
 	ti := exif.NewTagIndex()
 
 	_, index, err := exif.Collect(im, ti, rawExif)
 	if err != nil {
-		return metadata, fmt.Errorf("failed to collect exif data: %s", err)
+		return metadata, fmt.Errorf("failed to collect exif data: %w", err)
 	}
 
 	var focalLength string
 	var focalLength35mm string
 
 	var offsetTimeOriginal string
-	cb := func(ifd *exif.Ifd, ite *exif.IfdTagEntry) error {
+	cb := func(_ *exif.Ifd, ite *exif.IfdTagEntry) error {
 		if ite.TagName() == "Make" {
 			rawValue, err := ite.Value()
 			if err != nil {
@@ -212,7 +212,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			metadata.DateTime, err = time.Parse("2006:01:02 15:04:05", val)
 			if err != nil {
-				return fmt.Errorf("failed to parse time: %s", err)
+				return fmt.Errorf("failed to parse time: %w", err)
 			}
 		}
 
@@ -400,7 +400,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 	err = index.RootIfd.EnumerateTagsRecursively(cb)
 	if err != nil {
-		return metadata, fmt.Errorf("failed to walk exif data tree: %s", err)
+		return metadata, fmt.Errorf("failed to walk exif data tree: %w", err)
 	}
 
 	if focalLength != "" {
@@ -445,7 +445,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 	m, _, err := image.Decode(bytes.NewReader(b))
 	if err != nil {
-		return metadata, fmt.Errorf("failed to decode image for size check: %s", err)
+		return metadata, fmt.Errorf("failed to decode image for size check: %w", err)
 	}
 	bounds := m.Bounds()
 	metadata.Width = bounds.Dx()

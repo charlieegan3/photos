@@ -12,6 +12,8 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/models"
 )
 
+var ErrLensNotFound = errors.New("lens not found")
+
 type dbLens struct {
 	ID   int64  `db:"id"`
 	Name string `db:"name"`
@@ -82,7 +84,7 @@ func FindLensesByID(ctx context.Context, db *sql.DB, id []int64) (results []mode
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.lenses").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructs(&dbLenses); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to select lenses by slug")
 	}
 
@@ -98,7 +100,7 @@ func FindLensesByName(ctx context.Context, db *sql.DB, name string) (results []m
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.lenses").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	if err := insert.ScanStructs(&dbLenses); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to select lenses by slug")
 	}
 
@@ -126,7 +128,7 @@ func AllLenses(ctx context.Context, db *sql.DB) (results []models.Lens, err erro
 		GroupBy(goqu.I("lenses.id")).
 		Executor()
 
-	if err := selectLenses.ScanStructs(&dbLenses); err != nil {
+	if err := selectLenses.ScanStructsContext(ctx, &dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to select lenses")
 	}
 
@@ -149,7 +151,7 @@ func MostRecentlyUsedLens(ctx context.Context, db *sql.DB) (result models.Lens, 
 		Select("lenses.*").
 		Order(goqu.I("medias.taken_at").Desc()).
 		Executor()
-	if err := selectLenses.ScanStructs(&dbLenses); err != nil {
+	if err := selectLenses.ScanStructsContext(ctx, &dbLenses); err != nil {
 		return result, errors.Wrap(err, "failed to select lenses")
 	}
 
@@ -179,18 +181,18 @@ func DeleteLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (err er
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build lenses delete query: %s", err)
+		return fmt.Errorf("failed to build lenses delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete lenses: %s", err)
+		return fmt.Errorf("failed to delete lenses: %w", err)
 	}
 
 	return nil
 }
 
 // UpdateLenses is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
+// place is not supported by goqu and it wasn't worth the work (TODO).
 func UpdateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (results []models.Lens, err error) {
 	records := []goqu.Record{}
 	for _, v := range lenses {
@@ -249,7 +251,7 @@ func FindLensByLensMatches(ctx context.Context, db *sql.DB, lensMatch string) (r
 		return &l, nil
 	}
 
-	return nil, nil
+	return nil, ErrLensNotFound
 }
 
 func LensPosts(ctx context.Context, db *sql.DB, lensID int64) (results []models.Post, err error) {

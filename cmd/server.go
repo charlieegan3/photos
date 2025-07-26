@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"log"
 	"os"
 	"strings"
@@ -22,11 +23,11 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server"
 )
 
-// serverCmd wraps server.Serve and starts the cms webserver
+// serverCmd wraps server.Serve and starts the cms webserver.
 var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "start photos server",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		ctx := context.Background()
 
 		environment := viper.GetString("environment")
@@ -80,7 +81,7 @@ var serverCmd = &cobra.Command{
 		}
 
 		err = m.Up()
-		if err != nil && err != migrate.ErrNoChange {
+		if err != nil && errors.Is(err, migrate.ErrNoChange) {
 			log.Fatalf("failed to migrate up: %s", err)
 		} else {
 			log.Println("migrated up")

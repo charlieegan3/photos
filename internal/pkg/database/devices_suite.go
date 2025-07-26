@@ -11,9 +11,10 @@ import (
 )
 
 // DevicesSuite is a number of tests to define the database integration for
-// storing devices
+// storing devices.
 type DevicesSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

@@ -11,9 +11,10 @@ import (
 )
 
 // LensesSuite is a number of tests to define the database integration for
-// storing lenses
+// storing lenses.
 type LensesSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

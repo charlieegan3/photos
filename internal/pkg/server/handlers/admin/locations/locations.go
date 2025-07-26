@@ -135,7 +135,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 	}
 }
 
-func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -186,7 +186,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 func BuildFormHandler(
 	db *sql.DB,
 	bucket *blob.Bucket,
-	renderer templating.PageRenderer,
+	_ templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")

@@ -25,6 +25,7 @@ import (
 
 type EndpointsPostsSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -193,7 +194,9 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

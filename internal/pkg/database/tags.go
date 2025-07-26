@@ -56,7 +56,7 @@ func newDBTag(tag models.Tag) dbTag {
 
 type TagNameConflictError struct{}
 
-func (t TagNameConflictError) Error() string {
+func (_ TagNameConflictError) Error() string {
 	return "tag name conflicted with an existing tag"
 }
 
@@ -158,7 +158,12 @@ func FindOrCreateTagsByName(ctx context.Context, db *sql.DB, names []string) (re
 	return results, nil
 }
 
-func AllTags(ctx context.Context, db *sql.DB, includeHidden bool, options SelectOptions) (results []models.Tag, err error) {
+func AllTags(
+	ctx context.Context,
+	db *sql.DB,
+	includeHidden bool,
+	options SelectOptions,
+) (results []models.Tag, err error) {
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
@@ -208,18 +213,18 @@ func DeleteTags(ctx context.Context, db *sql.DB, tags []models.Tag) (err error) 
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build tags delete query: %s", err)
+		return fmt.Errorf("failed to build tags delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete tags: %s", err)
+		return fmt.Errorf("failed to delete tags: %w", err)
 	}
 
 	return nil
 }
 
 // UpdateTags is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
+// place is not supported by goqu and it wasn't worth the work (TODO).
 func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
 	records := []goqu.Record{}
 	for _, v := range tags {
@@ -258,7 +263,7 @@ func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []m
 	return results, nil
 }
 
-// TODO make this a transaction
+// TODO make this a transaction.
 func MergeTags(ctx context.Context, db *sql.DB, tag1, tag2 models.Tag) (err error) {
 	taggings, err := FindTaggingsByTagID(ctx, db, tag2.ID)
 	if err != nil {

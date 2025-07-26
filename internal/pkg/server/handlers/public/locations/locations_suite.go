@@ -26,6 +26,7 @@ import (
 
 type LocationsSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -128,7 +129,9 @@ func (s *LocationsSuite) TestGetLocation() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
 	).Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -161,7 +164,7 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	h.Write(mapBytes)
 	mapSha := hex.EncodeToString(h.Sum(nil))
 
-	mapServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mapServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, err = io.Copy(w, bytes.NewReader(mapBytes))
 		if err != nil {
 			s.T().Error(err)
@@ -186,7 +189,9 @@ func (s *LocationsSuite) TestGetLocationMap() {
 		BuildMapHandler(s.DB, s.Bucket, mapServer.URL, "")).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

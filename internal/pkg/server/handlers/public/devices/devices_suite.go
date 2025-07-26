@@ -26,6 +26,7 @@ import (
 
 type DevicesSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -128,7 +129,9 @@ func (s *DevicesSuite) TestShow() {
 		BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -175,7 +178,9 @@ func (s *DevicesSuite) TestGetIcon() {
 		BuildIconHandler(s.DB, s.Bucket)).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/devices/%d/icon.jpg", returnedDevices[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/devices/%d/icon.jpg", returnedDevices[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

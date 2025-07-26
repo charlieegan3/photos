@@ -61,7 +61,11 @@ func newDBLocation(location models.Location) dbLocation {
 	}
 }
 
-func CreateLocations(ctx context.Context, db *sql.DB, locations []models.Location) (results []models.Location, err error) {
+func CreateLocations(
+	ctx context.Context,
+	db *sql.DB,
+	locations []models.Location,
+) (results []models.Location, err error) {
 	records := []goqu.Record{}
 	for _, v := range locations {
 		d := newDBLocation(v)
@@ -146,19 +150,23 @@ func DeleteLocations(ctx context.Context, db *sql.DB, locations []models.Locatio
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build locations delete query: %s", err)
+		return fmt.Errorf("failed to build locations delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete locations: %s", err)
+		return fmt.Errorf("failed to delete locations: %w", err)
 	}
 
 	return nil
 }
 
 // UpdateLocations is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdateLocations(ctx context.Context, db *sql.DB, locations []models.Location) (results []models.Location, err error) {
+// place is not supported by goqu and it wasn't worth the work (TODO).
+func UpdateLocations(
+	ctx context.Context,
+	db *sql.DB,
+	locations []models.Location,
+) (results []models.Location, err error) {
 	records := []goqu.Record{}
 	for _, v := range locations {
 		d := newDBLocation(v)

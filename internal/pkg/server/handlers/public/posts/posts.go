@@ -324,7 +324,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
-// BuildLegacyPostRedirect will send requests to old post IDs to the period pages as a best guess
+// BuildLegacyPostRedirect will send requests to old post IDs to the period pages as a best guess.
 func BuildLegacyPostRedirect() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date, ok := mux.Vars(r)["date"]
@@ -337,7 +337,7 @@ func BuildLegacyPostRedirect() func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-// BuildLegacyPeriodRedirect will transform requests for /archive to /posts/period paths
+// BuildLegacyPeriodRedirect will transform requests for /archive to /posts/period paths.
 func BuildLegacyPeriodRedirect() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		month, monthOk := mux.Vars(r)["month"]
@@ -674,8 +674,11 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 
 			feedItems = append(feedItems,
 				&feeds.Item{
-					Id:          fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[i].ID),
-					Title:       fmt.Sprintf("%s - %s", posts[i].PublishDate.Format("January 2, 2006"), locationMap[posts[i].LocationID].Name),
+					Id: fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[i].ID),
+					Title: fmt.Sprintf(
+						"%s - %s", posts[i].PublishDate.Format("January 2, 2006"),
+						locationMap[posts[i].LocationID].Name,
+					),
 					Link:        &feeds.Link{Href: fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[i].ID)},
 					Description: string(markdown.ToHTML(content, nil, nil)),
 					Created:     posts[i].PublishDate,

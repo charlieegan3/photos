@@ -10,9 +10,10 @@ import (
 )
 
 // TagsSuite is a number of tests to define the database integration for
-// storing tags
+// storing tags.
 type TagsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

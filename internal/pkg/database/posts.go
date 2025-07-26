@@ -215,7 +215,7 @@ func FindPostsByMediaID(ctx context.Context, db *sql.DB, id int) (results []mode
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"media_id": id}).Executor()
-	if err := insert.ScanStructs(&dbPosts); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by media_id")
 	}
 
@@ -384,18 +384,18 @@ func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) (err erro
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build posts delete query: %s", err)
+		return fmt.Errorf("failed to build posts delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete posts: %s", err)
+		return fmt.Errorf("failed to delete posts: %w", err)
 	}
 
 	return nil
 }
 
 // UpdatePosts is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
+// place is not supported by goqu and it wasn't worth the work (TODO).
 func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results []models.Post, err error) {
 	records := []goqu.Record{}
 	for i := range posts {

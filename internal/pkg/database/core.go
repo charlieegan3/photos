@@ -21,7 +21,7 @@ type SelectOptions struct {
 
 // Init takes the details from config and initializes a database connection,
 // bootstrap can be set to overide the database name in the params to postgres
-// when first connecting to the database server
+// when first connecting to the database server.
 func Init(
 	ctx context.Context,
 	connectionStringBase string,
@@ -46,18 +46,18 @@ func Init(
 		// Open the connection and test that it's working
 		db, err := sql.Open("postgres", connectionString)
 		if err != nil {
-			return db, fmt.Errorf("failed to init db connection: %s", err)
+			return db, fmt.Errorf("failed to init db connection: %w", err)
 		}
 
 		exists, err := Exists(ctx, db, databaseName)
 		if err != nil {
-			return db, fmt.Errorf("failed to check if database must be created: %s", err)
+			return db, fmt.Errorf("failed to check if database must be created: %w", err)
 		}
 
 		if !exists {
 			err = Create(ctx, db, databaseName)
 			if err != nil {
-				return db, fmt.Errorf("failed to create database: %s", err)
+				return db, fmt.Errorf("failed to create database: %w", err)
 			}
 		}
 	}
@@ -83,11 +83,11 @@ func Init(
 	// Open the connection and test that it's working
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
-		return db, fmt.Errorf("failed to init db connection: %s", err)
+		return db, fmt.Errorf("failed to init db connection: %w", err)
 	}
 
 	if err = db.PingContext(ctx); err != nil {
-		return db, fmt.Errorf("failed to ping the database: %s", err)
+		return db, fmt.Errorf("failed to ping the database: %w", err)
 	}
 
 	// this is the limit set by elephantsql.com free tier, so no point in making configurable right now
@@ -96,17 +96,17 @@ func Init(
 	return db, nil
 }
 
-// Create will attempt to create a new database with a given name
+// Create will attempt to create a new database with a given name.
 func Create(ctx context.Context, db *sql.DB, databaseName string) error {
 	_, err := db.ExecContext(ctx, fmt.Sprintf(`CREATE DATABASE %s;`, databaseName))
 	if err != nil {
-		return fmt.Errorf("failed to create database: %s", err)
+		return fmt.Errorf("failed to create database: %w", err)
 	}
 
 	return nil
 }
 
-// Drop will terminate connections to the database and remove it
+// Drop will terminate connections to the database and remove it.
 func Drop(ctx context.Context, db *sql.DB, databaseName string) error {
 	// https://stackoverflow.com/questions/5408156/how-to-drop-a-postgresql-database-if-there-are-active-connections-to-it
 	transactionSQL := fmt.Sprintf(`
@@ -118,20 +118,20 @@ func Drop(ctx context.Context, db *sql.DB, databaseName string) error {
 
 	_, err := db.ExecContext(ctx, transactionSQL)
 	if err != nil {
-		return fmt.Errorf("failed to terminate active connections: %s", err)
+		return fmt.Errorf("failed to terminate active connections: %w", err)
 	}
 
 	// once the connections have been removed, then we can drop the database
 	_, err = db.ExecContext(ctx, fmt.Sprintf(`DROP DATABASE %s;`, databaseName))
 	if err != nil {
-		return fmt.Errorf("failed to drop database %q: %s", databaseName, err)
+		return fmt.Errorf("failed to drop database %q: %w", databaseName, err)
 	}
 
 	return nil
 }
 
 // Ping calls db.Ping on the connection handle to test the connection, a simple
-// wrapper
+// wrapper.
 func Ping(ctx context.Context, db *sql.DB) error {
 	err := db.PingContext(ctx)
 	if err != nil {
@@ -142,12 +142,12 @@ func Ping(ctx context.Context, db *sql.DB) error {
 }
 
 // Exists will return true if a database with the supplied name exists on the
-// currently connected postgres instance
+// currently connected postgres instance.
 func Exists(ctx context.Context, db *sql.DB, databaseName string) (bool, error) {
 	// https://dba.stackexchange.com/questions/45143/check-if-postgresql-database-exists-case-insensitive-way
 	rows, err := db.QueryContext(ctx, `SELECT 1 FROM pg_database WHERE datname=$1`, databaseName)
 	if err != nil {
-		return false, fmt.Errorf("failed look up database: %s", err)
+		return false, fmt.Errorf("failed look up database: %w", err)
 	}
 	defer rows.Close()
 
@@ -156,7 +156,7 @@ func Exists(ctx context.Context, db *sql.DB, databaseName string) (bool, error) 
 		err = rows.Scan(&result)
 		if err != nil {
 			return false, fmt.Errorf(
-				"failed to parse sql row response containing matching databases: %s",
+				"failed to parse sql row response containing matching databases: %w",
 				err,
 			)
 		}
@@ -189,11 +189,11 @@ func buildConnectionString(connectionStringBase string, params url.Values) strin
 	return fmt.Sprintf("%s?%s", connectionStringBase, params.Encode())
 }
 
-// Truncate the table with tableName
+// Truncate the table with tableName.
 func Truncate(ctx context.Context, db *sql.DB, tableName string) error {
 	_, err := db.ExecContext(ctx, fmt.Sprintf(`TRUNCATE %s CASCADE;`, tableName))
 	if err != nil {
-		return fmt.Errorf("failed to truncate table: %s", err)
+		return fmt.Errorf("failed to truncate table: %w", err)
 	}
 
 	return nil

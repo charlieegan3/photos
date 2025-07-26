@@ -23,6 +23,7 @@ import (
 
 type EndpointsTripsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 
@@ -93,7 +94,9 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

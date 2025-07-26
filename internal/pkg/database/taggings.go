@@ -86,7 +86,11 @@ func CreateTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) 
 	return results, nil
 }
 
-func FindOrCreateTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) (results []models.Tagging, err error) {
+func FindOrCreateTaggings(
+	ctx context.Context,
+	db *sql.DB,
+	taggings []models.Tagging,
+) (results []models.Tagging, err error) {
 	var ex []exp.Expression
 	for _, t := range taggings {
 		ex = append(ex, goqu.Ex{
@@ -181,11 +185,11 @@ func DeleteTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) 
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build taggings delete query: %s", err)
+		return fmt.Errorf("failed to build taggings delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete taggings: %s", err)
+		return fmt.Errorf("failed to delete taggings: %w", err)
 	}
 
 	return nil

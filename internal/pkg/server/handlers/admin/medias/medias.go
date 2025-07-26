@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	_ "embed"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -34,7 +35,7 @@ var newTemplate string
 var showTemplate string
 
 // requiredThumbs is a list of the required thumbnail sizes
-// Note: this must be ordered
+// Note: this must be ordered.
 var requiredThumbs = []int{2000, 1000, 500, 200}
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
@@ -153,7 +154,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 func BuildFormHandler(
 	db *sql.DB,
 	bucket *blob.Bucket,
-	renderer templating.PageRenderer,
+	_ templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
 	ir := imageproxy.Resizer{}
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -228,7 +229,7 @@ func BuildFormHandler(
 			iter := bucket.List(listOptions)
 			for {
 				obj, err := iter.Next(r.Context())
-				if err == io.EOF {
+				if errors.Is(err, io.EOF) {
 					break
 				}
 				if err != nil {
@@ -529,7 +530,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 func BuildCreateHandler(
 	db *sql.DB,
 	bucket *blob.Bucket,
-	renderer templating.PageRenderer,
+	_ templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
 	ir := imageproxy.Resizer{}
 

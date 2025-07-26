@@ -61,7 +61,7 @@ func Attach(
 
 	stylesHandler, err := buildStylesHandler()
 	if err != nil {
-		return fmt.Errorf("failed to build styles handler: %s", err)
+		return fmt.Errorf("failed to build styles handler: %w", err)
 	}
 	router.HandleFunc("/styles.css", stylesHandler).Methods(http.MethodGet)
 
@@ -156,7 +156,7 @@ func Attach(
 		}
 
 		router.Use(mw)
-		adminRouter.HandleFunc("/auth/callback", func(w http.ResponseWriter, r *http.Request) {
+		adminRouter.HandleFunc("/auth/callback", func(_ http.ResponseWriter, _ *http.Request) {
 			// should be handled by middleware, but here to avoid 404 and the middleware not
 			// being run
 		})

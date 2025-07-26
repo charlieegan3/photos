@@ -3,7 +3,7 @@ package models
 import "time"
 
 // Post represents a post to be shared on the site, linking a media item and
-// various metadata
+// various metadata.
 type Post struct {
 	ID int
 

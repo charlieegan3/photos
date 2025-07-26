@@ -270,18 +270,18 @@ func DeleteMedias(ctx context.Context, db *sql.DB, medias []models.Media) (err e
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build medias delete query: %s", err)
+		return fmt.Errorf("failed to build medias delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete medias: %s", err)
+		return fmt.Errorf("failed to delete medias: %w", err)
 	}
 
 	return nil
 }
 
 // UpdateMedias is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
+// place is not supported by goqu and it wasn't worth the work (TODO).
 func UpdateMedias(ctx context.Context, db *sql.DB, medias []models.Media) (results []models.Media, err error) {
 	records := []goqu.Record{}
 	for i := range medias {

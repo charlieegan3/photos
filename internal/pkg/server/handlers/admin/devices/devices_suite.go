@@ -29,6 +29,7 @@ import (
 
 type EndpointsDevicesSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -90,7 +91,9 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	router.HandleFunc("/admin/devices/{deviceID}",
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

@@ -10,6 +10,7 @@ import (
 
 type loggingResponseWriter struct {
 	http.ResponseWriter
+
 	statusCode int
 	body       []byte
 }

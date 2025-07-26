@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-// Media represents a media item uploaded to the system
+// Media represents a media item uploaded to the system.
 type Media struct {
 	ID int
 

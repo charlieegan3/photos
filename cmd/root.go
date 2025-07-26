@@ -9,7 +9,7 @@ import (
 
 var cfgFile string
 
-// rootCmd represents the base for the Photos application
+// rootCmd represents the base for the Photos application.
 var rootCmd = &cobra.Command{
 	Use:   "photos",
 	Short: "Photos is a web app to manage a photo library",
@@ -38,7 +38,7 @@ func init() {
 	)
 }
 
-// initConfig reads in config file and errors if fails
+// initConfig reads in config file and errors if fails.
 func initConfig() {
 	// if cfgFile is not set by flag or CONFIG_STRING logic, then use the HOME dir default
 	if cfgFile == "" {

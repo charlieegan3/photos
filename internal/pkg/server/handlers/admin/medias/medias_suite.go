@@ -6,6 +6,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -32,6 +33,7 @@ import (
 
 type EndpointsMediasSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -179,7 +181,9 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), nil)
+	req, err := http.NewRequestWithContext(
+		s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), nil,
+	)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -432,7 +436,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	iter := s.Bucket.List(listOptions)
 	for {
 		obj, err := iter.Next(context.Background())
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		s.Require().NoError(err)
@@ -615,7 +619,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	iter := s.Bucket.List(listOptions)
 	for {
 		obj, err := iter.Next(context.Background())
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		s.Require().NoError(err)

@@ -11,9 +11,10 @@ import (
 )
 
 // TripsSuite is a number of tests to define the database integration for
-// storing trips
+// storing trips.
 type TripsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

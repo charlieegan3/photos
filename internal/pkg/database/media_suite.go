@@ -11,9 +11,10 @@ import (
 )
 
 // MediasSuite is a number of tests to define the database integration for
-// storing medias
+// storing medias.
 type MediasSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

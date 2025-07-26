@@ -23,6 +23,7 @@ import (
 
 type EndpointsTagsSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string
@@ -294,7 +295,9 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	form.Add("Hidden", "false")
 
 	// make the request to the handler
-	req, err = http.NewRequestWithContext(s.T().Context(), http.MethodPost, "/admin/tags/tag2", strings.NewReader(form.Encode()))
+	req, err = http.NewRequestWithContext(
+		s.T().Context(), http.MethodPost, "/admin/tags/tag2", strings.NewReader(form.Encode()),
+	)
 	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 

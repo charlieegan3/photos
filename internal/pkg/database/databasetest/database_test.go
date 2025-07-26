@@ -41,6 +41,7 @@ func TestDatabaseSuite(t *testing.T) {
 // the database.
 type DatabaseSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

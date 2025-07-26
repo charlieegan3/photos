@@ -20,6 +20,7 @@ import (
 
 type TagsSuite struct {
 	suite.Suite
+
 	DB            *sql.DB
 	Bucket        *blob.Bucket
 	BucketBaseURL string

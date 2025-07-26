@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-// Tagging links posts and tags
+// Tagging links posts and tags.
 type Tagging struct {
 	ID int
 

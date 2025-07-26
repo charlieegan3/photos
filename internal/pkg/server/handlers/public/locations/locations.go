@@ -28,7 +28,7 @@ var indexTemplate string
 //go:embed templates/show.html.plush
 var showTemplate string
 
-// HeadContent is appended to the head of the base template
+// HeadContent is appended to the head of the base template.
 const HeadContent = `
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css">
 <script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
@@ -233,6 +233,7 @@ func BuildMapHandler(
 				fmt.Fprintf(w, "upstream map server request failed: %s", err)
 				return
 			}
+			defer resp.Body.Close()
 			if resp.StatusCode != http.StatusOK {
 				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprintf(w, "upstream map server request failed: %d", resp.StatusCode)

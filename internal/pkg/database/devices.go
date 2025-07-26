@@ -12,6 +12,8 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/models"
 )
 
+var ErrDeviceNotFound = errors.New("device not found")
+
 type dbDevice struct {
 	ID           int64  `db:"id"`
 	Name         string `db:"name"`
@@ -132,7 +134,7 @@ func FindDeviceByModelMatches(ctx context.Context, db *sql.DB, modelMatch string
 		return &d, nil
 	}
 
-	return nil, nil
+	return nil, ErrDeviceNotFound
 }
 
 func AllDevices(ctx context.Context, db *sql.DB) (results []models.Device, err error) {
@@ -151,7 +153,7 @@ func AllDevices(ctx context.Context, db *sql.DB) (results []models.Device, err e
 		GroupBy(goqu.I("devices.id")).
 		Executor()
 
-	if err := selectDevices.ScanStructs(&dbDevices); err != nil {
+	if err := selectDevices.ScanStructsContext(ctx, &dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices")
 	}
 
@@ -204,18 +206,18 @@ func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) (er
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build devices delete query: %s", err)
+		return fmt.Errorf("failed to build devices delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete devices: %s", err)
+		return fmt.Errorf("failed to delete devices: %w", err)
 	}
 
 	return nil
 }
 
 // UpdateDevices is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
+// place is not supported by goqu and it wasn't worth the work (TODO).
 func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (results []models.Device, err error) {
 	records := []goqu.Record{}
 	for _, v := range devices {

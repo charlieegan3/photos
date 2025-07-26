@@ -3,6 +3,7 @@ package tags
 import (
 	"database/sql"
 	_ "embed"
+	"errors"
 	"net/http"
 	"strings"
 
@@ -82,7 +83,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 }
 
 func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		ctx := plush.NewContext()
@@ -98,7 +99,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 	}
 }
 
-func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -139,7 +140,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 	}
 }
 
-func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
@@ -214,8 +215,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		updatedTags, err := database.UpdateTags(r.Context(), db, []models.Tag{tag})
 		var redirectTo string
 		if err != nil {
-			_, ok := err.(*database.TagNameConflictError)
-			if ok {
+			if errors.As(err, &database.TagNameConflictError{}) {
 				conflictingTags, err := database.FindTagsByName(r.Context(), db, []string{tag.Name})
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)

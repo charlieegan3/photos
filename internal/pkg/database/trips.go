@@ -139,18 +139,18 @@ func DeleteTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (err erro
 		goqu.Ex{"id": ids},
 	).ToSQL()
 	if err != nil {
-		return fmt.Errorf("failed to build trips delete query: %s", err)
+		return fmt.Errorf("failed to build trips delete query: %w", err)
 	}
 	_, err = db.ExecContext(ctx, del)
 	if err != nil {
-		return fmt.Errorf("failed to delete trips: %s", err)
+		return fmt.Errorf("failed to delete trips: %w", err)
 	}
 
 	return nil
 }
 
 // UpdateTrips is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO)
+// place is not supported by goqu and it wasn't worth the work (TODO).
 func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
 	records := []goqu.Record{}
 	for i := range trips {

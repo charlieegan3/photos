@@ -12,9 +12,10 @@ import (
 )
 
 // PostsSuite is a number of tests to define the database integration for
-// storing posts
+// storing posts.
 type PostsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 
@@ -458,19 +459,19 @@ func (s *PostsSuite) TestFindNextPost() {
 	posts := []models.Post{
 		{
 			Description: "post 1",
-			PublishDate: time.Date(2021, time.October, 25, 19, 56, 0, 0, time.Local),
+			PublishDate: time.Date(2021, time.October, 25, 19, 56, 0, 0, time.UTC),
 			MediaID:     returnedMedias[0].ID,
 			LocationID:  returnedLocations[0].ID,
 		},
 		{
 			Description: "post 2",
-			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.Local),
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
 			MediaID:     returnedMedias[0].ID,
 			LocationID:  returnedLocations[0].ID,
 		},
 		{
 			Description: "post 3",
-			PublishDate: time.Date(2021, time.December, 25, 19, 56, 0, 0, time.Local),
+			PublishDate: time.Date(2021, time.December, 25, 19, 56, 0, 0, time.UTC),
 			MediaID:     returnedMedias[0].ID,
 			LocationID:  returnedLocations[0].ID,
 		},
@@ -987,8 +988,8 @@ func (s *PostsSuite) TestPostsInDateRange() {
 	returnedPosts, err := PostsInDateRange(
 		s.T().Context(),
 		s.DB,
-		time.Date(2021, time.November, 1, 0, 0, 0, 0, time.Local),
-		time.Date(2021, time.November, 30, 0, 0, 0, 0, time.Local),
+		time.Date(2021, time.November, 1, 0, 0, 0, 0, time.UTC),
+		time.Date(2021, time.November, 30, 0, 0, 0, 0, time.UTC),
 	)
 	s.Require().NoError(err)
 

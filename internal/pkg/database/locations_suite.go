@@ -10,9 +10,10 @@ import (
 )
 
 // LocationsSuite is a number of tests to define the database integration for
-// storing locations
+// storing locations.
 type LocationsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

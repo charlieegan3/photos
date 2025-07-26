@@ -11,9 +11,10 @@ import (
 )
 
 // TaggingsSuite is a number of tests to define the database integration for
-// storing taggings
+// storing taggings.
 type TaggingsSuite struct {
 	suite.Suite
+
 	DB *sql.DB
 }
 

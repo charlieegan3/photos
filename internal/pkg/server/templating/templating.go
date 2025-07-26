@@ -96,9 +96,13 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 				HeadContent template.HTML
 				Body        template.HTML
 			}{
-				ShowMenu:    showMenu,
+				ShowMenu: showMenu,
+
+				// comes from trusted author
+				//nolint:gosec
 				HeadContent: template.HTML(headContent),
-				Body:        template.HTML(body),
+				//nolint:gosec
+				Body: template.HTML(body),
 			})
 			if err != nil {
 				return errors.Wrap(err, "failed to parse base template")

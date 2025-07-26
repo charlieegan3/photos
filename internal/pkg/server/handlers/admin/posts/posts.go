@@ -40,10 +40,13 @@ func (sm SelectableModel) SelectValue() interface{} {
 }
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, _ *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		posts, err := database.AllPosts(db, true, database.SelectOptions{SortField: "publish_date", SortDescending: true})
+		posts, err := database.AllPosts(
+			r.Context(), db, true,
+			database.SelectOptions{SortField: "publish_date", SortDescending: true},
+		)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))

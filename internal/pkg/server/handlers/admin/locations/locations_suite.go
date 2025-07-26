@@ -330,7 +330,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 	)
 	td.Cmp(s.T(), endingLocations, expectedLocations)
 
-	endingPosts, err := database.AllPosts(s.DB, false, database.SelectOptions{SortField: "id"})
+	endingPosts, err := database.AllPosts(s.T().Context(), s.DB, false, database.SelectOptions{SortField: "id"})
 	s.Require().NoError(err)
 
 	expectedPosts := td.Slice(

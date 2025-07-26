@@ -1,6 +1,7 @@
 package server
 
 import (
+	//nolint:gosec
 	"crypto/sha1"
 	"embed"
 	"encoding/hex"
@@ -32,6 +33,8 @@ func buildStylesHandler() (handler func(http.ResponseWriter, *http.Request), err
 		allStyleData += string(*b) + "\n"
 	}
 
+	// this is just used as a cache-busting ETag for the styles
+	//nolint:gosec
 	styleHash := sha1.New()
 	styleHash.Write([]byte(allStyleData))
 

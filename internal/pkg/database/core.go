@@ -110,17 +110,20 @@ func Create(ctx context.Context, db *sql.DB, databaseName string) error {
 
 // Drop will terminate connections to the database and remove it.
 func Drop(ctx context.Context, db *sql.DB, databaseName string) error {
-	// https://stackoverflow.com/questions/5408156/how-to-drop-a-postgresql-database-if-there-are-active-connections-to-it
-	transactionSQL := fmt.Sprintf(`
-      UPDATE pg_database SET datallowconn = 'false' WHERE datname = '%s';
-
-      SELECT pg_terminate_backend(pid)
-      FROM pg_stat_activity
-      WHERE datname = '%s';`, databaseName, databaseName)
-
-	_, err := db.ExecContext(ctx, transactionSQL)
+	// Disallow new connections
+	_, err := db.ExecContext(ctx,
+		"UPDATE pg_database SET datallowconn = 'false' WHERE datname = $1",
+		databaseName)
 	if err != nil {
-		return fmt.Errorf("failed to terminate active connections: %w", err)
+		return fmt.Errorf("failed to disallow connections: %w", err)
+	}
+
+	// Terminate existing connections
+	_, err = db.ExecContext(ctx,
+		"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1",
+		databaseName)
+	if err != nil {
+		return fmt.Errorf("failed to terminate connections: %w", err)
 	}
 
 	// once the connections have been removed, then we can drop the database

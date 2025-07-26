@@ -582,7 +582,7 @@ func (s *PostsSuite) TestCountPosts() {
 	count, err := CountPosts(s.T().Context(), s.DB, false, SelectOptions{})
 	s.Require().NoError(err)
 
-	td.Cmp(s.T(), count, int64(1))
+	td.Cmp(s.T(), count, uint(1))
 }
 
 func (s *PostsSuite) TestAllPosts() {
@@ -642,7 +642,7 @@ func (s *PostsSuite) TestAllPosts() {
 	_, err = CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
-	returnedPosts, err := AllPosts(s.DB, true, SelectOptions{})
+	returnedPosts, err := AllPosts(s.T().Context(), s.DB, true, SelectOptions{})
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
@@ -726,7 +726,7 @@ func (s *PostsSuite) TestDeletePosts() {
 	err = DeletePosts(s.T().Context(), s.DB, []models.Post{postToDelete})
 	s.Require().NoError(err)
 
-	allPosts, err := AllPosts(s.DB, true, SelectOptions{})
+	allPosts, err := AllPosts(s.T().Context(), s.DB, true, SelectOptions{})
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(

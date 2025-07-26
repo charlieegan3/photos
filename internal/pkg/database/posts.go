@@ -319,7 +319,12 @@ func SetPostTags(ctx context.Context, db *sql.DB, post models.Post, rawTags []st
 	return nil
 }
 
-func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []models.Post, err error) {
+func AllPosts(
+	ctx context.Context,
+	db *sql.DB,
+	includeDrafts bool,
+	options SelectOptions,
+) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -344,7 +349,7 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 		query = query.Limit(options.Limit)
 	}
 
-	err = query.Executor().ScanStructs(&dbPosts)
+	err = query.Executor().ScanStructsContext(ctx, &dbPosts)
 	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
@@ -359,7 +364,7 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 	return results, nil
 }
 
-func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options SelectOptions) (int64, error) {
+func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options SelectOptions) (uint, error) {
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*")
 
@@ -381,10 +386,14 @@ func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options Sel
 
 	count, err := insert.CountContext(ctx)
 	if err != nil {
-		return count, errors.Wrap(err, "failed to count posts")
+		return 0, errors.Wrap(err, "failed to count posts")
 	}
 
-	return count, nil
+	if count < 0 {
+		return 0, errors.New("count cannot be negative")
+	}
+
+	return uint(count), nil
 }
 
 func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) (err error) {

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"math"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -52,7 +53,7 @@ var pageSize uint = 42
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		pageParam := r.URL.Query().Get("page")
 		var page uint = 1
@@ -68,6 +69,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		}
 
 		posts, err := database.AllPosts(
+			r.Context(),
 			db,
 			false,
 			database.SelectOptions{
@@ -112,8 +114,8 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			mediasByID[medias[i].ID] = medias[i]
 		}
 
-		lastPage := postsCount/int64(pageSize) + 1
-		if int64(page) > lastPage {
+		lastPage := postsCount/pageSize + 1
+		if page > lastPage {
 			http.Redirect(w, r, fmt.Sprintf("/?page=%d", lastPage), http.StatusSeeOther)
 			return
 		}
@@ -121,8 +123,27 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		ctx := plush.NewContext()
 		ctx.Set("posts", posts)
 		ctx.Set("medias", mediasByID)
-		ctx.Set("page", int(page))
-		ctx.Set("lastPage", int(lastPage))
+		
+		// Safe conversion of page to int
+		var pageInt int
+		if page > uint(math.MaxInt) {
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte("page number too large"))
+			return
+		}
+		pageInt = int(page)
+		
+		// Safe conversion of lastPage to int
+		var lastPageInt int
+		if lastPage > uint(math.MaxInt) {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte("lastPage number too large"))
+			return
+		}
+		lastPageInt = int(lastPage)
+		
+		ctx.Set("page", pageInt)
+		ctx.Set("lastPage", lastPageInt)
 
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
@@ -135,7 +156,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		queryParam := r.URL.Query().Get("query")
 		if queryParam == "" {
@@ -194,7 +215,7 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		rawID, ok := mux.Vars(r)["postID"]
 		if !ok {
@@ -364,7 +385,7 @@ func BuildLegacyPeriodRedirect() func(http.ResponseWriter, *http.Request) {
 
 func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		fromString, ok := mux.Vars(r)["from"]
 		if !ok {
@@ -493,7 +514,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		fromString := r.URL.Query().Get("from")
 		if fromString == "" {
@@ -529,6 +550,7 @@ func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(
 func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		posts, err := database.AllPosts(
+			r.Context(),
 			db,
 			false,
 			database.SelectOptions{
@@ -586,6 +608,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		w.Header().Set("Content-Type", "application/rss+xml")
 
 		posts, err := database.AllPosts(
+			r.Context(),
 			db,
 			false,
 			database.SelectOptions{
@@ -706,7 +729,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 
 func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		rawMonth, monthOk := mux.Vars(r)["month"]
 		rawDay, dayOk := mux.Vars(r)["day"]

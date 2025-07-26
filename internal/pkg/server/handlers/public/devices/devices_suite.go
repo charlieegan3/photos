@@ -2,6 +2,7 @@ package public
 
 import (
 	"context"
+	//nolint:gosec
 	"crypto/sha1"
 	"database/sql"
 	"encoding/hex"

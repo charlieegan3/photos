@@ -49,7 +49,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			return
 		}
 
-		posts, err := database.AllPosts(db, true, database.SelectOptions{})
+		posts, err := database.AllPosts(r.Context(), db, true, database.SelectOptions{})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -304,24 +304,26 @@ func BuildFormHandler(
 			}
 		}
 
-		var exposureTimeNumerator uint64
+		var exposureTimeNumerator uint32
 		if val := r.PostForm.Get("ExposureTimeNumerator"); val != "" {
-			exposureTimeNumerator, err = strconv.ParseUint(val, 10, 32)
+			val64, err := strconv.ParseUint(val, 10, 32)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				fmt.Fprintf(w, "exposureTimeNumerator int value %v was invalid", val)
 				return
 			}
+			exposureTimeNumerator = uint32(val64)
 		}
 
-		var exposureTimeDenominator uint64
+		var exposureTimeDenominator uint32
 		if val := r.PostForm.Get("ExposureTimeDenominator"); val != "" {
-			exposureTimeDenominator, err = strconv.ParseUint(val, 10, 32)
+			val64, err := strconv.ParseUint(val, 10, 32)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				fmt.Fprintf(w, "exposureTimeDenominator int value %v was invalid", val)
 				return
 			}
+			exposureTimeDenominator = uint32(val64)
 		}
 
 		var takenAt time.Time
@@ -343,8 +345,8 @@ func BuildFormHandler(
 			FocalLength:             r.PostForm.Get("FocalLength"),
 			TakenAt:                 takenAt,
 			ISOSpeed:                isoSpeed,
-			ExposureTimeNumerator:   uint32(exposureTimeNumerator),
-			ExposureTimeDenominator: uint32(exposureTimeDenominator),
+			ExposureTimeNumerator:   exposureTimeNumerator,
+			ExposureTimeDenominator: exposureTimeDenominator,
 			FNumber:                 floatMap["FNumber"],
 			Latitude:                floatMap["Latitude"],
 			Longitude:               floatMap["Longitude"],

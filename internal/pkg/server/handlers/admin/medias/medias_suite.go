@@ -3,7 +3,9 @@ package medias
 import (
 	"bytes"
 	"context"
-	"crypto/md5"
+
+	//nolint:gosec
+	"crypto/sha1"
 	"database/sql"
 	"encoding/hex"
 	"errors"
@@ -595,21 +597,21 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	r, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("media/%d.jpg", returnedMedias[0].ID), nil)
 	s.Require().NoError(err)
 	defer r.Close()
-	bucketHash := md5.New()
+	bucketHash := sha1.New()
 	_, err = io.Copy(bucketHash, r)
 	s.Require().NoError(err)
-	bucketMD5 := hex.EncodeToString(bucketHash.Sum(nil))
+	bucketDigest := hex.EncodeToString(bucketHash.Sum(nil))
 
 	// get a digest for the image originally uploaded
 	f, err := os.Open(imageFilePath)
 	s.Require().NoError(err)
 	defer f.Close()
-	sourceHash := md5.New()
+	sourceHash := sha1.New()
 	_, err = io.Copy(sourceHash, f)
 	s.Require().NoError(err)
-	sourceMD5 := hex.EncodeToString(sourceHash.Sum(nil))
+	sourceDigest := hex.EncodeToString(sourceHash.Sum(nil))
 
-	s.Require().Equal(bucketMD5, sourceMD5)
+	s.Require().Equal(bucketDigest, sourceDigest, "image in bucket does not match original image")
 
 	// check that the thumbs have been created too
 	var thumbs []string

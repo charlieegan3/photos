@@ -20,21 +20,31 @@ Should you want to run an instance of this application yourself,
 the required configuration file looks like this:
 
 ```yaml
-hostname: photos.charlieegan3.com
-environment: production
+environment: development
+admin:
+  auth:
+    param: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    provider_url: https://xxxxxxxxxxxxxx
+    client_id: xxxxxxxxxxxxxxxxxxxxxxx
+    client_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    permitted_email_suffix: "@example.com"
 server:
-  address: "0.0.0.0"
+  address: "localhost"
   port: "3000"
-  adminUsername: "example"
-  adminPassword: "example"
+  https: false
 geoapify:
   url: https://maps.geoapify.com/v1/staticmap
-  key: xxx
+  key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+database:
+  migrationsTable: schema_migrations_photos
+  connectionString: postgresql://postgres:password@localhost:5432
+  params:
+    dbname: cms_dev
+    sslmode: disable
 bucket:
-  # I use gocloud.dev, so it should be possible to use various cloud providers
-  url: gs://example-bucket # file:///tmp/photos
+  url: file://./bucket
 notification_webhook:
-  endpoint: https://example.com/
+  endpoint: https://example.com
 ```
 
 Note that a database will also need to be provided.

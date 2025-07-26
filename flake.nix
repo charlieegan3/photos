@@ -94,6 +94,8 @@
               gofumpt
               gotools
               google-cloud-sql-proxy
+
+              postgresql_16 # psql
             ];
           };
         };

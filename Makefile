@@ -3,7 +3,8 @@ FILE_PATTERN := 'html\|css\|plush\|go\|sql\|Makefile'
 TAG := $(shell git rev-parse --short HEAD)
 IMAGE := "eu.gcr.io/charlieegan3-photos/photos:$(TAG)"
 
-dev_server:
+dev:
+	lsof -i :3000 | tail -n 1 | awk '{print $$2}' | xargs kill -9 || true
 	find . | grep $(FILE_PATTERN) | entr -r bash -c 'clear; go run main.go server --config=config.dev.yaml'
 
 new_migration:

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/coreos/go-oidc"
 	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	"golang.org/x/oauth2"
@@ -44,7 +46,6 @@ func Attach(
 	db *sql.DB,
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
-	adminUsername, adminPassword string,
 	oauth2Config *oauth2.Config,
 	idTokenVerifier *oidc.IDTokenVerifier,
 	adminPath string,
@@ -116,51 +117,48 @@ func Attach(
 
 	adminRouter := router.PathPrefix(adminPath).Subrouter()
 
-	if adminUsername != "" && adminPassword != "" {
-		adminRouter.Use(InitMiddlewareAuth(adminUsername, adminPassword))
-	} else {
-		mw, err := oauthmiddleware.Init(&oauthmiddleware.Config{
-			OAuth2Connector: oauth2Config,
-			IDTokenVerifier: idTokenVerifier,
-			Validators: []oauthmiddleware.IDTokenValidator{
-				func(token *oidc.IDToken) (map[any]any, bool) {
-					c := struct {
-						Email string `json:"email"`
-					}{}
+	// Only use OAuth authentication
+	mw, err := oauthmiddleware.Init(&oauthmiddleware.Config{
+		OAuth2Connector: oauth2Config,
+		IDTokenVerifier: idTokenVerifier,
+		Validators: []oauthmiddleware.IDTokenValidator{
+			func(token *oidc.IDToken) (map[any]any, bool) {
+				c := struct {
+					Email string `json:"email"`
+				}{}
 
-					err := token.Claims(&c)
-					if err != nil {
-						return nil, false
-					}
+				err := token.Claims(&c)
+				if err != nil {
+					return nil, false
+				}
 
-					if permittedEmailSuffix == "" {
-						log.Println("email suffix was blank and so no emails are allowed")
-						return nil, false
-					}
+				if permittedEmailSuffix == "" {
+					log.Println("email suffix was blank and so no emails are allowed")
+					return nil, false
+				}
 
-					if !strings.HasSuffix(c.Email, permittedEmailSuffix) {
-						log.Printf("email %s does not have suffix %s", c.Email, permittedEmailSuffix)
+				if !strings.HasSuffix(c.Email, permittedEmailSuffix) {
+					log.Printf("email %s does not have suffix %s", c.Email, permittedEmailSuffix)
 
-						return nil, false
-					}
+					return nil, false
+				}
 
-					return map[any]any{"email": c.Email}, true
-				},
+				return map[any]any{"email": c.Email}, true
 			},
-			AuthBasePath:     adminPath,
-			CallbackBasePath: adminPath,
-			BeginParam:       adminParam,
-		})
-		if err != nil {
-			return fmt.Errorf("failed to init oauth middleware: %w", err)
-		}
-
-		router.Use(mw)
-		adminRouter.HandleFunc("/auth/callback", func(_ http.ResponseWriter, _ *http.Request) {
-			// should be handled by middleware, but here to avoid 404 and the middleware not
-			// being run
-		})
+		},
+		AuthBasePath:     adminPath,
+		CallbackBasePath: adminPath,
+		BeginParam:       adminParam,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to init oauth middleware: %w", err)
 	}
+
+	router.Use(mw)
+	adminRouter.HandleFunc("/auth/callback", func(_ http.ResponseWriter, _ *http.Request) {
+		// should be handled by middleware, but here to avoid 404 and the middleware not
+		// being run
+	})
 
 	adminRouter.HandleFunc("", admin.BuildAdminIndexHandler(rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/", handlers.BuildRedirectHandler("/admin")).Methods(http.MethodGet)
@@ -222,7 +220,7 @@ func Attach(
 }
 
 func Serve(
-	environment, hostname, addr, port, adminUsername, adminPassword string,
+	environment, hostname, addr, port string,
 	db *sql.DB,
 	bucket *blob.Bucket,
 	mapServerURL, mapServerAPIKey string,
@@ -230,19 +228,66 @@ func Serve(
 	router := mux.NewRouter()
 	router.Use(InitMiddlewareHTTPS(hostname, environment))
 
+	// Read OAuth configuration from viper
+	var oauth2Config *oauth2.Config
+	var idTokenVerifier *oidc.IDTokenVerifier
+	permittedEmailSuffix := ""
+
+	if viper.IsSet("admin.auth.provider_url") {
+		// Build redirect URL based on server configuration
+		protocol := "http"
+		if viper.GetBool("server.https") {
+			protocol = "https"
+		}
+
+		// Use localhost if hostname is empty
+		redirectHost := hostname
+		if redirectHost == "" {
+			redirectHost = "localhost"
+		}
+
+		redirectURL := fmt.Sprintf("%s://%s:%s/admin/auth/callback", protocol, redirectHost, port)
+
+		oauth2Config = &oauth2.Config{
+			ClientID:     viper.GetString("admin.auth.client_id"),
+			ClientSecret: viper.GetString("admin.auth.client_secret"),
+			RedirectURL:  redirectURL,
+			Endpoint: oauth2.Endpoint{
+				AuthURL:  viper.GetString("admin.auth.provider_url") + "/auth",
+				TokenURL: viper.GetString("admin.auth.provider_url") + "/token",
+			},
+			Scopes: []string{"openid", "email", "profile"},
+		}
+
+		// Set up OIDC provider and verifier
+		provider, err := oidc.NewProvider(context.Background(), viper.GetString("admin.auth.provider_url"))
+		if err != nil {
+			log.Printf("Failed to create OIDC provider: %v", err)
+			oauth2Config = &oauth2.Config{}
+			idTokenVerifier = &oidc.IDTokenVerifier{}
+		} else {
+			idTokenVerifier = provider.Verifier(&oidc.Config{
+				ClientID: viper.GetString("admin.auth.client_id"),
+			})
+		}
+
+		permittedEmailSuffix = viper.GetString("admin.auth.permitted_email_suffix")
+	} else {
+		oauth2Config = &oauth2.Config{}
+		idTokenVerifier = &oidc.IDTokenVerifier{}
+	}
+
 	err := Attach(
 		router,
 		db,
 		bucket,
 		mapServerURL,
 		mapServerAPIKey,
-		adminUsername,
-		adminPassword,
-		&oauth2.Config{},
-		&oidc.IDTokenVerifier{},
+		oauth2Config,
+		idTokenVerifier,
 		"/admin",
-		"admin",
-		"",
+		viper.GetString("admin.auth.param"),
+		permittedEmailSuffix,
 	)
 	if err != nil {
 		log.Fatal(err)

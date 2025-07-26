@@ -11,7 +11,17 @@
       "Bash(rg:*)",
       "Bash(rm:*)",
       "Bash(make lint:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(go run:*)",
+      "Bash(pg_isready:*)",
+      "Bash(lsof:*)",
+      "Bash(psql:*)",
+      "Bash(/nix/store/4m0fmy9b0fvzlr33cdv5rl829apvz8ic-postgresql-16.9/bin/psql:*)",
+      "Bash(timeout:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(true)"
     ],
     "deny": []
   }

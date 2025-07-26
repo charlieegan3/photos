@@ -81,7 +81,7 @@ var serverCmd = &cobra.Command{
 		}
 
 		err = m.Up()
-		if err != nil && errors.Is(err, migrate.ErrNoChange) {
+		if err != nil && !errors.Is(err, migrate.ErrNoChange) {
 			log.Fatalf("failed to migrate up: %s", err)
 		} else {
 			log.Println("migrated up")
@@ -136,8 +136,6 @@ var serverCmd = &cobra.Command{
 			viper.GetString("hostname"),
 			viper.GetString("server.address"),
 			port,
-			viper.GetString("server.adminUsername"),
-			viper.GetString("server.adminPassword"),
 			db,
 			bucket,
 			viper.GetString("geoapify.url"),

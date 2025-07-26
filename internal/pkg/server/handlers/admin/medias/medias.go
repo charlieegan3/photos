@@ -2,6 +2,7 @@ package medias
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	_ "embed"
 	"errors"
@@ -22,6 +23,7 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/imageproxy"
 	"github.com/charlieegan3/photos/internal/pkg/mediametadata"
 	"github.com/charlieegan3/photos/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/shared"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
@@ -40,7 +42,7 @@ var requiredThumbs = []int{2000, 1000, 500, 200}
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		medias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
@@ -75,7 +77,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		id, ok := mux.Vars(r)["mediaID"]
 		if !ok {
@@ -151,40 +153,34 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	}
 }
 
-func BuildFormHandler(
+func BuildDeleteHandler(
 	db *sql.DB,
 	bucket *blob.Bucket,
-	_ templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
-	ir := imageproxy.Resizer{}
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
-		contentType, ok := r.Header["Content-Type"]
-		if !ok {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("Content-Type must be set"))
+		err := shared.ValidateContentType(r, "application/x-www-form-urlencoded")
+		if err != nil {
+			shared.WriteError(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
 		id, ok := mux.Vars(r)["mediaID"]
 		if !ok {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("media id is required"))
+			shared.WriteError(w, http.StatusInternalServerError, "media id is required")
 			return
 		}
 
 		intID, err := strconv.Atoi(id)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("failed to parse supplied ID"))
+			shared.WriteError(w, http.StatusInternalServerError, "failed to parse supplied ID")
 			return
 		}
 
 		existingMedias, err := database.FindMediasByID(r.Context(), db, []int{intID})
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte(err.Error()))
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -193,279 +189,96 @@ func BuildFormHandler(
 			return
 		}
 
-		// handle delete, of database item and blob
-		if contentType[0] == "application/x-www-form-urlencoded" {
-			err := r.ParseForm()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed to parse delete form"))
-				return
-			}
-
-			if r.Form.Get("_method") != http.MethodDelete {
-				w.WriteHeader(http.StatusBadRequest)
-				_, _ = w.Write([]byte("expected _method to be DELETE"))
-				return
-			}
-
-			err = database.DeleteMedias(r.Context(), db, []models.Media{existingMedias[0]})
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte(err.Error()))
-				return
-			}
-
-			mediaKey := fmt.Sprintf("media/%d.%s", existingMedias[0].ID, existingMedias[0].Kind)
-			err = bucket.Delete(r.Context(), mediaKey)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte(err.Error()))
-				return
-			}
-
-			listOptions := &blob.ListOptions{
-				Prefix: fmt.Sprintf("thumbs/%d-", existingMedias[0].ID),
-			}
-			iter := bucket.List(listOptions)
-			for {
-				obj, err := iter.Next(r.Context())
-				if errors.Is(err, io.EOF) {
-					break
-				}
-				if err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
-					_, _ = w.Write([]byte(err.Error()))
-					return
-				}
-
-				err = bucket.Delete(r.Context(), obj.Key)
-				if err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
-					_, _ = w.Write([]byte(err.Error()))
-					return
-				}
-			}
-
-			http.Redirect(w, r, "/admin/medias", http.StatusSeeOther)
+		err = r.ParseForm()
+		if err != nil {
+			shared.WriteError(w, http.StatusInternalServerError, "failed to parse delete form")
 			return
 		}
 
-		if !strings.HasPrefix(contentType[0], "multipart/form-data") {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+		if r.Form.Get("_method") != http.MethodDelete {
+			shared.WriteError(w, http.StatusBadRequest, "expected _method to be DELETE")
+			return
+		}
+
+		err = database.DeleteMedias(r.Context(), db, []models.Media{existingMedias[0]})
+		if err != nil {
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		err = deleteMediaFiles(r.Context(), bucket, existingMedias[0])
+		if err != nil {
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		http.Redirect(w, r, "/admin/medias", http.StatusSeeOther)
+	}
+}
+
+func BuildUpdateHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+) func(http.ResponseWriter, *http.Request) {
+	ir := imageproxy.Resizer{}
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+
+		id, ok := mux.Vars(r)["mediaID"]
+		if !ok {
+			shared.WriteError(w, http.StatusInternalServerError, "media id is required")
+			return
+		}
+
+		intID, err := strconv.Atoi(id)
+		if err != nil {
+			shared.WriteError(w, http.StatusInternalServerError, "failed to parse supplied ID")
+			return
+		}
+
+		existingMedias, err := database.FindMediasByID(r.Context(), db, []int{intID})
+		if err != nil {
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		if len(existingMedias) == 0 {
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 
 		err = r.ParseMultipartForm(32 << 20)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte("failed to parse multipart form"))
+			shared.WriteError(w, http.StatusBadRequest, "failed to parse multipart form")
 			return
 		}
 
 		if r.PostForm.Get("_method") != http.MethodPut {
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			shared.WriteError(w, http.StatusBadRequest, "expected _method to be PUT")
 			return
 		}
 
-		floatKeys := []string{"FNumber", "Latitude", "Longitude", "Altitude"}
-		floatMap := make(map[string]float64)
-		for _, key := range floatKeys {
-			floatMap[key] = 0
-			if val := r.PostForm.Get(key); val != "" {
-				f, err := strconv.ParseFloat(val, 64)
-				if err != nil {
-					w.WriteHeader(http.StatusBadRequest)
-					fmt.Fprintf(w, "float value %v was invalid", val)
-					return
-				}
-				floatMap[key] = f
-			}
-		}
-
-		var isoSpeed int
-		if val := r.PostForm.Get("ISOSpeed"); val != "" {
-			isoSpeed, err = strconv.Atoi(val)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "int value %v was invalid", val)
-				return
-			}
-		}
-
-		var displayOffset int
-		if val := r.PostForm.Get("DisplayOffset"); val != "" {
-			displayOffset, err = strconv.Atoi(val)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "int value %v was invalid", val)
-				return
-			}
-		}
-
-		var exposureTimeNumerator uint32
-		if val := r.PostForm.Get("ExposureTimeNumerator"); val != "" {
-			val64, err := strconv.ParseUint(val, 10, 32)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "exposureTimeNumerator int value %v was invalid", val)
-				return
-			}
-			exposureTimeNumerator = uint32(val64)
-		}
-
-		var exposureTimeDenominator uint32
-		if val := r.PostForm.Get("ExposureTimeDenominator"); val != "" {
-			val64, err := strconv.ParseUint(val, 10, 32)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "exposureTimeDenominator int value %v was invalid", val)
-				return
-			}
-			exposureTimeDenominator = uint32(val64)
-		}
-
-		var takenAt time.Time
-		if val := r.PostForm.Get("TakenAt"); val != "" {
-			takenAt, err = time.Parse("2006-01-02T15:04", val)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "time value %v was invalid", val)
-				return
-			}
-		}
-
-		media := models.Media{
-			ID:                      existingMedias[0].ID,
-			Kind:                    existingMedias[0].Kind,
-			Make:                    r.PostForm.Get("Make"),
-			Model:                   r.PostForm.Get("Model"),
-			Lens:                    r.PostForm.Get("Lens"),
-			FocalLength:             r.PostForm.Get("FocalLength"),
-			TakenAt:                 takenAt,
-			ISOSpeed:                isoSpeed,
-			ExposureTimeNumerator:   exposureTimeNumerator,
-			ExposureTimeDenominator: exposureTimeDenominator,
-			FNumber:                 floatMap["FNumber"],
-			Latitude:                floatMap["Latitude"],
-			Longitude:               floatMap["Longitude"],
-			Altitude:                floatMap["Altitude"],
-			DisplayOffset:           displayOffset,
-			Width:                   existingMedias[0].Width,
-			Height:                  existingMedias[0].Height,
-		}
-
-		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
+		media, err := parseMediaForm(r, existingMedias[0])
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte("failed to parse device ID"))
+			shared.WriteError(w, http.StatusBadRequest, err.Error())
 			return
-		}
-
-		// only handle the lens if set, it's optional
-		rawLensID := r.Form.Get("LensID")
-		if rawLensID != "" && rawLensID != "0" {
-			media.LensID, err = strconv.ParseInt(rawLensID, 10, 0)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed to parse lens ID"))
-				return
-			}
 		}
 
 		updatedMedias, err := database.UpdateMedias(r.Context(), db, []models.Media{media})
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte(err.Error()))
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
 		if len(updatedMedias) != 1 {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("unexpected number of updatedMedias"))
+			shared.WriteError(w, http.StatusInternalServerError, "unexpected number of updatedMedias")
 			return
 		}
 
-		// only handle the file when it's present, file might not be submitted
-		// every time the form is sent
-		f, header, err := r.FormFile("File")
-		if err == nil {
-			lowerFilename := strings.ToLower(header.Filename)
-			if !strings.HasSuffix(lowerFilename, ".jpg") &&
-				!strings.HasSuffix(lowerFilename, ".jpeg") &&
-				!strings.HasSuffix(lowerFilename, ".mp4") {
-				w.WriteHeader(http.StatusBadRequest)
-				_, _ = w.Write([]byte("media file must be jpg or mp4"))
-				return
-			}
-
-			key := fmt.Sprintf("media/%d.%s", updatedMedias[0].ID, updatedMedias[0].Kind)
-
-			bw, err := bucket.NewWriter(r.Context(), key, nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed initialize media storage"))
-				return
-			}
-
-			_, err = io.Copy(bw, f)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed to save to media storage"))
-				return
-			}
-
-			err = bw.Close()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed to close connection to media storage"))
-				return
-			}
-
-			br, err := bucket.NewReader(r.Context(), key, nil)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed to read from media storage"))
-				return
-			}
-			defer br.Close()
-
-			imageBytes, err := io.ReadAll(br)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte("failed to read from media storage"))
-				return
-			}
-
-			for _, thumbSize := range requiredThumbs {
-				var err error
-				imageResizeString := fmt.Sprintf("%dx", thumbSize)
-				if media.Width != 0 && media.Height != 0 {
-					imageResizeString = fmt.Sprintf("%d,fit", thumbSize)
-				}
-				thumbMediaPath := fmt.Sprintf(
-					"thumbs/media/%d-%s.%s",
-					updatedMedias[0].ID,
-					strings.Replace(imageResizeString, ",", "-", 1),
-					updatedMedias[0].Kind,
-				)
-
-				// use the downsampled bytes from for the next thumb to save time
-				imageBytes, err = ir.CreateThumbInBucket(
-					r.Context(),
-					bytes.NewReader(imageBytes),
-					bucket,
-					imageResizeString,
-					thumbMediaPath,
-				)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/text")
-					w.WriteHeader(http.StatusInternalServerError)
-					_, _ = w.Write([]byte(err.Error()))
-					return
-				}
-			}
+		err = processMediaFileIfProvided(r, bucket, &ir, updatedMedias[0], media)
+		if err != nil {
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
+			return
 		}
 
 		http.Redirect(
@@ -477,9 +290,245 @@ func BuildFormHandler(
 	}
 }
 
+func BuildFormHandler(
+	db *sql.DB,
+	bucket *blob.Bucket,
+	_ templating.PageRenderer,
+) func(http.ResponseWriter, *http.Request) {
+	deleteHandler := BuildDeleteHandler(db, bucket)
+	updateHandler := BuildUpdateHandler(db, bucket)
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		contentType, ok := r.Header["Content-Type"]
+		if !ok {
+			shared.WriteError(w, http.StatusInternalServerError, "Content-Type must be set")
+			return
+		}
+
+		switch {
+		case contentType[0] == "application/x-www-form-urlencoded":
+			deleteHandler(w, r)
+		case strings.HasPrefix(contentType[0], "multipart/form-data"):
+			updateHandler(w, r)
+		default:
+			shared.WriteError(w, http.StatusInternalServerError,
+				"Content-Type must be 'multipart/form-data' or 'application/x-www-form-urlencoded'")
+		}
+	}
+}
+
+func deleteMediaFiles(ctx context.Context, bucket *blob.Bucket, media models.Media) error {
+	mediaKey := fmt.Sprintf("media/%d.%s", media.ID, media.Kind)
+	err := bucket.Delete(ctx, mediaKey)
+	if err != nil {
+		return fmt.Errorf("failed to delete media file: %w", err)
+	}
+
+	listOptions := &blob.ListOptions{
+		Prefix: fmt.Sprintf("thumbs/%d-", media.ID),
+	}
+	iter := bucket.List(listOptions)
+	for {
+		obj, err := iter.Next(ctx)
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			return fmt.Errorf("failed to list thumbnails: %w", err)
+		}
+
+		err = bucket.Delete(ctx, obj.Key)
+		if err != nil {
+			return fmt.Errorf("failed to delete thumbnail: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func parseMediaForm(r *http.Request, existing models.Media) (models.Media, error) {
+	floatKeys := []string{"FNumber", "Latitude", "Longitude", "Altitude"}
+	floatMap := make(map[string]float64)
+	for _, key := range floatKeys {
+		floatMap[key] = 0
+		if val := r.PostForm.Get(key); val != "" {
+			f, err := strconv.ParseFloat(val, 64)
+			if err != nil {
+				return models.Media{}, fmt.Errorf("float value %v was invalid", val)
+			}
+			floatMap[key] = f
+		}
+	}
+
+	var isoSpeed int
+	if val := r.PostForm.Get("ISOSpeed"); val != "" {
+		var err error
+		isoSpeed, err = strconv.Atoi(val)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("int value %v was invalid", val)
+		}
+	}
+
+	var displayOffset int
+	if val := r.PostForm.Get("DisplayOffset"); val != "" {
+		var err error
+		displayOffset, err = strconv.Atoi(val)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("int value %v was invalid", val)
+		}
+	}
+
+	var exposureTimeNumerator uint32
+	if val := r.PostForm.Get("ExposureTimeNumerator"); val != "" {
+		val64, err := strconv.ParseUint(val, 10, 32)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("exposureTimeNumerator int value %v was invalid", val)
+		}
+		exposureTimeNumerator = uint32(val64)
+	}
+
+	var exposureTimeDenominator uint32
+	if val := r.PostForm.Get("ExposureTimeDenominator"); val != "" {
+		val64, err := strconv.ParseUint(val, 10, 32)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("exposureTimeDenominator int value %v was invalid", val)
+		}
+		exposureTimeDenominator = uint32(val64)
+	}
+
+	var takenAt time.Time
+	if val := r.PostForm.Get("TakenAt"); val != "" {
+		var err error
+		takenAt, err = time.Parse("2006-01-02T15:04", val)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("time value %v was invalid", val)
+		}
+	}
+
+	media := models.Media{
+		ID:                      existing.ID,
+		Kind:                    existing.Kind,
+		Make:                    r.PostForm.Get("Make"),
+		Model:                   r.PostForm.Get("Model"),
+		Lens:                    r.PostForm.Get("Lens"),
+		FocalLength:             r.PostForm.Get("FocalLength"),
+		TakenAt:                 takenAt,
+		ISOSpeed:                isoSpeed,
+		ExposureTimeNumerator:   exposureTimeNumerator,
+		ExposureTimeDenominator: exposureTimeDenominator,
+		FNumber:                 floatMap["FNumber"],
+		Latitude:                floatMap["Latitude"],
+		Longitude:               floatMap["Longitude"],
+		Altitude:                floatMap["Altitude"],
+		DisplayOffset:           displayOffset,
+		Width:                   existing.Width,
+		Height:                  existing.Height,
+	}
+
+	deviceID, err := strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
+	if err != nil {
+		return models.Media{}, fmt.Errorf("failed to parse device ID: %w", err)
+	}
+	media.DeviceID = deviceID
+
+	rawLensID := r.Form.Get("LensID")
+	if rawLensID != "" && rawLensID != "0" {
+		lensID, err := strconv.ParseInt(rawLensID, 10, 0)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("failed to parse lens ID: %w", err)
+		}
+		media.LensID = lensID
+	}
+
+	return media, nil
+}
+
+func processMediaFileIfProvided(
+	r *http.Request,
+	bucket *blob.Bucket,
+	ir *imageproxy.Resizer,
+	updated models.Media,
+	media models.Media,
+) error {
+	f, header, err := r.FormFile("File")
+	if err != nil {
+		return nil
+	}
+	defer f.Close()
+
+	lowerFilename := strings.ToLower(header.Filename)
+	if !strings.HasSuffix(lowerFilename, ".jpg") &&
+		!strings.HasSuffix(lowerFilename, ".jpeg") &&
+		!strings.HasSuffix(lowerFilename, ".mp4") {
+		return errors.New("media file must be jpg or mp4")
+	}
+
+	// Determine the file extension from the uploaded file
+	fileKind := "jpg"
+	if strings.HasSuffix(lowerFilename, ".mp4") {
+		fileKind = "mp4"
+	}
+
+	key := fmt.Sprintf("media/%d.%s", updated.ID, fileKind)
+
+	bw, err := bucket.NewWriter(r.Context(), key, nil)
+	if err != nil {
+		return fmt.Errorf("failed initialize media storage: %w", err)
+	}
+
+	_, err = io.Copy(bw, f)
+	if err != nil {
+		bw.Close()
+		return fmt.Errorf("failed to save to media storage: %w", err)
+	}
+
+	// Close the writer before attempting to read
+	err = bw.Close()
+	if err != nil {
+		return fmt.Errorf("failed to close media storage writer: %w", err)
+	}
+
+	br, err := bucket.NewReader(r.Context(), key, nil)
+	if err != nil {
+		return fmt.Errorf("failed to read from media storage: %w", err)
+	}
+	defer br.Close()
+
+	imageBytes, err := io.ReadAll(br)
+	if err != nil {
+		return fmt.Errorf("failed to read from media storage: %w", err)
+	}
+
+	for _, thumbSize := range requiredThumbs {
+		imageResizeString := fmt.Sprintf("%dx", thumbSize)
+		if media.Width != 0 && media.Height != 0 {
+			imageResizeString = fmt.Sprintf("%d,fit", thumbSize)
+		}
+		thumbMediaPath := fmt.Sprintf(
+			"thumbs/media/%d-%s.%s",
+			updated.ID,
+			strings.Replace(imageResizeString, ",", "-", 1),
+			fileKind,
+		)
+
+		imageBytes, err = ir.CreateThumbInBucket(
+			r.Context(),
+			bytes.NewReader(imageBytes),
+			bucket,
+			imageResizeString,
+			thumbMediaPath,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to create thumbnail: %w", err)
+		}
+	}
+
+	return nil
+}
+
 func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
@@ -537,205 +586,215 @@ func BuildCreateHandler(
 	ir := imageproxy.Resizer{}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		if val, ok := r.Header["Content-Type"]; !ok || !strings.HasPrefix(val[0], "multipart/form-data") {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			shared.WriteError(w, http.StatusInternalServerError, "Content-Type must be 'multipart/form-data'")
 			return
 		}
 
 		err := r.ParseMultipartForm(32 << 20)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "failed to parse multipart form: %s", err.Error())
+			shared.WriteError(w, http.StatusBadRequest, "failed to parse multipart form: "+err.Error())
 			return
 		}
 
-		media := models.Media{
-			Make: r.Form.Get("Make"),
-			// new uploads from 2022-08-10 will have this set to true since we can only now trust the time
-			UTCCorrect: true,
-		}
-
-		// may be overridden if the EXIF data matches an existing device
-		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
+		media, err := parseCreateForm(r)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte("failed to parse device ID"))
+			shared.WriteError(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		if r.Form.Get("LensID") != "" {
-			media.LensID, err = strconv.ParseInt(r.Form.Get("LensID"), 10, 64)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				_, _ = w.Write([]byte("failed to parse lens ID"))
-				return
-			}
-		}
-
-		f, header, err := r.FormFile("File")
+		fileBytes, filename, err := processUploadedFile(r)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "failed to open uploaded file: %s", err)
+			shared.WriteError(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		lowerFilename := strings.ToLower(header.Filename)
-		if !strings.HasSuffix(lowerFilename, ".jpg") &&
-			!strings.HasSuffix(lowerFilename, ".jpeg") {
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte("media file must be jpg"))
-			return
-		}
-
-		if parts := strings.Split(lowerFilename, "."); len(parts) > 1 {
-			media.Kind = parts[len(parts)-1]
-			if media.Kind == "jpeg" {
-				media.Kind = "jpg"
-			}
-		} else {
-			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte("file must have name and extension"))
-			return
-		}
-
-		fileBytes, err := io.ReadAll(f)
+		err = enrichMediaFromEXIF(&media, fileBytes, filename)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "failed to read uploaded file data: %s", err)
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		exifData, err := mediametadata.ExtractMetadata(fileBytes)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "failed to get exif data file: %s", err)
-			return
-		}
-
-		// location information is now required for all uploaded images.
-		// images are now updated with https://github.com/charlieegan3/gpxif
-		latValue, _ := exifData.Latitude.ToDecimal()
-		longValue, _ := exifData.Longitude.ToDecimal()
-		if latValue == 0 && longValue == 0 {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("images must have a location set"))
-			return
-		}
-
-		media.Make = exifData.Make
-		media.Model = exifData.Model
-		media.Lens = exifData.Lens
-		media.FocalLength = exifData.FocalLength
-		media.TakenAt = exifData.DateTime
-		// TODO handle exif errors
-		media.FNumber, _ = exifData.FNumber.ToDecimal()
-		media.ExposureTimeNumerator = exifData.ExposureTime.Numerator
-		media.ExposureTimeDenominator = exifData.ExposureTime.Denominator
-		media.ISOSpeed = int(exifData.ISOSpeed)
-		media.Latitude, _ = exifData.Latitude.ToDecimal()
-		media.Longitude, _ = exifData.Longitude.ToDecimal()
-		media.Altitude, _ = exifData.Altitude.ToDecimal()
-		media.Width = exifData.Width
-		media.Height = exifData.Height
-
-		// if there's a match from the EXIF data, then use that to set the device ID
-		modelMatchedDevice, err := database.FindDeviceByModelMatches(r.Context(), db, exifData.Model)
-		if err == nil {
-			if modelMatchedDevice != nil {
-				media.DeviceID = modelMatchedDevice.ID
-			}
-		}
-
-		lensMatchLens, err := database.FindLensByLensMatches(r.Context(), db, exifData.Lens)
-		if err == nil {
-			if lensMatchLens != nil {
-				media.LensID = lensMatchLens.ID
-			}
-		}
+		matchDeviceAndLens(r.Context(), db, &media)
 
 		persistedMedias, err := database.CreateMedias(r.Context(), db, []models.Media{media})
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte(err.Error()))
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
 		if len(persistedMedias) != 1 {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("unexpected number of persistedMedias"))
+			shared.WriteError(w, http.StatusInternalServerError, "unexpected number of persistedMedias")
 			return
 		}
 
-		key := fmt.Sprintf("media/%d.%s", persistedMedias[0].ID, persistedMedias[0].Kind)
-
-		bw, err := bucket.NewWriter(r.Context(), key, nil)
+		err = saveMediaAndGenerateThumbs(r.Context(), bucket, &ir, persistedMedias[0], fileBytes)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("failed initialize media storage"))
+			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
-		}
-
-		_, err = io.Copy(bw, bytes.NewReader(fileBytes))
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("failed to save to media storage"))
-			return
-		}
-
-		err = bw.Close()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("failed to close connection to media storage"))
-			return
-		}
-
-		br, err := bucket.NewReader(r.Context(), key, nil)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("failed to read from media storage"))
-			return
-		}
-		defer br.Close()
-
-		imageBytes, err := io.ReadAll(br)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("failed to read from media storage"))
-			return
-		}
-
-		for _, thumbSize := range requiredThumbs {
-			var err error
-			imageResizeString := fmt.Sprintf("%dx", thumbSize)
-			if media.Width != 0 && media.Height != 0 {
-				imageResizeString = fmt.Sprintf("%d,fit", thumbSize)
-			}
-			thumbMediaPath := fmt.Sprintf(
-				"thumbs/media/%d-%s.%s",
-				persistedMedias[0].ID,
-				strings.Replace(imageResizeString, ",", "-", 1),
-				persistedMedias[0].Kind,
-			)
-
-			// use the downsampled bytes from for the next thumb to save time
-			imageBytes, err = ir.CreateThumbInBucket(
-				r.Context(),
-				bytes.NewReader(imageBytes),
-				bucket,
-				imageResizeString,
-				thumbMediaPath,
-			)
-			if err != nil {
-				w.Header().Set("Content-Type", "application/text")
-				w.WriteHeader(http.StatusInternalServerError)
-				_, _ = w.Write([]byte(err.Error()))
-				return
-			}
 		}
 
 		http.Redirect(w, r, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), http.StatusSeeOther)
 	}
+}
+
+func parseCreateForm(r *http.Request) (models.Media, error) {
+	media := models.Media{
+		Make:       r.Form.Get("Make"),
+		UTCCorrect: true,
+	}
+
+	deviceID, err := strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
+	if err != nil {
+		return models.Media{}, fmt.Errorf("failed to parse device ID: %w", err)
+	}
+	media.DeviceID = deviceID
+
+	if r.Form.Get("LensID") != "" {
+		lensID, err := strconv.ParseInt(r.Form.Get("LensID"), 10, 64)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("failed to parse lens ID: %w", err)
+		}
+		media.LensID = lensID
+	}
+
+	return media, nil
+}
+
+func processUploadedFile(r *http.Request) ([]byte, string, error) {
+	f, header, err := r.FormFile("File")
+	if err != nil {
+		return nil, "", fmt.Errorf("failed to open uploaded file: %w", err)
+	}
+	defer f.Close()
+
+	lowerFilename := strings.ToLower(header.Filename)
+	if !strings.HasSuffix(lowerFilename, ".jpg") && !strings.HasSuffix(lowerFilename, ".jpeg") {
+		return nil, "", errors.New("media file must be jpg")
+	}
+
+	fileBytes, err := io.ReadAll(f)
+	if err != nil {
+		return nil, "", fmt.Errorf("failed to read uploaded file data: %w", err)
+	}
+
+	return fileBytes, header.Filename, nil
+}
+
+func enrichMediaFromEXIF(media *models.Media, fileBytes []byte, filename string) error {
+	exifData, err := mediametadata.ExtractMetadata(fileBytes)
+	if err != nil {
+		return fmt.Errorf("failed to get exif data file: %w", err)
+	}
+
+	latValue, _ := exifData.Latitude.ToDecimal()
+	longValue, _ := exifData.Longitude.ToDecimal()
+	if latValue == 0 && longValue == 0 {
+		return errors.New("images must have a location set")
+	}
+
+	media.Make = exifData.Make
+	media.Model = exifData.Model
+	media.Lens = exifData.Lens
+	media.FocalLength = exifData.FocalLength
+	media.TakenAt = exifData.DateTime
+	media.FNumber, _ = exifData.FNumber.ToDecimal()
+	media.ExposureTimeNumerator = exifData.ExposureTime.Numerator
+	media.ExposureTimeDenominator = exifData.ExposureTime.Denominator
+	media.ISOSpeed = int(exifData.ISOSpeed)
+	media.Latitude, _ = exifData.Latitude.ToDecimal()
+	media.Longitude, _ = exifData.Longitude.ToDecimal()
+	media.Altitude, _ = exifData.Altitude.ToDecimal()
+	media.Width = exifData.Width
+	media.Height = exifData.Height
+
+	if len(strings.Split(strings.ToLower(filename), ".")) > 1 {
+		parts := strings.Split(strings.ToLower(filename), ".")
+		media.Kind = parts[len(parts)-1]
+		if media.Kind == "jpeg" {
+			media.Kind = "jpg"
+		}
+	} else {
+		return errors.New("file must have name and extension")
+	}
+
+	return nil
+}
+
+func matchDeviceAndLens(ctx context.Context, db *sql.DB, media *models.Media) {
+	modelMatchedDevice, err := database.FindDeviceByModelMatches(ctx, db, media.Model)
+	if err == nil && modelMatchedDevice != nil {
+		media.DeviceID = modelMatchedDevice.ID
+	}
+
+	lensMatchLens, err := database.FindLensByLensMatches(ctx, db, media.Lens)
+	if err == nil && lensMatchLens != nil {
+		media.LensID = lensMatchLens.ID
+	}
+}
+
+func saveMediaAndGenerateThumbs(
+	ctx context.Context,
+	bucket *blob.Bucket,
+	ir *imageproxy.Resizer,
+	media models.Media,
+	fileBytes []byte,
+) error {
+	key := fmt.Sprintf("media/%d.%s", media.ID, media.Kind)
+
+	bw, err := bucket.NewWriter(ctx, key, nil)
+	if err != nil {
+		return fmt.Errorf("failed initialize media storage: %w", err)
+	}
+
+	_, err = io.Copy(bw, bytes.NewReader(fileBytes))
+	if err != nil {
+		bw.Close()
+		return fmt.Errorf("failed to save to media storage: %w", err)
+	}
+
+	// Close the writer before attempting to read
+	err = bw.Close()
+	if err != nil {
+		return fmt.Errorf("failed to close media storage writer: %w", err)
+	}
+
+	br, err := bucket.NewReader(ctx, key, nil)
+	if err != nil {
+		return fmt.Errorf("failed to read from media storage: %w", err)
+	}
+	defer br.Close()
+
+	imageBytes, err := io.ReadAll(br)
+	if err != nil {
+		return fmt.Errorf("failed to read from media storage: %w", err)
+	}
+
+	for _, thumbSize := range requiredThumbs {
+		imageResizeString := fmt.Sprintf("%dx", thumbSize)
+		if media.Width != 0 && media.Height != 0 {
+			imageResizeString = fmt.Sprintf("%d,fit", thumbSize)
+		}
+		thumbMediaPath := fmt.Sprintf(
+			"thumbs/media/%d-%s.%s",
+			media.ID,
+			strings.Replace(imageResizeString, ",", "-", 1),
+			media.Kind,
+		)
+
+		imageBytes, err = ir.CreateThumbInBucket(
+			ctx,
+			bytes.NewReader(imageBytes),
+			bucket,
+			imageResizeString,
+			thumbMediaPath,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to create thumbnail: %w", err)
+		}
+	}
+
+	return nil
 }

@@ -80,6 +80,33 @@ make update_config  # Update Northflank production configuration
 - Command pattern using Cobra for CLI (`/cmd/`)
 - Toolbelt integration for development tools (`/pkg/tool/`)
 
+### Code Style
+
+#### Error Handling
+
+Prefer explicit error handling over inline error checks for better readability:
+
+Instead of:
+
+```go
+if err := doSomething(); err != nil {
+    return err
+}
+```
+
+Prefer:
+
+```go
+err := doSomething()
+if err != nil {
+    return err
+}
+```
+
+#### Comments
+
+Comments should begin with the name of the thing being described and end in a period.
+
 ### Configuration
 
 - Environment-specific configs: `config.dev.yaml`, `config.prod.yaml`, `config.test.yaml`

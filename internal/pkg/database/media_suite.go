@@ -18,10 +18,10 @@ type MediasSuite struct {
 }
 
 func (s *MediasSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.medias")
+	err := Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.devices")
+	err = Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -32,7 +32,7 @@ func (s *MediasSuite) TestCreateMedias() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -76,7 +76,7 @@ func (s *MediasSuite) TestCreateMedias() {
 		},
 	}
 
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -107,7 +107,7 @@ func (s *MediasSuite) TestFindMediasByID() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -145,14 +145,14 @@ func (s *MediasSuite) TestFindMediasByID() {
 		},
 	}
 
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias needed for test: %s", err)
 	}
 
 	medias[0].ID = returnedMedias[0].ID
 
-	returnedMedias, err = FindMediasByID(s.DB, []int{medias[0].ID})
+	returnedMedias, err = FindMediasByID(s.T().Context(), s.DB, []int{medias[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}
@@ -178,7 +178,7 @@ func (s *MediasSuite) TestFindMediasByInstagramPost() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -218,12 +218,12 @@ func (s *MediasSuite) TestFindMediasByInstagramPost() {
 		},
 	}
 
-	_, err = CreateMedias(s.DB, medias)
+	_, err = CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias needed for test: %s", err)
 	}
 
-	returnedMedias, err := FindMediasByInstagramCode(s.DB, "abc")
+	returnedMedias, err := FindMediasByInstagramCode(s.T().Context(), s.DB, "abc")
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}
@@ -249,7 +249,7 @@ func (s *MediasSuite) TestAllMedias() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -289,12 +289,12 @@ func (s *MediasSuite) TestAllMedias() {
 		},
 	}
 
-	_, err = CreateMedias(s.DB, medias)
+	_, err = CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias needed for test: %s", err)
 	}
 
-	returnedMedias, err := AllMedias(s.DB, true)
+	returnedMedias, err := AllMedias(s.T().Context(), s.DB, true)
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}
@@ -325,7 +325,7 @@ func (s *MediasSuite) TestDeleteMedias() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -363,17 +363,17 @@ func (s *MediasSuite) TestDeleteMedias() {
 		},
 	}
 
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
 	mediaToDelete := returnedMedias[0]
 
-	err = DeleteMedias(s.DB, []models.Media{mediaToDelete})
+	err = DeleteMedias(s.T().Context(), s.DB, []models.Media{mediaToDelete})
 	s.Require().NoError(err, "unexpected error deleting medias")
 
-	allMedias, err := AllMedias(s.DB, false)
+	allMedias, err := AllMedias(s.T().Context(), s.DB, false)
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}
@@ -399,7 +399,7 @@ func (s *MediasSuite) TestUpdateMedias() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -437,7 +437,7 @@ func (s *MediasSuite) TestUpdateMedias() {
 		},
 	}
 
-	returnedMedias, err := CreateMedias(s.DB, initialMedias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, initialMedias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias needed for test: %s", err)
 	}
@@ -487,7 +487,7 @@ func (s *MediasSuite) TestUpdateMedias() {
 	updatedMedias := returnedMedias
 	updatedMedias[0].Make = "Fuji"
 
-	returnedMedias, err = UpdateMedias(s.DB, updatedMedias)
+	returnedMedias, err = UpdateMedias(s.T().Context(), s.DB, updatedMedias)
 	if err != nil {
 		s.T().Fatalf("failed to update medias: %s", err)
 	}
@@ -534,7 +534,7 @@ func (s *MediasSuite) TestUpdateMedias() {
 
 	td.Cmp(s.T(), returnedMedias, expectedMedias)
 
-	returnedMedias, err = FindMediasByID(s.DB, []int{updatedMedias[0].ID})
+	returnedMedias, err = FindMediasByID(s.T().Context(), s.DB, []int{updatedMedias[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get medias: %s", err)
 	}

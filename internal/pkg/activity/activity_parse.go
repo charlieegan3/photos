@@ -51,21 +51,22 @@ func parseTCX(rawData []byte) (models.Activity, []Point, error) {
 
 	creator := "Unknown Creator"
 	sport := "Unknown Sport"
-	for _, act := range db.Acts.Act {
-		if act.Creator.Name != "" {
-			creator = act.Creator.Name
+	for i := range db.Acts.Act {
+		if db.Acts.Act[i].Creator.Name != "" {
+			creator = db.Acts.Act[i].Creator.Name
 		}
 
-		if act.Sport != "" {
-			sport = act.Sport
+		if db.Acts.Act[i].Sport != "" {
+			sport = db.Acts.Act[i].Sport
 		}
 
-		for i, lap := range act.Laps {
-			for j, trackpoint := range lap.Trk.Pt {
-				if i == 0 && j == 0 {
+		for lapIdx := range db.Acts.Act[i].Laps {
+			for ptIdx := range db.Acts.Act[i].Laps[lapIdx].Trk.Pt {
+				trackpoint := &db.Acts.Act[i].Laps[lapIdx].Trk.Pt[ptIdx]
+				if lapIdx == 0 && ptIdx == 0 {
 					activity.StartTime = trackpoint.Time.UTC()
 				}
-				if i == len(act.Laps)-1 && j == (len(lap.Trk.Pt))-1 {
+				if lapIdx == len(db.Acts.Act[i].Laps)-1 && ptIdx == (len(db.Acts.Act[i].Laps[lapIdx].Trk.Pt))-1 {
 					activity.EndTime = trackpoint.Time.UTC()
 				}
 
@@ -74,8 +75,8 @@ func parseTCX(rawData []byte) (models.Activity, []Point, error) {
 				}
 
 				// don't save points for virtual rides
-				if act.Creator.Name == "KinomapVirtualRide" ||
-					act.Creator.Name == "TrainerRoad" {
+				if db.Acts.Act[i].Creator.Name == "KinomapVirtualRide" ||
+					db.Acts.Act[i].Creator.Name == "TrainerRoad" {
 					continue
 				}
 				points = append(points, Point{
@@ -112,10 +113,11 @@ func parseGPX(rawData []byte) (models.Activity, []Point, error) {
 
 	activity.Description = "Created by " + gpxData.Creator
 
-	for _, track := range gpxData.Tracks {
-		activity.Title = track.Name
-		for _, segment := range track.Segments {
-			for _, point := range segment.Points {
+	for i := range gpxData.Tracks {
+		activity.Title = gpxData.Tracks[i].Name
+		for j := range gpxData.Tracks[i].Segments {
+			for k := range gpxData.Tracks[i].Segments[j].Points {
+				point := &gpxData.Tracks[i].Segments[j].Points[k]
 				points = append(points, Point{
 					Timestamp:        point.Timestamp.UTC(),
 					Latitude:         point.Latitude,

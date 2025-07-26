@@ -13,7 +13,6 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
 
-	//"gocloud.dev/blob"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
@@ -36,7 +35,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		lenses, err := database.AllLenses(db)
+		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -90,7 +89,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		lenses, err := database.FindLensesByID(db, []int64{id})
+		lenses, err := database.FindLensesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -161,7 +160,7 @@ func BuildCreateHandler(
 			return
 		}
 
-		persistedLenses, err := database.CreateLenses(db, []models.Lens{lens})
+		persistedLenses, err := database.CreateLenses(r.Context(), db, []models.Lens{lens})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -230,7 +229,7 @@ func BuildFormHandler(
 			return
 		}
 
-		existingLenses, err := database.FindLensesByID(db, []int64{id})
+		existingLenses, err := database.FindLensesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -257,7 +256,7 @@ func BuildFormHandler(
 				return
 			}
 
-			err = database.DeleteLenses(db, []models.Lens{existingLenses[0]})
+			err = database.DeleteLenses(r.Context(), db, []models.Lens{existingLenses[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -317,7 +316,7 @@ func BuildFormHandler(
 			}
 		}
 
-		updatedLenses, err := database.UpdateLenses(db, []models.Lens{lens})
+		updatedLenses, err := database.UpdateLenses(r.Context(), db, []models.Lens{lens})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

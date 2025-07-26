@@ -18,7 +18,7 @@ type TripsSuite struct {
 }
 
 func (s *TripsSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.trips")
+	err := Truncate(s.T().Context(), s.DB, "photos.trips")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
@@ -40,7 +40,7 @@ func (s *TripsSuite) TestCreateTrips() {
 		},
 	}
 
-	returnedTrips, err := CreateTrips(s.DB, trips)
+	returnedTrips, err := CreateTrips(s.T().Context(), s.DB, trips)
 	if err != nil {
 		s.T().Fatalf("failed to create trips: %s", err)
 	}
@@ -84,12 +84,12 @@ func (s *TripsSuite) TestFindTripsByID() {
 		},
 	}
 
-	persistedTrips, err := CreateTrips(s.DB, trips)
+	persistedTrips, err := CreateTrips(s.T().Context(), s.DB, trips)
 	if err != nil {
 		s.T().Fatalf("failed to create trips needed for test: %s", err)
 	}
 
-	returnedTrips, err := FindTripsByID(s.DB, []int{persistedTrips[0].ID})
+	returnedTrips, err := FindTripsByID(s.T().Context(), s.DB, []int{persistedTrips[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get trips: %s", err)
 	}
@@ -120,12 +120,12 @@ func (s *TripsSuite) TestAllTrips() {
 		},
 	}
 
-	_, err := CreateTrips(s.DB, trips)
+	_, err := CreateTrips(s.T().Context(), s.DB, trips)
 	if err != nil {
 		s.T().Fatalf("failed to create trips needed for test: %s", err)
 	}
 
-	returnedTrips, err := AllTrips(s.DB)
+	returnedTrips, err := AllTrips(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get trips: %s", err)
 	}
@@ -163,7 +163,7 @@ func (s *TripsSuite) TestUpdateTrips() {
 		},
 	}
 
-	returnedTrips, err := CreateTrips(s.DB, initialTrips)
+	returnedTrips, err := CreateTrips(s.T().Context(), s.DB, initialTrips)
 	if err != nil {
 		s.T().Fatalf("failed to create trips needed for test: %s", err)
 	}
@@ -194,7 +194,7 @@ func (s *TripsSuite) TestUpdateTrips() {
 	updatedTrips[0].Title = "'ereford"
 	updatedTrips[1].StartDate = time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
 
-	returnedTrips, err = UpdateTrips(s.DB, updatedTrips)
+	returnedTrips, err = UpdateTrips(s.T().Context(), s.DB, updatedTrips)
 	if err != nil {
 		s.T().Fatalf("failed to update trips: %s", err)
 	}
@@ -222,7 +222,7 @@ func (s *TripsSuite) TestUpdateTrips() {
 
 	td.Cmp(s.T(), returnedTrips, expectedTrips)
 
-	returnedTrips, err = FindTripsByID(s.DB, []int{returnedTrips[0].ID})
+	returnedTrips, err = FindTripsByID(s.T().Context(), s.DB, []int{returnedTrips[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get trips: %s", err)
 	}
@@ -253,17 +253,17 @@ func (s *TripsSuite) TestDeleteTrips() {
 		},
 	}
 
-	returnedTrips, err := CreateTrips(s.DB, trips)
+	returnedTrips, err := CreateTrips(s.T().Context(), s.DB, trips)
 	if err != nil {
 		s.T().Fatalf("failed to create trips: %s", err)
 	}
 
 	tripToDelete := returnedTrips[1]
 
-	err = DeleteTrips(s.DB, []models.Trip{tripToDelete})
+	err = DeleteTrips(s.T().Context(), s.DB, []models.Trip{tripToDelete})
 	s.Require().NoError(err, "unexpected error deleting trips")
 
-	allTrips, err := AllTrips(s.DB)
+	allTrips, err := AllTrips(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get trips: %s", err)
 	}

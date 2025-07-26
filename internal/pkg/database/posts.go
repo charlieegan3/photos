@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"regexp"
@@ -84,10 +85,10 @@ func newDBPost(post models.Post) dbPost {
 	}
 }
 
-func CreatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err error) {
+func CreatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results []models.Post, err error) {
 	records := []goqu.Record{}
-	for _, v := range posts {
-		d := newDBPost(v)
+	for i := range posts {
+		d := newDBPost(posts[i])
 		records = append(records, d.ToRecord(false))
 	}
 
@@ -95,21 +96,21 @@ func CreatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.posts").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructs(&dbPosts); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to insert posts")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func RandomPostID(db *sql.DB) (int, error) {
+func RandomPostID(ctx context.Context, db *sql.DB) (int, error) {
 	var postID int
 
-	rows, err := db.Query("SELECT id from photos.posts ORDER BY RANDOM() LIMIT 1")
+	rows, err := db.QueryContext(ctx, "SELECT id from photos.posts ORDER BY RANDOM() LIMIT 1")
 	if err != nil {
 		return 0, errors.Wrap(err, "failed to select random post")
 	}
@@ -128,39 +129,39 @@ func RandomPostID(db *sql.DB) (int, error) {
 	return postID, nil
 }
 
-func FindPostsByID(db *sql.DB, id []int) (results []models.Post, err error) {
+func FindPostsByID(ctx context.Context, db *sql.DB, id []int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructs(&dbPosts); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func FindPostsByLocation(db *sql.DB, id []int) (results []models.Post, err error) {
+func FindPostsByLocation(ctx context.Context, db *sql.DB, id []int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"location_id": id}).Executor()
-	if err := insert.ScanStructs(&dbPosts); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
+func SearchPosts(ctx context.Context, db *sql.DB, query string) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	safeQuery := regexp.MustCompile(`[^\w\s]+`).ReplaceAllString(query, "")
@@ -182,34 +183,34 @@ func SearchPosts(db *sql.DB, query string) (results []models.Post, err error) {
 			),
 		)
 	outer := goquDB.From(inner).Select("*").Order(goqu.I("publish_date").Desc())
-	if err := outer.ScanStructs(&dbPosts); err != nil {
+	if err := outer.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func FindPostsByInstagramCode(db *sql.DB, code string) (results []models.Post, err error) {
+func FindPostsByInstagramCode(ctx context.Context, db *sql.DB, code string) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
-	if err := insert.ScanStructs(&dbPosts); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts by instagram_code")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func FindPostsByMediaID(db *sql.DB, id int) (results []models.Post, err error) {
+func FindPostsByMediaID(ctx context.Context, db *sql.DB, id int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -218,8 +219,8 @@ func FindPostsByMediaID(db *sql.DB, id int) (results []models.Post, err error) {
 		return results, errors.Wrap(err, "failed to select posts by media_id")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
@@ -248,17 +249,17 @@ func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models
 		return results, errors.Wrap(err, "failed to select posts by media_id")
 	}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
+func SetPostTags(ctx context.Context, db *sql.DB, post models.Post, rawTags []string) (err error) {
 	var tags []models.Tag
 	if len(rawTags) > 0 {
-		tags, err = FindOrCreateTagsByName(db, rawTags)
+		tags, err = FindOrCreateTagsByName(ctx, db, rawTags)
 		if err != nil {
 			return errors.Wrap(err, "failed to find or created tags")
 		}
@@ -292,12 +293,12 @@ func SetPostTags(db *sql.DB, post models.Post, rawTags []string) (err error) {
 		}
 	}
 
-	err = DeleteTaggings(db, taggingsToDelete)
+	err = DeleteTaggings(ctx, db, taggingsToDelete)
 	if err != nil {
 		return errors.Wrap(err, "failed to delete old taggings")
 	}
 
-	_, err = FindOrCreateTaggings(db, requiredTaggings)
+	_, err = FindOrCreateTaggings(ctx, db, requiredTaggings)
 	if err != nil {
 		return errors.Wrap(err, "failed to find or create taggings")
 	}
@@ -337,14 +338,14 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
 	results = []models.Post{}
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func CountPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (int64, error) {
+func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options SelectOptions) (int64, error) {
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*")
 
@@ -364,7 +365,7 @@ func CountPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (int64, e
 		insert = insert.Limit(options.Limit)
 	}
 
-	count, err := insert.Count()
+	count, err := insert.CountContext(ctx)
 	if err != nil {
 		return count, errors.Wrap(err, "failed to count posts")
 	}
@@ -372,10 +373,10 @@ func CountPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (int64, e
 	return count, nil
 }
 
-func DeletePosts(db *sql.DB, posts []models.Post) (err error) {
+func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) (err error) {
 	var ids []int
-	for _, d := range posts {
-		ids = append(ids, d.ID)
+	for i := range posts {
+		ids = append(ids, posts[i].ID)
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -385,7 +386,7 @@ func DeletePosts(db *sql.DB, posts []models.Post) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build posts delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete posts: %s", err)
 	}
@@ -395,10 +396,10 @@ func DeletePosts(db *sql.DB, posts []models.Post) (err error) {
 
 // UpdatePosts is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err error) {
+func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results []models.Post, err error) {
 	records := []goqu.Record{}
-	for _, v := range posts {
-		d := newDBPost(v)
+	for i := range posts {
+		d := newDBPost(posts[i])
 		records = append(records, d.ToRecord(true))
 	}
 
@@ -416,7 +417,7 @@ func UpdatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStruct(&result); err != nil {
+		if _, err = update.ScanStructContext(ctx, &result); err != nil {
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
@@ -432,7 +433,7 @@ func UpdatePosts(db *sql.DB, posts []models.Post) (results []models.Post, err er
 	return results, nil
 }
 
-func PostsInDateRange(db *sql.DB, after, before time.Time) (results []models.Post, err error) {
+func PostsInDateRange(ctx context.Context, db *sql.DB, after, before time.Time) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -450,7 +451,7 @@ func PostsInDateRange(db *sql.DB, after, before time.Time) (results []models.Pos
 		).
 		Order(goqu.I("publish_date").Asc())
 
-	if err := query.Executor().ScanStructs(&dbPosts); err != nil {
+	if err := query.Executor().ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 
@@ -458,14 +459,14 @@ func PostsInDateRange(db *sql.DB, after, before time.Time) (results []models.Pos
 	// nil but rather an empty slice
 	results = []models.Post{}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil
 }
 
-func PostsOnThisDay(db *sql.DB, month time.Month, day int) (results []models.Post, err error) {
+func PostsOnThisDay(ctx context.Context, db *sql.DB, month time.Month, day int) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -479,7 +480,7 @@ func PostsOnThisDay(db *sql.DB, month time.Month, day int) (results []models.Pos
 		).
 		Order(goqu.I("publish_date").Desc())
 
-	if err := query.Executor().ScanStructs(&dbPosts); err != nil {
+	if err := query.Executor().ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 
@@ -487,8 +488,8 @@ func PostsOnThisDay(db *sql.DB, month time.Month, day int) (results []models.Pos
 	// nil but rather an empty slice
 	results = []models.Post{}
 
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil

@@ -24,6 +24,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
 		tags, err := database.AllTags(
+			r.Context(),
 			db,
 			false,
 			database.SelectOptions{
@@ -59,7 +60,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		tags, err := database.FindTagsByName(db, []string{tagName})
+		tags, err := database.FindTagsByName(r.Context(), db, []string{tagName})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -73,7 +74,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		// TODO create a db function to get tags for post in SQL
-		taggings, err := database.FindTaggingsByTagID(db, tags[0].ID)
+		taggings, err := database.FindTaggingsByTagID(r.Context(), db, tags[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -90,7 +91,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			postIDs = append(postIDs, t.PostID)
 		}
 
-		posts, err := database.FindPostsByID(db, postIDs)
+		posts, err := database.FindPostsByID(r.Context(), db, postIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -98,11 +99,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		var mediaIDs []int
-		for _, p := range posts {
-			mediaIDs = append(mediaIDs, p.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -110,8 +111,8 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, m := range medias {
-			mediasByID[m.ID] = m
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		ctx := plush.NewContext()

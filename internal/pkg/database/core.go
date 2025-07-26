@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/url"
@@ -22,6 +23,7 @@ type SelectOptions struct {
 // bootstrap can be set to overide the database name in the params to postgres
 // when first connecting to the database server
 func Init(
+	ctx context.Context,
 	connectionStringBase string,
 	rawParams map[string]string,
 	databaseName string,
@@ -47,13 +49,13 @@ func Init(
 			return db, fmt.Errorf("failed to init db connection: %s", err)
 		}
 
-		exists, err := Exists(db, databaseName)
+		exists, err := Exists(ctx, db, databaseName)
 		if err != nil {
 			return db, fmt.Errorf("failed to check if database must be created: %s", err)
 		}
 
 		if !exists {
-			err = Create(db, databaseName)
+			err = Create(ctx, db, databaseName)
 			if err != nil {
 				return db, fmt.Errorf("failed to create database: %s", err)
 			}
@@ -84,7 +86,7 @@ func Init(
 		return db, fmt.Errorf("failed to init db connection: %s", err)
 	}
 
-	if err = db.Ping(); err != nil {
+	if err = db.PingContext(ctx); err != nil {
 		return db, fmt.Errorf("failed to ping the database: %s", err)
 	}
 
@@ -95,8 +97,8 @@ func Init(
 }
 
 // Create will attempt to create a new database with a given name
-func Create(db *sql.DB, databaseName string) error {
-	_, err := db.Exec(fmt.Sprintf(`CREATE DATABASE %s;`, databaseName))
+func Create(ctx context.Context, db *sql.DB, databaseName string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(`CREATE DATABASE %s;`, databaseName))
 	if err != nil {
 		return fmt.Errorf("failed to create database: %s", err)
 	}
@@ -105,7 +107,7 @@ func Create(db *sql.DB, databaseName string) error {
 }
 
 // Drop will terminate connections to the database and remove it
-func Drop(db *sql.DB, databaseName string) error {
+func Drop(ctx context.Context, db *sql.DB, databaseName string) error {
 	// https://stackoverflow.com/questions/5408156/how-to-drop-a-postgresql-database-if-there-are-active-connections-to-it
 	transactionSQL := fmt.Sprintf(`
       UPDATE pg_database SET datallowconn = 'false' WHERE datname = '%s';
@@ -114,13 +116,13 @@ func Drop(db *sql.DB, databaseName string) error {
       FROM pg_stat_activity
       WHERE datname = '%s';`, databaseName, databaseName)
 
-	_, err := db.Exec(transactionSQL)
+	_, err := db.ExecContext(ctx, transactionSQL)
 	if err != nil {
 		return fmt.Errorf("failed to terminate active connections: %s", err)
 	}
 
 	// once the connections have been removed, then we can drop the database
-	_, err = db.Exec(fmt.Sprintf(`DROP DATABASE %s;`, databaseName))
+	_, err = db.ExecContext(ctx, fmt.Sprintf(`DROP DATABASE %s;`, databaseName))
 	if err != nil {
 		return fmt.Errorf("failed to drop database %q: %s", databaseName, err)
 	}
@@ -130,8 +132,8 @@ func Drop(db *sql.DB, databaseName string) error {
 
 // Ping calls db.Ping on the connection handle to test the connection, a simple
 // wrapper
-func Ping(db *sql.DB) error {
-	err := db.Ping()
+func Ping(ctx context.Context, db *sql.DB) error {
+	err := db.PingContext(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to ping database")
 	}
@@ -141,9 +143,9 @@ func Ping(db *sql.DB) error {
 
 // Exists will return true if a database with the supplied name exists on the
 // currently connected postgres instance
-func Exists(db *sql.DB, databaseName string) (bool, error) {
+func Exists(ctx context.Context, db *sql.DB, databaseName string) (bool, error) {
 	// https://dba.stackexchange.com/questions/45143/check-if-postgresql-database-exists-case-insensitive-way
-	rows, err := db.Query(`SELECT 1 FROM pg_database WHERE datname=$1`, databaseName)
+	rows, err := db.QueryContext(ctx, `SELECT 1 FROM pg_database WHERE datname=$1`, databaseName)
 	if err != nil {
 		return false, fmt.Errorf("failed look up database: %s", err)
 	}
@@ -188,8 +190,8 @@ func buildConnectionString(connectionStringBase string, params url.Values) strin
 }
 
 // Truncate the table with tableName
-func Truncate(db *sql.DB, tableName string) error {
-	_, err := db.Exec(fmt.Sprintf(`TRUNCATE %s CASCADE;`, tableName))
+func Truncate(ctx context.Context, db *sql.DB, tableName string) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf(`TRUNCATE %s CASCADE;`, tableName))
 	if err != nil {
 		return fmt.Errorf("failed to truncate table: %s", err)
 	}

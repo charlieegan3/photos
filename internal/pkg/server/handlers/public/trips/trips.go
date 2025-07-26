@@ -37,7 +37,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		trips, err := database.FindTripsByID(db, []int{id})
+		trips, err := database.FindTripsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -81,7 +81,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			)
 		}
 
-		posts, err := database.PostsInDateRange(db, trip.StartDate, toTime)
+		posts, err := database.PostsInDateRange(r.Context(), db, trip.StartDate, toTime)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -94,11 +94,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		var locationIDs []int
-		for _, p := range posts {
-			locationIDs = append(locationIDs, p.LocationID)
+		for i := range posts {
+			locationIDs = append(locationIDs, posts[i].LocationID)
 		}
 
-		locations, err := database.FindLocationsByID(db, locationIDs)
+		locations, err := database.FindLocationsByID(r.Context(), db, locationIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -110,11 +110,11 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		var mediaIDs []int
-		for _, p := range posts {
-			mediaIDs = append(mediaIDs, p.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -122,19 +122,19 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, m := range medias {
-			mediasByID[m.ID] = m
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		postGroupKeys := []string{}
 		postGroups := make(map[string][]models.Post)
-		for _, p := range posts {
-			key := p.PublishDate.Format(timeFormat)
+		for i := range posts {
+			key := posts[i].PublishDate.Format(timeFormat)
 			if _, ok := postGroups[key]; !ok {
 				postGroups[key] = []models.Post{}
 				postGroupKeys = append(postGroupKeys, key)
 			}
-			postGroups[key] = append(postGroups[key], p)
+			postGroups[key] = append(postGroups[key], posts[i])
 		}
 
 		showDates := trip.StartDate.Add(24 * time.Hour).Before(toTime)

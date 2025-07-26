@@ -1,6 +1,7 @@
 package geoapify
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -24,7 +25,7 @@ type Client struct {
 	apiKey string
 }
 
-func (c *Client) GeocodingSearch(query string) ([]Feature, error) {
+func (c *Client) GeocodingSearch(ctx context.Context, query string) ([]Feature, error) {
 	queryURL, err := url.Parse(c.url.String())
 	if err != nil {
 		return []Feature{}, fmt.Errorf("failed to parse base url: %w", err)
@@ -36,7 +37,14 @@ func (c *Client) GeocodingSearch(query string) ([]Feature, error) {
 	queryURL.RawQuery = values.Encode()
 	queryURL.Path = "/v1/geocode/search"
 
-	resp, err := http.Get(queryURL.String())
+	client := &http.Client{}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return []Feature{}, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return []Feature{}, fmt.Errorf("failed to get features from API: %w", err)
 	}

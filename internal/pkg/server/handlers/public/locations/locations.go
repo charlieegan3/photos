@@ -70,7 +70,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, []int{id})
+		locations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -82,7 +82,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		posts, err := database.FindPostsByLocation(db, []int{id})
+		posts, err := database.FindPostsByLocation(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -92,19 +92,19 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		var mediaIDs []int
 		mediasByID := make(map[int]models.Media)
 		if len(posts) == 0 {
-			for _, post := range posts {
-				mediaIDs = append(mediaIDs, post.MediaID)
+			for i := range posts {
+				mediaIDs = append(mediaIDs, posts[i].MediaID)
 			}
 
-			medias, err := database.FindMediasByID(db, mediaIDs)
+			medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
 
-			for _, media := range medias {
-				mediasByID[media.ID] = media
+			for i := range medias {
+				mediasByID[medias[i].ID] = medias[i]
 			}
 		}
 
@@ -128,7 +128,7 @@ func BuildIndexHandler(
 	renderer templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		locations, err := database.AllLocations(db)
+		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -183,7 +183,7 @@ func BuildMapHandler(
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, []int{id})
+		locations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -218,7 +218,16 @@ func BuildMapHandler(
 				return
 			}
 
-			resp, err := http.Get(mapImageURL)
+			client := &http.Client{}
+
+			req, err := http.NewRequestWithContext(r.Context(), http.MethodGet, mapImageURL, nil)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				fmt.Fprintf(w, "failed to create request to upstream map server: %s", err)
+				return
+			}
+
+			resp, err := client.Do(req)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprintf(w, "upstream map server request failed: %s", err)

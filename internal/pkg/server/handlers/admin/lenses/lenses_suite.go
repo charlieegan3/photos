@@ -35,7 +35,7 @@ type EndpointsLensesSuite struct {
 }
 
 func (s *EndpointsLensesSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.lenses")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.lenses")
 	s.Require().NoError(err)
 }
 
@@ -49,7 +49,7 @@ func (s *EndpointsLensesSuite) TestListLenses() {
 		},
 	}
 
-	_, err := database.CreateLenses(s.DB, testData)
+	_, err := database.CreateLenses(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -59,19 +59,19 @@ func (s *EndpointsLensesSuite) TestListLenses() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/lenses", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/lenses", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "iPhone")
-	s.Contains( string(body), "X100F")
+	s.Contains(string(body), "iPhone")
+	s.Contains(string(body), "X100F")
 }
 
 func (s *EndpointsLensesSuite) TestGetLens() {
@@ -81,7 +81,7 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 		},
 	}
 
-	persistedLenses, err := database.CreateLenses(s.DB, testData)
+	persistedLenses, err := database.CreateLenses(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -91,13 +91,13 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
@@ -106,7 +106,7 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "iPhone")
+	s.Contains(string(body), "iPhone")
 }
 
 func (s *EndpointsLensesSuite) TestUpdateLens() {
@@ -117,7 +117,7 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 		},
 	}
 
-	persistedLenses, err := database.CreateLenses(s.DB, testData)
+	persistedLenses, err := database.CreateLenses(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -165,7 +165,8 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 	}
 	w.Close()
 
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID),
 		&b,
@@ -177,14 +178,14 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	// check that the database content is also correct
-	returnedLenses, err := database.AllLenses(s.DB)
+	returnedLenses, err := database.AllLenses(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list lenses: %s", err)
 	}
@@ -211,7 +212,7 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 		{Name: "iPhone"},
 	}
 
-	persistedLenses, err := database.CreateLenses(s.DB, testData)
+	persistedLenses, err := database.CreateLenses(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -237,7 +238,8 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID),
 		strings.NewReader(form.Encode()),
@@ -249,14 +251,14 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	// check that the database content is also correct
-	returnedLenses, err := database.AllLenses(s.DB)
+	returnedLenses, err := database.AllLenses(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list lenses: %s", err)
 	}
@@ -275,19 +277,19 @@ func (s *EndpointsLensesSuite) TestNewLens() {
 		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/lenses/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/lenses/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "Name")
-	s.Contains( string(body), "Icon")
+	s.Contains(string(body), "Name")
+	s.Contains(string(body), "Icon")
 }
 
 func (s *EndpointsLensesSuite) TestCreateLens() {
@@ -327,7 +329,8 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	w.Close()
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/lenses",
 		&b,
@@ -340,7 +343,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	if !s.Equal( http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
@@ -350,7 +353,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	}
 
 	// check that the database content is also correct
-	returnedLenses, err := database.AllLenses(s.DB)
+	returnedLenses, err := database.AllLenses(s.T().Context(), s.DB)
 	s.Require().NoError(err)
 
 	expectedLenses := td.Slice(
@@ -388,5 +391,5 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	s.Require().NoError(err)
 	sourceMD5 := hex.EncodeToString(sourceHash.Sum(nil))
 
-	s.Require().Equal( bucketMD5, sourceMD5)
+	s.Require().Equal(bucketMD5, sourceMD5)
 }

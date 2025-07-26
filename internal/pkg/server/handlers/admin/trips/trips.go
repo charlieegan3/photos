@@ -29,7 +29,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		trips, err := database.AllTrips(db)
+		trips, err := database.AllTrips(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -66,7 +66,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		trips, err := database.FindTripsByID(db, []int{id})
+		trips, err := database.FindTripsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -151,7 +151,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			EndDate:     endDate,
 		}
 
-		persistedTrips, err := database.CreateTrips(db, []models.Trip{trip})
+		persistedTrips, err := database.CreateTrips(r.Context(), db, []models.Trip{trip})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -193,7 +193,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		existingTrips, err := database.FindTripsByID(db, []int{id})
+		existingTrips, err := database.FindTripsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -220,7 +220,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		if r.Form.Get("_method") == http.MethodDelete {
-			err = database.DeleteTrips(db, []models.Trip{existingTrips[0]})
+			err = database.DeleteTrips(r.Context(), db, []models.Trip{existingTrips[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -261,7 +261,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			EndDate:     endDate,
 		}
 
-		updatedTrips, err := database.UpdateTrips(db, []models.Trip{trip})
+		updatedTrips, err := database.UpdateTrips(r.Context(), db, []models.Trip{trip})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

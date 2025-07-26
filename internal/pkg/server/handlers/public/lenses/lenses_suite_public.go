@@ -33,19 +33,19 @@ type LensesSuite struct {
 func (s *LensesSuite) SetupTest() {
 	var err error
 
-	err = database.Truncate(s.DB, "photos.posts")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
 
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
 
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 
-	err = database.Truncate(s.DB, "photos.lenses")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.lenses")
 	s.Require().NoError(err)
 }
 
@@ -58,7 +58,7 @@ func (s *LensesSuite) TestIndex() {
 			Name: "Example Lens 2",
 		},
 	}
-	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	returnedLenses, err := database.CreateLenses(s.T().Context(), s.DB, lenses)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -66,7 +66,7 @@ func (s *LensesSuite) TestIndex() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/lenses", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/lenses", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -93,7 +93,7 @@ func (s *LensesSuite) TestShow() {
 			Name: "iPhone",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	lenses := []models.Lens{
@@ -101,7 +101,7 @@ func (s *LensesSuite) TestShow() {
 			Name: "example lens",
 		},
 	}
-	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	returnedLenses, err := database.CreateLenses(s.T().Context(), s.DB, lenses)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -114,13 +114,13 @@ func (s *LensesSuite) TestShow() {
 			DeviceID: returnedDevices[0].ID,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 	}
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -137,7 +137,7 @@ func (s *LensesSuite) TestShow() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := database.CreatePosts(s.DB, posts)
+	returnedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -145,7 +145,7 @@ func (s *LensesSuite) TestShow() {
 		BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/lenses/%d", returnedLenses[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/lenses/%d", returnedLenses[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -166,7 +166,7 @@ func (s *LensesSuite) TestShow() {
 
 func (s *LensesSuite) TestGetIcon() {
 	lenses := []models.Lens{{Name: "Example Lens"}}
-	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	returnedLenses, err := database.CreateLenses(s.T().Context(), s.DB, lenses)
 	s.Require().NoError(err)
 
 	// store an image for the lens in the bucket to be served in the request.
@@ -195,7 +195,7 @@ func (s *LensesSuite) TestGetIcon() {
 		BuildIconHandler(s.DB, s.Bucket),
 	).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(s.T().Context(),
 		http.MethodGet,
 		fmt.Sprintf("/lenses/%d.jpg", returnedLenses[0].ID),
 		nil,

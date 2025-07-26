@@ -38,10 +38,10 @@ type EndpointsMediasSuite struct {
 }
 
 func (s *EndpointsMediasSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.medias")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -52,7 +52,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		},
 	}
 
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -90,7 +90,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		},
 	}
 
-	returnedMedias, err := database.CreateMedias(s.DB, testData)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -103,7 +103,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -115,7 +115,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -123,7 +123,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/medias", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/medias", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -146,7 +146,7 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 		},
 	}
 
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -169,7 +169,7 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 		},
 	}
 
-	persistedMedias, err := database.CreateMedias(s.DB, testData)
+	persistedMedias, err := database.CreateMedias(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -179,7 +179,7 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -204,11 +204,11 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		},
 	}
 
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	lenses := []models.Lens{{Name: "Example Lens"}}
-	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	returnedLenses, err := database.CreateLenses(s.T().Context(), s.DB, lenses)
 	s.Require().NoError(err)
 
 	testData := []models.Media{
@@ -232,7 +232,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		},
 	}
 
-	persistedMedias, err := database.CreateMedias(s.DB, testData)
+	persistedMedias, err := database.CreateMedias(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -284,7 +284,8 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	w.Close()
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID),
 		&b,
@@ -303,7 +304,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	}
 
 	// check that the database content is also correct
-	returnedMedias, err := database.AllMedias(s.DB, false)
+	returnedMedias, err := database.AllMedias(s.T().Context(), s.DB, false)
 	if err != nil {
 		s.T().Fatalf("failed to list medias: %s", err)
 	}
@@ -333,7 +334,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 		},
 	}
 
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -358,7 +359,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 		},
 	}
 
-	persistedMedias, err := database.CreateMedias(s.DB, testData)
+	persistedMedias, err := database.CreateMedias(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -396,7 +397,8 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID),
 		strings.NewReader(form.Encode()),
@@ -411,7 +413,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedMedias, err := database.AllMedias(s.DB, false)
+	returnedMedias, err := database.AllMedias(s.T().Context(), s.DB, false)
 	if err != nil {
 		s.T().Fatalf("failed to list medias: %s", err)
 	}
@@ -449,7 +451,7 @@ func (s *EndpointsMediasSuite) TestNewMedia() {
 		BuildNewHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/medias/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/medias/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -472,7 +474,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		},
 	}
 
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -488,7 +490,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		},
 	}
 
-	returnedLenses, err := database.CreateLenses(s.DB, lenses)
+	returnedLenses, err := database.CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -528,7 +530,8 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	w.Close()
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/medias",
 		&b,
@@ -551,7 +554,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	}
 
 	// check that the database content is also correct
-	returnedMedias, err := database.AllMedias(s.DB, false)
+	returnedMedias, err := database.AllMedias(s.T().Context(), s.DB, false)
 	s.Require().NoError(err)
 
 	expectedMedias := td.Slice(

@@ -37,7 +37,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, []int{id})
+		medias, err := database.FindMediasByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)

@@ -84,6 +84,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		}
 
 		postsCount, err := database.CountPosts(
+			r.Context(),
 			db,
 			false,
 			database.SelectOptions{},
@@ -95,11 +96,11 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		}
 
 		var mediaIDs []int
-		for _, post := range posts {
-			mediaIDs = append(mediaIDs, post.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -107,8 +108,8 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, media := range medias {
-			mediasByID[media.ID] = media
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		lastPage := postsCount/int64(pageSize) + 1
@@ -151,7 +152,7 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		safeQuery := regexp.MustCompile(`[^\w\s]+`).ReplaceAllString(queryParam, "")
 		safeQuery = regexp.MustCompile(`[\s]+`).ReplaceAllString(safeQuery, " ")
 
-		posts, err := database.SearchPosts(db, safeQuery)
+		posts, err := database.SearchPosts(r.Context(), db, safeQuery)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -161,19 +162,19 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		mediaIDs := make([]int, len(posts))
 		mediasByID := make(map[int]models.Media)
 		if len(posts) > 0 {
-			for i, post := range posts {
-				mediaIDs[i] = post.MediaID
+			for i := range posts {
+				mediaIDs[i] = posts[i].MediaID
 			}
 
-			medias, err := database.FindMediasByID(db, mediaIDs)
+			medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
 				return
 			}
 
-			for _, media := range medias {
-				mediasByID[media.ID] = media
+			for i := range medias {
+				mediasByID[medias[i].ID] = medias[i]
 			}
 		}
 
@@ -209,7 +210,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		posts, err := database.FindPostsByID(db, []int{id})
+		posts, err := database.FindPostsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -234,14 +235,14 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			tagIDs = append(tagIDs, t.TagID)
 		}
 
-		tags, err := database.FindTagsByID(db, tagIDs)
+		tags, err := database.FindTagsByID(r.Context(), db, tagIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, []int{posts[0].MediaID})
+		medias, err := database.FindMediasByID(r.Context(), db, []int{posts[0].MediaID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -252,7 +253,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, []int{posts[0].LocationID})
+		locations, err := database.FindLocationsByID(r.Context(), db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -263,7 +264,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int64{medias[0].DeviceID})
+		devices, err := database.FindDevicesByID(r.Context(), db, []int64{medias[0].DeviceID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -274,7 +275,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		lenses, err := database.FindLensesByID(db, []int64{medias[0].LensID})
+		lenses, err := database.FindLensesByID(r.Context(), db, []int64{medias[0].LensID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -409,7 +410,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			showDates = false
 		}
 
-		posts, err := database.PostsInDateRange(db, fromTime, toTime)
+		posts, err := database.PostsInDateRange(r.Context(), db, fromTime, toTime)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -429,11 +430,11 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 		var locationIDs []int
 		// TODO fetch these with posts
-		for _, p := range posts {
-			locationIDs = append(locationIDs, p.LocationID)
+		for i := range posts {
+			locationIDs = append(locationIDs, posts[i].LocationID)
 		}
 
-		locations, err := database.FindLocationsByID(db, locationIDs)
+		locations, err := database.FindLocationsByID(r.Context(), db, locationIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -446,11 +447,11 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 
 		// TODO fetch these with posts
 		var mediaIDs []int
-		for _, p := range posts {
-			mediaIDs = append(mediaIDs, p.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -458,19 +459,19 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, m := range medias {
-			mediasByID[m.ID] = m
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		postGroupKeys := []string{}
 		postGroups := make(map[string][]models.Post)
-		for _, p := range posts {
-			key := p.PublishDate.Format(timeFormat)
+		for i := range posts {
+			key := posts[i].PublishDate.Format(timeFormat)
 			if _, ok := postGroups[key]; !ok {
 				postGroups[key] = []models.Post{}
 				postGroupKeys = append(postGroupKeys, key)
 			}
-			postGroups[key] = append(postGroups[key], p)
+			postGroups[key] = append(postGroups[key], posts[i])
 		}
 
 		ctx := plush.NewContext()
@@ -496,7 +497,7 @@ func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(
 
 		fromString := r.URL.Query().Get("from")
 		if fromString == "" {
-			trips, err := database.AllTrips(db)
+			trips, err := database.AllTrips(r.Context(), db)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -549,7 +550,7 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		// TODO get in same query
-		locations, err := database.FindLocationsByID(db, []int{posts[0].LocationID})
+		locations, err := database.FindLocationsByID(r.Context(), db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -605,11 +606,11 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		var mediaIDs []int
-		for _, v := range posts {
-			mediaIDs = append(mediaIDs, v.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -620,11 +621,11 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 		mediaMap := make(map[int]models.Media)
-		for _, m := range medias {
-			mediaMap[m.ID] = m
+		for i := range medias {
+			mediaMap[medias[i].ID] = medias[i]
 		}
 
-		locations, err := database.FindLocationsByID(db, []int{posts[0].LocationID})
+		locations, err := database.FindLocationsByID(r.Context(), db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -639,7 +640,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			locationMap[l.ID] = l
 		}
 
-		devices, err := database.AllDevices(db)
+		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -662,22 +663,22 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		var feedItems []*feeds.Item
-		for _, p := range posts {
+		for i := range posts {
 			md := fmt.Sprintf("%s\n\n%s\n\n%s",
-				p.Description,
-				fmt.Sprintf("![post image](https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000,fit)", p.MediaID),
-				"Taken on "+deviceMap[mediaMap[p.MediaID].DeviceID].Name,
+				posts[i].Description,
+				fmt.Sprintf("![post image](https://photos.charlieegan3.com/medias/%d/image.jpg?o=1000,fit)", posts[i].MediaID),
+				"Taken on "+deviceMap[mediaMap[posts[i].MediaID].DeviceID].Name,
 			)
 
 			content := markdown.NormalizeNewlines([]byte(md))
 
 			feedItems = append(feedItems,
 				&feeds.Item{
-					Id:          fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", p.ID),
-					Title:       fmt.Sprintf("%s - %s", p.PublishDate.Format("January 2, 2006"), locationMap[p.LocationID].Name),
-					Link:        &feeds.Link{Href: fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", p.ID)},
+					Id:          fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[i].ID),
+					Title:       fmt.Sprintf("%s - %s", posts[i].PublishDate.Format("January 2, 2006"), locationMap[posts[i].LocationID].Name),
+					Link:        &feeds.Link{Href: fmt.Sprintf("https://photos.charlieegan3.com/posts/%d", posts[i].ID)},
 					Description: string(markdown.ToHTML(content, nil, nil)),
-					Created:     p.PublishDate,
+					Created:     posts[i].PublishDate,
 				})
 		}
 
@@ -721,7 +722,7 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 			return
 		}
 
-		posts, err := database.PostsOnThisDay(db, month.Month(), day)
+		posts, err := database.PostsOnThisDay(r.Context(), db, month.Month(), day)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -734,11 +735,11 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		}
 
 		var mediaIDs []int
-		for _, post := range posts {
-			mediaIDs = append(mediaIDs, post.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -746,16 +747,16 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, media := range medias {
-			mediasByID[media.ID] = media
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		var locationIDs []int
-		for _, p := range posts {
-			locationIDs = append(locationIDs, p.LocationID)
+		for i := range posts {
+			locationIDs = append(locationIDs, posts[i].LocationID)
 		}
 
-		locations, err := database.FindLocationsByID(db, locationIDs)
+		locations, err := database.FindLocationsByID(r.Context(), db, locationIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -785,7 +786,7 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 
 func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		postID, err := database.RandomPostID(db)
+		postID, err := database.RandomPostID(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

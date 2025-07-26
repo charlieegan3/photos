@@ -40,7 +40,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		locations, err := database.AllLocations(db)
+		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -77,7 +77,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		locations, err := database.FindLocationsByID(db, []int{id})
+		locations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -166,7 +166,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			location.Longitude = s
 		}
 
-		persistedLocations, err := database.CreateLocations(db, []models.Location{location})
+		persistedLocations, err := database.CreateLocations(r.Context(), db, []models.Location{location})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -212,7 +212,7 @@ func BuildFormHandler(
 			return
 		}
 
-		existingLocations, err := database.FindLocationsByID(db, []int{id})
+		existingLocations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -254,7 +254,7 @@ func BuildFormHandler(
 					return
 				}
 			}
-			err = database.DeleteLocations(db, []models.Location{existingLocations[0]})
+			err = database.DeleteLocations(r.Context(), db, []models.Location{existingLocations[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -275,7 +275,7 @@ func BuildFormHandler(
 
 		// handle the case where there's an existing location with the new name
 		if name != existingLocations[0].Name {
-			newLocationID, err := database.MergeLocations(db, name, existingLocations[0].Name)
+			newLocationID, err := database.MergeLocations(r.Context(), db, name, existingLocations[0].Name)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -317,7 +317,7 @@ func BuildFormHandler(
 			location.Longitude = s
 		}
 
-		updatedLocations, err := database.UpdateLocations(db, []models.Location{location})
+		updatedLocations, err := database.UpdateLocations(r.Context(), db, []models.Location{location})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -375,7 +375,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, []int{int(mediaID)})
+		medias, err := database.FindMediasByID(r.Context(), db, []int{int(mediaID)})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -397,7 +397,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		locations, err := database.AllLocations(db)
+		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -444,7 +444,7 @@ func BuildLookupHandler(
 			return
 		}
 
-		features, err := client.GeocodingSearch(query)
+		features, err := client.GeocodingSearch(r.Context(), query)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

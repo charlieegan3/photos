@@ -18,7 +18,7 @@ type DevicesSuite struct {
 }
 
 func (s *DevicesSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.devices")
+	err := Truncate(s.T().Context(), s.DB, "photos.devices")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
@@ -34,7 +34,7 @@ func (s *DevicesSuite) TestMostRecentlyUsedDevice() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -73,12 +73,12 @@ func (s *DevicesSuite) TestMostRecentlyUsedDevice() {
 			Altitude:  200.0,
 		},
 	}
-	_, err = CreateMedias(s.DB, medias)
+	_, err = CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
-	device, err := MostRecentlyUsedDevice(s.DB)
+	device, err := MostRecentlyUsedDevice(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -96,7 +96,7 @@ func (s *DevicesSuite) TestCreateDevices() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -134,12 +134,12 @@ func (s *DevicesSuite) TestFindDevicesByID() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices needed for test: %s", err)
 	}
 
-	returnedDevices, err = FindDevicesByID(s.DB, []int64{returnedDevices[0].ID})
+	returnedDevices, err = FindDevicesByID(s.T().Context(), s.DB, []int64{returnedDevices[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -170,12 +170,12 @@ func (s *DevicesSuite) TestFindDevicesByName() {
 		},
 	}
 
-	_, err := CreateDevices(s.DB, devices)
+	_, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices needed for test: %s", err)
 	}
 
-	returnedDevices, err := FindDevicesByName(s.DB, "iPhone")
+	returnedDevices, err := FindDevicesByName(s.T().Context(), s.DB, "iPhone")
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -206,12 +206,12 @@ func (s *DevicesSuite) TestAllDevices() {
 		},
 	}
 
-	_, err := CreateDevices(s.DB, devices)
+	_, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices needed for test: %s", err)
 	}
 
-	returnedDevices, err := AllDevices(s.DB)
+	returnedDevices, err := AllDevices(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -249,7 +249,7 @@ func (s *DevicesSuite) TestUpdateDevices() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, initialDevices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, initialDevices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices needed for test: %s", err)
 	}
@@ -279,7 +279,7 @@ func (s *DevicesSuite) TestUpdateDevices() {
 	updatedDevices := returnedDevices
 	updatedDevices[0].Name = "iPod"
 
-	returnedDevices, err = UpdateDevices(s.DB, updatedDevices)
+	returnedDevices, err = UpdateDevices(s.T().Context(), s.DB, updatedDevices)
 	if err != nil {
 		s.T().Fatalf("failed to update devices: %s", err)
 	}
@@ -306,7 +306,7 @@ func (s *DevicesSuite) TestUpdateDevices() {
 
 	td.Cmp(s.T(), returnedDevices, expectedDevices)
 
-	returnedDevices, err = FindDevicesByID(s.DB, []int64{returnedDevices[0].ID})
+	returnedDevices, err = FindDevicesByID(s.T().Context(), s.DB, []int64{returnedDevices[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -337,17 +337,17 @@ func (s *DevicesSuite) TestDeleteDevices() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
 
 	deviceToDelete := returnedDevices[0]
 
-	err = DeleteDevices(s.DB, []models.Device{deviceToDelete})
+	err = DeleteDevices(s.T().Context(), s.DB, []models.Device{deviceToDelete})
 	s.Require().NoError(err, "unexpected error deleting devices")
 
-	allDevices, err := AllDevices(s.DB)
+	allDevices, err := AllDevices(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get devices: %s", err)
 	}
@@ -378,7 +378,7 @@ func (s *DevicesSuite) TestDevicePosts() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -387,7 +387,7 @@ func (s *DevicesSuite) TestDevicePosts() {
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[1].ID},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -395,7 +395,7 @@ func (s *DevicesSuite) TestDevicePosts() {
 	locations := []models.Location{
 		{Name: "London"},
 	}
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -412,10 +412,10 @@ func (s *DevicesSuite) TestDevicePosts() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
-	result, err := DevicePosts(s.DB, returnedDevices[0].ID)
+	result, err := DevicePosts(s.T().Context(), s.DB, returnedDevices[0].ID)
 	if err != nil {
 		s.T().Fatalf("failed to get posts for devices: %s", err)
 	}
@@ -448,12 +448,12 @@ func (s *DevicesSuite) TestFindDeviceByModelMatches() {
 		},
 	}
 
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
 
-	device, err := FindDeviceByModelMatches(s.DB, "iPhone 11 Pro Max")
+	device, err := FindDeviceByModelMatches(s.T().Context(), s.DB, "iPhone 11 Pro Max")
 	if err != nil {
 		s.T().Fatalf("failed to find devices by model matches: %s", err)
 	}

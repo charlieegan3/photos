@@ -29,17 +29,17 @@ type EndpointsTagsSuite struct {
 }
 
 func (s *EndpointsTagsSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.posts")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.tags")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.tags")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.taggings")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.taggings")
 	s.Require().NoError(err)
 }
 
@@ -54,7 +54,7 @@ func (s *EndpointsTagsSuite) TestListTags() {
 		},
 	}
 
-	_, err := database.CreateTags(s.DB, testData)
+	_, err := database.CreateTags(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
@@ -64,7 +64,7 @@ func (s *EndpointsTagsSuite) TestListTags() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/tags", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/tags", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -87,7 +87,7 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 		},
 	}
 
-	persistedTags, err := database.CreateTags(s.DB, testData)
+	persistedTags, err := database.CreateTags(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
@@ -97,7 +97,7 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/tags/"+persistedTags[0].Name, nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/tags/"+persistedTags[0].Name, nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -116,7 +116,7 @@ func (s *EndpointsTagsSuite) TestNewTag() {
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/tags/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/tags/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/tags/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -142,7 +142,8 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 	form.Add("Hidden", "true")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/tags",
 		strings.NewReader(form.Encode()),
@@ -159,7 +160,7 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 	td.Cmp(s.T(), rr.Result().Header["Location"], []string{"/admin/tags/nofilter"})
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{})
+	returnedTags, err := database.AllTags(s.T().Context(), s.DB, true, database.SelectOptions{})
 	s.Require().NoError(err)
 
 	expectedTags := td.Slice(
@@ -185,7 +186,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -205,7 +206,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -215,7 +216,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -232,7 +233,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := database.CreatePosts(s.DB, posts)
+	returnedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	testData := []models.Tag{
@@ -254,14 +255,14 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 		},
 	}
 
-	persistedTags, err := database.CreateTags(s.DB, testData)
+	persistedTags, err := database.CreateTags(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
 
-	err = database.SetPostTags(s.DB, returnedPosts[0], []string{"tag1"})
+	err = database.SetPostTags(s.T().Context(), s.DB, returnedPosts[0], []string{"tag1"})
 	s.Require().NoError(err)
-	err = database.SetPostTags(s.DB, returnedPosts[1], []string{"tag2"})
+	err = database.SetPostTags(s.T().Context(), s.DB, returnedPosts[1], []string{"tag2"})
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -275,7 +276,8 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	form.Add("Hidden", "false")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/tags/"+persistedTags[0].Name,
 		strings.NewReader(form.Encode()),
@@ -292,7 +294,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	form.Add("Hidden", "false")
 
 	// make the request to the handler
-	req, err = http.NewRequest(http.MethodPost, "/admin/tags/tag2", strings.NewReader(form.Encode()))
+	req, err = http.NewRequestWithContext(s.T().Context(), http.MethodPost, "/admin/tags/tag2", strings.NewReader(form.Encode()))
 	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -306,7 +308,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	}
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{
+	returnedTags, err := database.AllTags(s.T().Context(), s.DB, true, database.SelectOptions{
 		SortField: "name",
 	})
 	s.Require().NoError(err)
@@ -335,7 +337,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 
 	td.Cmp(s.T(), returnedTags, expectedTags)
 
-	taggings, err := database.FindTaggingsByTagID(s.DB, returnedTags[1].ID)
+	taggings, err := database.FindTaggingsByTagID(s.T().Context(), s.DB, returnedTags[1].ID)
 	s.Require().NoError(err)
 
 	expectedTaggings := td.Slice(
@@ -370,7 +372,7 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 		},
 	}
 
-	persistedTags, err := database.CreateTags(s.DB, testData)
+	persistedTags, err := database.CreateTags(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
@@ -385,7 +387,8 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/tags/"+persistedTags[0].Name,
 		strings.NewReader(form.Encode()),
@@ -400,7 +403,7 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedTags, err := database.AllTags(s.DB, false, database.SelectOptions{})
+	returnedTags, err := database.AllTags(s.T().Context(), s.DB, false, database.SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed to list tags: %s", err)
 	}

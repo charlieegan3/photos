@@ -29,7 +29,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		lenses, err := database.AllLenses(db)
+		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -71,7 +71,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		lenses, err := database.FindLensesByID(db, []int64{id})
+		lenses, err := database.FindLensesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -89,7 +89,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		posts, err := database.LensPosts(db, lenses[0].ID)
+		posts, err := database.LensPosts(r.Context(), db, lenses[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -97,11 +97,11 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		mediaIDs := []int{}
-		for _, post := range posts {
-			mediaIDs = append(mediaIDs, post.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -109,8 +109,8 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, m := range medias {
-			mediasByID[m.ID] = m
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		ctx := plush.NewContext()
@@ -145,7 +145,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			return
 		}
 
-		lenses, err := database.FindLensesByID(db, []int64{id})
+		lenses, err := database.FindLensesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -69,10 +70,10 @@ func newDBTrip(trip models.Trip) dbTrip {
 	}
 }
 
-func CreateTrips(db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
+func CreateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
 	records := []goqu.Record{}
-	for _, v := range trips {
-		d := newDBTrip(v)
+	for i := range trips {
+		d := newDBTrip(trips[i])
 		records = append(records, d.ToRecord(false))
 	}
 
@@ -80,57 +81,57 @@ func CreateTrips(db *sql.DB, trips []models.Trip) (results []models.Trip, err er
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.trips").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructs(&dbTrips); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTrips); err != nil {
 		return results, errors.Wrap(err, "failed to insert trips")
 	}
 
-	for _, v := range dbTrips {
-		results = append(results, newTrip(v))
+	for i := range dbTrips {
+		results = append(results, newTrip(dbTrips[i]))
 	}
 
 	return results, nil
 }
 
-func FindTripsByID(db *sql.DB, id []int) (results []models.Trip, err error) {
+func FindTripsByID(ctx context.Context, db *sql.DB, id []int) (results []models.Trip, err error) {
 	var dbTrips []dbTrip
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.trips").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructs(&dbTrips); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTrips); err != nil {
 		return results, errors.Wrap(err, "failed to select trips by id")
 	}
 
-	for _, v := range dbTrips {
-		results = append(results, newTrip(v))
+	for i := range dbTrips {
+		results = append(results, newTrip(dbTrips[i]))
 	}
 
 	return results, nil
 }
 
-func AllTrips(db *sql.DB) (results []models.Trip, err error) {
+func AllTrips(ctx context.Context, db *sql.DB) (results []models.Trip, err error) {
 	var dbTrips []dbTrip
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.trips").Select("*").Order(goqu.I("start_date").Desc()).Executor()
 
-	if err := insert.ScanStructs(&dbTrips); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTrips); err != nil {
 		return results, errors.Wrap(err, "failed to select trips")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
 	results = []models.Trip{}
-	for _, v := range dbTrips {
-		results = append(results, newTrip(v))
+	for i := range dbTrips {
+		results = append(results, newTrip(dbTrips[i]))
 	}
 
 	return results, nil
 }
 
-func DeleteTrips(db *sql.DB, trips []models.Trip) (err error) {
+func DeleteTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (err error) {
 	var ids []int
-	for _, d := range trips {
-		ids = append(ids, d.ID)
+	for i := range trips {
+		ids = append(ids, trips[i].ID)
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -140,7 +141,7 @@ func DeleteTrips(db *sql.DB, trips []models.Trip) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build trips delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete trips: %s", err)
 	}
@@ -150,10 +151,10 @@ func DeleteTrips(db *sql.DB, trips []models.Trip) (err error) {
 
 // UpdateTrips is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdateTrips(db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
+func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
 	records := []goqu.Record{}
-	for _, v := range trips {
-		d := newDBTrip(v)
+	for i := range trips {
+		d := newDBTrip(trips[i])
 		records = append(records, d.ToRecord(true))
 	}
 
@@ -171,7 +172,7 @@ func UpdateTrips(db *sql.DB, trips []models.Trip) (results []models.Trip, err er
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStruct(&result); err != nil {
+		if _, err = update.ScanStructContext(ctx, &result); err != nil {
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}

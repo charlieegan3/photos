@@ -30,9 +30,9 @@ type MediasSuite struct {
 }
 
 func (s *MediasSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.devices")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 }
 
@@ -42,7 +42,7 @@ func (s *MediasSuite) TestGetMedia() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	// insert a sample media to allow the request to be validated as being for a valid media item
@@ -56,7 +56,7 @@ func (s *MediasSuite) TestGetMedia() {
 		},
 	}
 
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	// store an image for the media in the bucket to be served in the request.
@@ -75,7 +75,7 @@ func (s *MediasSuite) TestGetMedia() {
 		BuildMediaHandler(s.DB, s.Bucket)).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -143,7 +143,7 @@ func (s *MediasSuite) TestGetMediaFit() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	// insert a sample media to allow the request to be validated as being for a valid media item
@@ -158,7 +158,7 @@ func (s *MediasSuite) TestGetMediaFit() {
 		},
 	}
 
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	// store an image for the media in the bucket to be served in the request.
@@ -177,7 +177,7 @@ func (s *MediasSuite) TestGetMediaFit() {
 		BuildMediaHandler(s.DB, s.Bucket)).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/medias/%d/file.jpg?o=100,fit", returnedMedias[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

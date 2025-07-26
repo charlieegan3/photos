@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -59,7 +60,7 @@ func newDBTagging(tagging models.Tagging) dbTagging {
 	}
 }
 
-func CreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tagging, err error) {
+func CreateTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) (results []models.Tagging, err error) {
 	records := []goqu.Record{}
 	for _, v := range taggings {
 		d := newDBTagging(v)
@@ -74,7 +75,7 @@ func CreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tag
 		Rows(records).
 		OnConflict(goqu.DoNothing()). // there are only two fields
 		Executor()
-	if err := insert.ScanStructs(&dbTaggings); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to insert taggings")
 	}
 
@@ -85,7 +86,7 @@ func CreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tag
 	return results, nil
 }
 
-func FindOrCreateTaggings(db *sql.DB, taggings []models.Tagging) (results []models.Tagging, err error) {
+func FindOrCreateTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) (results []models.Tagging, err error) {
 	var ex []exp.Expression
 	for _, t := range taggings {
 		ex = append(ex, goqu.Ex{
@@ -98,7 +99,7 @@ func FindOrCreateTaggings(db *sql.DB, taggings []models.Tagging) (results []mode
 
 	goquDB := goqu.New("postgres", db)
 	sel := goquDB.From("photos.taggings").Select("*").Where(goqu.Or(ex...)).Executor()
-	if err := sel.ScanStructs(&dbTaggings); err != nil {
+	if err := sel.ScanStructsContext(ctx, &dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by post_id")
 	}
 
@@ -121,7 +122,7 @@ func FindOrCreateTaggings(db *sql.DB, taggings []models.Tagging) (results []mode
 		}
 	}
 	if len(taggingsToCreate) > 0 {
-		newTaggings, err := CreateTaggings(db, taggingsToCreate)
+		newTaggings, err := CreateTaggings(ctx, db, taggingsToCreate)
 		if err != nil {
 			return results, errors.Wrap(err, "failed to create missing taggings")
 		}
@@ -148,12 +149,12 @@ func FindTaggingsByPostID(db *sql.DB, id int) (results []models.Tagging, err err
 	return results, nil
 }
 
-func FindTaggingsByTagID(db *sql.DB, id int) (results []models.Tagging, err error) {
+func FindTaggingsByTagID(ctx context.Context, db *sql.DB, id int) (results []models.Tagging, err error) {
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.taggings").Select("*").Where(goqu.Ex{"tag_id": id}).Executor()
-	if err := insert.ScanStructs(&dbTaggings); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTaggings); err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by tag_id")
 	}
 
@@ -164,7 +165,7 @@ func FindTaggingsByTagID(db *sql.DB, id int) (results []models.Tagging, err erro
 	return results, nil
 }
 
-func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
+func DeleteTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) (err error) {
 	var ids []int
 	for _, d := range taggings {
 		ids = append(ids, d.ID)
@@ -182,7 +183,7 @@ func DeleteTaggings(db *sql.DB, taggings []models.Tagging) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build taggings delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete taggings: %s", err)
 	}

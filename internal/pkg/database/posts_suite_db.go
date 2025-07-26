@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -18,16 +19,16 @@ type PostsSuite struct {
 }
 
 func (s *PostsSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.posts")
+	err := Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.medias")
+	err = Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.locations")
+	err = Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.devices")
+	err = Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -37,7 +38,7 @@ func (s *PostsSuite) TestRandomPost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -57,7 +58,7 @@ func (s *PostsSuite) TestRandomPost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -67,7 +68,7 @@ func (s *PostsSuite) TestRandomPost() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -85,15 +86,15 @@ func (s *PostsSuite) TestRandomPost() {
 		},
 	}
 
-	createdPosts, err := CreatePosts(s.DB, posts)
+	createdPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
-	returnedPostID, err := RandomPostID(s.DB)
+	returnedPostID, err := RandomPostID(context.Background(), s.DB)
 	s.Require().NoError(err)
 
 	var found bool
-	for _, p := range createdPosts {
-		if p.ID == returnedPostID {
+	for i := range createdPosts {
+		if createdPosts[i].ID == returnedPostID {
 			found = true
 			break
 		}
@@ -110,7 +111,7 @@ func (s *PostsSuite) TestCreatePosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -130,7 +131,7 @@ func (s *PostsSuite) TestCreatePosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -140,7 +141,7 @@ func (s *PostsSuite) TestCreatePosts() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -153,7 +154,7 @@ func (s *PostsSuite) TestCreatePosts() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
@@ -176,7 +177,7 @@ func (s *PostsSuite) TestFindPostsByMediaID() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -196,7 +197,7 @@ func (s *PostsSuite) TestFindPostsByMediaID() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -206,7 +207,7 @@ func (s *PostsSuite) TestFindPostsByMediaID() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -221,14 +222,14 @@ func (s *PostsSuite) TestFindPostsByMediaID() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	if err != nil {
 		s.T().Fatalf("failed to create posts: %s", err)
 	}
 
 	posts[0].ID = returnedPosts[0].ID
 
-	returnedPosts, err = FindPostsByMediaID(s.DB, posts[0].MediaID)
+	returnedPosts, err = FindPostsByMediaID(s.T().Context(), s.DB, posts[0].MediaID)
 	if err != nil {
 		s.T().Fatalf("failed get posts: %s", err)
 	}
@@ -253,7 +254,7 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -273,7 +274,7 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -283,7 +284,7 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -305,14 +306,14 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	if err != nil {
 		s.T().Fatalf("failed to create posts: %s", err)
 	}
 
 	posts[0].ID = returnedPosts[0].ID
 
-	returnedPosts, err = FindPostsByInstagramCode(s.DB, posts[0].InstagramCode)
+	returnedPosts, err = FindPostsByInstagramCode(s.T().Context(), s.DB, posts[0].InstagramCode)
 	if err != nil {
 		s.T().Fatalf("failed get posts: %s", err)
 	}
@@ -337,7 +338,7 @@ func (s *PostsSuite) TestFindPostsByID() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -357,7 +358,7 @@ func (s *PostsSuite) TestFindPostsByID() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -367,7 +368,7 @@ func (s *PostsSuite) TestFindPostsByID() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -387,14 +388,14 @@ func (s *PostsSuite) TestFindPostsByID() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	if err != nil {
 		s.T().Fatalf("failed to create posts: %s", err)
 	}
 
 	posts[0].ID = returnedPosts[0].ID
 
-	returnedPosts, err = FindPostsByID(s.DB, []int{posts[0].ID})
+	returnedPosts, err = FindPostsByID(s.T().Context(), s.DB, []int{posts[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get posts: %s", err)
 	}
@@ -419,7 +420,7 @@ func (s *PostsSuite) TestFindNextPost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -439,7 +440,7 @@ func (s *PostsSuite) TestFindNextPost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -449,7 +450,7 @@ func (s *PostsSuite) TestFindNextPost() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -475,7 +476,7 @@ func (s *PostsSuite) TestFindNextPost() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	if err != nil {
 		s.T().Fatalf("failed to create posts: %s", err)
 	}
@@ -525,7 +526,7 @@ func (s *PostsSuite) TestCountPosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -545,7 +546,7 @@ func (s *PostsSuite) TestCountPosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -555,7 +556,7 @@ func (s *PostsSuite) TestCountPosts() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -574,10 +575,10 @@ func (s *PostsSuite) TestCountPosts() {
 		},
 	}
 
-	_, err = CreatePosts(s.DB, posts)
+	_, err = CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
-	count, err := CountPosts(s.DB, false, SelectOptions{})
+	count, err := CountPosts(s.T().Context(), s.DB, false, SelectOptions{})
 	s.Require().NoError(err)
 
 	td.Cmp(s.T(), count, int64(1))
@@ -589,7 +590,7 @@ func (s *PostsSuite) TestAllPosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -609,7 +610,7 @@ func (s *PostsSuite) TestAllPosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -619,7 +620,7 @@ func (s *PostsSuite) TestAllPosts() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -637,7 +638,7 @@ func (s *PostsSuite) TestAllPosts() {
 		},
 	}
 
-	_, err = CreatePosts(s.DB, posts)
+	_, err = CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	returnedPosts, err := AllPosts(s.DB, true, SelectOptions{})
@@ -668,7 +669,7 @@ func (s *PostsSuite) TestDeletePosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -688,7 +689,7 @@ func (s *PostsSuite) TestDeletePosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -698,7 +699,7 @@ func (s *PostsSuite) TestDeletePosts() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -716,12 +717,12 @@ func (s *PostsSuite) TestDeletePosts() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	postToDelete := returnedPosts[0]
 
-	err = DeletePosts(s.DB, []models.Post{postToDelete})
+	err = DeletePosts(s.T().Context(), s.DB, []models.Post{postToDelete})
 	s.Require().NoError(err)
 
 	allPosts, err := AllPosts(s.DB, true, SelectOptions{})
@@ -747,7 +748,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -767,7 +768,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -777,7 +778,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -795,7 +796,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 		},
 	}
 
-	createdPosts, err := CreatePosts(s.DB, posts)
+	createdPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	posts[0].ID = createdPosts[0].ID // needed to match up the update
@@ -803,7 +804,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 
 	posts[0].Description = "foobar"
 
-	updatedPosts, err := UpdatePosts(s.DB, posts)
+	updatedPosts, err := UpdatePosts(s.T().Context(), s.DB, posts)
 	if err != nil {
 		s.T().Fatalf("failed to update posts: %s", err)
 	}
@@ -833,7 +834,7 @@ func (s *PostsSuite) TestSetPostTags() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -853,7 +854,7 @@ func (s *PostsSuite) TestSetPostTags() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -863,7 +864,7 @@ func (s *PostsSuite) TestSetPostTags() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -875,7 +876,7 @@ func (s *PostsSuite) TestSetPostTags() {
 		},
 	}
 
-	persistedPosts, err := CreatePosts(s.DB, posts)
+	persistedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -883,18 +884,18 @@ func (s *PostsSuite) TestSetPostTags() {
 		{Name: "tag_b"},
 		{Name: "tag_c"},
 	}
-	persistedTags, err := CreateTags(s.DB, tags)
+	persistedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
 	}
-	_, err = CreateTaggings(s.DB, taggings)
+	_, err = CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	// update to a and c
-	err = SetPostTags(s.DB, persistedPosts[0], []string{"tag_a", "tag_c"})
+	err = SetPostTags(s.T().Context(), s.DB, persistedPosts[0], []string{"tag_a", "tag_c"})
 	s.Require().NoError(err)
 
 	postTaggings, err := FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
@@ -905,7 +906,7 @@ func (s *PostsSuite) TestSetPostTags() {
 		tagIDs = append(tagIDs, v.TagID)
 	}
 
-	postTags, err := FindTagsByID(s.DB, tagIDs)
+	postTags, err := FindTagsByID(s.T().Context(), s.DB, tagIDs)
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
@@ -927,7 +928,7 @@ func (s *PostsSuite) TestSetPostTags() {
 	td.Cmp(s.T(), postTags, expectedResult)
 
 	// update to none
-	err = SetPostTags(s.DB, persistedPosts[0], []string{})
+	err = SetPostTags(s.T().Context(), s.DB, persistedPosts[0], []string{})
 	s.Require().NoError(err)
 
 	postTaggings, err = FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
@@ -938,7 +939,7 @@ func (s *PostsSuite) TestSetPostTags() {
 		tagIDs = append(tagIDs, v.TagID)
 	}
 
-	postTags, err = FindTagsByID(s.DB, tagIDs)
+	postTags, err = FindTagsByID(s.T().Context(), s.DB, tagIDs)
 	s.Require().NoError(err)
 
 	expectedResult = td.Slice([]models.Tag{}, td.ArrayEntries{})
@@ -948,15 +949,15 @@ func (s *PostsSuite) TestSetPostTags() {
 
 func (s *PostsSuite) TestPostsInDateRange() {
 	devices := []models.Device{{Name: "Example Device"}}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -980,10 +981,11 @@ func (s *PostsSuite) TestPostsInDateRange() {
 		},
 	}
 
-	_, err = CreatePosts(s.DB, posts)
+	_, err = CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	returnedPosts, err := PostsInDateRange(
+		s.T().Context(),
 		s.DB,
 		time.Date(2021, time.November, 1, 0, 0, 0, 0, time.Local),
 		time.Date(2021, time.November, 30, 0, 0, 0, 0, time.Local),
@@ -1010,7 +1012,7 @@ func (s *PostsSuite) TestSearchPosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -1045,7 +1047,7 @@ func (s *PostsSuite) TestSearchPosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
@@ -1060,7 +1062,7 @@ func (s *PostsSuite) TestSearchPosts() {
 			Longitude: 1.2,
 		},
 	}
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -1078,12 +1080,12 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
-	err = SetPostTags(s.DB, returnedPosts[0], []string{"cats", "kittens", "pets", "pet"})
+	err = SetPostTags(s.T().Context(), s.DB, returnedPosts[0], []string{"cats", "kittens", "pets", "pet"})
 	s.Require().NoError(err)
-	err = SetPostTags(s.DB, returnedPosts[1], []string{"dogs", "doggos", "pets"})
+	err = SetPostTags(s.T().Context(), s.DB, returnedPosts[1], []string{"dogs", "doggos", "pets"})
 	s.Require().NoError(err)
 
 	expectPostIDs := func(posts []models.Post, ids []int) {
@@ -1093,8 +1095,8 @@ func (s *PostsSuite) TestSearchPosts() {
 		}
 		for _, id := range ids {
 			found := false
-			for _, v := range posts {
-				if v.ID == id {
+			for i := range posts {
+				if posts[i].ID == id {
 					found = true
 					break
 				}
@@ -1106,44 +1108,44 @@ func (s *PostsSuite) TestSearchPosts() {
 	}
 
 	s.Run("can find posts by post body", func() {
-		results, err := SearchPosts(s.DB, "post")
+		results, err := SearchPosts(s.T().Context(), s.DB, "post")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 	})
 
 	s.Run("can find posts by tags", func() {
-		results, err := SearchPosts(s.DB, "pets")
+		results, err := SearchPosts(s.T().Context(), s.DB, "pets")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 	})
 
 	s.Run("can find a single post by non pluralized tag", func() {
-		results, err := SearchPosts(s.DB, "dog")
+		results, err := SearchPosts(s.T().Context(), s.DB, "dog")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 
-		results, err = SearchPosts(s.DB, "cats")
+		results, err = SearchPosts(s.T().Context(), s.DB, "cats")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID})
 	})
 
 	s.Run("can find post by location name", func() {
-		results, err := SearchPosts(s.DB, "london")
+		results, err := SearchPosts(s.T().Context(), s.DB, "london")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID})
 
-		results, err = SearchPosts(s.DB, "new york")
+		results, err = SearchPosts(s.T().Context(), s.DB, "new york")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 	})
 
 	s.Run("cleans query", func() {
-		results, err := SearchPosts(s.DB, "';DROP TABLE posts;")
+		results, err := SearchPosts(s.T().Context(), s.DB, "';DROP TABLE posts;")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{})
 
 		// still works after that
-		results, err = SearchPosts(s.DB, "new york")
+		results, err = SearchPosts(s.T().Context(), s.DB, "new york")
 		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 	})
@@ -1155,14 +1157,14 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
@@ -1170,7 +1172,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 			Name: "London",
 		},
 	}
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -1194,7 +1196,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		},
 	}
 
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	expectPostIDs := func(posts []models.Post, ids []int) {
@@ -1204,8 +1206,8 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		}
 		for _, id := range ids {
 			found := false
-			for _, v := range posts {
-				if v.ID == id {
+			for i := range posts {
+				if posts[i].ID == id {
 					found = true
 					break
 				}
@@ -1216,7 +1218,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		}
 	}
 
-	results, err := PostsOnThisDay(s.DB, time.January, 1)
+	results, err := PostsOnThisDay(s.T().Context(), s.DB, time.January, 1)
 	s.Require().NoError(err)
 	expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 }

@@ -33,13 +33,13 @@ type DevicesSuite struct {
 
 func (s *DevicesSuite) SetupTest() {
 	var err error
-	err = database.Truncate(s.DB, "photos.posts")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -54,7 +54,7 @@ func (s *DevicesSuite) TestIndex() {
 			IconKind: "png",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -62,7 +62,7 @@ func (s *DevicesSuite) TestIndex() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/devices", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/devices", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -90,20 +90,20 @@ func (s *DevicesSuite) TestShow() {
 			IconKind: "jpg",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 	}
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -120,7 +120,7 @@ func (s *DevicesSuite) TestShow() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := database.CreatePosts(s.DB, posts)
+	returnedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -128,7 +128,7 @@ func (s *DevicesSuite) TestShow() {
 		BuildShowHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -154,7 +154,7 @@ func (s *DevicesSuite) TestGetIcon() {
 			IconKind: "jpg",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	// store an image for the device in the bucket to be served in the request.
@@ -175,7 +175,7 @@ func (s *DevicesSuite) TestGetIcon() {
 		BuildIconHandler(s.DB, s.Bucket)).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/devices/%d/icon.jpg", returnedDevices[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/devices/%d/icon.jpg", returnedDevices[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

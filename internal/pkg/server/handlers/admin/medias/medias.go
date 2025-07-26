@@ -41,7 +41,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		medias, err := database.AllMedias(db, true)
+		medias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -55,8 +55,8 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 			return
 		}
 		postMediaMap := make(map[int]bool)
-		for _, p := range posts {
-			postMediaMap[p.MediaID] = true
+		for i := range posts {
+			postMediaMap[posts[i].MediaID] = true
 		}
 
 		ctx := plush.NewContext()
@@ -90,7 +90,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, []int{intID})
+		medias, err := database.FindMediasByID(r.Context(), db, []int{intID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -102,7 +102,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		devices, err := database.AllDevices(db)
+		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -114,7 +114,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			deviceOptionMap[d.Name] = d.ID
 		}
 
-		lenses, err := database.AllLenses(db)
+		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -128,7 +128,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			lensOptionMap[l.Name] = l.ID
 		}
 
-		posts, err := database.FindPostsByMediaID(db, medias[0].ID)
+		posts, err := database.FindPostsByMediaID(r.Context(), db, medias[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -180,7 +180,7 @@ func BuildFormHandler(
 			return
 		}
 
-		existingMedias, err := database.FindMediasByID(db, []int{intID})
+		existingMedias, err := database.FindMediasByID(r.Context(), db, []int{intID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -207,7 +207,7 @@ func BuildFormHandler(
 				return
 			}
 
-			err = database.DeleteMedias(db, []models.Media{existingMedias[0]})
+			err = database.DeleteMedias(r.Context(), db, []models.Media{existingMedias[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -371,7 +371,7 @@ func BuildFormHandler(
 			}
 		}
 
-		updatedMedias, err := database.UpdateMedias(db, []models.Media{media})
+		updatedMedias, err := database.UpdateMedias(r.Context(), db, []models.Media{media})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -478,7 +478,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		devices, err := database.AllDevices(db)
+		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -491,14 +491,14 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		// device will be empty if there isn't a most recently used device in the current db
-		device, err := database.MostRecentlyUsedDevice(db)
+		device, err := database.MostRecentlyUsedDevice(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		lenses, err := database.AllLenses(db)
+		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -639,21 +639,21 @@ func BuildCreateHandler(
 		media.Height = exifData.Height
 
 		// if there's a match from the EXIF data, then use that to set the device ID
-		modelMatchedDevice, err := database.FindDeviceByModelMatches(db, exifData.Model)
+		modelMatchedDevice, err := database.FindDeviceByModelMatches(r.Context(), db, exifData.Model)
 		if err == nil {
 			if modelMatchedDevice != nil {
 				media.DeviceID = modelMatchedDevice.ID
 			}
 		}
 
-		lensMatchLens, err := database.FindLensByLensMatches(db, exifData.Lens)
+		lensMatchLens, err := database.FindLensByLensMatches(r.Context(), db, exifData.Lens)
 		if err == nil {
 			if lensMatchLens != nil {
 				media.LensID = lensMatchLens.ID
 			}
 		}
 
-		persistedMedias, err := database.CreateMedias(db, []models.Media{media})
+		persistedMedias, err := database.CreateMedias(r.Context(), db, []models.Media{media})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

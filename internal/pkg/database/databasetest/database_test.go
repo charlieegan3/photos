@@ -59,7 +59,7 @@ func (s *DatabaseSuite) SetupSuite() {
 	params := viper.GetStringMapString("database.params")
 	connectionString := viper.GetString("database.connectionString")
 	migrationsTable := viper.GetString("database.migrationsTable")
-	db, err := database.Init(connectionString, params, "postgres", false)
+	db, err := database.Init(s.T().Context(), connectionString, params, "postgres", false)
 	if err != nil {
 		s.T().Fatalf("failed to init DB: %s", err)
 	}
@@ -73,26 +73,26 @@ func (s *DatabaseSuite) SetupSuite() {
 	// if the database exists, then we drop it to give a clean test state
 	// this happens at the start of the test suite so that the state is there
 	// after a test run to inspect if need be
-	exists, err := database.Exists(db, dbname)
+	exists, err := database.Exists(s.T().Context(), db, dbname)
 	if err != nil {
 		s.T().Fatalf("failed to check if test DB exists: %s", err)
 	}
 	if exists {
 		// drop existing test db
-		err = database.Drop(db, dbname)
+		err = database.Drop(s.T().Context(), db, dbname)
 		if err != nil {
 			s.T().Fatalf("failed to drop test database: %s", err)
 		}
 	}
 
 	// create the test db for this test run
-	err = database.Create(db, dbname)
+	err = database.Create(s.T().Context(), db, dbname)
 	if err != nil {
 		s.T().Fatalf("failed to create test database: %s", err)
 	}
 
 	// init the db for the test suite with the name of the new db
-	s.DB, err = database.Init(connectionString, params, dbname, true)
+	s.DB, err = database.Init(s.T().Context(), connectionString, params, dbname, true)
 	if err != nil {
 		s.T().Fatalf("failed to init DB: %s", err)
 	}
@@ -139,7 +139,7 @@ func (s *DatabaseSuite) SetupSuite() {
 
 func (s *DatabaseSuite) TestPing() {
 	// example test, check that the connection is ok
-	err := database.Ping(s.DB)
+	err := database.Ping(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to ping database: %s", err)
 	}

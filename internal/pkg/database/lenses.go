@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -54,7 +55,7 @@ func newDBLens(lens models.Lens) dbLens {
 	}
 }
 
-func CreateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err error) {
+func CreateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (results []models.Lens, err error) {
 	records := []goqu.Record{}
 	for _, v := range lenses {
 		d := newDBLens(v)
@@ -65,7 +66,7 @@ func CreateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.lenses").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructs(&dbLenses); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
 		return results, errors.Wrap(err, "failed to insert lenses")
 	}
 
@@ -76,7 +77,7 @@ func CreateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 	return results, nil
 }
 
-func FindLensesByID(db *sql.DB, id []int64) (results []models.Lens, err error) {
+func FindLensesByID(ctx context.Context, db *sql.DB, id []int64) (results []models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
@@ -92,7 +93,7 @@ func FindLensesByID(db *sql.DB, id []int64) (results []models.Lens, err error) {
 	return results, nil
 }
 
-func FindLensesByName(db *sql.DB, name string) (results []models.Lens, err error) {
+func FindLensesByName(ctx context.Context, db *sql.DB, name string) (results []models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
@@ -108,7 +109,7 @@ func FindLensesByName(db *sql.DB, name string) (results []models.Lens, err error
 	return results, nil
 }
 
-func AllLenses(db *sql.DB) (results []models.Lens, err error) {
+func AllLenses(ctx context.Context, db *sql.DB) (results []models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
@@ -139,7 +140,7 @@ func AllLenses(db *sql.DB) (results []models.Lens, err error) {
 	return results, nil
 }
 
-func MostRecentlyUsedLens(db *sql.DB) (result models.Lens, err error) {
+func MostRecentlyUsedLens(ctx context.Context, db *sql.DB) (result models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
@@ -167,7 +168,7 @@ func MostRecentlyUsedLens(db *sql.DB) (result models.Lens, err error) {
 	return result, nil
 }
 
-func DeleteLenses(db *sql.DB, lenses []models.Lens) (err error) {
+func DeleteLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (err error) {
 	var ids []int64
 	for _, d := range lenses {
 		ids = append(ids, d.ID)
@@ -180,7 +181,7 @@ func DeleteLenses(db *sql.DB, lenses []models.Lens) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build lenses delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete lenses: %s", err)
 	}
@@ -190,7 +191,7 @@ func DeleteLenses(db *sql.DB, lenses []models.Lens) (err error) {
 
 // UpdateLenses is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err error) {
+func UpdateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (results []models.Lens, err error) {
 	records := []goqu.Record{}
 	for _, v := range lenses {
 		d := newDBLens(v)
@@ -211,7 +212,7 @@ func UpdateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStruct(&result); err != nil {
+		if _, err = update.ScanStructContext(ctx, &result); err != nil {
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
@@ -227,7 +228,7 @@ func UpdateLenses(db *sql.DB, lenses []models.Lens) (results []models.Lens, err 
 	return results, nil
 }
 
-func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, err error) {
+func FindLensByLensMatches(ctx context.Context, db *sql.DB, lensMatch string) (result *models.Lens, err error) {
 	var dbLenses []dbLens
 
 	goquDB := goqu.New("postgres", db)
@@ -239,7 +240,7 @@ func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, e
 		)).
 		Limit(1).
 		Executor()
-	if err := insert.ScanStructs(&dbLenses); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
 		return nil, errors.Wrap(err, "failed to select lenses by lens matches")
 	}
 
@@ -251,7 +252,7 @@ func FindLensByLensMatches(db *sql.DB, lensMatch string) (result *models.Lens, e
 	return nil, nil
 }
 
-func LensPosts(db *sql.DB, lensID int64) (results []models.Post, err error) {
+func LensPosts(ctx context.Context, db *sql.DB, lensID int64) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -262,14 +263,14 @@ func LensPosts(db *sql.DB, lensID int64) (results []models.Post, err error) {
 		Where(goqu.Ex{"lenses.id": lensID}).
 		Order(goqu.I("posts.publish_date").Desc()).
 		Executor()
-	if err := selectPosts.ScanStructs(&dbPosts); err != nil {
+	if err := selectPosts.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil

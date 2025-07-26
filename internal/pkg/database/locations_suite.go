@@ -17,7 +17,7 @@ type LocationsSuite struct {
 }
 
 func (s *LocationsSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.locations")
+	err := Truncate(s.T().Context(), s.DB, "photos.locations")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
@@ -37,7 +37,7 @@ func (s *LocationsSuite) TestCreateLocations() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -81,12 +81,12 @@ func (s *LocationsSuite) TestFindLocationsByID() {
 		},
 	}
 
-	persistedLocations, err := CreateLocations(s.DB, locations)
+	persistedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations needed for test: %s", err)
 	}
 
-	returnedLocations, err := FindLocationsByID(s.DB, []int{persistedLocations[0].ID})
+	returnedLocations, err := FindLocationsByID(s.T().Context(), s.DB, []int{persistedLocations[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -117,12 +117,12 @@ func (s *LocationsSuite) TestFindLocationsByName() {
 		},
 	}
 
-	_, err := CreateLocations(s.DB, locations)
+	_, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations needed for test: %s", err)
 	}
 
-	returnedLocations, err := FindLocationsByName(s.DB, "Edinburgh")
+	returnedLocations, err := FindLocationsByName(s.T().Context(), s.DB, "Edinburgh")
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -153,12 +153,12 @@ func (s *LocationsSuite) TestAllLocations() {
 		},
 	}
 
-	_, err := CreateLocations(s.DB, locations)
+	_, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations needed for test: %s", err)
 	}
 
-	returnedLocations, err := AllLocations(s.DB)
+	returnedLocations, err := AllLocations(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -196,7 +196,7 @@ func (s *LocationsSuite) TestUpdateLocations() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, initialLocations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, initialLocations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations needed for test: %s", err)
 	}
@@ -227,7 +227,7 @@ func (s *LocationsSuite) TestUpdateLocations() {
 	updatedLocations[0].Name = "'ereford"
 	updatedLocations[0].Longitude = 1.1
 
-	returnedLocations, err = UpdateLocations(s.DB, updatedLocations)
+	returnedLocations, err = UpdateLocations(s.T().Context(), s.DB, updatedLocations)
 	if err != nil {
 		s.T().Fatalf("failed to update locations: %s", err)
 	}
@@ -254,7 +254,7 @@ func (s *LocationsSuite) TestUpdateLocations() {
 
 	td.Cmp(s.T(), returnedLocations, expectedLocations)
 
-	returnedLocations, err = FindLocationsByID(s.DB, []int{returnedLocations[0].ID})
+	returnedLocations, err = FindLocationsByID(s.T().Context(), s.DB, []int{returnedLocations[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -285,17 +285,17 @@ func (s *LocationsSuite) TestDeleteLocations() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
 
 	locationToDelete := returnedLocations[1]
 
-	err = DeleteLocations(s.DB, []models.Location{locationToDelete})
+	err = DeleteLocations(s.T().Context(), s.DB, []models.Location{locationToDelete})
 	s.Require().NoError(err, "unexpected error deleting locations")
 
-	allLocations, err := AllLocations(s.DB)
+	allLocations, err := AllLocations(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get locations: %s", err)
 	}
@@ -322,13 +322,13 @@ func (s *PostsSuite) TestMergeLocations() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
@@ -348,7 +348,7 @@ func (s *PostsSuite) TestMergeLocations() {
 			Longitude: 1.2,
 		},
 	}
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -361,35 +361,35 @@ func (s *PostsSuite) TestMergeLocations() {
 			LocationID: returnedLocations[1].ID,
 		},
 	}
-	_, err = CreatePosts(s.DB, posts)
+	_, err = CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	s.Run("simple merge", func() {
-		remainingLocationID, err := MergeLocations(s.DB, "London 1", "London 2")
+		remainingLocationID, err := MergeLocations(s.T().Context(), s.DB, "London 1", "London 2")
 		s.Require().NoError(err)
 
 		s.Equal(returnedLocations[0].ID, remainingLocationID)
 	})
 
 	s.Run("merge when target name is missing from table", func() {
-		remainingLocationID, err := MergeLocations(s.DB, "London X", "London 3")
+		remainingLocationID, err := MergeLocations(s.T().Context(), s.DB, "London X", "London 3")
 		s.Require().NoError(err)
 
 		s.Equal(0, remainingLocationID)
 
-		locations, err := FindLocationsByName(s.DB, "London 3")
+		locations, err := FindLocationsByName(s.T().Context(), s.DB, "London 3")
 		s.Require().NoError(err)
 
 		s.Len(locations, 1)
 	})
 
 	s.Run("merge when old name is missing from table", func() {
-		remainingLocationID, err := MergeLocations(s.DB, "London 3", "London X")
+		remainingLocationID, err := MergeLocations(s.T().Context(), s.DB, "London 3", "London X")
 		s.Require().NoError(err)
 
 		s.Equal(0, remainingLocationID)
 
-		locations, err := FindLocationsByName(s.DB, "London 3")
+		locations, err := FindLocationsByName(s.T().Context(), s.DB, "London 3")
 		s.Require().NoError(err)
 
 		s.Len(locations, 1)
@@ -420,7 +420,7 @@ func (s *LocationsSuite) TestNearbyLocations() {
 		},
 	}
 
-	_, err := CreateLocations(s.DB, locations)
+	_, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	nearbyLocations, err := NearbyLocations(s.DB, 51.56748, -0.138666)

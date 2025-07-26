@@ -18,19 +18,19 @@ type TaggingsSuite struct {
 }
 
 func (s *TaggingsSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.taggings")
+	err := Truncate(s.T().Context(), s.DB, "photos.taggings")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.medias")
+	err = Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.locations")
+	err = Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.devices")
+	err = Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.tags")
+	err = Truncate(s.T().Context(), s.DB, "photos.tags")
 	s.Require().NoError(err)
 }
 
@@ -40,7 +40,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -60,7 +60,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -70,7 +70,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -81,7 +81,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -89,7 +89,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 			Name: "nofilter",
 		},
 	}
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
@@ -99,7 +99,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 		},
 	}
 
-	returnedTaggings, err := CreateTaggings(s.DB, taggings)
+	returnedTaggings, err := CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
@@ -122,7 +122,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -142,7 +142,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -152,7 +152,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -163,7 +163,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -171,7 +171,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 			Name: "nofilter",
 		},
 	}
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
@@ -181,7 +181,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 		},
 	}
 
-	returnedTaggings, err := FindOrCreateTaggings(s.DB, taggings)
+	returnedTaggings, err := FindOrCreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
@@ -198,7 +198,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 	td.Cmp(s.T(), returnedTaggings, expectedResult)
 
 	// create them again
-	returnedTaggings2, err := FindOrCreateTaggings(s.DB, taggings)
+	returnedTaggings2, err := FindOrCreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	td.Cmp(s.T(), returnedTaggings, returnedTaggings2)
@@ -210,7 +210,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -230,7 +230,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -240,7 +240,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -251,7 +251,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -259,7 +259,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 			Name: "nofilter",
 		},
 	}
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
@@ -269,7 +269,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 
-	_, err = CreateTaggings(s.DB, taggings)
+	_, err = CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	returnedTaggings, err := FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
@@ -295,7 +295,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -315,7 +315,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -325,7 +325,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 		},
 	}
 
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -336,7 +336,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -344,7 +344,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 			Name: "nofilter",
 		},
 	}
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
@@ -354,12 +354,12 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 		},
 	}
 
-	returnedTaggings, err := CreateTaggings(s.DB, taggings)
+	returnedTaggings, err := CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	taggingToDelete := returnedTaggings[0]
 
-	err = DeleteTaggings(s.DB, []models.Tagging{taggingToDelete})
+	err = DeleteTaggings(s.T().Context(), s.DB, []models.Tagging{taggingToDelete})
 	s.Require().NoError(err)
 
 	postTaggings, err := FindTaggingsByPostID(s.DB, returnedPosts[0].ID)

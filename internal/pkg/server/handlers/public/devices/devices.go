@@ -29,7 +29,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		devices, err := database.AllDevices(db)
+		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -71,7 +71,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int64{id})
+		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -89,7 +89,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		posts, err := database.DevicePosts(db, devices[0].ID)
+		posts, err := database.DevicePosts(r.Context(), db, devices[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -97,11 +97,11 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		mediaIDs := []int{}
-		for _, post := range posts {
-			mediaIDs = append(mediaIDs, post.MediaID)
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
 		}
 
-		medias, err := database.FindMediasByID(db, mediaIDs)
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -109,8 +109,8 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		mediasByID := make(map[int]models.Media)
-		for _, m := range medias {
-			mediasByID[m.ID] = m
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
 		}
 
 		ctx := plush.NewContext()
@@ -145,7 +145,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int64{id})
+		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

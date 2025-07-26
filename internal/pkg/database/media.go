@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -176,10 +177,10 @@ func newDBMedia(media models.Media) dbMedia {
 	return m
 }
 
-func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, err error) {
+func CreateMedias(ctx context.Context, db *sql.DB, medias []models.Media) (results []models.Media, err error) {
 	var records []goqu.Record
-	for _, v := range medias {
-		d := newDBMedia(v)
+	for i := range medias {
+		d := newDBMedia(medias[i])
 		records = append(records, d.ToRecord(false))
 	}
 
@@ -187,18 +188,18 @@ func CreateMedias(db *sql.DB, medias []models.Media) (results []models.Media, er
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.medias").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructs(&dbMedias); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to insert medias")
 	}
 
-	for _, v := range dbMedias {
-		results = append(results, newMedia(v))
+	for i := range dbMedias {
+		results = append(results, newMedia(dbMedias[i]))
 	}
 
 	return results, nil
 }
 
-func FindMediasByID(db *sql.DB, ids []int) (results []models.Media, err error) {
+func FindMediasByID(ctx context.Context, db *sql.DB, ids []int) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
 	if len(ids) == 0 {
@@ -207,34 +208,34 @@ func FindMediasByID(db *sql.DB, ids []int) (results []models.Media, err error) {
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"id": ids}).Executor()
-	if err := insert.ScanStructs(&dbMedias); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias by id")
 	}
 
-	for _, v := range dbMedias {
-		results = append(results, newMedia(v))
+	for i := range dbMedias {
+		results = append(results, newMedia(dbMedias[i]))
 	}
 
 	return results, nil
 }
 
-func FindMediasByInstagramCode(db *sql.DB, code string) (results []models.Media, err error) {
+func FindMediasByInstagramCode(ctx context.Context, db *sql.DB, code string) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
-	if err := insert.ScanStructs(&dbMedias); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias by instagram code")
 	}
 
-	for _, v := range dbMedias {
-		results = append(results, newMedia(v))
+	for i := range dbMedias {
+		results = append(results, newMedia(dbMedias[i]))
 	}
 
 	return results, nil
 }
 
-func AllMedias(db *sql.DB, descending bool) (results []models.Media, err error) {
+func AllMedias(ctx context.Context, db *sql.DB, descending bool) (results []models.Media, err error) {
 	var dbMedias []dbMedia
 
 	goquDB := goqu.New("postgres", db)
@@ -244,24 +245,24 @@ func AllMedias(db *sql.DB, descending bool) (results []models.Media, err error) 
 		insert = insert.Order(goqu.I("taken_at").Desc(), goqu.I("created_at").Desc())
 	}
 
-	if err := insert.Executor().ScanStructs(&dbMedias); err != nil {
+	if err := insert.Executor().ScanStructsContext(ctx, &dbMedias); err != nil {
 		return results, errors.Wrap(err, "failed to select medias")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
 	results = []models.Media{}
-	for _, v := range dbMedias {
-		results = append(results, newMedia(v))
+	for i := range dbMedias {
+		results = append(results, newMedia(dbMedias[i]))
 	}
 
 	return results, nil
 }
 
-func DeleteMedias(db *sql.DB, medias []models.Media) (err error) {
+func DeleteMedias(ctx context.Context, db *sql.DB, medias []models.Media) (err error) {
 	var ids []int
-	for _, d := range medias {
-		ids = append(ids, d.ID)
+	for i := range medias {
+		ids = append(ids, medias[i].ID)
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -271,7 +272,7 @@ func DeleteMedias(db *sql.DB, medias []models.Media) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build medias delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete medias: %s", err)
 	}
@@ -281,10 +282,10 @@ func DeleteMedias(db *sql.DB, medias []models.Media) (err error) {
 
 // UpdateMedias is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdateMedias(db *sql.DB, medias []models.Media) (results []models.Media, err error) {
+func UpdateMedias(ctx context.Context, db *sql.DB, medias []models.Media) (results []models.Media, err error) {
 	records := []goqu.Record{}
-	for _, v := range medias {
-		d := newDBMedia(v)
+	for i := range medias {
+		d := newDBMedia(medias[i])
 		records = append(records, d.ToRecord(true))
 	}
 
@@ -302,7 +303,7 @@ func UpdateMedias(db *sql.DB, medias []models.Media) (results []models.Media, er
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStruct(&result); err != nil {
+		if _, err = update.ScanStructContext(ctx, &result); err != nil {
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}

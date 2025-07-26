@@ -28,17 +28,17 @@ type PostsSuite struct {
 }
 
 func (s *PostsSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.posts")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.tags")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.tags")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.taggings")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.taggings")
 	s.Require().NoError(err)
 }
 
@@ -48,7 +48,7 @@ func (s *PostsSuite) TestListPosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -68,7 +68,7 @@ func (s *PostsSuite) TestListPosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -78,7 +78,7 @@ func (s *PostsSuite) TestListPosts() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -96,19 +96,19 @@ func (s *PostsSuite) TestListPosts() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -123,7 +123,7 @@ func (s *PostsSuite) TestGetPost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -143,7 +143,7 @@ func (s *PostsSuite) TestGetPost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -153,7 +153,7 @@ func (s *PostsSuite) TestGetPost() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -171,7 +171,7 @@ func (s *PostsSuite) TestGetPost() {
 		},
 	}
 
-	persistedPosts, err := database.CreatePosts(s.DB, posts)
+	persistedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -179,7 +179,7 @@ func (s *PostsSuite) TestGetPost() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -200,15 +200,15 @@ func (s *PostsSuite) TestGetPost() {
 
 func (s *PostsSuite) TestPeriodHandler() {
 	devices := []models.Device{{Name: "Example Device"}}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -232,7 +232,7 @@ func (s *PostsSuite) TestPeriodHandler() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -240,7 +240,7 @@ func (s *PostsSuite) TestPeriodHandler() {
 		BuildPeriodHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/posts/period/2021-11-01-to-2021-11-29", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/period/2021-11-01-to-2021-11-29", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -264,7 +264,7 @@ func (s *PostsSuite) TestLegacyPostPathRedirect() {
 	router := mux.NewRouter()
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, BuildLegacyPostRedirect()).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/posts/2018-07-08-1819241500870030645", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/2018-07-08-1819241500870030645", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -283,7 +283,7 @@ func (s *PostsSuite) TestLegacyPeriodRedirect() {
 	router := mux.NewRouter()
 	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`, BuildLegacyPeriodRedirect()).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/archive/09-01", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/archive/09-01", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -304,7 +304,7 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 		BuildPeriodIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/posts/period?from=2021-10-01&to=2021-11-01", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/period?from=2021-10-01&to=2021-11-01", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -319,7 +319,7 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 	s.Equal("/posts/period/2021-10-01-to-2021-11-01", rr.Header().Get("Location"))
 
 	// getting with no params renders form page
-	req, err = http.NewRequest(http.MethodGet, "/posts/period", nil)
+	req, err = http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/period", nil)
 	s.Require().NoError(err)
 	rr = httptest.NewRecorder()
 
@@ -343,7 +343,7 @@ func (s *PostsSuite) TestLatestPost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -363,7 +363,7 @@ func (s *PostsSuite) TestLatestPost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -373,7 +373,7 @@ func (s *PostsSuite) TestLatestPost() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -386,13 +386,13 @@ func (s *PostsSuite) TestLatestPost() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/posts/latest.json", BuildLatestHandler(s.DB)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/posts/latest.json", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/latest.json", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -418,7 +418,7 @@ func (s *PostsSuite) TestRSS() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -438,7 +438,7 @@ func (s *PostsSuite) TestRSS() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -448,7 +448,7 @@ func (s *PostsSuite) TestRSS() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -461,13 +461,13 @@ func (s *PostsSuite) TestRSS() {
 		},
 	}
 
-	persistedPosts, err := database.CreatePosts(s.DB, posts)
+	persistedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/rss.xml", BuildRSSHandler(s.DB)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/rss.xml", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/rss.xml", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -509,7 +509,7 @@ func (s *PostsSuite) TestSearchPosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -529,7 +529,7 @@ func (s *PostsSuite) TestSearchPosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -539,7 +539,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -557,7 +557,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -565,7 +565,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		BuildSearchHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/posts/search?query=post1", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/search?query=post1", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -590,14 +590,14 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
@@ -605,7 +605,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 			Name: "London",
 		},
 	}
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -629,7 +629,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -641,7 +641,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		Methods(http.MethodGet)
 
 	// check that redirects to current day
-	req, err := http.NewRequest(http.MethodGet, "/posts/on-this-day", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/on-this-day", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -659,7 +659,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	}
 
 	// check the correct contents is returned
-	req, err = http.NewRequest(http.MethodGet, "/posts/on-this-day/January-1", nil)
+	req, err = http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/on-this-day/January-1", nil)
 	s.Require().NoError(err)
 	rr = httptest.NewRecorder()
 

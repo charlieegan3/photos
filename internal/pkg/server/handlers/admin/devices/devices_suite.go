@@ -35,7 +35,7 @@ type EndpointsDevicesSuite struct {
 }
 
 func (s *EndpointsDevicesSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.devices")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -49,7 +49,7 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 		},
 	}
 
-	_, err := database.CreateDevices(s.DB, testData)
+	_, err := database.CreateDevices(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -59,19 +59,19 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/devices", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/devices", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "iPhone")
-	s.Contains( string(body), "X100F")
+	s.Contains(string(body), "iPhone")
+	s.Contains(string(body), "X100F")
 }
 
 func (s *EndpointsDevicesSuite) TestGetDevice() {
@@ -81,7 +81,7 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 		},
 	}
 
-	persistedDevices, err := database.CreateDevices(s.DB, testData)
+	persistedDevices, err := database.CreateDevices(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -90,13 +90,13 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	router.HandleFunc("/admin/devices/{deviceID}",
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
@@ -105,7 +105,7 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "iPhone")
+	s.Contains(string(body), "iPhone")
 }
 
 func (s *EndpointsDevicesSuite) TestUpdateDevice() {
@@ -116,7 +116,7 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 		},
 	}
 
-	persistedDevices, err := database.CreateDevices(s.DB, testData)
+	persistedDevices, err := database.CreateDevices(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -162,7 +162,8 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	}
 	w.Close()
 
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		&b,
@@ -174,14 +175,14 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	// check that the database content is also correct
-	returnedDevices, err := database.AllDevices(s.DB)
+	returnedDevices, err := database.AllDevices(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list devices: %s", err)
 	}
@@ -210,7 +211,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 		},
 	}
 
-	persistedDevices, err := database.CreateDevices(s.DB, testData)
+	persistedDevices, err := database.CreateDevices(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -236,7 +237,8 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		strings.NewReader(form.Encode()),
@@ -248,14 +250,14 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	// check that the database content is also correct
-	returnedDevices, err := database.AllDevices(s.DB)
+	returnedDevices, err := database.AllDevices(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list devices: %s", err)
 	}
@@ -265,7 +267,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 	// should have a not found error as the icon should have been deleted
 	_, err = s.Bucket.Attributes(context.Background(), "device_icons/iphone.jpg")
-	s.Require().Error( err)
+	s.Require().Error(err)
 }
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
@@ -273,19 +275,19 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 	router.HandleFunc("/admin/devices/new",
 		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/devices/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/devices/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "Name")
-	s.Contains( string(body), "Icon")
+	s.Contains(string(body), "Name")
+	s.Contains(string(body), "Icon")
 }
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
@@ -323,7 +325,8 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	w.Close()
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/devices",
 		&b,
@@ -336,13 +339,13 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/devices/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
-	returnedDevices, err := database.AllDevices(s.DB)
+	returnedDevices, err := database.AllDevices(s.T().Context(), s.DB)
 	s.Require().NoError(err)
 
 	expectedDevices := td.Slice(
@@ -379,5 +382,5 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	s.Require().NoError(err)
 	sourceMD5 := hex.EncodeToString(sourceHash.Sum(nil))
 
-	s.Require().Equal( bucketMD5, sourceMD5)
+	s.Require().Equal(bucketMD5, sourceMD5)
 }

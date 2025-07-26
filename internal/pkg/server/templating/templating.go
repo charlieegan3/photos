@@ -26,7 +26,8 @@ type PageRenderer func(*plush.Context, string, io.Writer) error
 
 func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplates ...string) PageRenderer {
 	// list of all templates to run including intermediateTemplates
-	templates := append(intermediateTemplates, "base")
+	templates := intermediateTemplates
+	templates = append(templates, "base")
 
 	return func(ctx *plush.Context, t string, w io.Writer) error {
 		ctx.Set("to_string", func(arg interface{}) string {

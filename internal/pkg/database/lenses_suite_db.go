@@ -20,17 +20,17 @@ type LensesSuite struct {
 func (s *LensesSuite) SetupTest() {
 	var err error
 
-	err = Truncate(s.DB, "photos.devices")
+	err = Truncate(s.T().Context(), s.DB, "photos.devices")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
 
-	err = Truncate(s.DB, "photos.medias")
+	err = Truncate(s.T().Context(), s.DB, "photos.medias")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
 
-	err = Truncate(s.DB, "photos.lenses")
+	err = Truncate(s.T().Context(), s.DB, "photos.lenses")
 	if err != nil {
 		s.T().Fatalf("failed to truncate table: %s", err)
 	}
@@ -45,7 +45,7 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 			Name: "X100F",
 		},
 	}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	if err != nil {
 		s.T().Fatalf("failed to create devices: %s", err)
 	}
@@ -59,7 +59,7 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 		},
 	}
 
-	returnedLenses, err := CreateLenses(s.DB, lenses)
+	returnedLenses, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -100,12 +100,12 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 			Altitude:  200.0,
 		},
 	}
-	_, err = CreateMedias(s.DB, medias)
+	_, err = CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
 
-	lens, err := MostRecentlyUsedLens(s.DB)
+	lens, err := MostRecentlyUsedLens(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -123,7 +123,7 @@ func (s *LensesSuite) TestCreateLenses() {
 		},
 	}
 
-	returnedLenses, err := CreateLenses(s.DB, lenses)
+	returnedLenses, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
@@ -161,12 +161,12 @@ func (s *LensesSuite) TestFindLensesByID() {
 		},
 	}
 
-	returnedLenses, err := CreateLenses(s.DB, lenses)
+	returnedLenses, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses needed for test: %s", err)
 	}
 
-	returnedLenses, err = FindLensesByID(s.DB, []int64{returnedLenses[0].ID})
+	returnedLenses, err = FindLensesByID(s.T().Context(), s.DB, []int64{returnedLenses[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get lenses: %s", err)
 	}
@@ -197,12 +197,12 @@ func (s *LensesSuite) TestFindLensesByName() {
 		},
 	}
 
-	_, err := CreateLenses(s.DB, lenses)
+	_, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses needed for test: %s", err)
 	}
 
-	returnedLenses, err := FindLensesByName(s.DB, "iPhone")
+	returnedLenses, err := FindLensesByName(s.T().Context(), s.DB, "iPhone")
 	if err != nil {
 		s.T().Fatalf("failed get lenses: %s", err)
 	}
@@ -233,12 +233,12 @@ func (s *LensesSuite) TestAllLenses() {
 		},
 	}
 
-	_, err := CreateLenses(s.DB, lenses)
+	_, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses needed for test: %s", err)
 	}
 
-	returnedLenses, err := AllLenses(s.DB)
+	returnedLenses, err := AllLenses(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get lenses: %s", err)
 	}
@@ -276,7 +276,7 @@ func (s *LensesSuite) TestUpdateLenses() {
 		},
 	}
 
-	returnedLenses, err := CreateLenses(s.DB, initialLenses)
+	returnedLenses, err := CreateLenses(s.T().Context(), s.DB, initialLenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses needed for test: %s", err)
 	}
@@ -306,7 +306,7 @@ func (s *LensesSuite) TestUpdateLenses() {
 	updatedLenses := returnedLenses
 	updatedLenses[0].Name = "iPod"
 
-	returnedLenses, err = UpdateLenses(s.DB, updatedLenses)
+	returnedLenses, err = UpdateLenses(s.T().Context(), s.DB, updatedLenses)
 	if err != nil {
 		s.T().Fatalf("failed to update lenses: %s", err)
 	}
@@ -333,7 +333,7 @@ func (s *LensesSuite) TestUpdateLenses() {
 
 	td.Cmp(s.T(), returnedLenses, expectedLenses)
 
-	returnedLenses, err = FindLensesByID(s.DB, []int64{returnedLenses[0].ID})
+	returnedLenses, err = FindLensesByID(s.T().Context(), s.DB, []int64{returnedLenses[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get lenses: %s", err)
 	}
@@ -364,17 +364,17 @@ func (s *LensesSuite) TestDeleteLenses() {
 		},
 	}
 
-	returnedLenses, err := CreateLenses(s.DB, lenses)
+	returnedLenses, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses: %s", err)
 	}
 
 	lensToDelete := returnedLenses[0]
 
-	err = DeleteLenses(s.DB, []models.Lens{lensToDelete})
+	err = DeleteLenses(s.T().Context(), s.DB, []models.Lens{lensToDelete})
 	s.Require().NoError(err, "unexpected error deleting lenses")
 
-	allLenses, err := AllLenses(s.DB)
+	allLenses, err := AllLenses(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed get lenses: %s", err)
 	}
@@ -407,12 +407,12 @@ func (s *LensesSuite) TestFindLensByLensMatches() {
 		},
 	}
 
-	returnedLenses, err := CreateLenses(s.DB, lenses)
+	returnedLenses, err := CreateLenses(s.T().Context(), s.DB, lenses)
 	if err != nil {
 		s.T().Fatalf("failed to create lenses needed for test: %s", err)
 	}
 
-	lens, err := FindLensByLensMatches(s.DB, "back triple camera")
+	lens, err := FindLensByLensMatches(s.T().Context(), s.DB, "back triple camera")
 	if err != nil {
 		s.T().Fatalf("failed to find devices by model matches: %s", err)
 	}

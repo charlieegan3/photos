@@ -27,7 +27,7 @@ type EndpointsTripsSuite struct {
 }
 
 func (s *EndpointsTripsSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.trips")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.trips")
 	s.Require().NoError(err)
 }
 
@@ -47,7 +47,7 @@ func (s *EndpointsTripsSuite) TestListTrips() {
 		},
 	}
 
-	_, err := database.CreateTrips(s.DB, testData)
+	_, err := database.CreateTrips(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create trips: %s", err)
 	}
@@ -57,7 +57,7 @@ func (s *EndpointsTripsSuite) TestListTrips() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/trips", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/trips", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -83,7 +83,7 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 		},
 	}
 
-	persistedTrips, err := database.CreateTrips(s.DB, testData)
+	persistedTrips, err := database.CreateTrips(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create trips: %s", err)
 	}
@@ -93,13 +93,13 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -113,13 +113,13 @@ func (s *EndpointsTripsSuite) TestNewTrip() {
 		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/trips/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/trips/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -141,7 +141,8 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 	form.Add("EndDate", "2023-01-02")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/trips",
 		strings.NewReader(form.Encode()),
@@ -157,13 +158,13 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		s.T().Log(rr.Body.String())
 	}
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/trips/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
-	returnedTrips, err := database.AllTrips(s.DB)
+	returnedTrips, err := database.AllTrips(s.T().Context(), s.DB)
 	s.Require().NoError(err)
 
 	expectedTrips := td.Slice(
@@ -192,7 +193,7 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 		},
 	}
 
-	persistedTrips, err := database.CreateTrips(s.DB, testData)
+	persistedTrips, err := database.CreateTrips(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create trips: %s", err)
 	}
@@ -209,7 +210,8 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 	form.Add("EndDate", "2023-01-02")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID),
 		strings.NewReader(form.Encode()),
@@ -223,10 +225,10 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		s.T().Log(rr.Body.String())
 	}
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedTrips, err := database.AllTrips(s.DB)
+	returnedTrips, err := database.AllTrips(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list trips: %s", err)
 	}
@@ -254,7 +256,7 @@ func (s *EndpointsTripsSuite) TestDeleteTrip() {
 		},
 	}
 
-	persistedTrips, err := database.CreateTrips(s.DB, testData)
+	persistedTrips, err := database.CreateTrips(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create trips: %s", err)
 	}
@@ -269,7 +271,8 @@ func (s *EndpointsTripsSuite) TestDeleteTrip() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID),
 		strings.NewReader(form.Encode()),
@@ -288,7 +291,7 @@ func (s *EndpointsTripsSuite) TestDeleteTrip() {
 	}
 
 	// check that the database content is also correct
-	returnedTrips, err := database.AllTrips(s.DB)
+	returnedTrips, err := database.AllTrips(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list trips: %s", err)
 	}

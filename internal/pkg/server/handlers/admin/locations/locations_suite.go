@@ -32,11 +32,11 @@ type EndpointsLocationsSuite struct {
 
 func (s *EndpointsLocationsSuite) SetupTest() {
 	var err error
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -54,7 +54,7 @@ func (s *EndpointsLocationsSuite) TestListLocations() {
 		},
 	}
 
-	_, err := database.CreateLocations(s.DB, testData)
+	_, err := database.CreateLocations(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -64,21 +64,21 @@ func (s *EndpointsLocationsSuite) TestListLocations() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/locations", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/locations", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "London")
-	s.Contains( string(body), "1.1")
-	s.Contains( string(body), "New York")
-	s.Contains( string(body), "1.3")
+	s.Contains(string(body), "London")
+	s.Contains(string(body), "1.1")
+	s.Contains(string(body), "New York")
+	s.Contains(string(body), "1.3")
 }
 
 func (s *EndpointsLocationsSuite) TestGetLocation() {
@@ -90,7 +90,7 @@ func (s *EndpointsLocationsSuite) TestGetLocation() {
 		},
 	}
 
-	persistedLocations, err := database.CreateLocations(s.DB, testData)
+	persistedLocations, err := database.CreateLocations(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -100,20 +100,20 @@ func (s *EndpointsLocationsSuite) TestGetLocation() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "Inverness")
-	s.Contains( string(body), "1.1")
-	s.Contains( string(body), "1.2")
+	s.Contains(string(body), "Inverness")
+	s.Contains(string(body), "1.1")
+	s.Contains(string(body), "1.2")
 }
 
 func (s *EndpointsLocationsSuite) TestNewLocation() {
@@ -122,18 +122,18 @@ func (s *EndpointsLocationsSuite) TestNewLocation() {
 		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/locations/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/locations/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	s.Contains( string(body), "Name")
+	s.Contains(string(body), "Name")
 }
 
 func (s *EndpointsLocationsSuite) TestCreateLocation() {
@@ -146,7 +146,8 @@ func (s *EndpointsLocationsSuite) TestCreateLocation() {
 	form.Add("Name", "London")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/locations",
 		strings.NewReader(form.Encode()),
@@ -159,13 +160,13 @@ func (s *EndpointsLocationsSuite) TestCreateLocation() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/locations/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
-	returnedLocations, err := database.AllLocations(s.DB)
+	returnedLocations, err := database.AllLocations(s.T().Context(), s.DB)
 	s.Require().NoError(err)
 
 	expectedLocations := td.Slice(
@@ -191,7 +192,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 		},
 	}
 
-	persistedLocations, err := database.CreateLocations(s.DB, testData)
+	persistedLocations, err := database.CreateLocations(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -207,7 +208,8 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 	form.Add("Longitude", "1.1")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID),
 		strings.NewReader(form.Encode()),
@@ -218,10 +220,10 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	returnedLocations, err := database.AllLocations(s.DB)
+	returnedLocations, err := database.AllLocations(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list locations: %s", err)
 	}
@@ -249,20 +251,20 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "Paris"},
 		{Name: "Berlin"},
 	}
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -279,7 +281,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 			LocationID:  returnedLocations[1].ID,
 		},
 	}
-	returnedPosts, err := database.CreatePosts(s.DB, posts)
+	returnedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -292,7 +294,8 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 	form.Add("Name", "Berlin")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/locations/%d", returnedLocations[0].ID),
 		strings.NewReader(form.Encode()),
@@ -303,10 +306,10 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
-	endingLocations, err := database.AllLocations(s.DB)
+	endingLocations, err := database.AllLocations(s.T().Context(), s.DB)
 	s.Require().NoError(err)
 
 	expectedLocations := td.Slice(
@@ -358,7 +361,7 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 		},
 	}
 
-	persistedLocations, err := database.CreateLocations(s.DB, testData)
+	persistedLocations, err := database.CreateLocations(s.T().Context(), s.DB, testData)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
@@ -373,7 +376,8 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID),
 		strings.NewReader(form.Encode()),
@@ -385,14 +389,14 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !s.Equal( http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
 		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	// check that the database content is also correct
-	returnedLocations, err := database.AllLocations(s.DB)
+	returnedLocations, err := database.AllLocations(s.T().Context(), s.DB)
 	if err != nil {
 		s.T().Fatalf("failed to list locations: %s", err)
 	}
@@ -415,12 +419,12 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 		},
 	}
 
-	persistedLocations, err := database.CreateLocations(s.DB, testDataLocations)
+	persistedLocations, err := database.CreateLocations(s.T().Context(), s.DB, testDataLocations)
 	if err != nil {
 		s.T().Fatalf("failed to create locations: %s", err)
 	}
 
-	persistedDevices, err := database.CreateDevices(s.DB, []models.Device{
+	persistedDevices, err := database.CreateDevices(s.T().Context(), s.DB, []models.Device{
 		{
 			Name: "Example",
 			Slug: "example",
@@ -438,7 +442,7 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 		},
 	}
 
-	persistedMedias, err := database.CreateMedias(s.DB, testDataMedias)
+	persistedMedias, err := database.CreateMedias(s.T().Context(), s.DB, testDataMedias)
 	if err != nil {
 		s.T().Fatalf("failed to create medias: %s", err)
 	}
@@ -448,7 +452,8 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 		BuildSelectHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodGet,
 		"/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&param1=1&param2=2&timestamp=1234&mediaID="+
 			strconv.Itoa(persistedMedias[0].ID),
@@ -462,14 +467,14 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
 
-	if !s.Equal( http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		s.T().Fatalf("request failed with: %s", string(body))
 	}
 
-	s.Contains( string(body), "London")
-	s.Contains( string(body), "New York")
+	s.Contains(string(body), "London")
+	s.Contains(string(body), "New York")
 
-	s.Contains( string(body), fmt.Sprintf(
+	s.Contains(string(body), fmt.Sprintf(
 		`/admin/posts/new?mediaID=%d&param1=1&param2=2&timestamp=1234&locationID=%d`,
 		persistedMedias[0].ID,
 		persistedLocations[0].ID,

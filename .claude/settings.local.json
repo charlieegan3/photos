@@ -7,7 +7,9 @@
       "Bash(make fmt:*)",
       "Bash(golangci-lint run:*)",
       "Bash(go build:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(rg:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

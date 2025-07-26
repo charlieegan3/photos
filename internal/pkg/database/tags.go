@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -59,7 +60,7 @@ func (t TagNameConflictError) Error() string {
 	return "tag name conflicted with an existing tag"
 }
 
-func CreateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
+func CreateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
 	records := []goqu.Record{}
 	for _, v := range tags {
 		d := newDBTag(v)
@@ -70,7 +71,7 @@ func CreateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.tags").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructs(&dbTags); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to insert tags")
 	}
 
@@ -81,12 +82,12 @@ func CreateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 	return results, nil
 }
 
-func FindTagsByName(db *sql.DB, names []string) (results []models.Tag, err error) {
+func FindTagsByName(ctx context.Context, db *sql.DB, names []string) (results []models.Tag, err error) {
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("name").In(names)).Executor()
-	if err := insert.ScanStructs(&dbTags); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags by name")
 	}
 
@@ -97,7 +98,7 @@ func FindTagsByName(db *sql.DB, names []string) (results []models.Tag, err error
 	return results, nil
 }
 
-func FindTagsByID(db *sql.DB, ids []int) (results []models.Tag, err error) {
+func FindTagsByID(ctx context.Context, db *sql.DB, ids []int) (results []models.Tag, err error) {
 	if len(ids) == 0 {
 		return results, nil
 	}
@@ -106,7 +107,7 @@ func FindTagsByID(db *sql.DB, ids []int) (results []models.Tag, err error) {
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("id").In(ids)).Executor()
-	if err := insert.ScanStructs(&dbTags); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags by id")
 	}
 
@@ -117,10 +118,10 @@ func FindTagsByID(db *sql.DB, ids []int) (results []models.Tag, err error) {
 	return results, nil
 }
 
-func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, err error) {
+func FindOrCreateTagsByName(ctx context.Context, db *sql.DB, names []string) (results []models.Tag, err error) {
 	resultMap := make(map[string]models.Tag)
 
-	foundTags, err := FindTagsByName(db, names)
+	foundTags, err := FindTagsByName(ctx, db, names)
 	if err != nil {
 		return results, err
 	}
@@ -136,7 +137,7 @@ func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, e
 	}
 
 	if len(tagsToCreate) > 0 {
-		createdTags, err := CreateTags(db, tagsToCreate)
+		createdTags, err := CreateTags(ctx, db, tagsToCreate)
 		if err != nil {
 			return results, err
 		}
@@ -157,7 +158,7 @@ func FindOrCreateTagsByName(db *sql.DB, names []string) (results []models.Tag, e
 	return results, nil
 }
 
-func AllTags(db *sql.DB, includeHidden bool, options SelectOptions) (results []models.Tag, err error) {
+func AllTags(ctx context.Context, db *sql.DB, includeHidden bool, options SelectOptions) (results []models.Tag, err error) {
 	var dbTags []dbTag
 
 	goquDB := goqu.New("postgres", db)
@@ -182,7 +183,7 @@ func AllTags(db *sql.DB, includeHidden bool, options SelectOptions) (results []m
 		query = query.Limit(options.Limit)
 	}
 
-	if err := query.Executor().ScanStructs(&dbTags); err != nil {
+	if err := query.Executor().ScanStructsContext(ctx, &dbTags); err != nil {
 		return results, errors.Wrap(err, "failed to select tags")
 	}
 
@@ -196,7 +197,7 @@ func AllTags(db *sql.DB, includeHidden bool, options SelectOptions) (results []m
 	return results, nil
 }
 
-func DeleteTags(db *sql.DB, tags []models.Tag) (err error) {
+func DeleteTags(ctx context.Context, db *sql.DB, tags []models.Tag) (err error) {
 	var ids []int
 	for _, d := range tags {
 		ids = append(ids, d.ID)
@@ -209,7 +210,7 @@ func DeleteTags(db *sql.DB, tags []models.Tag) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build tags delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete tags: %s", err)
 	}
@@ -219,7 +220,7 @@ func DeleteTags(db *sql.DB, tags []models.Tag) (err error) {
 
 // UpdateTags is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
+func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
 	records := []goqu.Record{}
 	for _, v := range tags {
 		d := newDBTag(v)
@@ -240,7 +241,7 @@ func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStruct(&result); err != nil {
+		if _, err = update.ScanStructContext(ctx, &result); err != nil {
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
@@ -258,8 +259,8 @@ func UpdateTags(db *sql.DB, tags []models.Tag) (results []models.Tag, err error)
 }
 
 // TODO make this a transaction
-func MergeTags(db *sql.DB, tag1, tag2 models.Tag) (err error) {
-	taggings, err := FindTaggingsByTagID(db, tag2.ID)
+func MergeTags(ctx context.Context, db *sql.DB, tag1, tag2 models.Tag) (err error) {
+	taggings, err := FindTaggingsByTagID(ctx, db, tag2.ID)
 	if err != nil {
 		return errors.Wrap(err, "failed to list all taggings")
 	}
@@ -271,13 +272,13 @@ func MergeTags(db *sql.DB, tag1, tag2 models.Tag) (err error) {
 			newTaggings = append(newTaggings, models.Tagging{TagID: tag1.ID, PostID: t.PostID})
 		}
 
-		_, err = CreateTaggings(db, newTaggings)
+		_, err = CreateTaggings(ctx, db, newTaggings)
 		if err != nil {
 			return errors.Wrap(err, "failed to create new taggings for tag1")
 		}
 	}
 
-	err = DeleteTags(db, []models.Tag{tag2})
+	err = DeleteTags(ctx, db, []models.Tag{tag2})
 	if err != nil {
 		return errors.Wrap(err, "failed to delete tag2")
 	}

@@ -31,17 +31,17 @@ type EndpointsPostsSuite struct {
 }
 
 func (s *EndpointsPostsSuite) SetupTest() {
-	err := database.Truncate(s.DB, "photos.posts")
+	err := database.Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.tags")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.tags")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.taggings")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.taggings")
 	s.Require().NoError(err)
 }
 
@@ -51,7 +51,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -71,7 +71,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -81,7 +81,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -99,7 +99,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 		},
 	}
 
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -107,13 +107,13 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 		BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/posts", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/posts", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -128,7 +128,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -148,7 +148,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -158,7 +158,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -170,7 +170,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		},
 	}
 
-	persistedPosts, err := database.CreatePosts(s.DB, posts)
+	persistedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -178,14 +178,14 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		{Name: "tag_b"},
 		{Name: "tag_c"},
 	}
-	persistedTags, err := database.CreateTags(s.DB, tags)
+	persistedTags, err := database.CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
 	}
-	_, err = database.CreateTaggings(s.DB, taggings)
+	_, err = database.CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -193,7 +193,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -219,13 +219,13 @@ func (s *EndpointsPostsSuite) TestNewPost() {
 		BuildNewHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/posts/new", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/admin/posts/new", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
 	s.Require().NoError(err)
@@ -242,7 +242,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -262,7 +262,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -272,7 +272,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -289,7 +289,8 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	form.Add("Tags", "tag_a tagb tag_c")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		"/admin/posts",
 		strings.NewReader(form.Encode()),
@@ -346,7 +347,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -366,7 +367,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -376,7 +377,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -388,7 +389,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		},
 	}
 
-	persistedPosts, err := database.CreatePosts(s.DB, posts)
+	persistedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
@@ -396,14 +397,14 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		{Name: "tag_b"},
 		{Name: "tag_c"},
 	}
-	persistedTags, err := database.CreateTags(s.DB, tags)
+	persistedTags, err := database.CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
 	}
-	_, err = database.CreateTaggings(s.DB, taggings)
+	_, err = database.CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -421,7 +422,8 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	form.Add("Tags", " tag_d   \n")
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID),
 		strings.NewReader(form.Encode()),
@@ -469,10 +471,10 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		s.T().Errorf("expected there to be one tagging")
 	}
 
-	tagD, err := database.FindTagsByName(s.DB, []string{"tag_d"})
+	tagD, err := database.FindTagsByName(s.T().Context(), s.DB, []string{"tag_d"})
 	s.Require().NoError(err)
 
-	s.Require().Equal( tagD[0].ID, persistedTaggings[0].TagID)
+	s.Require().Equal(tagD[0].ID, persistedTaggings[0].TagID)
 }
 
 func (s *EndpointsPostsSuite) TestDeletePost() {
@@ -481,7 +483,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 			Name: "Example Device",
 		},
 	}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
@@ -501,7 +503,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 			Altitude:  100.0,
 		},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 	locations := []models.Location{
 		{
@@ -511,7 +513,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -523,7 +525,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 		},
 	}
 
-	persistedPosts, err := database.CreatePosts(s.DB, posts)
+	persistedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -536,7 +538,8 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 	form.Add("_method", http.MethodDelete)
 
 	// make the request to the handler
-	req, err := http.NewRequest(
+	req, err := http.NewRequestWithContext(
+		s.T().Context(),
 		http.MethodPost,
 		fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID),
 		strings.NewReader(form.Encode()),
@@ -548,7 +551,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	s.Require().Equal( http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedPosts, err := database.AllPosts(s.DB, true, database.SelectOptions{})

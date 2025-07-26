@@ -17,19 +17,19 @@ type TagsSuite struct {
 }
 
 func (s *TagsSuite) SetupTest() {
-	err := Truncate(s.DB, "photos.tags")
+	err := Truncate(s.T().Context(), s.DB, "photos.tags")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.taggings")
+	err = Truncate(s.T().Context(), s.DB, "photos.taggings")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.medias")
+	err = Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.locations")
+	err = Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
 
-	err = Truncate(s.DB, "photos.devices")
+	err = Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -44,7 +44,7 @@ func (s *TagsSuite) TestCreateTags() {
 		},
 	}
 
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
@@ -82,12 +82,12 @@ func (s *TagsSuite) TestFindOrCreateTagsByName() {
 		},
 	}
 
-	returnedTags, err := CreateTags(s.DB, existingTags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, existingTags)
 	s.Require().NoError(err)
 
 	tags := []string{"example", "foobar"}
 
-	foundTags, err := FindOrCreateTagsByName(s.DB, tags)
+	foundTags, err := FindOrCreateTagsByName(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	expectedTags := td.Slice(
@@ -126,12 +126,12 @@ func (s *TagsSuite) TestFindTagsByName() {
 		},
 	}
 
-	_, err := CreateTags(s.DB, tags)
+	_, err := CreateTags(s.T().Context(), s.DB, tags)
 	if err != nil {
 		s.T().Fatalf("failed to create tags needed for test: %s", err)
 	}
 
-	returnedTags, err := FindTagsByName(s.DB, []string{"nofilter"})
+	returnedTags, err := FindTagsByName(s.T().Context(), s.DB, []string{"nofilter"})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -162,10 +162,10 @@ func (s *TagsSuite) TestFindTagsByID() {
 		},
 	}
 
-	persistedTags, err := CreateTags(s.DB, tags)
+	persistedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
-	returnedTags, err := FindTagsByID(s.DB, []int{persistedTags[0].ID})
+	returnedTags, err := FindTagsByID(s.T().Context(), s.DB, []int{persistedTags[0].ID})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -196,12 +196,12 @@ func (s *TagsSuite) TestAllTags() {
 		},
 	}
 
-	_, err := CreateTags(s.DB, tags)
+	_, err := CreateTags(s.T().Context(), s.DB, tags)
 	if err != nil {
 		s.T().Fatalf("failed to create tags needed for test: %s", err)
 	}
 
-	returnedTags, err := AllTags(s.DB, false, SelectOptions{})
+	returnedTags, err := AllTags(s.T().Context(), s.DB, false, SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -239,7 +239,7 @@ func (s *TagsSuite) TestUpdateTags() {
 		},
 	}
 
-	returnedTags, err := CreateTags(s.DB, initialTags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, initialTags)
 	if err != nil {
 		s.T().Fatalf("failed to create tags needed for test: %s", err)
 	}
@@ -269,7 +269,7 @@ func (s *TagsSuite) TestUpdateTags() {
 	updatedTags := returnedTags
 	updatedTags[0].Name = "iPod"
 
-	returnedTags, err = UpdateTags(s.DB, updatedTags)
+	returnedTags, err = UpdateTags(s.T().Context(), s.DB, updatedTags)
 	if err != nil {
 		s.T().Fatalf("failed to update tags: %s", err)
 	}
@@ -296,7 +296,7 @@ func (s *TagsSuite) TestUpdateTags() {
 
 	td.Cmp(s.T(), returnedTags, expectedTags)
 
-	returnedTags, err = FindTagsByName(s.DB, []string{"ipod"})
+	returnedTags, err = FindTagsByName(s.T().Context(), s.DB, []string{"ipod"})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -327,17 +327,17 @@ func (s *TagsSuite) TestDeleteTags() {
 		},
 	}
 
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	if err != nil {
 		s.T().Fatalf("failed to create tags: %s", err)
 	}
 
 	tagToDelete := returnedTags[0]
 
-	err = DeleteTags(s.DB, []models.Tag{tagToDelete})
+	err = DeleteTags(s.T().Context(), s.DB, []models.Tag{tagToDelete})
 	s.Require().NoError(err, "unexpected error deleting tags")
 
-	allTags, err := AllTags(s.DB, false, SelectOptions{})
+	allTags, err := AllTags(s.T().Context(), s.DB, false, SelectOptions{})
 	if err != nil {
 		s.T().Fatalf("failed get tags: %s", err)
 	}
@@ -360,15 +360,15 @@ func (s *TagsSuite) TestDeleteTags() {
 
 func (s *TagsSuite) TestMergeTags() {
 	devices := []models.Device{{Name: "Example Device"}}
-	returnedDevices, err := CreateDevices(s.DB, devices)
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
-	returnedMedias, err := CreateMedias(s.DB, medias)
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
-	returnedLocations, err := CreateLocations(s.DB, locations)
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -383,14 +383,14 @@ func (s *TagsSuite) TestMergeTags() {
 			LocationID:  returnedLocations[0].ID,
 		},
 	}
-	returnedPosts, err := CreatePosts(s.DB, posts)
+	returnedPosts, err := CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{Name: "example1"},
 		{Name: "example2"},
 	}
-	returnedTags, err := CreateTags(s.DB, tags)
+	returnedTags, err := CreateTags(s.T().Context(), s.DB, tags)
 	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
@@ -404,13 +404,13 @@ func (s *TagsSuite) TestMergeTags() {
 		},
 	}
 
-	_, err = CreateTaggings(s.DB, taggings)
+	_, err = CreateTaggings(s.T().Context(), s.DB, taggings)
 	s.Require().NoError(err)
 
-	err = MergeTags(s.DB, returnedTags[0], returnedTags[1])
+	err = MergeTags(s.T().Context(), s.DB, returnedTags[0], returnedTags[1])
 	s.Require().NoError(err)
 
-	allTags, err := AllTags(s.DB, true, SelectOptions{})
+	allTags, err := AllTags(s.T().Context(), s.DB, true, SelectOptions{})
 	s.Require().NoError(err)
 
 	expectedResult := td.Slice(

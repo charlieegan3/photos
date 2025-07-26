@@ -33,13 +33,13 @@ type LocationsSuite struct {
 
 func (s *LocationsSuite) SetupTest() {
 	var err error
-	err = database.Truncate(s.DB, "photos.posts")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.posts")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.medias")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.medias")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.locations")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.locations")
 	s.Require().NoError(err)
-	err = database.Truncate(s.DB, "photos.devices")
+	err = database.Truncate(s.T().Context(), s.DB, "photos.devices")
 	s.Require().NoError(err)
 }
 
@@ -52,7 +52,7 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 		},
 	}
 
-	_, err := database.CreateLocations(s.DB, locations)
+	_, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -65,7 +65,7 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 		),
 	).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/locations", nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/locations", nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -88,21 +88,21 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 
 func (s *LocationsSuite) TestGetLocation() {
 	devices := []models.Device{{Name: "Example Device"}}
-	returnedDevices, err := database.CreateDevices(s.DB, devices)
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
-	returnedMedias, err := database.CreateMedias(s.DB, medias)
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 		{Name: "New York"},
 	}
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	posts := []models.Post{
@@ -119,7 +119,7 @@ func (s *LocationsSuite) TestGetLocation() {
 			LocationID:  returnedLocations[1].ID,
 		},
 	}
-	_, err = database.CreatePosts(s.DB, posts)
+	_, err = database.CreatePosts(s.T().Context(), s.DB, posts)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -128,7 +128,7 @@ func (s *LocationsSuite) TestGetLocation() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, "")),
 	).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
@@ -178,7 +178,7 @@ func (s *LocationsSuite) TestGetLocationMap() {
 		},
 	}
 
-	returnedLocations, err := database.CreateLocations(s.DB, locations)
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
 	s.Require().NoError(err)
 
 	router := mux.NewRouter()
@@ -186,7 +186,7 @@ func (s *LocationsSuite) TestGetLocationMap() {
 		BuildMapHandler(s.DB, s.Bucket, mapServer.URL, "")).
 		Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
 	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 

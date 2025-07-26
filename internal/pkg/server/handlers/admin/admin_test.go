@@ -22,7 +22,7 @@ func TestIndexPage(t *testing.T) {
 
 	router.HandleFunc("/admin", BuildAdminIndexHandler(renderer)).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "/admin", nil)
 	require.NoError(t, err)
 	rr := httptest.NewRecorder()
 

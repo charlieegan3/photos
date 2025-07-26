@@ -80,7 +80,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		posts, err := database.FindPostsByID(db, []int{id})
+		posts, err := database.FindPostsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -105,28 +105,28 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			tagIDs = append(tagIDs, t.TagID)
 		}
 
-		tags, err := database.FindTagsByID(db, tagIDs)
+		tags, err := database.FindTagsByID(r.Context(), db, tagIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		medias, err := database.FindMediasByID(db, []int{posts[0].MediaID})
+		medias, err := database.FindMediasByID(r.Context(), db, []int{posts[0].MediaID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		locations, err := database.AllLocations(db)
+		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		allMedias, err := database.AllMedias(db, true)
+		allMedias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -134,8 +134,8 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		mediaMap := make(map[string]interface{})
-		for _, m := range allMedias {
-			mediaMap[fmt.Sprintf("%d-%s", m.ID, m.TakenAt)] = m.ID
+		for i := range allMedias {
+			mediaMap[fmt.Sprintf("%d-%s", allMedias[i].ID, allMedias[i].TakenAt)] = allMedias[i].ID
 		}
 
 		var formLocations []SelectableModel
@@ -198,14 +198,14 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			newPost.PublishDate = time.Unix(i, 0)
 		}
 
-		locations, err := database.AllLocations(db)
+		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
-		medias, err := database.AllMedias(db, true)
+		medias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -213,8 +213,8 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 
 		mediaMap := make(map[string]interface{})
-		for _, m := range medias {
-			mediaMap[fmt.Sprintf("%d-%s", m.ID, m.TakenAt)] = m.ID
+		for i := range medias {
+			mediaMap[fmt.Sprintf("%d-%s", medias[i].ID, medias[i].TakenAt)] = medias[i].ID
 		}
 
 		var formLocations []SelectableModel
@@ -280,7 +280,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			return
 		}
 
-		persistedPosts, err := database.CreatePosts(db, []models.Post{post})
+		persistedPosts, err := database.CreatePosts(r.Context(), db, []models.Post{post})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -294,7 +294,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		}
 
 		tags := strings.Fields(strings.ToLower(r.Form.Get("Tags")))
-		err = database.SetPostTags(db, persistedPosts[0], tags)
+		err = database.SetPostTags(r.Context(), db, persistedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -330,7 +330,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		existingPosts, err := database.FindPostsByID(db, []int{id})
+		existingPosts, err := database.FindPostsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -357,7 +357,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		if r.Form.Get("_method") == http.MethodDelete {
-			err = database.DeletePosts(db, []models.Post{existingPosts[0]})
+			err = database.DeletePosts(r.Context(), db, []models.Post{existingPosts[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -401,7 +401,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		updatedPosts, err := database.UpdatePosts(db, []models.Post{post})
+		updatedPosts, err := database.UpdatePosts(r.Context(), db, []models.Post{post})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -415,7 +415,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		tags := strings.Fields(strings.ToLower(r.Form.Get("Tags")))
-		err = database.SetPostTags(db, updatedPosts[0], tags)
+		err = database.SetPostTags(r.Context(), db, updatedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

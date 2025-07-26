@@ -16,7 +16,7 @@ func TestBuildRedirectHandler(t *testing.T) {
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/", BuildRedirectHandler("/admin")).Methods(http.MethodGet)
 
-	req, err := http.NewRequest(http.MethodGet, "/admin/", nil)
+	req, err := http.NewRequestWithContext(t.Context(), http.MethodGet, "/admin/", nil)
 	require.NoError(t, err)
 	rr := httptest.NewRecorder()
 

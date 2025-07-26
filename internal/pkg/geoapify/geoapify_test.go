@@ -24,7 +24,7 @@ func TestGeoapifyGeocoding(t *testing.T) {
 	client, err := NewClient(ts.URL, "api_key")
 	require.NoError(t, err, "unexpected error")
 
-	features, err := client.GeocodingSearch("Highgate Hill, London")
+	features, err := client.GeocodingSearch(t.Context(), "Highgate Hill, London")
 	require.NoError(t, err, "unexpected error")
 
 	require.Len(t, features, 5, "unexpected number of features")

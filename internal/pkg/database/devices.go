@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -59,7 +60,7 @@ func newDBDevice(device models.Device) dbDevice {
 	}
 }
 
-func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device, err error) {
+func CreateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (results []models.Device, err error) {
 	records := []goqu.Record{}
 	for _, v := range devices {
 		d := newDBDevice(v)
@@ -70,7 +71,7 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.devices").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructs(&dbDevices); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to insert devices")
 	}
 
@@ -81,12 +82,12 @@ func CreateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	return results, nil
 }
 
-func FindDevicesByID(db *sql.DB, id []int64) (results []models.Device, err error) {
+func FindDevicesByID(ctx context.Context, db *sql.DB, id []int64) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructs(&dbDevices); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}
 
@@ -97,12 +98,12 @@ func FindDevicesByID(db *sql.DB, id []int64) (results []models.Device, err error
 	return results, nil
 }
 
-func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err error) {
+func FindDevicesByName(ctx context.Context, db *sql.DB, name string) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	if err := insert.ScanStructs(&dbDevices); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}
 
@@ -113,7 +114,7 @@ func FindDevicesByName(db *sql.DB, name string) (results []models.Device, err er
 	return results, nil
 }
 
-func FindDeviceByModelMatches(db *sql.DB, modelMatch string) (result *models.Device, err error) {
+func FindDeviceByModelMatches(ctx context.Context, db *sql.DB, modelMatch string) (result *models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
@@ -122,7 +123,7 @@ func FindDeviceByModelMatches(db *sql.DB, modelMatch string) (result *models.Dev
 		Where(goqu.L(`"model_matches" ILIKE ?`, modelMatch)).
 		Limit(1).
 		Executor()
-	if err := insert.ScanStructs(&dbDevices); err != nil {
+	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
 		return nil, errors.Wrap(err, "failed to select devices by slug")
 	}
 
@@ -134,7 +135,7 @@ func FindDeviceByModelMatches(db *sql.DB, modelMatch string) (result *models.Dev
 	return nil, nil
 }
 
-func AllDevices(db *sql.DB) (results []models.Device, err error) {
+func AllDevices(ctx context.Context, db *sql.DB) (results []models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
@@ -164,7 +165,7 @@ func AllDevices(db *sql.DB) (results []models.Device, err error) {
 	return results, nil
 }
 
-func MostRecentlyUsedDevice(db *sql.DB) (result models.Device, err error) {
+func MostRecentlyUsedDevice(ctx context.Context, db *sql.DB) (result models.Device, err error) {
 	var dbDevices []dbDevice
 
 	goquDB := goqu.New("postgres", db)
@@ -173,7 +174,7 @@ func MostRecentlyUsedDevice(db *sql.DB) (result models.Device, err error) {
 		Select("devices.*").
 		Order(goqu.I("medias.taken_at").Desc()).
 		Executor()
-	if err := selectDevices.ScanStructs(&dbDevices); err != nil {
+	if err := selectDevices.ScanStructsContext(ctx, &dbDevices); err != nil {
 		return result, errors.Wrap(err, "failed to select devices")
 	}
 
@@ -192,7 +193,7 @@ func MostRecentlyUsedDevice(db *sql.DB) (result models.Device, err error) {
 	return result, nil
 }
 
-func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
+func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) (err error) {
 	var ids []int64
 	for _, d := range devices {
 		ids = append(ids, d.ID)
@@ -205,7 +206,7 @@ func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to build devices delete query: %s", err)
 	}
-	_, err = db.Exec(del)
+	_, err = db.ExecContext(ctx, del)
 	if err != nil {
 		return fmt.Errorf("failed to delete devices: %s", err)
 	}
@@ -215,7 +216,7 @@ func DeleteDevices(db *sql.DB, devices []models.Device) (err error) {
 
 // UpdateDevices is not implemented as a single SQL query since update many in
 // place is not supported by goqu and it wasn't worth the work (TODO)
-func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device, err error) {
+func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (results []models.Device, err error) {
 	records := []goqu.Record{}
 	for _, v := range devices {
 		d := newDBDevice(v)
@@ -236,7 +237,7 @@ func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStruct(&result); err != nil {
+		if _, err = update.ScanStructContext(ctx, &result); err != nil {
 			if rErr := tx.Rollback(); rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
@@ -252,7 +253,7 @@ func UpdateDevices(db *sql.DB, devices []models.Device) (results []models.Device
 	return results, nil
 }
 
-func DevicePosts(db *sql.DB, deviceID int64) (results []models.Post, err error) {
+func DevicePosts(ctx context.Context, db *sql.DB, deviceID int64) (results []models.Post, err error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -263,14 +264,14 @@ func DevicePosts(db *sql.DB, deviceID int64) (results []models.Post, err error) 
 		Where(goqu.Ex{"devices.id": deviceID}).
 		Order(goqu.I("posts.publish_date").Desc()).
 		Executor()
-	if err := selectPosts.ScanStructs(&dbPosts); err != nil {
+	if err := selectPosts.ScanStructsContext(ctx, &dbPosts); err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
-	for _, v := range dbPosts {
-		results = append(results, newPost(v))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
 	}
 
 	return results, nil

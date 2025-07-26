@@ -13,7 +13,6 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gorilla/mux"
 
-	//"gocloud.dev/blob"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
@@ -36,7 +35,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		devices, err := database.AllDevices(db)
+		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -90,7 +89,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		devices, err := database.FindDevicesByID(db, []int64{id})
+		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -161,7 +160,7 @@ func BuildCreateHandler(
 			return
 		}
 
-		persistedDevices, err := database.CreateDevices(db, []models.Device{device})
+		persistedDevices, err := database.CreateDevices(r.Context(), db, []models.Device{device})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -230,7 +229,7 @@ func BuildFormHandler(
 			return
 		}
 
-		existingDevices, err := database.FindDevicesByID(db, []int64{id})
+		existingDevices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -257,7 +256,7 @@ func BuildFormHandler(
 				return
 			}
 
-			err = database.DeleteDevices(db, []models.Device{existingDevices[0]})
+			err = database.DeleteDevices(r.Context(), db, []models.Device{existingDevices[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -319,7 +318,7 @@ func BuildFormHandler(
 			}
 		}
 
-		updatedDevices, err := database.UpdateDevices(db, []models.Device{device})
+		updatedDevices, err := database.UpdateDevices(r.Context(), db, []models.Device{device})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))

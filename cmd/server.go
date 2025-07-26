@@ -36,7 +36,13 @@ var serverCmd = &cobra.Command{
 
 		params := viper.GetStringMapString("database.params")
 		connectionString := viper.GetString("database.connectionString")
-		db, err := database.Init(connectionString, params, params["dbname"], viper.GetBool("database.createDatabase"))
+		db, err := database.Init(
+			ctx,
+			connectionString,
+			params,
+			params["dbname"],
+			viper.GetBool("database.createDatabase"),
+		)
 		if err != nil {
 			log.Fatalf("failed to init DB: %s", err)
 		}

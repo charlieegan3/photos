@@ -27,7 +27,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
 
-		tags, err := database.AllTags(db, true, database.SelectOptions{SortField: "name"})
+		tags, err := database.AllTags(r.Context(), db, true, database.SelectOptions{SortField: "name"})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -57,7 +57,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		tags, err := database.FindTagsByName(db, []string{name})
+		tags, err := database.FindTagsByName(r.Context(), db, []string{name})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -122,7 +122,7 @@ func BuildCreateHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			tag.Hidden = true
 		}
 
-		persistedTags, err := database.CreateTags(db, []models.Tag{tag})
+		persistedTags, err := database.CreateTags(r.Context(), db, []models.Tag{tag})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -157,7 +157,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		existingTags, err := database.FindTagsByName(db, []string{name})
+		existingTags, err := database.FindTagsByName(r.Context(), db, []string{name})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
@@ -184,7 +184,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		}
 
 		if r.Form.Get("_method") == http.MethodDelete {
-			err = database.DeleteTags(db, []models.Tag{existingTags[0]})
+			err = database.DeleteTags(r.Context(), db, []models.Tag{existingTags[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte(err.Error()))
@@ -211,12 +211,12 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			tag.Hidden = false
 		}
 
-		updatedTags, err := database.UpdateTags(db, []models.Tag{tag})
+		updatedTags, err := database.UpdateTags(r.Context(), db, []models.Tag{tag})
 		var redirectTo string
 		if err != nil {
 			_, ok := err.(*database.TagNameConflictError)
 			if ok {
-				conflictingTags, err := database.FindTagsByName(db, []string{tag.Name})
+				conflictingTags, err := database.FindTagsByName(r.Context(), db, []string{tag.Name})
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Write([]byte(err.Error()))
@@ -227,7 +227,7 @@ func BuildFormHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 					w.Write([]byte("conflicting tag was not found"))
 					return
 				}
-				err = database.MergeTags(db, conflictingTags[0], tag)
+				err = database.MergeTags(r.Context(), db, conflictingTags[0], tag)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Write([]byte(err.Error()))

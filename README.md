@@ -9,8 +9,7 @@ which I built and host for myself. The application has a number of features I fi
 - [Browse by Device](https://photos.charlieegan3.com/devices)
 - [RSS](https://photos.charlieegan3.com/rss.xml)
 
-The app is formed of a Go application and runs on
-[Northflank](https://northflank.com). The project is the
+The app is formed of a Go application. The project is the
 spiritual successor of a project I built to back up my Instagram account
 [in 2018](https://charlieegan3.com/posts/2018-03-04-backing-up-instagram).
 

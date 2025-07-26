@@ -40,12 +40,6 @@ make import                               # Import data
 make local_bucket  # Start local bucket server for file storage
 ```
 
-### Production Deployment
-
-```bash
-make update_config  # Update Northflank production configuration
-```
-
 ## Architecture
 
 ### Key Components

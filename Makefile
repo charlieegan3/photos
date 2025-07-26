@@ -47,10 +47,3 @@ fmt:
 	@echo "Running treefmt for Nix files..."
 	treefmt
 	@echo "Formatting complete!"
-
-.PHONY: update_config
-update_config:
-	cat northflank-secret-template.json | \
-		sed "s/DATA/$$(cat config.prod.yaml | base64)/g" > northflank-secret.json
-	northflank update secret --projectId photos --secretId config --file northflank-secret.json
-

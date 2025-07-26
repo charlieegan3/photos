@@ -3,11 +3,15 @@
 [photos.charlieegan3.com](https://photos.charlieegan3.com) is a personal, single user photo sharing site
 which I built and host for myself. The application has a number of features I find valuable:
 
-- [Photo Map](https://photos.charlieegan3.com/locations)
-- [Trips](https://photos.charlieegan3.com/posts/period)
-- [Search](https://photos.charlieegan3.com/posts/search)
-- [Browse by Device](https://photos.charlieegan3.com/devices)
-- [RSS](https://photos.charlieegan3.com/rss.xml)
+- [Photo Map](https://photos.charlieegan3.com/locations) - Interactive map view of all geotagged posts
+- [Trips](https://photos.charlieegan3.com/posts/period) - Browse posts from specific trips and date ranges
+- [Search](https://photos.charlieegan3.com/posts/search) - Find posts by tag, description, and location
+- [On This Day](https://photos.charlieegan3.com/posts/on-this-day) - Discover posts from this day in previous years
+- [Browse by Device](https://photos.charlieegan3.com/devices) - View posts by camera or device used
+- [Browse by Lens](https://photos.charlieegan3.com/lenses) - Filter posts by specific lenses
+- [Tags](https://photos.charlieegan3.com/tags) - Browse posts organized by tags
+- [Random](https://photos.charlieegan3.com/random) - Discover a random post
+- [RSS](https://photos.charlieegan3.com/rss.xml) - Subscribe to updates
 
 The app is formed of a Go application. The project is the
 spiritual successor of a project I built to back up my Instagram account

@@ -16,8 +16,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -37,7 +35,7 @@ type EndpointsLensesSuite struct {
 
 func (s *EndpointsLensesSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.lenses")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsLensesSuite) TestListLenses() {
@@ -61,18 +59,18 @@ func (s *EndpointsLensesSuite) TestListLenses() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/lenses", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "iPhone")
-	assert.Contains(s.T(), string(body), "X100F")
+	s.Contains( string(body), "iPhone")
+	s.Contains( string(body), "X100F")
 }
 
 func (s *EndpointsLensesSuite) TestGetLens() {
@@ -93,21 +91,21 @@ func (s *EndpointsLensesSuite) TestGetLens() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal( http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "iPhone")
+	s.Contains( string(body), "iPhone")
 }
 
 func (s *EndpointsLensesSuite) TestUpdateLens() {
@@ -126,13 +124,13 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 	// store the an icon in the bucket, check it's deleted
 	imageIconPath := "../../../pkg/server/handlers/admin/lenses/testdata/fisheye.png"
 	imageFile, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), "lens_icons/iphone.jpg", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/lenses/{lensID}",
@@ -156,13 +154,13 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 		}
 		if x, ok := r.(*os.File); ok {
 			fw, err = w.CreateFormFile(key, x.Name())
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		} else {
 			fw, err = w.CreateFormField(key)
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		}
 		_, err = io.Copy(fw, r)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 	}
 	w.Close()
 
@@ -171,16 +169,16 @@ func (s *EndpointsLensesSuite) TestUpdateLens() {
 		fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID),
 		&b,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal( http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -220,13 +218,13 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 	// store the an icon in the bucket, check it's deleted
 	imageIconPath := "../../../pkg/server/handlers/admin/lenses/testdata/fisheye.png"
 	imageFile, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("lens_icons/%d.png", persistedLenses[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -243,16 +241,16 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 		fmt.Sprintf("/admin/lenses/%d", persistedLenses[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal( http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -267,7 +265,7 @@ func (s *EndpointsLensesSuite) TestDeleteLens() {
 
 	// should have a not found error as the icon should have been deleted
 	_, err = s.Bucket.Attributes(context.Background(), "lens_icons/iphone.jpg")
-	require.Error(s.T(), err)
+	s.Require().Error(err)
 }
 
 func (s *EndpointsLensesSuite) TestNewLens() {
@@ -277,18 +275,18 @@ func (s *EndpointsLensesSuite) TestNewLens() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/lenses/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Name")
-	assert.Contains(s.T(), string(body), "Icon")
+	s.Contains( string(body), "Name")
+	s.Contains( string(body), "Icon")
 }
 
 func (s *EndpointsLensesSuite) TestCreateLens() {
@@ -300,7 +298,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/admin/lenses/testdata/fisheye.png"
 	imageFile, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// build the form to be posted
 	values := map[string]io.Reader{
@@ -317,13 +315,13 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 		}
 		if x, ok := r.(*os.File); ok {
 			fw, err = w.CreateFormFile(key, x.Name())
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		} else {
 			fw, err = w.CreateFormField(key)
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		}
 		_, err = io.Copy(fw, r)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 	}
 	w.Close()
 
@@ -333,7 +331,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 		"/admin/lenses",
 		&b,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
@@ -341,9 +339,9 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal( http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/lenses") {
@@ -352,7 +350,7 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 
 	// check that the database content is also correct
 	returnedLenses, err := database.AllLenses(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedLenses := td.Slice(
 		[]models.Lens{},
@@ -373,21 +371,21 @@ func (s *EndpointsLensesSuite) TestCreateLens() {
 	// check that the image has been uploaded ok
 	// get a digest for the image in the bucket
 	r, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("lens_icons/%d.png", returnedLenses[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer r.Close()
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bucketMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
 	// get a digest for the image originally uploaded
 	f, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer f.Close()
 	sourceHash := md5.New()
 	_, err = io.Copy(sourceHash, f)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
-	require.Equal(s.T(), bucketMD5, sourceMD5)
+	s.Require().Equal( bucketMD5, sourceMD5)
 }

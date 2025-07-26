@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -29,17 +27,17 @@ type TagsSuite struct {
 
 func (s *TagsSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.tags")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.taggings")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *TagsSuite) TestListTags() {
@@ -49,7 +47,7 @@ func (s *TagsSuite) TestListTags() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -69,7 +67,7 @@ func (s *TagsSuite) TestListTags() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{
@@ -79,7 +77,7 @@ func (s *TagsSuite) TestListTags() {
 		},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -90,30 +88,30 @@ func (s *TagsSuite) TestListTags() {
 		},
 	}
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.SetPostTags(s.DB, persistedPosts[0], []string{"tag1"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/tags", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/tags", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "tag1")
+	s.Contains(string(body), "tag1")
 }
 
 func (s *TagsSuite) TestGetTag() {
@@ -123,7 +121,7 @@ func (s *TagsSuite) TestGetTag() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -143,7 +141,7 @@ func (s *TagsSuite) TestGetTag() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -153,7 +151,7 @@ func (s *TagsSuite) TestGetTag() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -171,12 +169,12 @@ func (s *TagsSuite) TestGetTag() {
 	}
 
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.SetPostTags(s.DB, persistedPosts[0], []string{"tag1"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.SetPostTags(s.DB, persistedPosts[1], []string{"tag2"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/tags/{tagName}",
@@ -184,20 +182,20 @@ func (s *TagsSuite) TestGetTag() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/tags/tag1", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Here is a shot")
-	assert.NotContains(s.T(), string(body), "another photo")
+	s.Contains(string(body), "Here is a shot")
+	s.NotContains(string(body), "another photo")
 }

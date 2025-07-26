@@ -23,7 +23,13 @@ func (lw *loggingResponseWriter) Write(b []byte) (int, error) {
 	if lw.statusCode >= 400 {
 		lw.body = append(lw.body, b...)
 	}
-	return lw.ResponseWriter.Write(b)
+
+	count, err := lw.ResponseWriter.Write(b)
+	if err != nil {
+		return 0, fmt.Errorf("error writing response: %w", err)
+	}
+
+	return count, nil
 }
 
 func InitMiddlewareLogging() func(http.Handler) http.Handler {

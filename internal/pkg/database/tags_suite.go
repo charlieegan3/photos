@@ -4,7 +4,6 @@ import (
 	"database/sql"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -19,19 +18,19 @@ type TagsSuite struct {
 
 func (s *TagsSuite) SetupTest() {
 	err := Truncate(s.DB, "photos.tags")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.taggings")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *TagsSuite) TestCreateTags() {
@@ -84,12 +83,12 @@ func (s *TagsSuite) TestFindOrCreateTagsByName() {
 	}
 
 	returnedTags, err := CreateTags(s.DB, existingTags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []string{"example", "foobar"}
 
 	foundTags, err := FindOrCreateTagsByName(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedTags := td.Slice(
 		[]models.Tag{},
@@ -164,7 +163,7 @@ func (s *TagsSuite) TestFindTagsByID() {
 	}
 
 	persistedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	returnedTags, err := FindTagsByID(s.DB, []int{persistedTags[0].ID})
 	if err != nil {
@@ -336,7 +335,7 @@ func (s *TagsSuite) TestDeleteTags() {
 	tagToDelete := returnedTags[0]
 
 	err = DeleteTags(s.DB, []models.Tag{tagToDelete})
-	require.NoError(s.T(), err, "unexpected error deleting tags")
+	s.Require().NoError(err, "unexpected error deleting tags")
 
 	allTags, err := AllTags(s.DB, false, SelectOptions{})
 	if err != nil {
@@ -362,15 +361,15 @@ func (s *TagsSuite) TestDeleteTags() {
 func (s *TagsSuite) TestMergeTags() {
 	devices := []models.Device{{Name: "Example Device"}}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -385,14 +384,14 @@ func (s *TagsSuite) TestMergeTags() {
 		},
 	}
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{Name: "example1"},
 		{Name: "example2"},
 	}
 	returnedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{
@@ -406,13 +405,13 @@ func (s *TagsSuite) TestMergeTags() {
 	}
 
 	_, err = CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = MergeTags(s.DB, returnedTags[0], returnedTags[1])
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	allTags, err := AllTags(s.DB, true, SelectOptions{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Tag{},
@@ -428,7 +427,7 @@ func (s *TagsSuite) TestMergeTags() {
 	td.Cmp(s.T(), allTags, expectedResult)
 
 	returnedTaggings, err := AllTaggings(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult = td.Slice(
 		[]models.Tagging{},

@@ -2,11 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"testing"
 	"time"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -21,16 +19,16 @@ type PostsSuite struct {
 
 func (s *PostsSuite) SetupTest() {
 	err := Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *PostsSuite) TestRandomPost() {
@@ -40,7 +38,7 @@ func (s *PostsSuite) TestRandomPost() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -60,7 +58,7 @@ func (s *PostsSuite) TestRandomPost() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -70,7 +68,7 @@ func (s *PostsSuite) TestRandomPost() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -88,10 +86,10 @@ func (s *PostsSuite) TestRandomPost() {
 	}
 
 	createdPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	returnedPostID, err := RandomPostID(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	var found bool
 	for _, p := range createdPosts {
@@ -113,7 +111,7 @@ func (s *PostsSuite) TestCreatePosts() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -133,7 +131,7 @@ func (s *PostsSuite) TestCreatePosts() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -143,7 +141,7 @@ func (s *PostsSuite) TestCreatePosts() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -156,7 +154,7 @@ func (s *PostsSuite) TestCreatePosts() {
 	}
 
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Post{},
@@ -179,7 +177,7 @@ func (s *PostsSuite) TestFindPostsByMediaID() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -199,7 +197,7 @@ func (s *PostsSuite) TestFindPostsByMediaID() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -256,7 +254,7 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -276,7 +274,7 @@ func (s *PostsSuite) TestFindPostsByInstagramCode() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -340,7 +338,7 @@ func (s *PostsSuite) TestFindPostsByID() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -360,7 +358,7 @@ func (s *PostsSuite) TestFindPostsByID() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -422,7 +420,7 @@ func (s *PostsSuite) TestFindNextPost() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -442,7 +440,7 @@ func (s *PostsSuite) TestFindNextPost() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -528,7 +526,7 @@ func (s *PostsSuite) TestCountPosts() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -548,7 +546,7 @@ func (s *PostsSuite) TestCountPosts() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -558,7 +556,7 @@ func (s *PostsSuite) TestCountPosts() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -577,10 +575,10 @@ func (s *PostsSuite) TestCountPosts() {
 	}
 
 	_, err = CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	count, err := CountPosts(s.DB, false, SelectOptions{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	td.Cmp(s.T(), count, int64(1))
 }
@@ -592,7 +590,7 @@ func (s *PostsSuite) TestAllPosts() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -612,7 +610,7 @@ func (s *PostsSuite) TestAllPosts() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -622,7 +620,7 @@ func (s *PostsSuite) TestAllPosts() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -640,10 +638,10 @@ func (s *PostsSuite) TestAllPosts() {
 	}
 
 	_, err = CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	returnedPosts, err := AllPosts(s.DB, true, SelectOptions{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Post{},
@@ -671,7 +669,7 @@ func (s *PostsSuite) TestDeletePosts() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -691,7 +689,7 @@ func (s *PostsSuite) TestDeletePosts() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -701,7 +699,7 @@ func (s *PostsSuite) TestDeletePosts() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -719,15 +717,15 @@ func (s *PostsSuite) TestDeletePosts() {
 	}
 
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	postToDelete := returnedPosts[0]
 
 	err = DeletePosts(s.DB, []models.Post{postToDelete})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	allPosts, err := AllPosts(s.DB, true, SelectOptions{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Post{},
@@ -750,7 +748,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -770,7 +768,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -780,7 +778,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -798,7 +796,7 @@ func (s *PostsSuite) TestUpdatePosts() {
 	}
 
 	createdPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts[0].ID = createdPosts[0].ID // needed to match up the update
 	posts[1].ID = createdPosts[1].ID // needed to match up the update
@@ -836,7 +834,7 @@ func (s *PostsSuite) TestSetPostTags() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -856,7 +854,7 @@ func (s *PostsSuite) TestSetPostTags() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -866,7 +864,7 @@ func (s *PostsSuite) TestSetPostTags() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -878,7 +876,7 @@ func (s *PostsSuite) TestSetPostTags() {
 	}
 
 	persistedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{Name: "tag_a"},
@@ -886,21 +884,21 @@ func (s *PostsSuite) TestSetPostTags() {
 		{Name: "tag_c"},
 	}
 	persistedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
 	}
 	_, err = CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// update to a and c
 	err = SetPostTags(s.DB, persistedPosts[0], []string{"tag_a", "tag_c"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	postTaggings, err := FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	var tagIDs []int
 	for _, v := range postTaggings {
@@ -908,7 +906,7 @@ func (s *PostsSuite) TestSetPostTags() {
 	}
 
 	postTags, err := FindTagsByID(s.DB, tagIDs)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Tag{},
@@ -930,10 +928,10 @@ func (s *PostsSuite) TestSetPostTags() {
 
 	// update to none
 	err = SetPostTags(s.DB, persistedPosts[0], []string{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	postTaggings, err = FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tagIDs = []int{}
 	for _, v := range postTaggings {
@@ -941,7 +939,7 @@ func (s *PostsSuite) TestSetPostTags() {
 	}
 
 	postTags, err = FindTagsByID(s.DB, tagIDs)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult = td.Slice([]models.Tag{}, td.ArrayEntries{})
 
@@ -951,15 +949,15 @@ func (s *PostsSuite) TestSetPostTags() {
 func (s *PostsSuite) TestPostsInDateRange() {
 	devices := []models.Device{{Name: "Example Device"}}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -983,14 +981,14 @@ func (s *PostsSuite) TestPostsInDateRange() {
 	}
 
 	_, err = CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	returnedPosts, err := PostsInDateRange(
 		s.DB,
 		time.Date(2021, time.November, 1, 0, 0, 0, 0, time.Local),
 		time.Date(2021, time.November, 30, 0, 0, 0, 0, time.Local),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Post{},
@@ -1013,7 +1011,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -1048,7 +1046,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{
@@ -1063,7 +1061,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -1081,12 +1079,12 @@ func (s *PostsSuite) TestSearchPosts() {
 	}
 
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = SetPostTags(s.DB, returnedPosts[0], []string{"cats", "kittens", "pets", "pet"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = SetPostTags(s.DB, returnedPosts[1], []string{"dogs", "doggos", "pets"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectPostIDs := func(posts []models.Post, ids []int) {
 		s.T().Helper()
@@ -1107,46 +1105,46 @@ func (s *PostsSuite) TestSearchPosts() {
 		}
 	}
 
-	s.T().Run("can find posts by post body", func(t *testing.T) {
+	s.Run("can find posts by post body", func() {
 		results, err := SearchPosts(s.DB, "post")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 	})
 
-	s.T().Run("can find posts by tags", func(t *testing.T) {
+	s.Run("can find posts by tags", func() {
 		results, err := SearchPosts(s.DB, "pets")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 	})
 
-	s.T().Run("can find a single post by non pluralized tag", func(t *testing.T) {
+	s.Run("can find a single post by non pluralized tag", func() {
 		results, err := SearchPosts(s.DB, "dog")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 
 		results, err = SearchPosts(s.DB, "cats")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID})
 	})
 
-	s.T().Run("can find post by location name", func(t *testing.T) {
+	s.Run("can find post by location name", func() {
 		results, err := SearchPosts(s.DB, "london")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[0].ID})
 
 		results, err = SearchPosts(s.DB, "new york")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 	})
 
-	s.T().Run("cleans query", func(t *testing.T) {
+	s.Run("cleans query", func() {
 		results, err := SearchPosts(s.DB, "';DROP TABLE posts;")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{})
 
 		// still works after that
 		results, err = SearchPosts(s.DB, "new york")
-		require.NoError(t, err)
+		s.Require().NoError(err)
 		expectPostIDs(results, []int{returnedPosts[1].ID})
 	})
 }
@@ -1158,14 +1156,14 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{
@@ -1173,7 +1171,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		},
 	}
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -1197,7 +1195,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	}
 
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectPostIDs := func(posts []models.Post, ids []int) {
 		s.T().Helper()
@@ -1219,6 +1217,6 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	}
 
 	results, err := PostsOnThisDay(s.DB, time.January, 1)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 }

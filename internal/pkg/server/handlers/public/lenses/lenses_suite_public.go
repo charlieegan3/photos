@@ -13,8 +13,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -36,19 +34,19 @@ func (s *LensesSuite) SetupTest() {
 	var err error
 
 	err = database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.Truncate(s.DB, "photos.lenses")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *LensesSuite) TestIndex() {
@@ -61,7 +59,7 @@ func (s *LensesSuite) TestIndex() {
 		},
 	}
 	returnedLenses, err := database.CreateLenses(s.DB, lenses)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/lenses",
@@ -69,24 +67,24 @@ func (s *LensesSuite) TestIndex() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/lenses", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/lenses/%d", returnedLenses[0].ID))
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/lenses/%d", returnedLenses[1].ID))
-	assert.Contains(s.T(), string(body), returnedLenses[0].Name)
-	assert.Contains(s.T(), string(body), returnedLenses[1].Name)
+	s.Contains(string(body), fmt.Sprintf("/lenses/%d", returnedLenses[0].ID))
+	s.Contains(string(body), fmt.Sprintf("/lenses/%d", returnedLenses[1].ID))
+	s.Contains(string(body), returnedLenses[0].Name)
+	s.Contains(string(body), returnedLenses[1].Name)
 }
 
 func (s *LensesSuite) TestShow() {
@@ -96,7 +94,7 @@ func (s *LensesSuite) TestShow() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	lenses := []models.Lens{
 		{
@@ -104,7 +102,7 @@ func (s *LensesSuite) TestShow() {
 		},
 	}
 	returnedLenses, err := database.CreateLenses(s.DB, lenses)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -117,13 +115,13 @@ func (s *LensesSuite) TestShow() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -140,7 +138,7 @@ func (s *LensesSuite) TestShow() {
 		},
 	}
 	returnedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/lenses/{lensID}",
@@ -148,48 +146,48 @@ func (s *LensesSuite) TestShow() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/lenses/%d", returnedLenses[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/posts/%d", returnedPosts[0].ID))
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/posts/%d", returnedPosts[1].ID))
+	s.Contains(string(body), fmt.Sprintf("/posts/%d", returnedPosts[0].ID))
+	s.Contains(string(body), fmt.Sprintf("/posts/%d", returnedPosts[1].ID))
 }
 
 func (s *LensesSuite) TestGetIcon() {
 	lenses := []models.Lens{{Name: "Example Lens"}}
 	returnedLenses, err := database.CreateLenses(s.DB, lenses)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// store an image for the lens in the bucket to be served in the request.
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageBytes, err := os.ReadFile(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	imageFile, err := os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	bw, err := s.Bucket.NewWriter(
 		context.Background(),
 		fmt.Sprintf("lens_icons/%d.png", returnedLenses[0].ID),
 		nil,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -202,19 +200,19 @@ func (s *LensesSuite) TestGetIcon() {
 		fmt.Sprintf("/lenses/%d.jpg", returnedLenses[0].ID),
 		nil,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// validate that the images are the same
 	h := sha1.New()
@@ -225,5 +223,5 @@ func (s *LensesSuite) TestGetIcon() {
 	h.Write(imageBytes)
 	imageSha := hex.EncodeToString(h.Sum(nil))
 
-	assert.Equal(s.T(), bodySha, imageSha)
+	s.Equal(bodySha, imageSha)
 }

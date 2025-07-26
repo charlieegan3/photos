@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -346,7 +345,7 @@ func (s *DevicesSuite) TestDeleteDevices() {
 	deviceToDelete := returnedDevices[0]
 
 	err = DeleteDevices(s.DB, []models.Device{deviceToDelete})
-	require.NoError(s.T(), err, "unexpected error deleting devices")
+	s.Require().NoError(err, "unexpected error deleting devices")
 
 	allDevices, err := AllDevices(s.DB)
 	if err != nil {
@@ -397,7 +396,7 @@ func (s *DevicesSuite) TestDevicePosts() {
 		{Name: "London"},
 	}
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -414,7 +413,7 @@ func (s *DevicesSuite) TestDevicePosts() {
 		},
 	}
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	result, err := DevicePosts(s.DB, returnedDevices[0].ID)
 	if err != nil {

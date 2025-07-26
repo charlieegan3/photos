@@ -12,8 +12,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
@@ -30,7 +28,7 @@ type EndpointsTripsSuite struct {
 
 func (s *EndpointsTripsSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.trips")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsTripsSuite) TestListTrips() {
@@ -60,22 +58,22 @@ func (s *EndpointsTripsSuite) TestListTrips() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/trips", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		s.T().Log(rr.Body.String())
 		s.T().Fatalf("failed to read response body: %s", err)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "London")
-	assert.Contains(s.T(), string(body), "2020-01")
-	assert.Contains(s.T(), string(body), "New York")
+	s.Contains(string(body), "London")
+	s.Contains(string(body), "2020-01")
+	s.Contains(string(body), "New York")
 }
 
 func (s *EndpointsTripsSuite) TestGetTrip() {
@@ -96,17 +94,17 @@ func (s *EndpointsTripsSuite) TestGetTrip() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Inverness")
+	s.Contains(string(body), "Inverness")
 }
 
 func (s *EndpointsTripsSuite) TestNewTrip() {
@@ -116,17 +114,17 @@ func (s *EndpointsTripsSuite) TestNewTrip() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/trips/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Title")
+	s.Contains(string(body), "Title")
 }
 
 func (s *EndpointsTripsSuite) TestCreateTrip() {
@@ -148,7 +146,7 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 		"/admin/trips",
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -156,17 +154,17 @@ func (s *EndpointsTripsSuite) TestCreateTrip() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right trip
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		s.T().Log(rr.Body.String())
 	}
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/trips/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
 	returnedTrips, err := database.AllTrips(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedTrips := td.Slice(
 		[]models.Trip{},
@@ -216,16 +214,16 @@ func (s *EndpointsTripsSuite) TestUpdateTrip() {
 		fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		s.T().Log(rr.Body.String())
 	}
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedTrips, err := database.AllTrips(s.DB)
@@ -276,16 +274,16 @@ func (s *EndpointsTripsSuite) TestDeleteTrip() {
 		fmt.Sprintf("/admin/trips/%d", persistedTrips[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 

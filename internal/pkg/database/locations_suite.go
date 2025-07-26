@@ -2,11 +2,8 @@ package database
 
 import (
 	"database/sql"
-	"testing"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -296,7 +293,7 @@ func (s *LocationsSuite) TestDeleteLocations() {
 	locationToDelete := returnedLocations[1]
 
 	err = DeleteLocations(s.DB, []models.Location{locationToDelete})
-	require.NoError(s.T(), err, "unexpected error deleting locations")
+	s.Require().NoError(err, "unexpected error deleting locations")
 
 	allLocations, err := AllLocations(s.DB)
 	if err != nil {
@@ -326,13 +323,13 @@ func (s *PostsSuite) TestMergeLocations() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{
@@ -352,7 +349,7 @@ func (s *PostsSuite) TestMergeLocations() {
 		},
 	}
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -365,37 +362,37 @@ func (s *PostsSuite) TestMergeLocations() {
 		},
 	}
 	_, err = CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	s.T().Run("simple merge", func(t *testing.T) {
+	s.Run("simple merge", func() {
 		remainingLocationID, err := MergeLocations(s.DB, "London 1", "London 2")
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
-		assert.Equal(t, returnedLocations[0].ID, remainingLocationID)
+		s.Equal(returnedLocations[0].ID, remainingLocationID)
 	})
 
-	s.T().Run("merge when target name is missing from table", func(t *testing.T) {
+	s.Run("merge when target name is missing from table", func() {
 		remainingLocationID, err := MergeLocations(s.DB, "London X", "London 3")
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
-		assert.Equal(t, 0, remainingLocationID)
+		s.Equal(0, remainingLocationID)
 
 		locations, err := FindLocationsByName(s.DB, "London 3")
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
-		assert.Equal(t, 1, len(locations))
+		s.Len(locations, 1)
 	})
 
-	s.T().Run("merge when old name is missing from table", func(t *testing.T) {
+	s.Run("merge when old name is missing from table", func() {
 		remainingLocationID, err := MergeLocations(s.DB, "London 3", "London X")
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
-		assert.Equal(t, 0, remainingLocationID)
+		s.Equal(0, remainingLocationID)
 
 		locations, err := FindLocationsByName(s.DB, "London 3")
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
-		assert.Equal(t, 1, len(locations))
+		s.Len(locations, 1)
 	})
 }
 
@@ -424,10 +421,10 @@ func (s *LocationsSuite) TestNearbyLocations() {
 	}
 
 	_, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	nearbyLocations, err := NearbyLocations(s.DB, 51.56748, -0.138666)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Location{},

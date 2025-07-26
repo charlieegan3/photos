@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -20,19 +19,19 @@ type TaggingsSuite struct {
 
 func (s *TaggingsSuite) SetupTest() {
 	err := Truncate(s.DB, "photos.taggings")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.tags")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *TaggingsSuite) TestCreateTaggings() {
@@ -42,7 +41,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -62,7 +61,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -72,7 +71,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -83,7 +82,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 		},
 	}
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{
@@ -91,7 +90,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 		},
 	}
 	returnedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{
@@ -101,7 +100,7 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 	}
 
 	returnedTaggings, err := CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Tagging{},
@@ -124,7 +123,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -144,7 +143,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -154,7 +153,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -165,7 +164,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 		},
 	}
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{
@@ -173,7 +172,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 		},
 	}
 	returnedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{
@@ -183,7 +182,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 	}
 
 	returnedTaggings, err := FindOrCreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Tagging{},
@@ -200,7 +199,7 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 
 	// create them again
 	returnedTaggings2, err := FindOrCreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	td.Cmp(s.T(), returnedTaggings, returnedTaggings2)
 }
@@ -212,7 +211,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -232,7 +231,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -242,7 +241,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -253,7 +252,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{
@@ -261,7 +260,7 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 		},
 	}
 	returnedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{
@@ -271,10 +270,10 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 	}
 
 	_, err = CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	returnedTaggings, err := FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedResult := td.Slice(
 		[]models.Tagging{},
@@ -297,7 +296,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 		},
 	}
 	returnedDevices, err := CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -317,7 +316,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 		},
 	}
 	returnedMedias, err := CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -327,7 +326,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 	}
 
 	returnedLocations, err := CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -338,7 +337,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 		},
 	}
 	returnedPosts, err := CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{
@@ -346,7 +345,7 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 		},
 	}
 	returnedTags, err := CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{
@@ -356,15 +355,15 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 	}
 
 	returnedTaggings, err := CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggingToDelete := returnedTaggings[0]
 
 	err = DeleteTaggings(s.DB, []models.Tagging{taggingToDelete})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	postTaggings, err := FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	if len(postTaggings) > 0 {
 		s.T().Fatalf("expected there to be no post taggings, but there were some")

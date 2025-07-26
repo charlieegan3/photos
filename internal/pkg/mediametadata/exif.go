@@ -260,8 +260,8 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 				return fmt.Errorf("found %d ExposureTime values", len(val))
 			}
 
-			metadata.ExposureTime.Numerator = uint32(val[0].Numerator)
-			metadata.ExposureTime.Denominator = uint32(val[0].Denominator)
+			metadata.ExposureTime.Numerator = val[0].Numerator
+			metadata.ExposureTime.Denominator = val[0].Denominator
 		}
 
 		if ite.TagName() == "ISOSpeedRatings" {

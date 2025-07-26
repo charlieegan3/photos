@@ -19,8 +19,9 @@ func InitMiddlewareAuth(username, password string) func(http.Handler) http.Handl
 					"WWW-Authenticate",
 					fmt.Sprintf(`Basic realm="%s"`, constants.Realm),
 				)
-				w.WriteHeader(401)
+				w.WriteHeader(http.StatusUnauthorized)
 				w.Write([]byte("Unauthorised.\n"))
+
 				return
 			}
 			next.ServeHTTP(w, r)

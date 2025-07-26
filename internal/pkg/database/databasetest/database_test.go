@@ -11,7 +11,6 @@ import (
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 
@@ -185,7 +184,7 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 	// TODO move to suite to be shared
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &devices.EndpointsDevicesSuite{
@@ -205,7 +204,7 @@ func (s *DatabaseSuite) TestEndpointsLensesSuite() {
 	// TODO move to suite to be shared
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &lenses.EndpointsLensesSuite{
@@ -230,7 +229,7 @@ func (s *DatabaseSuite) TestEndpointsTagsSuite() {
 func (s *DatabaseSuite) TestEndpointsLocationsSuite() {
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 	suite.Run(s.T(), &locations.EndpointsLocationsSuite{
 		DB:     s.DB,
@@ -253,7 +252,7 @@ func (s *DatabaseSuite) TestPublicTagsSuite() {
 func (s *DatabaseSuite) TestPublicLocationsSuite() {
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &publiclocations.LocationsSuite{
@@ -271,7 +270,7 @@ func (s *DatabaseSuite) TestPublicTripsSuite() {
 func (s *DatabaseSuite) TestPublicDevicesSuite() {
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &publicdevices.DevicesSuite{
@@ -283,7 +282,7 @@ func (s *DatabaseSuite) TestPublicDevicesSuite() {
 func (s *DatabaseSuite) TestPublicLensesSuite() {
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &publiclenses.LensesSuite{
@@ -295,7 +294,7 @@ func (s *DatabaseSuite) TestPublicLensesSuite() {
 func (s *DatabaseSuite) TestPublicMediasSuite() {
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &publicmedias.MediasSuite{
@@ -308,7 +307,7 @@ func (s *DatabaseSuite) TestEndpointsMediasSuite() {
 	// TODO move to suite to be shared
 	bucketBaseURL := "mem://test_bucket/"
 	bucket, err := blob.OpenBucket(context.Background(), bucketBaseURL)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer bucket.Close()
 
 	suite.Run(s.T(), &medias.EndpointsMediasSuite{

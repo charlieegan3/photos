@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -20,10 +19,10 @@ type MediasSuite struct {
 
 func (s *MediasSuite) SetupTest() {
 	err := Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *MediasSuite) TestCreateMedias() {
@@ -372,7 +371,7 @@ func (s *MediasSuite) TestDeleteMedias() {
 	mediaToDelete := returnedMedias[0]
 
 	err = DeleteMedias(s.DB, []models.Media{mediaToDelete})
-	require.NoError(s.T(), err, "unexpected error deleting medias")
+	s.Require().NoError(err, "unexpected error deleting medias")
 
 	allMedias, err := AllMedias(s.DB, false)
 	if err != nil {

@@ -12,8 +12,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -33,17 +31,17 @@ type EndpointsTagsSuite struct {
 
 func (s *EndpointsTagsSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.tags")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.taggings")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsTagsSuite) TestListTags() {
@@ -68,18 +66,18 @@ func (s *EndpointsTagsSuite) TestListTags() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/tags", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "x100f")
-	assert.Contains(s.T(), string(body), "nofilter")
+	s.Contains(string(body), "x100f")
+	s.Contains(string(body), "nofilter")
 }
 
 func (s *EndpointsTagsSuite) TestGetTag() {
@@ -101,18 +99,18 @@ func (s *EndpointsTagsSuite) TestGetTag() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "nofilter")
-	assert.Contains(s.T(), string(body), `name="Hidden" type="checkbox" value="true" checked`)
+	s.Contains(string(body), "nofilter")
+	s.Contains(string(body), `name="Hidden" type="checkbox" value="true" checked`)
 }
 
 func (s *EndpointsTagsSuite) TestNewTag() {
@@ -120,18 +118,18 @@ func (s *EndpointsTagsSuite) TestNewTag() {
 	router.HandleFunc("/admin/tags/new", BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/tags/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Name")
-	assert.Contains(s.T(), string(body), "Hidden")
+	s.Contains(string(body), "Name")
+	s.Contains(string(body), "Hidden")
 }
 
 func (s *EndpointsTagsSuite) TestCreateTag() {
@@ -150,7 +148,7 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 		"/admin/tags",
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -158,12 +156,12 @@ func (s *EndpointsTagsSuite) TestCreateTag() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 	td.Cmp(s.T(), rr.Result().Header["Location"], []string{"/admin/tags/nofilter"})
 
 	// check that the database content is also correct
 	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedTags := td.Slice(
 		[]models.Tag{},
@@ -189,7 +187,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -209,7 +207,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -219,7 +217,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -236,7 +234,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 		},
 	}
 	returnedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	testData := []models.Tag{
 		{
@@ -263,9 +261,9 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	}
 
 	err = database.SetPostTags(s.DB, returnedPosts[0], []string{"tag1"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.SetPostTags(s.DB, returnedPosts[1], []string{"tag2"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/tags/{tagName}",
@@ -283,7 +281,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 		fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
@@ -296,15 +294,15 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 
 	// make the request to the handler
 	req, err = http.NewRequest(http.MethodPost, "/admin/tags/tag2", strings.NewReader(form.Encode()))
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr = httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -312,7 +310,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	returnedTags, err := database.AllTags(s.DB, true, database.SelectOptions{
 		SortField: "name",
 	})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedTags := td.Slice(
 		[]models.Tag{},
@@ -339,7 +337,7 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 	td.Cmp(s.T(), returnedTags, expectedTags)
 
 	taggings, err := database.FindTaggingsByTagID(s.DB, returnedTags[1].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedTaggings := td.Slice(
 		[]models.Tagging{},
@@ -393,14 +391,14 @@ func (s *EndpointsTagsSuite) TestDeleteTag() {
 		fmt.Sprintf("/admin/tags/%s", persistedTags[0].Name),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedTags, err := database.AllTags(s.DB, false, database.SelectOptions{})

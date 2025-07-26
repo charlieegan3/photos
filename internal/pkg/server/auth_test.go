@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAuthMiddleware(t *testing.T) {
@@ -26,7 +27,7 @@ func TestAuthMiddleware(t *testing.T) {
 
 	// test the public request
 	req, err := http.NewRequest(http.MethodGet, "/public", nil)
-	assert.NoError(t, err, "unexpected error getting public page")
+	require.NoError(t, err, "unexpected error getting public page")
 
 	rr := httptest.NewRecorder()
 
@@ -35,12 +36,12 @@ func TestAuthMiddleware(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 
 	body, err := io.ReadAll(rr.Body)
-	assert.NoError(t, err, "unexpected error reading public page body")
+	require.NoError(t, err, "unexpected error reading public page body")
 	assert.Equal(t, "public", string(body))
 
 	// test the admin request without credentials
 	req, err = http.NewRequest(http.MethodGet, "/admin/secret", nil)
-	assert.NoError(t, err, "unexpected error getting admin page")
+	require.NoError(t, err, "unexpected error getting admin page")
 
 	rr = httptest.NewRecorder()
 
@@ -49,13 +50,13 @@ func TestAuthMiddleware(t *testing.T) {
 	assert.Equal(t, http.StatusUnauthorized, rr.Result().StatusCode)
 
 	body, err = io.ReadAll(rr.Body)
-	assert.NoError(t, err, "unexpected error reading private page body")
+	require.NoError(t, err, "unexpected error reading private page body")
 	assert.Equal(t, "Unauthorised.\n", string(body))
 
 	// test the admin request with credentials set
 	req, err = http.NewRequest(http.MethodGet, "/admin/secret", nil)
 	req.SetBasicAuth("username", "password")
-	assert.NoError(t, err, "unexpected error getting admin page")
+	require.NoError(t, err, "unexpected error getting admin page")
 
 	rr = httptest.NewRecorder()
 
@@ -64,6 +65,6 @@ func TestAuthMiddleware(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 
 	body, err = io.ReadAll(rr.Body)
-	assert.NoError(t, err, "unexpected error reading private page body")
+	require.NoError(t, err, "unexpected error reading private page body")
 	assert.Equal(t, "secret", string(body))
 }

@@ -40,6 +40,6 @@ func buildStylesHandler() (handler func(http.ResponseWriter, *http.Request), err
 		w.Header().Set("Content-Type", "text/css")
 		w.Header().Set("ETag", hex.EncodeToString(styleHash.Sum(nil)))
 
-		fmt.Fprint(w, string(allStyleData))
+		fmt.Fprint(w, allStyleData)
 	}, nil
 }

@@ -12,8 +12,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -34,11 +32,11 @@ type EndpointsLocationsSuite struct {
 func (s *EndpointsLocationsSuite) SetupTest() {
 	var err error
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsLocationsSuite) TestListLocations() {
@@ -66,20 +64,20 @@ func (s *EndpointsLocationsSuite) TestListLocations() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/locations", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "London")
-	assert.Contains(s.T(), string(body), "1.1")
-	assert.Contains(s.T(), string(body), "New York")
-	assert.Contains(s.T(), string(body), "1.3")
+	s.Contains( string(body), "London")
+	s.Contains( string(body), "1.1")
+	s.Contains( string(body), "New York")
+	s.Contains( string(body), "1.3")
 }
 
 func (s *EndpointsLocationsSuite) TestGetLocation() {
@@ -102,19 +100,19 @@ func (s *EndpointsLocationsSuite) TestGetLocation() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Inverness")
-	assert.Contains(s.T(), string(body), "1.1")
-	assert.Contains(s.T(), string(body), "1.2")
+	s.Contains( string(body), "Inverness")
+	s.Contains( string(body), "1.1")
+	s.Contains( string(body), "1.2")
 }
 
 func (s *EndpointsLocationsSuite) TestNewLocation() {
@@ -124,17 +122,17 @@ func (s *EndpointsLocationsSuite) TestNewLocation() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/locations/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Name")
+	s.Contains( string(body), "Name")
 }
 
 func (s *EndpointsLocationsSuite) TestCreateLocation() {
@@ -152,7 +150,7 @@ func (s *EndpointsLocationsSuite) TestCreateLocation() {
 		"/admin/locations",
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -160,14 +158,14 @@ func (s *EndpointsLocationsSuite) TestCreateLocation() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/locations/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
 	returnedLocations, err := database.AllLocations(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedLocations := td.Slice(
 		[]models.Location{},
@@ -213,13 +211,13 @@ func (s *EndpointsLocationsSuite) TestUpdateLocation() {
 		fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedLocations, err := database.AllLocations(s.DB)
@@ -251,20 +249,20 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "Paris"},
 		{Name: "Berlin"},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -281,7 +279,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 		},
 	}
 	returnedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/locations/{locationID}",
@@ -298,17 +296,17 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 		fmt.Sprintf("/admin/locations/%d", returnedLocations[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	endingLocations, err := database.AllLocations(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedLocations := td.Slice(
 		[]models.Location{},
@@ -326,7 +324,7 @@ func (s *EndpointsLocationsSuite) TestUpdateLocationMergeName() {
 	td.Cmp(s.T(), endingLocations, expectedLocations)
 
 	endingPosts, err := database.AllPosts(s.DB, false, database.SelectOptions{SortField: "id"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedPosts := td.Slice(
 		[]models.Post{},
@@ -379,16 +377,16 @@ func (s *EndpointsLocationsSuite) TestDeleteLocation() {
 		fmt.Sprintf("/admin/locations/%d", persistedLocations[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal( http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -455,22 +453,22 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 			fmt.Sprintf("%d", persistedMedias[0].ID),
 		nil,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal( http.StatusOK, rr.Code) {
 		s.T().Fatalf("request failed with: %s", string(body))
 	}
 
-	assert.Contains(s.T(), string(body), "London")
-	assert.Contains(s.T(), string(body), "New York")
+	s.Contains( string(body), "London")
+	s.Contains( string(body), "New York")
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf(
+	s.Contains( string(body), fmt.Sprintf(
 		`/admin/posts/new?mediaID=%d&param1=1&param2=2&timestamp=1234&locationID=%d`,
 		persistedMedias[0].ID,
 		persistedLocations[0].ID,

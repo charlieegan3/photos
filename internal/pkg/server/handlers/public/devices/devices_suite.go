@@ -15,8 +15,6 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 
 	"github.com/gorilla/mux"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -36,13 +34,13 @@ type DevicesSuite struct {
 func (s *DevicesSuite) SetupTest() {
 	var err error
 	err = database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *DevicesSuite) TestIndex() {
@@ -57,7 +55,7 @@ func (s *DevicesSuite) TestIndex() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/devices",
@@ -65,24 +63,24 @@ func (s *DevicesSuite) TestIndex() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/devices", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/devices/%d", returnedDevices[0].ID))
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/devices/%d", returnedDevices[1].ID))
-	assert.Contains(s.T(), string(body), returnedDevices[0].Name)
-	assert.Contains(s.T(), string(body), returnedDevices[0].Name)
+	s.Contains(string(body), fmt.Sprintf("/devices/%d", returnedDevices[0].ID))
+	s.Contains(string(body), fmt.Sprintf("/devices/%d", returnedDevices[1].ID))
+	s.Contains(string(body), returnedDevices[0].Name)
+	s.Contains(string(body), returnedDevices[0].Name)
 }
 
 func (s *DevicesSuite) TestShow() {
@@ -93,20 +91,20 @@ func (s *DevicesSuite) TestShow() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -123,7 +121,7 @@ func (s *DevicesSuite) TestShow() {
 		},
 	}
 	returnedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/devices/{deviceID}",
@@ -131,22 +129,22 @@ func (s *DevicesSuite) TestShow() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/devices/%d", returnedDevices[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/posts/%d", returnedPosts[0].ID))
-	assert.Contains(s.T(), string(body), fmt.Sprintf("/posts/%d", returnedPosts[1].ID))
+	s.Contains(string(body), fmt.Sprintf("/posts/%d", returnedPosts[0].ID))
+	s.Contains(string(body), fmt.Sprintf("/posts/%d", returnedPosts[1].ID))
 }
 
 func (s *DevicesSuite) TestGetIcon() {
@@ -157,20 +155,20 @@ func (s *DevicesSuite) TestGetIcon() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// store an image for the device in the bucket to be served in the request.
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageBytes, err := os.ReadFile(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	imageFile, err := os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("device_icons/%s.jpg", returnedDevices[0].Slug), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/devices/{deviceID}/icon.{kind}",
@@ -178,19 +176,19 @@ func (s *DevicesSuite) TestGetIcon() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/devices/%d/icon.jpg", returnedDevices[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// validate that the images are the same
 	h := sha1.New()
@@ -199,5 +197,5 @@ func (s *DevicesSuite) TestGetIcon() {
 	h = sha1.New()
 	h.Write(imageBytes)
 	imageSha := hex.EncodeToString(h.Sum(nil))
-	assert.Equal(s.T(), bodySha, imageSha)
+	s.Equal(bodySha, imageSha)
 }

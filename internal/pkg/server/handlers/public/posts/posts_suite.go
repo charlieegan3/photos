@@ -10,8 +10,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -31,17 +29,17 @@ type PostsSuite struct {
 
 func (s *PostsSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.tags")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.taggings")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *PostsSuite) TestListPosts() {
@@ -51,7 +49,7 @@ func (s *PostsSuite) TestListPosts() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -71,7 +69,7 @@ func (s *PostsSuite) TestListPosts() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -81,7 +79,7 @@ func (s *PostsSuite) TestListPosts() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -99,24 +97,24 @@ func (s *PostsSuite) TestListPosts() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/", BuildIndexHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "shot")
-	assert.Contains(s.T(), string(body), "another photo")
+	s.Contains(string(body), "shot")
+	s.Contains(string(body), "another photo")
 }
 
 func (s *PostsSuite) TestGetPost() {
@@ -126,7 +124,7 @@ func (s *PostsSuite) TestGetPost() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -146,7 +144,7 @@ func (s *PostsSuite) TestGetPost() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -156,7 +154,7 @@ func (s *PostsSuite) TestGetPost() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -174,7 +172,7 @@ func (s *PostsSuite) TestGetPost() {
 	}
 
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/posts/{postID}",
@@ -182,36 +180,36 @@ func (s *PostsSuite) TestGetPost() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/posts/%d", persistedPosts[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Here is a shot I took")
-	assert.NotContains(s.T(), string(body), "another photo")
+	s.Contains(string(body), "Here is a shot I took")
+	s.NotContains(string(body), "another photo")
 }
 
 func (s *PostsSuite) TestPeriodHandler() {
 	devices := []models.Device{{Name: "Example Device"}}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{{Name: "London", Latitude: 1.1, Longitude: 1.2}}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -235,7 +233,7 @@ func (s *PostsSuite) TestPeriodHandler() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/posts/period/{from}-to-{to}",
@@ -243,23 +241,23 @@ func (s *PostsSuite) TestPeriodHandler() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/posts/period/2021-11-01-to-2021-11-29", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.NotContains(s.T(), string(body), "older post")
-	assert.Contains(s.T(), string(body), "post in range")
-	assert.NotContains(s.T(), string(body), "future post")
+	s.NotContains(string(body), "older post")
+	s.Contains(string(body), "post in range")
+	s.NotContains(string(body), "future post")
 }
 
 func (s *PostsSuite) TestLegacyPostPathRedirect() {
@@ -267,18 +265,18 @@ func (s *PostsSuite) TestLegacyPostPathRedirect() {
 	router.HandleFunc(`/posts/{date:\d{4}-\d{2}-\d{2}}{.*}`, BuildLegacyPostRedirect()).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/posts/2018-07-08-1819241500870030645", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusMovedPermanently, rr.Code) {
+	if !s.Equal(http.StatusMovedPermanently, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	assert.Equal(s.T(), "/posts/period/2018-07-08", rr.Header().Get("Location"))
+	s.Equal("/posts/period/2018-07-08", rr.Header().Get("Location"))
 }
 
 func (s *PostsSuite) TestLegacyPeriodRedirect() {
@@ -286,18 +284,18 @@ func (s *PostsSuite) TestLegacyPeriodRedirect() {
 	router.HandleFunc(`/archive/{month:\d{2}}-{day:\d{2}}`, BuildLegacyPeriodRedirect()).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/archive/09-01", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusMovedPermanently, rr.Code) {
+	if !s.Equal(http.StatusMovedPermanently, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	assert.Equal(s.T(), "/posts/on-this-day/September-1", rr.Header().Get("Location"))
+	s.Equal("/posts/on-this-day/September-1", rr.Header().Get("Location"))
 }
 
 func (s *PostsSuite) TestPeriodIndexHandler() {
@@ -307,36 +305,36 @@ func (s *PostsSuite) TestPeriodIndexHandler() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/posts/period?from=2021-10-01&to=2021-11-01", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
-	assert.Equal(s.T(), "/posts/period/2021-10-01-to-2021-11-01", rr.Header().Get("Location"))
+	s.Equal("/posts/period/2021-10-01-to-2021-11-01", rr.Header().Get("Location"))
 
 	// getting with no params renders form page
 	req, err = http.NewRequest(http.MethodGet, "/posts/period", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr = httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "From:")
+	s.Contains(string(body), "From:")
 }
 
 func (s *PostsSuite) TestLatestPost() {
@@ -346,7 +344,7 @@ func (s *PostsSuite) TestLatestPost() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -366,7 +364,7 @@ func (s *PostsSuite) TestLatestPost() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -376,7 +374,7 @@ func (s *PostsSuite) TestLatestPost() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -389,29 +387,29 @@ func (s *PostsSuite) TestLatestPost() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/posts/latest.json", BuildLatestHandler(s.DB)).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/posts/latest.json", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), `"location":"London"`)
-	assert.Contains(s.T(), string(body), `"created_at":"2021-11-25`)
-	assert.Contains(s.T(), string(body), `/posts`)
+	s.Contains(string(body), `"location":"London"`)
+	s.Contains(string(body), `"created_at":"2021-11-25`)
+	s.Contains(string(body), `/posts`)
 }
 
 func (s *PostsSuite) TestRSS() {
@@ -421,7 +419,7 @@ func (s *PostsSuite) TestRSS() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -441,7 +439,7 @@ func (s *PostsSuite) TestRSS() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -451,7 +449,7 @@ func (s *PostsSuite) TestRSS() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -464,25 +462,25 @@ func (s *PostsSuite) TestRSS() {
 	}
 
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/rss.xml", BuildRSSHandler(s.DB)).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/rss.xml", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedBody := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
@@ -502,7 +500,7 @@ func (s *PostsSuite) TestRSS() {
     </item>
 </channel>
 </rss>`, persistedPosts[0].ID, returnedMedias[0].ID, persistedPosts[0].ID)
-	assert.Equal(s.T(), expectedBody, string(body))
+	s.Equal(expectedBody, string(body))
 }
 
 func (s *PostsSuite) TestSearchPosts() {
@@ -512,7 +510,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -532,7 +530,7 @@ func (s *PostsSuite) TestSearchPosts() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -542,7 +540,7 @@ func (s *PostsSuite) TestSearchPosts() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -560,7 +558,7 @@ func (s *PostsSuite) TestSearchPosts() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/posts/search",
@@ -568,22 +566,22 @@ func (s *PostsSuite) TestSearchPosts() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/posts/search?query=post1", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "post1")
-	assert.NotContains(s.T(), string(body), "post2")
+	s.Contains(string(body), "post1")
+	s.NotContains(string(body), "post2")
 }
 
 func (s *PostsSuite) TestPostsOnThisDay() {
@@ -593,14 +591,14 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{
@@ -608,7 +606,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 		},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -632,7 +630,7 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/posts/on-this-day",
@@ -644,14 +642,14 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 
 	// check that redirects to current day
 	req, err := http.NewRequest(http.MethodGet, "/posts/on-this-day", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 	locationHeader := rr.Result().Header["Location"][0]
@@ -662,21 +660,21 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 
 	// check the correct contents is returned
 	req, err = http.NewRequest(http.MethodGet, "/posts/on-this-day/January-1", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr = httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "post from 2022")
-	assert.Contains(s.T(), string(body), "post from 2021")
-	assert.NotContains(s.T(), string(body), "other post")
+	s.Contains(string(body), "post from 2022")
+	s.Contains(string(body), "post from 2021")
+	s.NotContains(string(body), "other post")
 }

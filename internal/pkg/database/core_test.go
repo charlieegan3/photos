@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestBuildConnectionString(t *testing.T) {
@@ -95,10 +96,10 @@ func TestBuildConnectionString(t *testing.T) {
 
 			// Parse both URLs to compare them properly (order of query params may vary)
 			expectedURL, err := url.Parse(tt.expected)
-			assert.NoError(t, err, "Expected URL should be valid")
+			require.NoError(t, err, "Expected URL should be valid")
 
 			resultURL, err := url.Parse(result)
-			assert.NoError(t, err, "Result URL should be valid")
+			require.NoError(t, err, "Result URL should be valid")
 
 			// Compare scheme, host, path
 			assert.Equal(t, expectedURL.Scheme, resultURL.Scheme, "Schemes should match")

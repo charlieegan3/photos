@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
@@ -262,7 +261,7 @@ func (s *TripsSuite) TestDeleteTrips() {
 	tripToDelete := returnedTrips[1]
 
 	err = DeleteTrips(s.DB, []models.Trip{tripToDelete})
-	require.NoError(s.T(), err, "unexpected error deleting trips")
+	s.Require().NoError(err, "unexpected error deleting trips")
 
 	allTrips, err := AllTrips(s.DB)
 	if err != nil {

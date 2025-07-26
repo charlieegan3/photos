@@ -18,8 +18,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -39,10 +37,10 @@ type EndpointsMediasSuite struct {
 
 func (s *EndpointsMediasSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsMediasSuite) TestListMedias() {
@@ -104,7 +102,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -116,7 +114,7 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/medias",
@@ -124,19 +122,19 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/medias", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("id: %d", returnedMedias[0].ID))
+	s.Contains(string(body), fmt.Sprintf("id: %d", returnedMedias[0].ID))
 	cleanedBody := regexp.MustCompile(`\s+`).ReplaceAllString(string(body), " ")
-	assert.Contains(s.T(), cleanedBody, fmt.Sprintf("id: %d (not posted)", returnedMedias[1].ID))
+	s.Contains(cleanedBody, fmt.Sprintf("id: %d (not posted)", returnedMedias[1].ID))
 }
 
 func (s *EndpointsMediasSuite) TestGetMedia() {
@@ -180,21 +178,21 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), fmt.Sprintf("%d", persistedMedias[0].ID))
+	s.Contains(string(body), fmt.Sprintf("%d", persistedMedias[0].ID))
 }
 
 func (s *EndpointsMediasSuite) TestUpdateMedia() {
@@ -205,11 +203,11 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	}
 
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	lenses := []models.Lens{{Name: "Example Lens"}}
 	returnedLenses, err := database.CreateLenses(s.DB, lenses)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	testData := []models.Media{
 		{
@@ -240,13 +238,13 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	// store an icon in the bucket
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageFile, err := os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("media/%d.jpg", persistedMedias[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/medias/{mediaID}",
@@ -273,13 +271,13 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		}
 		if x, ok := r.(*os.File); ok {
 			fw, err = w.CreateFormFile(key, x.Name())
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		} else {
 			fw, err = w.CreateFormField(key)
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		}
 		_, err = io.Copy(fw, r)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 	}
 	w.Close()
 
@@ -289,16 +287,16 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID),
 		&b,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -366,24 +364,24 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 	// store the image in the bucket, check it's deleted
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageFile, err := os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), fmt.Sprintf("media/%d.jpg", persistedMedias[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	imageFile.Close()
 
 	// write a thumbnail to test these are also deleted, in this case there's only one thumb
 	imageFile, err = os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err = s.Bucket.NewWriter(context.Background(), fmt.Sprintf("thumbs/%d-foobar.jpg", persistedMedias[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	imageFile.Close()
 
 	router := mux.NewRouter()
@@ -401,14 +399,14 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 		fmt.Sprintf("/admin/medias/%d", persistedMedias[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedMedias, err := database.AllMedias(s.DB, false)
@@ -421,7 +419,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 
 	// should have a not found error as the icon should have been deleted
 	_, err = s.Bucket.Attributes(context.Background(), "media/iphone.jpg")
-	require.Error(s.T(), err)
+	s.Require().Error(err)
 
 	var thumbs []string
 	listOptions := &blob.ListOptions{
@@ -433,7 +431,7 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 		if err == io.EOF {
 			break
 		}
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
 		thumbs = append(thumbs, obj.Key)
 	}
@@ -450,19 +448,19 @@ func (s *EndpointsMediasSuite) TestNewMedia() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/medias/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal(http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "File")
+	s.Contains(string(body), "File")
 	// only show the file field on create
-	assert.NotContains(s.T(), string(body), "Make")
+	s.NotContains(string(body), "Make")
 }
 
 func (s *EndpointsMediasSuite) TestCreateMedia() {
@@ -501,7 +499,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	// open the image to be uploaded in the form
 	imageFilePath := "../../../pkg/mediametadata/samples/iphone-11-pro-max.jpg"
 	imageFile, err := os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// build the form to be posted
 	values := map[string]io.Reader{
@@ -517,13 +515,13 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		}
 		if x, ok := r.(*os.File); ok {
 			fw, err = w.CreateFormFile(key, x.Name())
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		} else {
 			fw, err = w.CreateFormField(key)
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		}
 		_, err = io.Copy(fw, r)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 	}
 	w.Close()
 
@@ -533,7 +531,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		"/admin/medias",
 		&b,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
@@ -541,9 +539,9 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/medias/") {
@@ -552,7 +550,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 
 	// check that the database content is also correct
 	returnedMedias, err := database.AllMedias(s.DB, false)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedMedias := td.Slice(
 		[]models.Media{},
@@ -586,23 +584,23 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	// check that the image has been uploaded ok
 	// get a digest for the image in the bucket
 	r, err := s.Bucket.NewReader(context.Background(), fmt.Sprintf("media/%d.jpg", returnedMedias[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer r.Close()
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bucketMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
 	// get a digest for the image originally uploaded
 	f, err := os.Open(imageFilePath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer f.Close()
 	sourceHash := md5.New()
 	_, err = io.Copy(sourceHash, f)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
-	require.Equal(s.T(), bucketMD5, sourceMD5)
+	s.Require().Equal(bucketMD5, sourceMD5)
 
 	// check that the thumbs have been created too
 	var thumbs []string
@@ -615,12 +613,12 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 		if err == io.EOF {
 			break
 		}
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 
 		thumbs = append(thumbs, obj.Key)
 	}
 
-	require.ElementsMatchf(s.T(), thumbs, []string{
+	s.Require().ElementsMatchf(thumbs, []string{
 		fmt.Sprintf("thumbs/media/%d-200-fit.jpg", returnedMedias[0].ID),
 		fmt.Sprintf("thumbs/media/%d-500-fit.jpg", returnedMedias[0].ID),
 		fmt.Sprintf("thumbs/media/%d-1000-fit.jpg", returnedMedias[0].ID),

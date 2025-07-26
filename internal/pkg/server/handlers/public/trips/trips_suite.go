@@ -11,8 +11,6 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 
 	"github.com/gorilla/mux"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
@@ -29,35 +27,35 @@ type TripsSuite struct {
 func (s *TripsSuite) SetupTest() {
 	var err error
 	err = database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.trips")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *TripsSuite) TestGetTrip() {
 	devices := []models.Device{{Name: "Example Device"}}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 		{Name: "New York"},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	trips := []models.Trip{
 		{
@@ -68,7 +66,7 @@ func (s *TripsSuite) TestGetTrip() {
 		{Title: "New York"},
 	}
 	returnedTrips, err := database.CreateTrips(s.DB, trips)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -85,7 +83,7 @@ func (s *TripsSuite) TestGetTrip() {
 		},
 	}
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -94,7 +92,7 @@ func (s *TripsSuite) TestGetTrip() {
 	).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/trips/%d", returnedTrips[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
@@ -102,16 +100,16 @@ func (s *TripsSuite) TestGetTrip() {
 	rr = httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), `London`)
-	assert.Contains(s.T(), string(body), `post from london`)
-	assert.NotContains(s.T(), string(body), `New York`)
+	s.Contains(string(body), `London`)
+	s.Contains(string(body), `post from london`)
+	s.NotContains(string(body), `New York`)
 }

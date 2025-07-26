@@ -27,10 +27,10 @@ func TestGeoapifyGeocoding(t *testing.T) {
 	features, err := client.GeocodingSearch("Highgate Hill, London")
 	require.NoError(t, err, "unexpected error")
 
-	require.Equal(t, 5, len(features), "unexpected number of features")
+	require.Len(t, features, 5, "unexpected number of features")
 
-	require.Equal(t, 51.5691675, features[0].Properties.Lat)
-	require.Equal(t, -0.1421935, features[0].Properties.Lon)
+	require.InEpsilon(t, 51.5691675, features[0].Properties.Lat, 0.0000001)
+	require.InEpsilon(t, -0.1421935, features[0].Properties.Lon, 0.0000001)
 	require.Equal(t, "Highgate Hill", features[0].Properties.Name)
 	require.Equal(t, "Highgate Hill, London, N6 5XG, United Kingdom", features[0].Properties.Formatted)
 	require.Equal(t, "street", features[0].Properties.ResultType)

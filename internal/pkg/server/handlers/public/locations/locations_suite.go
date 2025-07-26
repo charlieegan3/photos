@@ -15,8 +15,6 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 
 	"github.com/gorilla/mux"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -36,13 +34,13 @@ type LocationsSuite struct {
 func (s *LocationsSuite) SetupTest() {
 	var err error
 	err = database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *LocationsSuite) TestLocationsMapIndex() {
@@ -55,7 +53,7 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 	}
 
 	_, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -68,7 +66,7 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 	).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/locations", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
@@ -76,36 +74,36 @@ func (s *LocationsSuite) TestLocationsMapIndex() {
 	rr = httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), `"London"`)
+	s.Contains(string(body), `"London"`)
 }
 
 func (s *LocationsSuite) TestGetLocation() {
 	devices := []models.Device{{Name: "Example Device"}}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{DeviceID: returnedDevices[0].ID},
 		{DeviceID: returnedDevices[0].ID},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	locations := []models.Location{
 		{Name: "London"},
 		{Name: "New York"},
 	}
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -122,7 +120,7 @@ func (s *LocationsSuite) TestGetLocation() {
 		},
 	}
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -131,7 +129,7 @@ func (s *LocationsSuite) TestGetLocation() {
 	).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d", returnedLocations[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
@@ -139,18 +137,18 @@ func (s *LocationsSuite) TestGetLocation() {
 	rr = httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), `London`)
-	assert.Contains(s.T(), string(body), `post from london`)
-	assert.NotContains(s.T(), string(body), `New York`)
+	s.Contains(string(body), `London`)
+	s.Contains(string(body), `post from london`)
+	s.NotContains(string(body), `New York`)
 }
 
 func (s *LocationsSuite) TestGetLocationMap() {
@@ -181,7 +179,7 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/locations/{locationID}/map.jpg",
@@ -189,7 +187,7 @@ func (s *LocationsSuite) TestGetLocationMap() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/locations/%d/map.jpg", returnedLocations[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
@@ -198,19 +196,19 @@ func (s *LocationsSuite) TestGetLocationMap() {
 	router.ServeHTTP(rr, req)
 
 	// we expect that the raw map is only requested once, since the second time it's in object storage
-	assert.Equal(s.T(), 1, requested)
+	s.Equal(1, requested)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	h = sha1.New()
 	h.Write(body)
 	bodySha := hex.EncodeToString(h.Sum(nil))
-	assert.Equal(s.T(), bodySha, mapSha)
+	s.Equal(bodySha, mapSha)
 }

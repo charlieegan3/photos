@@ -16,8 +16,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -37,7 +35,7 @@ type EndpointsDevicesSuite struct {
 
 func (s *EndpointsDevicesSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsDevicesSuite) TestListDevices() {
@@ -61,18 +59,18 @@ func (s *EndpointsDevicesSuite) TestListDevices() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/devices", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "iPhone")
-	assert.Contains(s.T(), string(body), "X100F")
+	s.Contains( string(body), "iPhone")
+	s.Contains( string(body), "X100F")
 }
 
 func (s *EndpointsDevicesSuite) TestGetDevice() {
@@ -92,21 +90,21 @@ func (s *EndpointsDevicesSuite) TestGetDevice() {
 		BuildGetHandler(s.DB, templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal( http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "iPhone")
+	s.Contains( string(body), "iPhone")
 }
 
 func (s *EndpointsDevicesSuite) TestUpdateDevice() {
@@ -125,13 +123,13 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 	// store the an icon in the bucket, check it's deleted
 	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/devices/{deviceID}",
@@ -153,13 +151,13 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 		}
 		if x, ok := r.(*os.File); ok {
 			fw, err = w.CreateFormFile(key, x.Name())
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		} else {
 			fw, err = w.CreateFormField(key)
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		}
 		_, err = io.Copy(fw, r)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 	}
 	w.Close()
 
@@ -168,16 +166,16 @@ func (s *EndpointsDevicesSuite) TestUpdateDevice() {
 		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		&b,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal( http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -219,13 +217,13 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 	// store the an icon in the bucket, check it's deleted
 	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bw, err := s.Bucket.NewWriter(context.Background(), "device_icons/iphone.jpg", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	_, err = io.Copy(bw, imageFile)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = bw.Close()
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -242,16 +240,16 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 		fmt.Sprintf("/admin/devices/%d", persistedDevices[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal( http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -266,7 +264,7 @@ func (s *EndpointsDevicesSuite) TestDeleteDevice() {
 
 	// should have a not found error as the icon should have been deleted
 	_, err = s.Bucket.Attributes(context.Background(), "device_icons/iphone.jpg")
-	require.Error(s.T(), err)
+	s.Require().Error( err)
 }
 
 func (s *EndpointsDevicesSuite) TestNewDevice() {
@@ -275,18 +273,18 @@ func (s *EndpointsDevicesSuite) TestNewDevice() {
 		BuildNewHandler(templating.BuildPageRenderFunc(true, ""))).Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/devices/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Name")
-	assert.Contains(s.T(), string(body), "Icon")
+	s.Contains( string(body), "Name")
+	s.Contains( string(body), "Icon")
 }
 
 func (s *EndpointsDevicesSuite) TestCreateDevice() {
@@ -297,7 +295,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	// open the image to be uploaded in the form
 	imageIconPath := "../../../pkg/server/handlers/admin/devices/testdata/x100f.jpg"
 	imageFile, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	// build the form to be posted
 	values := map[string]io.Reader{
@@ -313,13 +311,13 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 		}
 		if x, ok := r.(*os.File); ok {
 			fw, err = w.CreateFormFile(key, x.Name())
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		} else {
 			fw, err = w.CreateFormField(key)
-			require.NoError(s.T(), err)
+			s.Require().NoError(err)
 		}
 		_, err = io.Copy(fw, r)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 	}
 	w.Close()
 
@@ -329,7 +327,7 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 		"/admin/devices",
 		&b,
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
@@ -337,14 +335,14 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/devices/") {
 		s.T().Fatalf("%v doesn't appear to be the correct path", rr.Result().Header["Location"])
 	}
 
 	// check that the database content is also correct
 	returnedDevices, err := database.AllDevices(s.DB)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedDevices := td.Slice(
 		[]models.Device{},
@@ -364,21 +362,21 @@ func (s *EndpointsDevicesSuite) TestCreateDevice() {
 	// check that the image has been uploaded ok
 	// get a digest for the image in the bucket
 	r, err := s.Bucket.NewReader(context.Background(), "device_icons/x100f.jpg", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer r.Close()
 	bucketHash := md5.New()
 	_, err = io.Copy(bucketHash, r)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	bucketMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
 	// get a digest for the image originally uploaded
 	f, err := os.Open(imageIconPath)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	defer f.Close()
 	sourceHash := md5.New()
 	_, err = io.Copy(sourceHash, f)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	sourceMD5 := fmt.Sprintf("%x", bucketHash.Sum(nil))
 
-	require.Equal(s.T(), bucketMD5, sourceMD5)
+	s.Require().Equal( bucketMD5, sourceMD5)
 }

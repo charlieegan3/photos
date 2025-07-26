@@ -12,8 +12,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/maxatome/go-testdeep/td"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -33,17 +31,17 @@ type EndpointsPostsSuite struct {
 
 func (s *EndpointsPostsSuite) SetupTest() {
 	err := database.Truncate(s.DB, "photos.posts")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.devices")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.locations")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.medias")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.tags")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	err = database.Truncate(s.DB, "photos.taggings")
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 }
 
 func (s *EndpointsPostsSuite) TestListPosts() {
@@ -53,7 +51,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -73,7 +71,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -83,7 +81,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -101,7 +99,7 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 	}
 
 	_, err = database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/posts",
@@ -109,18 +107,18 @@ func (s *EndpointsPostsSuite) TestListPosts() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/posts", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "another photo")
-	assert.Contains(s.T(), string(body), "shot")
+	s.Contains(string(body), "another photo")
+	s.Contains(string(body), "shot")
 }
 
 func (s *EndpointsPostsSuite) TestGetPost() {
@@ -130,7 +128,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -150,7 +148,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -160,7 +158,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -172,7 +170,7 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 	}
 
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{Name: "tag_a"},
@@ -180,14 +178,14 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		{Name: "tag_c"},
 	}
 	persistedTags, err := database.CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
 	}
 	_, err = database.CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/posts/{postID}",
@@ -195,23 +193,23 @@ func (s *EndpointsPostsSuite) TestGetPost() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID), nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusOK, rr.Code) {
+	if !s.Equal(http.StatusOK, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "shot I took")
-	assert.Contains(s.T(), string(body), "tag_a")
-	assert.NotContains(s.T(), string(body), "tag_c")
+	s.Contains(string(body), "shot I took")
+	s.Contains(string(body), "tag_a")
+	s.NotContains(string(body), "tag_c")
 }
 
 func (s *EndpointsPostsSuite) TestNewPost() {
@@ -221,20 +219,20 @@ func (s *EndpointsPostsSuite) TestNewPost() {
 		Methods(http.MethodGet)
 
 	req, err := http.NewRequest(http.MethodGet, "/admin/posts/new", nil)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	rr := httptest.NewRecorder()
 
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusOK, rr.Code)
+	s.Require().Equal( http.StatusOK, rr.Code)
 
 	body, err := io.ReadAll(rr.Body)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	assert.Contains(s.T(), string(body), "Description")
-	assert.Contains(s.T(), string(body), "PublishDate")
-	assert.Contains(s.T(), string(body), "LocationID")
-	assert.Contains(s.T(), string(body), "MediaID")
+	s.Contains(string(body), "Description")
+	s.Contains(string(body), "PublishDate")
+	s.Contains(string(body), "LocationID")
+	s.Contains(string(body), "MediaID")
 }
 
 func (s *EndpointsPostsSuite) TestCreatePost() {
@@ -244,7 +242,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -264,7 +262,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -274,7 +272,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/posts",
@@ -295,7 +293,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 		"/admin/posts",
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -303,9 +301,9 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	router.ServeHTTP(rr, req)
 
 	// check that we get a see other response to the right location
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 	if !strings.HasPrefix(rr.Result().Header["Location"][0], "/admin/posts/") {
@@ -314,7 +312,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 
 	// check that the database content is also correct
 	returnedPosts, err := database.AllPosts(s.DB, true, database.SelectOptions{})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	expectedPosts := td.Slice(
 		[]models.Post{},
@@ -334,7 +332,7 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	td.Cmp(s.T(), returnedPosts, expectedPosts)
 
 	taggings, err := database.FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	if len(taggings) != 3 {
 		s.T().Errorf("expected there to be three taggings")
@@ -348,7 +346,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -368,7 +366,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -378,7 +376,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -390,7 +388,7 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	}
 
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	tags := []models.Tag{
 		{Name: "tag_a"},
@@ -398,14 +396,14 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		{Name: "tag_c"},
 	}
 	persistedTags, err := database.CreateTags(s.DB, tags)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	taggings := []models.Tagging{
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[0].ID},
 		{PostID: persistedPosts[0].ID, TagID: persistedTags[1].ID},
 	}
 	_, err = database.CreateTaggings(s.DB, taggings)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/admin/posts/{postID}",
@@ -427,15 +425,15 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 		fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if !assert.Equal(s.T(), http.StatusSeeOther, rr.Code) {
+	if !s.Equal(http.StatusSeeOther, rr.Code) {
 		bodyString, err := io.ReadAll(rr.Body)
-		require.NoError(s.T(), err)
+		s.Require().NoError(err)
 		s.T().Fatalf("request failed with: %s", bodyString)
 	}
 
@@ -464,16 +462,16 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	td.Cmp(s.T(), returnedPosts, expectedPosts)
 
 	persistedTaggings, err := database.FindTaggingsByPostID(s.DB, returnedPosts[0].ID)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	if len(persistedTaggings) != 1 {
 		s.T().Errorf("expected there to be one tagging")
 	}
 
 	tagD, err := database.FindTagsByName(s.DB, []string{"tag_d"})
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
-	require.Equal(s.T(), tagD[0].ID, persistedTaggings[0].TagID)
+	s.Require().Equal( tagD[0].ID, persistedTaggings[0].TagID)
 }
 
 func (s *EndpointsPostsSuite) TestDeletePost() {
@@ -483,7 +481,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 		},
 	}
 	returnedDevices, err := database.CreateDevices(s.DB, devices)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	medias := []models.Media{
 		{
@@ -503,7 +501,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.DB, medias)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 	locations := []models.Location{
 		{
 			Name:      "London",
@@ -513,7 +511,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 	}
 
 	returnedLocations, err := database.CreateLocations(s.DB, locations)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	posts := []models.Post{
 		{
@@ -525,7 +523,7 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 	}
 
 	persistedPosts, err := database.CreatePosts(s.DB, posts)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc(
@@ -542,14 +540,14 @@ func (s *EndpointsPostsSuite) TestDeletePost() {
 		fmt.Sprintf("/admin/posts/%d", persistedPosts[0].ID),
 		strings.NewReader(form.Encode()),
 	)
-	require.NoError(s.T(), err)
+	s.Require().NoError(err)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(s.T(), http.StatusSeeOther, rr.Code)
+	s.Require().Equal( http.StatusSeeOther, rr.Code)
 
 	// check that the database content is also correct
 	returnedPosts, err := database.AllPosts(s.DB, true, database.SelectOptions{})

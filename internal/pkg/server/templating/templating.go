@@ -74,7 +74,7 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 		}
 
 		for _, chainTemplate := range templates {
-			templateContent := ""
+			var templateContent string
 			switch chainTemplate {
 			case "base":
 				templateContent = baseTemplate
@@ -107,6 +107,10 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 		}
 
 		_, err = io.Copy(w, strings.NewReader(body))
-		return err
+		if err != nil {
+			return fmt.Errorf("failed to write rendered template to writer: %w", err)
+		}
+
+		return nil
 	}
 }

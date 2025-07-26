@@ -96,7 +96,8 @@ func CreatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results 
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.posts").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert posts")
 	}
 
@@ -116,8 +117,14 @@ func RandomPostID(ctx context.Context, db *sql.DB) (int, error) {
 	}
 	defer rows.Close()
 
+	err = rows.Err()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to query for random post")
+	}
+
 	for rows.Next() {
-		if err := rows.Scan(&postID); err != nil {
+		err := rows.Scan(&postID)
+		if err != nil {
 			return 0, errors.Wrap(err, "failed to scan random post")
 		}
 	}
@@ -134,7 +141,8 @@ func FindPostsByID(ctx context.Context, db *sql.DB, id []int) (results []models.
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 
@@ -150,7 +158,8 @@ func FindPostsByLocation(ctx context.Context, db *sql.DB, id []int) (results []m
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"location_id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 
@@ -183,7 +192,8 @@ func SearchPosts(ctx context.Context, db *sql.DB, query string) (results []model
 			),
 		)
 	outer := goquDB.From(inner).Select("*").Order(goqu.I("publish_date").Desc())
-	if err := outer.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = outer.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts by id")
 	}
 
@@ -199,7 +209,8 @@ func FindPostsByInstagramCode(ctx context.Context, db *sql.DB, code string) (res
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts by instagram_code")
 	}
 
@@ -215,7 +226,8 @@ func FindPostsByMediaID(ctx context.Context, db *sql.DB, id int) (results []mode
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"media_id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts by media_id")
 	}
 
@@ -245,7 +257,8 @@ func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models
 		Order(order).
 		Limit(1).
 		Executor()
-	if err := operation.ScanStructs(&dbPosts); err != nil {
+	err = operation.ScanStructs(&dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts by media_id")
 	}
 
@@ -270,12 +283,12 @@ func SetPostTags(ctx context.Context, db *sql.DB, post models.Post, rawTags []st
 		return errors.Wrap(err, "failed to find existing taggings for post")
 	}
 
-	var requiredTaggings []models.Tagging
-	for _, t := range tags {
-		requiredTaggings = append(requiredTaggings, models.Tagging{
+	requiredTaggings := make([]models.Tagging, len(tags))
+	for i, t := range tags {
+		requiredTaggings[i] = models.Tagging{
 			PostID: post.ID,
 			TagID:  t.ID,
-		})
+		}
 	}
 
 	var taggingsToDelete []models.Tagging
@@ -331,7 +344,8 @@ func AllPosts(db *sql.DB, includeDrafts bool, options SelectOptions) (results []
 		query = query.Limit(options.Limit)
 	}
 
-	if err := query.Executor().ScanStructs(&dbPosts); err != nil {
+	err = query.Executor().ScanStructs(&dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 
@@ -374,9 +388,9 @@ func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options Sel
 }
 
 func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) (err error) {
-	var ids []int
+	ids := make([]int, len(posts))
 	for i := range posts {
-		ids = append(ids, posts[i].ID)
+		ids[i] = posts[i].ID
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -417,8 +431,10 @@ func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results 
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStructContext(ctx, &result); err != nil {
-			if rErr := tx.Rollback(); rErr != nil {
+		_, err = update.ScanStructContext(ctx, &result)
+		if err != nil {
+			rErr := tx.Rollback()
+			if rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
 			return results, errors.Wrap(err, "failed to update, rolled back")
@@ -426,7 +442,8 @@ func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results 
 
 		results = append(results, newPost(result))
 	}
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
 	}
 
@@ -451,7 +468,8 @@ func PostsInDateRange(ctx context.Context, db *sql.DB, after, before time.Time) 
 		).
 		Order(goqu.I("publish_date").Asc())
 
-	if err := query.Executor().ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = query.Executor().ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 
@@ -480,7 +498,8 @@ func PostsOnThisDay(ctx context.Context, db *sql.DB, month time.Month, day int) 
 		).
 		Order(goqu.I("publish_date").Desc())
 
-	if err := query.Executor().ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = query.Executor().ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 

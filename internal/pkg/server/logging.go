@@ -42,7 +42,7 @@ func InitMiddlewareLogging() func(http.Handler) http.Handler {
 
 			if r == nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("request to logging middleware was nil"))
+				_, _ = w.Write([]byte("request to logging middleware was nil"))
 				return
 			}
 

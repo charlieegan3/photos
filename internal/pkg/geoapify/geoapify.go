@@ -25,6 +25,15 @@ type Client struct {
 	apiKey string
 }
 
+func NewClient(serverURL, apiKey string) (Client, error) {
+	u, err := url.Parse(serverURL)
+	if err != nil {
+		return Client{}, fmt.Errorf("failed to parse server url: %w", err)
+	}
+
+	return Client{url: u, apiKey: apiKey}, nil
+}
+
 func (c *Client) GeocodingSearch(ctx context.Context, query string) ([]Feature, error) {
 	queryURL, err := url.Parse(c.url.String())
 	if err != nil {
@@ -67,13 +76,4 @@ func (c *Client) GeocodingSearch(ctx context.Context, query string) ([]Feature, 
 	}
 
 	return response.Features, nil
-}
-
-func NewClient(serverURL, apiKey string) (Client, error) {
-	u, err := url.Parse(serverURL)
-	if err != nil {
-		return Client{}, fmt.Errorf("failed to parse server url: %w", err)
-	}
-
-	return Client{url: u, apiKey: apiKey}, nil
 }

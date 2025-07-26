@@ -32,7 +32,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -47,7 +47,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -60,21 +60,21 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		rawID, ok := mux.Vars(r)["deviceID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device ID is required"))
+			_, _ = w.Write([]byte("device ID is required"))
 			return
 		}
 
 		id, err := strconv.ParseInt(rawID, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device ID was not integer"))
+			_, _ = w.Write([]byte("device ID was not integer"))
 			return
 		}
 
 		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -85,14 +85,14 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 
 		if len(devices) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of devices found"))
+			_, _ = w.Write([]byte("unexpected number of devices found"))
 			return
 		}
 
 		posts, err := database.DevicePosts(r.Context(), db, devices[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -104,7 +104,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -121,7 +121,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -134,21 +134,21 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		rawID, ok := mux.Vars(r)["deviceID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device ID is required"))
+			_, _ = w.Write([]byte("device ID is required"))
 			return
 		}
 
 		id, err := strconv.ParseInt(rawID, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("device ID was not integer"))
+			_, _ = w.Write([]byte("device ID was not integer"))
 			return
 		}
 
 		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -159,7 +159,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 
 		if len(devices) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of devices found"))
+			_, _ = w.Write([]byte("unexpected number of devices found"))
 			return
 		}
 
@@ -176,7 +176,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			attrs, err := bucket.Attributes(r.Context(), originalIconPath)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -193,7 +193,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			br, err := bucket.NewReader(r.Context(), originalIconPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			defer br.Close()
@@ -201,14 +201,14 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			_, err = io.Copy(w, br)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy device image into bucket"))
+				_, _ = w.Write([]byte("failed to copy device image into bucket"))
 				return
 			}
 
 			err = br.Close()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close bucket reader"))
+				_, _ = w.Write([]byte("failed to close bucket reader"))
 				return
 			}
 
@@ -218,7 +218,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		exists, err := bucket.Exists(r.Context(), thumbIconPath)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -227,7 +227,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			br, err := bucket.NewReader(r.Context(), originalIconPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			defer br.Close()
@@ -238,7 +238,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy media item into byte buffer for image processing"))
+				_, _ = w.Write([]byte("failed to copy media item into byte buffer for image processing"))
 				return
 			}
 
@@ -246,7 +246,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close handle loading image from backing store"))
+				_, _ = w.Write([]byte("failed to close handle loading image from backing store"))
 				return
 			}
 
@@ -257,7 +257,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			imageBytes, err := imageproxy.Transform(buf.Bytes(), imageOptions)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to transform image"))
+				_, _ = w.Write([]byte("failed to transform image"))
 				return
 			}
 
@@ -265,7 +265,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			bw, err := bucket.NewWriter(r.Context(), thumbIconPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to open bucket to stash resized image"))
+				_, _ = w.Write([]byte("failed to open bucket to stash resized image"))
 				return
 			}
 			_, err = io.Copy(bw, bytes.NewReader(imageBytes))
@@ -279,14 +279,14 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			err = bw.Close()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close bucket after writing"))
+				_, _ = w.Write([]byte("failed to close bucket after writing"))
 				return
 			}
 
 			attrs, err := bucket.Attributes(r.Context(), thumbIconPath)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			w.Header().Set("ETag", attrs.ETag)
@@ -295,7 +295,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 			_, err = io.Copy(w, bytes.NewReader(imageBytes))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy device image into bucket"))
+				_, _ = w.Write([]byte("failed to copy device image into bucket"))
 				return
 			}
 			return
@@ -305,7 +305,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		attrs, err := bucket.Attributes(r.Context(), thumbIconPath)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		w.Header().Set("ETag", attrs.ETag)
@@ -321,7 +321,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		br, err := bucket.NewReader(r.Context(), thumbIconPath, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		defer br.Close()
@@ -337,7 +337,7 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		err = br.Close()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close bucket after reading"))
+			_, _ = w.Write([]byte("failed to close bucket after reading"))
 			return
 		}
 	}

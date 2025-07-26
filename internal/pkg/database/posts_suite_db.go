@@ -902,9 +902,9 @@ func (s *PostsSuite) TestSetPostTags() {
 	postTaggings, err := FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
 	s.Require().NoError(err)
 
-	var tagIDs []int
-	for _, v := range postTaggings {
-		tagIDs = append(tagIDs, v.TagID)
+	tagIDs := make([]int, len(postTaggings))
+	for i, v := range postTaggings {
+		tagIDs[i] = v.TagID
 	}
 
 	postTags, err := FindTagsByID(s.T().Context(), s.DB, tagIDs)
@@ -935,9 +935,9 @@ func (s *PostsSuite) TestSetPostTags() {
 	postTaggings, err = FindTaggingsByPostID(s.DB, persistedPosts[0].ID)
 	s.Require().NoError(err)
 
-	tagIDs = []int{}
-	for _, v := range postTaggings {
-		tagIDs = append(tagIDs, v.TagID)
+	tagIDs = make([]int, len(postTaggings))
+	for i, t := range postTaggings {
+		tagIDs[i] = t.TagID
 	}
 
 	postTags, err = FindTagsByID(s.T().Context(), s.DB, tagIDs)

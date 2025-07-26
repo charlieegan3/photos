@@ -56,7 +56,7 @@ func newDBTag(tag models.Tag) dbTag {
 
 type TagNameConflictError struct{}
 
-func (_ TagNameConflictError) Error() string {
+func (TagNameConflictError) Error() string {
 	return "tag name conflicted with an existing tag"
 }
 
@@ -71,7 +71,8 @@ func CreateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []m
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.tags").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTags); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTags)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert tags")
 	}
 
@@ -87,7 +88,8 @@ func FindTagsByName(ctx context.Context, db *sql.DB, names []string) (results []
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("name").In(names)).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTags); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTags)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select tags by name")
 	}
 
@@ -107,7 +109,8 @@ func FindTagsByID(ctx context.Context, db *sql.DB, ids []int) (results []models.
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("id").In(ids)).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTags); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTags)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select tags by id")
 	}
 
@@ -188,7 +191,8 @@ func AllTags(
 		query = query.Limit(options.Limit)
 	}
 
-	if err := query.Executor().ScanStructsContext(ctx, &dbTags); err != nil {
+	err = query.Executor().ScanStructsContext(ctx, &dbTags)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select tags")
 	}
 
@@ -203,9 +207,9 @@ func AllTags(
 }
 
 func DeleteTags(ctx context.Context, db *sql.DB, tags []models.Tag) (err error) {
-	var ids []int
-	for _, d := range tags {
-		ids = append(ids, d.ID)
+	ids := make([]int, len(tags))
+	for i, t := range tags {
+		ids[i] = t.ID
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -246,8 +250,10 @@ func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []m
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStructContext(ctx, &result); err != nil {
-			if rErr := tx.Rollback(); rErr != nil {
+		_, err = update.ScanStructContext(ctx, &result)
+		if err != nil {
+			rErr := tx.Rollback()
+			if rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
 
@@ -256,7 +262,8 @@ func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []m
 
 		results = append(results, newTag(result))
 	}
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
 	}
 

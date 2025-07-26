@@ -46,7 +46,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		posts, err := database.AllPosts(db, true, database.SelectOptions{SortField: "publish_date", SortDescending: true})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -56,7 +56,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -69,21 +69,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		rawID, ok := mux.Vars(r)["postID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("post ID is required"))
+			_, _ = w.Write([]byte("post ID is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("postID was not integer"))
+			_, _ = w.Write([]byte("postID was not integer"))
 			return
 		}
 
 		posts, err := database.FindPostsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -96,7 +96,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		taggings, err := database.FindTaggingsByPostID(db, posts[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -108,28 +108,28 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		tags, err := database.FindTagsByID(r.Context(), db, tagIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		medias, err := database.FindMediasByID(r.Context(), db, []int{posts[0].MediaID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		allMedias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -153,7 +153,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -170,7 +170,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			i, err := strconv.ParseInt(mediaID, 10, 64)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to parse supplied mediaID value"))
+				_, _ = w.Write([]byte("failed to parse supplied mediaID value"))
 				return
 			}
 			newPost.MediaID = int(i)
@@ -181,7 +181,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			i, err := strconv.ParseInt(locationID, 10, 64)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to parse supplied locationID value"))
+				_, _ = w.Write([]byte("failed to parse supplied locationID value"))
 				return
 			}
 			newPost.LocationID = int(i)
@@ -192,7 +192,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			i, err := strconv.ParseInt(timestamp, 10, 64)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to parse supplied timestamp value"))
+				_, _ = w.Write([]byte("failed to parse supplied timestamp value"))
 				return
 			}
 			newPost.PublishDate = time.Unix(i, 0)
@@ -201,14 +201,14 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		medias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -230,7 +230,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -242,14 +242,14 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 
 		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
 		err := r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			_, _ = w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
@@ -270,26 +270,26 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		post.LocationID, err = strconv.Atoi(r.Form.Get("LocationID"))
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse location ID"))
+			_, _ = w.Write([]byte("failed to parse location ID"))
 			return
 		}
 		post.MediaID, err = strconv.Atoi(r.Form.Get("MediaID"))
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse media ID"))
+			_, _ = w.Write([]byte("failed to parse media ID"))
 			return
 		}
 
 		persistedPosts, err := database.CreatePosts(r.Context(), db, []models.Post{post})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(persistedPosts) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of persistedPosts"))
+			_, _ = w.Write([]byte("unexpected number of persistedPosts"))
 			return
 		}
 
@@ -297,7 +297,7 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		err = database.SetPostTags(r.Context(), db, persistedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -312,28 +312,28 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be set"))
+			_, _ = w.Write([]byte("Content-Type must be set"))
 			return
 		}
 
 		rawID, ok := mux.Vars(r)["postID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("post slug is required"))
+			_, _ = w.Write([]byte("post slug is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse post ID"))
+			_, _ = w.Write([]byte("failed to parse post ID"))
 			return
 		}
 
 		existingPosts, err := database.FindPostsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -345,14 +345,14 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		// handle delete
 		if contentType[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
+			_, _ = w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
 			return
 		}
 
 		err = r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse delete form"))
+			_, _ = w.Write([]byte("failed to parse delete form"))
 			return
 		}
 
@@ -360,7 +360,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 			err = database.DeletePosts(r.Context(), db, []models.Post{existingPosts[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			http.Redirect(w, r, "/admin/posts", http.StatusSeeOther)
@@ -369,7 +369,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 
 		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			_, _ = w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return
 		}
 
@@ -391,26 +391,26 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		post.LocationID, err = strconv.Atoi(r.Form.Get("LocationID"))
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse location ID"))
+			_, _ = w.Write([]byte("failed to parse location ID"))
 			return
 		}
 		post.MediaID, err = strconv.Atoi(r.Form.Get("MediaID"))
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse media ID"))
+			_, _ = w.Write([]byte("failed to parse media ID"))
 			return
 		}
 
 		updatedPosts, err := database.UpdatePosts(r.Context(), db, []models.Post{post})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(updatedPosts) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of updatedPosts"))
+			_, _ = w.Write([]byte("unexpected number of updatedPosts"))
 			return
 		}
 
@@ -418,7 +418,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		err = database.SetPostTags(r.Context(), db, updatedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 

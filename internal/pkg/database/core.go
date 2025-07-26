@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"strings"
@@ -86,7 +87,8 @@ func Init(
 		return db, fmt.Errorf("failed to init db connection: %w", err)
 	}
 
-	if err = db.PingContext(ctx); err != nil {
+	err = db.PingContext(ctx)
+	if err != nil {
 		return db, fmt.Errorf("failed to ping the database: %w", err)
 	}
 
@@ -151,6 +153,11 @@ func Exists(ctx context.Context, db *sql.DB, databaseName string) (bool, error) 
 	}
 	defer rows.Close()
 
+	err = rows.Err()
+	if err != nil {
+		return false, fmt.Errorf("failed to query for database existence: %w", err)
+	}
+
 	var result int
 	for rows.Next() {
 		err = rows.Scan(&result)
@@ -172,9 +179,10 @@ func buildConnectionString(connectionStringBase string, params url.Values) strin
 	// Check if this is a Unix socket connection by looking for host parameter that starts with "/"
 	if hostParam := params.Get("host"); hostParam != "" && strings.HasPrefix(hostParam, "/") {
 		// Validate that the socket directory exists
-		if _, err := os.Stat(hostParam); os.IsNotExist(err) {
+		_, err := os.Stat(hostParam)
+		if os.IsNotExist(err) {
 			// Log warning but continue - PostgreSQL might create the socket
-			fmt.Printf("Warning: Unix socket directory %s does not exist\n", hostParam)
+			log.Printf("Warning: Unix socket directory %s does not exist\n", hostParam)
 		}
 
 		// Unix socket connection: postgres:///dbname?host=/socket/path&other=params

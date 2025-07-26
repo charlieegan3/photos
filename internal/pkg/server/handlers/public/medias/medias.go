@@ -25,7 +25,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Header().Set("Content-Type", "application/text")
-			w.Write([]byte("media ID is required"))
+			_, _ = w.Write([]byte("media ID is required"))
 			return
 		}
 
@@ -33,7 +33,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("media ID was not integer"))
+			_, _ = w.Write([]byte("media ID was not integer"))
 			return
 		}
 
@@ -41,7 +41,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -53,7 +53,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if len(medias) != 1 {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of medias found"))
+			_, _ = w.Write([]byte("unexpected number of medias found"))
 			return
 		}
 
@@ -83,7 +83,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		if err != nil {
 			w.Header().Set("Content-Type", "application/text")
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if !exists {
@@ -97,7 +97,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 		}
@@ -111,7 +111,7 @@ func serveImageFromBucket(w http.ResponseWriter, r *http.Request, bucket *blob.B
 	if err != nil {
 		w.Header().Set("Content-Type", "application/text")
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -129,7 +129,7 @@ func serveImageFromBucket(w http.ResponseWriter, r *http.Request, bucket *blob.B
 	if err != nil {
 		w.Header().Set("Content-Type", "application/text")
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 	defer br.Close()
@@ -146,7 +146,7 @@ func serveImageFromBucket(w http.ResponseWriter, r *http.Request, bucket *blob.B
 	if err != nil {
 		w.Header().Set("Content-Type", "application/text")
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("failed to close bucket reader"))
+		_, _ = w.Write([]byte("failed to close bucket reader"))
 		return
 	}
 }

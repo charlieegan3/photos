@@ -19,10 +19,10 @@ func TestAuthMiddleware(t *testing.T) {
 	adminRouter.Use(InitMiddlewareAuth("username", "password"))
 
 	router.HandleFunc("/public", func(w http.ResponseWriter, _ *http.Request) {
-		io.WriteString(w, "public")
+		_, _ = io.WriteString(w, "public")
 	})
 	adminRouter.HandleFunc("/secret", func(w http.ResponseWriter, _ *http.Request) {
-		io.WriteString(w, "secret")
+		_, _ = io.WriteString(w, "secret")
 	})
 
 	// test the public request

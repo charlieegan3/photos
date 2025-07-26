@@ -26,27 +26,27 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		rawID, ok := mux.Vars(r)["tripID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("trip id is required"))
+			_, _ = w.Write([]byte("trip id is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse trip ID"))
+			_, _ = w.Write([]byte("failed to parse trip ID"))
 			return
 		}
 
 		trips, err := database.FindTripsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(trips) != 1 {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("trip not found"))
+			_, _ = w.Write([]byte("trip not found"))
 			return
 		}
 
@@ -84,7 +84,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		posts, err := database.PostsInDateRange(r.Context(), db, trip.StartDate, toTime)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -101,7 +101,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		locations, err := database.FindLocationsByID(r.Context(), db, locationIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		locationsByID := make(map[int]models.Location)
@@ -117,7 +117,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -157,7 +157,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}

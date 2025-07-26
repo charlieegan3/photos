@@ -263,7 +263,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 	values := map[string]io.Reader{
 		"Make":          strings.NewReader("Fuji"),
 		"File":          imageFile,
-		"DeviceID":      strings.NewReader(strconv.FormatInt(int64(returnedDevices[0].ID), 10)),
+		"DeviceID":      strings.NewReader(strconv.FormatInt(returnedDevices[0].ID, 10)),
 		"DisplayOffset": strings.NewReader("50"),
 		"LensID":        strings.NewReader("0"), // remove the previously set lens
 		"_method":       strings.NewReader(http.MethodPut),
@@ -512,7 +512,7 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 	// build the form to be posted
 	values := map[string]io.Reader{
 		"File":     imageFile,
-		"DeviceID": strings.NewReader(strconv.FormatInt(int64(returnedDevices[0].ID), 10)),
+		"DeviceID": strings.NewReader(strconv.FormatInt(returnedDevices[0].ID, 10)),
 	}
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)

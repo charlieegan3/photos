@@ -1,6 +1,6 @@
 module github.com/charlieegan3/photos
 
-go 1.22.4
+go 1.24.4
 
 require (
 	github.com/charlieegan3/oauth-middleware v0.0.0-20240622204233-c70d49cc30bf

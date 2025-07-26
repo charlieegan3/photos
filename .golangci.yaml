@@ -67,6 +67,10 @@ linters:
       linters:
       - forcetypeassert
       - godot
+      - dupl
+    - path: '(.+)_suite(.*)\.go'
+      linters:
+      - dupl
     generated: lax
     presets:
     - comments

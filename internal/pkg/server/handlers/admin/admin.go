@@ -19,7 +19,7 @@ func BuildAdminIndexHandler(renderer templating.PageRenderer) func(http.Response
 		err := renderer(ctx, adminIndexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}

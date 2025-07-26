@@ -23,7 +23,7 @@ func BuildIndexHandler(_ *sql.DB, renderer templating.PageRenderer) func(http.Re
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}

@@ -20,7 +20,7 @@ func InitMiddlewareAuth(username, password string) func(http.Handler) http.Handl
 					fmt.Sprintf(`Basic realm="%s"`, constants.Realm),
 				)
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("Unauthorised.\n"))
+				_, _ = w.Write([]byte("Unauthorised.\n"))
 
 				return
 			}

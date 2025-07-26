@@ -13,5 +13,5 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 		"method": r.Method,
 	}).Info("not found")
 	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("not found"))
+	_, _ = w.Write([]byte("not found"))
 }

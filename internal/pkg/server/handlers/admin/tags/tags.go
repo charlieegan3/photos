@@ -31,7 +31,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		tags, err := database.AllTags(r.Context(), db, true, database.SelectOptions{SortField: "name"})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -41,7 +41,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -54,14 +54,14 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		name, ok := mux.Vars(r)["tagName"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("tag name is required"))
+			_, _ = w.Write([]byte("tag name is required"))
 			return
 		}
 
 		tags, err := database.FindTagsByName(r.Context(), db, []string{name})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -76,7 +76,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -93,7 +93,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 		err := renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -105,14 +105,14 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 
 		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
 		err := r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			_, _ = w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
@@ -126,13 +126,13 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		persistedTags, err := database.CreateTags(r.Context(), db, []models.Tag{tag})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(persistedTags) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of persistedTags"))
+			_, _ = w.Write([]byte("unexpected number of persistedTags"))
 			return
 		}
 
@@ -147,21 +147,21 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be set"))
+			_, _ = w.Write([]byte("Content-Type must be set"))
 			return
 		}
 
 		name, ok := mux.Vars(r)["tagName"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("tag slug is required"))
+			_, _ = w.Write([]byte("tag slug is required"))
 			return
 		}
 
 		existingTags, err := database.FindTagsByName(r.Context(), db, []string{name})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -173,14 +173,14 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		// handle delete
 		if contentType[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
+			_, _ = w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
 			return
 		}
 
 		err = r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse delete form"))
+			_, _ = w.Write([]byte("failed to parse delete form"))
 			return
 		}
 
@@ -188,7 +188,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 			err = database.DeleteTags(r.Context(), db, []models.Tag{existingTags[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			http.Redirect(w, r, "/admin/tags", http.StatusSeeOther)
@@ -197,7 +197,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 
 		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			_, _ = w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return
 		}
 
@@ -220,30 +220,30 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 				conflictingTags, err := database.FindTagsByName(r.Context(), db, []string{tag.Name})
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 				if len(conflictingTags) != 1 {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte("conflicting tag was not found"))
+					_, _ = w.Write([]byte("conflicting tag was not found"))
 					return
 				}
 				err = database.MergeTags(r.Context(), db, conflictingTags[0], tag)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 				redirectTo = "/admin/tags/" + conflictingTags[0].Name
 			} else {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 		} else {
 			if len(updatedTags) != 1 {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("unexpected number of updatedTags"))
+				_, _ = w.Write([]byte("unexpected number of updatedTags"))
 				return
 			}
 

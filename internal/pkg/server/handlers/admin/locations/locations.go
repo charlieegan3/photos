@@ -43,7 +43,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -53,7 +53,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -66,21 +66,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		rawID, ok := mux.Vars(r)["locationID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("location id is required"))
+			_, _ = w.Write([]byte("location id is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse location ID"))
+			_, _ = w.Write([]byte("failed to parse location ID"))
 			return
 		}
 
 		locations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -95,7 +95,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -109,13 +109,15 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 
 		latitude, ok := r.URL.Query()["lat"]
 		if ok {
-			if s, err := strconv.ParseFloat(latitude[0], 64); err == nil {
+			s, err := strconv.ParseFloat(latitude[0], 64)
+			if err == nil {
 				location.Latitude = s
 			}
 		}
 		longitude, ok := r.URL.Query()["long"]
 		if ok {
-			if s, err := strconv.ParseFloat(longitude[0], 64); err == nil {
+			s, err := strconv.ParseFloat(longitude[0], 64)
+			if err == nil {
 				location.Longitude = s
 			}
 		}
@@ -129,7 +131,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 		err := renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -141,14 +143,14 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 
 		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
 		err := r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			_, _ = w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
@@ -157,25 +159,27 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		}
 
 		latitudeString := r.Form.Get("Latitude")
-		if s, err := strconv.ParseFloat(latitudeString, 64); err == nil {
+		s, err := strconv.ParseFloat(latitudeString, 64)
+		if err == nil {
 			location.Latitude = s
 		}
 
 		longitudeString := r.Form.Get("Longitude")
-		if s, err := strconv.ParseFloat(longitudeString, 64); err == nil {
+		s, err = strconv.ParseFloat(longitudeString, 64)
+		if err == nil {
 			location.Longitude = s
 		}
 
 		persistedLocations, err := database.CreateLocations(r.Context(), db, []models.Location{location})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(persistedLocations) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of persistedLocations"))
+			_, _ = w.Write([]byte("unexpected number of persistedLocations"))
 			return
 		}
 
@@ -194,28 +198,28 @@ func BuildFormHandler(
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be set"))
+			_, _ = w.Write([]byte("Content-Type must be set"))
 			return
 		}
 
 		rawID, ok := mux.Vars(r)["locationID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("location id is required"))
+			_, _ = w.Write([]byte("location id is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse location ID"))
+			_, _ = w.Write([]byte("failed to parse location ID"))
 			return
 		}
 
 		existingLocations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -227,14 +231,14 @@ func BuildFormHandler(
 		// handle delete
 		if contentType[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
+			_, _ = w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
 			return
 		}
 
 		err = r.ParseForm()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse delete form"))
+			_, _ = w.Write([]byte("failed to parse delete form"))
 			return
 		}
 
@@ -243,21 +247,21 @@ func BuildFormHandler(
 			exists, err := bucket.Exists(r.Context(), mapKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			if exists {
 				err = bucket.Delete(r.Context(), mapKey)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 			}
 			err = database.DeleteLocations(r.Context(), db, []models.Location{existingLocations[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -267,7 +271,7 @@ func BuildFormHandler(
 
 		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			_, _ = w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return
 		}
 
@@ -278,7 +282,7 @@ func BuildFormHandler(
 			newLocationID, err := database.MergeLocations(r.Context(), db, name, existingLocations[0].Name)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			if newLocationID != 0 {
@@ -286,14 +290,14 @@ func BuildFormHandler(
 				exists, err := bucket.Exists(r.Context(), mapKey)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 				if exists {
 					err = bucket.Delete(r.Context(), mapKey)
 					if err != nil {
 						w.WriteHeader(http.StatusInternalServerError)
-						w.Write([]byte(err.Error()))
+						_, _ = w.Write([]byte(err.Error()))
 						return
 					}
 				}
@@ -308,25 +312,27 @@ func BuildFormHandler(
 		}
 
 		latitudeString := r.Form.Get("Latitude")
-		if s, err := strconv.ParseFloat(latitudeString, 64); err == nil {
+		s, err := strconv.ParseFloat(latitudeString, 64)
+		if err == nil {
 			location.Latitude = s
 		}
 
 		longitudeString := r.Form.Get("Longitude")
-		if s, err := strconv.ParseFloat(longitudeString, 64); err == nil {
+		s, err = strconv.ParseFloat(longitudeString, 64)
+		if err == nil {
 			location.Longitude = s
 		}
 
 		updatedLocations, err := database.UpdateLocations(r.Context(), db, []models.Location{location})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(updatedLocations) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of updatedLocations"))
+			_, _ = w.Write([]byte("unexpected number of updatedLocations"))
 			return
 		}
 
@@ -346,7 +352,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		redirectToRaw := r.URL.Query().Get("redirectTo")
 		if redirectToRaw == "" {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("missing redirectTo param"))
+			_, _ = w.Write([]byte("missing redirectTo param"))
 			return
 		}
 
@@ -356,7 +362,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		redirectToURL, err := url.QueryUnescape(redirectToRaw)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		redirectToURL += "?" + params.Encode()
@@ -364,27 +370,27 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		mediaIDRaw := r.URL.Query().Get("mediaID")
 		if mediaIDRaw == "" {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("missing mediaID param"))
+			_, _ = w.Write([]byte("missing mediaID param"))
 			return
 		}
 
 		mediaID, err := strconv.ParseInt(mediaIDRaw, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("invalid mediaID"))
+			_, _ = w.Write([]byte("invalid mediaID"))
 			return
 		}
 
 		medias, err := database.FindMediasByID(r.Context(), db, []int{int(mediaID)})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(medias) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of medias"))
+			_, _ = w.Write([]byte("unexpected number of medias"))
 			return
 		}
 
@@ -393,14 +399,14 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		nearbyLocations, err := database.NearbyLocations(db, media.Latitude, media.Longitude)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to get points at that timestamp"))
+			_, _ = w.Write([]byte("failed to get points at that timestamp"))
 			return
 		}
 
 		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -414,7 +420,7 @@ func BuildSelectHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		err = renderer(ctx, selectTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -432,7 +438,7 @@ func BuildLookupHandler(
 			err := renderer(plush.NewContext(), lookupFormTemplate, w)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 			}
 			return
 		}
@@ -440,14 +446,14 @@ func BuildLookupHandler(
 		client, err := geoapify.NewClient("https://api.geoapify.com", mapServerAPIKey)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		features, err := client.GeocodingSearch(r.Context(), query)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -457,7 +463,7 @@ func BuildLookupHandler(
 		err = renderer(ctx, lookupTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 		}
 	}
 }

@@ -75,7 +75,8 @@ func CreateTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) 
 		Rows(records).
 		OnConflict(goqu.DoNothing()). // there are only two fields
 		Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTaggings); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTaggings)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert taggings")
 	}
 
@@ -91,19 +92,20 @@ func FindOrCreateTaggings(
 	db *sql.DB,
 	taggings []models.Tagging,
 ) (results []models.Tagging, err error) {
-	var ex []exp.Expression
-	for _, t := range taggings {
-		ex = append(ex, goqu.Ex{
+	ex := make([]exp.Expression, len(taggings))
+	for i, t := range taggings {
+		ex[i] = goqu.Ex{
 			"post_id": t.PostID,
 			"tag_id":  t.TagID,
-		})
+		}
 	}
 
 	var dbTaggings []dbTagging
 
 	goquDB := goqu.New("postgres", db)
 	sel := goquDB.From("photos.taggings").Select("*").Where(goqu.Or(ex...)).Executor()
-	if err := sel.ScanStructsContext(ctx, &dbTaggings); err != nil {
+	err = sel.ScanStructsContext(ctx, &dbTaggings)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by post_id")
 	}
 
@@ -142,7 +144,8 @@ func FindTaggingsByPostID(db *sql.DB, id int) (results []models.Tagging, err err
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.taggings").Select("*").Where(goqu.Ex{"post_id": id}).Executor()
-	if err := insert.ScanStructs(&dbTaggings); err != nil {
+	err = insert.ScanStructs(&dbTaggings)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by post_id")
 	}
 
@@ -158,7 +161,8 @@ func FindTaggingsByTagID(ctx context.Context, db *sql.DB, id int) (results []mod
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.taggings").Select("*").Where(goqu.Ex{"tag_id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTaggings); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTaggings)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select taggings by tag_id")
 	}
 
@@ -170,9 +174,9 @@ func FindTaggingsByTagID(ctx context.Context, db *sql.DB, id int) (results []mod
 }
 
 func DeleteTaggings(ctx context.Context, db *sql.DB, taggings []models.Tagging) (err error) {
-	var ids []int
-	for _, d := range taggings {
-		ids = append(ids, d.ID)
+	ids := make([]int, len(taggings))
+	for i, d := range taggings {
+		ids[i] = d.ID
 	}
 
 	// nothing to delete
@@ -201,7 +205,8 @@ func AllTaggings(db *sql.DB) (results []models.Tagging, err error) {
 	goquDB := goqu.New("postgres", db)
 	query := goquDB.From("photos.taggings").Select("*")
 
-	if err := query.Executor().ScanStructs(&dbTaggings); err != nil {
+	err = query.Executor().ScanStructs(&dbTaggings)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select tags")
 	}
 

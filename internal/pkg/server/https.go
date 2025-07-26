@@ -14,7 +14,7 @@ func InitMiddlewareHTTPS(hostname, environment string) func(http.Handler) http.H
 					newURL, err := url.Parse(r.URL.String())
 					if err != nil {
 						w.WriteHeader(http.StatusBadRequest)
-						w.Write([]byte(err.Error()))
+						_, _ = w.Write([]byte(err.Error()))
 						return
 					}
 					newURL.Host = hostname + ":443"

@@ -76,7 +76,8 @@ func CreateLocations(
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.locations").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLocations); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLocations)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert locations")
 	}
 
@@ -92,7 +93,8 @@ func FindLocationsByID(ctx context.Context, db *sql.DB, id []int) (results []mod
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLocations); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLocations)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select locations by id")
 	}
 
@@ -108,7 +110,8 @@ func FindLocationsByName(ctx context.Context, db *sql.DB, name string) (results 
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLocations); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLocations)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select locations by name")
 	}
 
@@ -125,7 +128,8 @@ func AllLocations(ctx context.Context, db *sql.DB) (results []models.Location, e
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.locations").Select("*").Order(goqu.I("name").Asc()).Executor()
 
-	if err := insert.ScanStructsContext(ctx, &dbLocations); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLocations)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select locations")
 	}
 
@@ -140,9 +144,9 @@ func AllLocations(ctx context.Context, db *sql.DB) (results []models.Location, e
 }
 
 func DeleteLocations(ctx context.Context, db *sql.DB, locations []models.Location) (err error) {
-	var ids []int
-	for _, d := range locations {
-		ids = append(ids, d.ID)
+	ids := make([]int, len(locations))
+	for i, d := range locations {
+		ids[i] = d.ID
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -187,8 +191,10 @@ func UpdateLocations(
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStructContext(ctx, &result); err != nil {
-			if rErr := tx.Rollback(); rErr != nil {
+		_, err = update.ScanStructContext(ctx, &result)
+		if err != nil {
+			rErr := tx.Rollback()
+			if rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
 			return results, errors.Wrap(err, "failed to update, rolled back")
@@ -196,7 +202,8 @@ func UpdateLocations(
 
 		results = append(results, newLocation(result))
 	}
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
 	}
 
@@ -219,13 +226,15 @@ func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationNa
 
 	result, err := newLocationID.ScanValContext(ctx, &id)
 	if err != nil {
-		if rErr := tx.Rollback(); rErr != nil {
+		rErr := tx.Rollback()
+		if rErr != nil {
 			return 0, errors.Wrap(rErr, "failed to rollback transaction")
 		}
 		return 0, errors.Wrap(err, "failed to get new location ID")
 	}
 	if !result {
-		if rErr := tx.Rollback(); rErr != nil {
+		rErr := tx.Rollback()
+		if rErr != nil {
 			return 0, errors.Wrap(rErr, "failed to rollback transaction")
 		}
 		return 0, errors.Wrap(err, "failed to get new location from queried row")
@@ -236,13 +245,15 @@ func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationNa
 		Where(goqu.Ex{"name": oldLocationName}).Executor()
 	result, err = oldLocationID.ScanVal(&oldID)
 	if err != nil {
-		if rErr := tx.Rollback(); rErr != nil {
+		rErr := tx.Rollback()
+		if rErr != nil {
 			return 0, errors.Wrap(rErr, "failed to rollback transaction")
 		}
 		return 0, errors.Wrap(err, "failed to get old location ID")
 	}
 	if !result {
-		if rErr := tx.Rollback(); rErr != nil {
+		rErr := tx.Rollback()
+		if rErr != nil {
 			return 0, errors.Wrap(rErr, "failed to rollback transaction")
 		}
 		return 0, errors.Wrap(err, "failed to get old location from queried row")
@@ -254,7 +265,8 @@ func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationNa
 		Executor()
 	_, err = updatePosts.Exec()
 	if err != nil {
-		if rErr := tx.Rollback(); rErr != nil {
+		rErr := tx.Rollback()
+		if rErr != nil {
 			return 0, errors.Wrap(rErr, "failed to rollback transaction")
 		}
 		return 0, errors.Wrap(err, "failed to update posts to merged location")
@@ -264,13 +276,15 @@ func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationNa
 		Where(goqu.Ex{"id": oldID}).Executor()
 	_, err = deleteLocation.Exec()
 	if err != nil {
-		if rErr := tx.Rollback(); rErr != nil {
+		rErr := tx.Rollback()
+		if rErr != nil {
 			return 0, errors.Wrap(rErr, "failed to rollback transaction")
 		}
 		return 0, errors.Wrap(err, "failed to delete old location")
 	}
 
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return 0, errors.Wrap(err, "failed to commit transaction")
 	}
 
@@ -300,7 +314,8 @@ func NearbyLocations(db *sql.DB, lat, lon float64) (results []models.Location, e
 			"updated_at").
 		Limit(10)
 
-	if err := sel.Executor().ScanStructs(&dbLocations); err != nil {
+	err = sel.Executor().ScanStructs(&dbLocations)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select locations")
 	}
 

@@ -59,21 +59,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		rawID, ok := mux.Vars(r)["locationID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("location id is required"))
+			_, _ = w.Write([]byte("location id is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse location ID"))
+			_, _ = w.Write([]byte("failed to parse location ID"))
 			return
 		}
 
 		locations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -85,7 +85,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		posts, err := database.FindPostsByLocation(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -99,7 +99,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -116,7 +116,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -131,7 +131,7 @@ func BuildIndexHandler(
 		locations, err := database.AllLocations(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -143,7 +143,7 @@ func BuildIndexHandler(
 		locationsJSON, err := json.Marshal(locations)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -154,7 +154,7 @@ func BuildIndexHandler(
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -172,21 +172,21 @@ func BuildMapHandler(
 		rawID, ok := mux.Vars(r)["locationID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("location ID is required"))
+			_, _ = w.Write([]byte("location ID is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("location ID was not integer"))
+			_, _ = w.Write([]byte("location ID was not integer"))
 			return
 		}
 
 		locations, err := database.FindLocationsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -197,7 +197,7 @@ func BuildMapHandler(
 
 		if len(locations) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of locations found"))
+			_, _ = w.Write([]byte("unexpected number of locations found"))
 			return
 		}
 
@@ -206,7 +206,7 @@ func BuildMapHandler(
 		exists, err := bucket.Exists(r.Context(), mapPath)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -214,7 +214,7 @@ func BuildMapHandler(
 			mapImageURL, err := mapURL(mapServerURL, mapServerAPIKey, locations[0].Latitude, locations[0].Longitude)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -243,21 +243,21 @@ func BuildMapHandler(
 			bw, err := bucket.NewWriter(r.Context(), mapPath, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to open bucket to stash map"))
+				_, _ = w.Write([]byte("failed to open bucket to stash map"))
 				return
 			}
 
 			_, err = io.Copy(bw, resp.Body)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to copy map into bucket"))
+				_, _ = w.Write([]byte("failed to copy map into bucket"))
 				return
 			}
 
 			err = bw.Close()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close bucket after writing"))
+				_, _ = w.Write([]byte("failed to close bucket after writing"))
 				return
 			}
 		}
@@ -265,7 +265,7 @@ func BuildMapHandler(
 		br, err := bucket.NewReader(r.Context(), mapPath, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		defer br.Close()
@@ -273,7 +273,7 @@ func BuildMapHandler(
 		attrs, err := bucket.Attributes(r.Context(), mapPath)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 

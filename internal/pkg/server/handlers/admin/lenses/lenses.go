@@ -38,7 +38,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -48,7 +48,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -65,7 +65,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 		err := renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -78,21 +78,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		rawID, ok := mux.Vars(r)["lensID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("lens id is required"))
+			_, _ = w.Write([]byte("lens id is required"))
 			return
 		}
 
 		id, err := strconv.ParseInt(rawID, 10, 0)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse lens ID"))
+			_, _ = w.Write([]byte("failed to parse lens ID"))
 			return
 		}
 
 		lenses, err := database.FindLensesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -107,7 +107,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -123,14 +123,14 @@ func BuildCreateHandler(
 
 		if val, ok := r.Header["Content-Type"]; !ok || !strings.HasPrefix(val[0], "multipart/form-data") {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
 		err := r.ParseMultipartForm(32 << 20)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			_, _ = w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
@@ -143,7 +143,7 @@ func BuildCreateHandler(
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to read uploaded icon file"))
+			_, _ = w.Write([]byte("failed to read uploaded icon file"))
 			return
 		}
 
@@ -156,20 +156,20 @@ func BuildCreateHandler(
 			}
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("icon file missing extension"))
+			_, _ = w.Write([]byte("icon file missing extension"))
 			return
 		}
 
 		persistedLenses, err := database.CreateLenses(r.Context(), db, []models.Lens{lens})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(persistedLenses) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of persistedLenses"))
+			_, _ = w.Write([]byte("unexpected number of persistedLenses"))
 			return
 		}
 
@@ -185,14 +185,14 @@ func BuildCreateHandler(
 		_, err = io.Copy(bw, f)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to save to icon storage"))
+			_, _ = w.Write([]byte("failed to save to icon storage"))
 			return
 		}
 
 		err = bw.Close()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close connection to icon storage"))
+			_, _ = w.Write([]byte("failed to close connection to icon storage"))
 			return
 		}
 
@@ -211,28 +211,28 @@ func BuildFormHandler(
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be set"))
+			_, _ = w.Write([]byte("Content-Type must be set"))
 			return
 		}
 
 		rawID, ok := mux.Vars(r)["lensID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("lens id is required"))
+			_, _ = w.Write([]byte("lens id is required"))
 			return
 		}
 
 		id, err := strconv.ParseInt(rawID, 10, 0)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse lens ID"))
+			_, _ = w.Write([]byte("failed to parse lens ID"))
 			return
 		}
 
 		existingLenses, err := database.FindLensesByID(r.Context(), db, []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -246,20 +246,20 @@ func BuildFormHandler(
 			err := r.ParseForm()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to parse delete form"))
+				_, _ = w.Write([]byte("failed to parse delete form"))
 				return
 			}
 
 			if r.Form.Get("_method") != http.MethodDelete {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("expected _method to be DELETE"))
+				_, _ = w.Write([]byte("expected _method to be DELETE"))
 				return
 			}
 
 			err = database.DeleteLenses(r.Context(), db, []models.Lens{existingLenses[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -267,7 +267,7 @@ func BuildFormHandler(
 			err = bucket.Delete(r.Context(), iconKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -277,20 +277,20 @@ func BuildFormHandler(
 
 		if !strings.HasPrefix(contentType[0], "multipart/form-data") {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
 		err = r.ParseMultipartForm(32 << 20)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			_, _ = w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
 		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			_, _ = w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return
 		}
 
@@ -311,7 +311,7 @@ func BuildFormHandler(
 				}
 			} else {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("icon file missing extension"))
+				_, _ = w.Write([]byte("icon file missing extension"))
 				return
 			}
 		}
@@ -319,13 +319,13 @@ func BuildFormHandler(
 		updatedLenses, err := database.UpdateLenses(r.Context(), db, []models.Lens{lens})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(updatedLenses) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of updatedLenses"))
+			_, _ = w.Write([]byte("unexpected number of updatedLenses"))
 			return
 		}
 
@@ -337,21 +337,21 @@ func BuildFormHandler(
 			bw, err := bucket.NewWriter(r.Context(), fmt.Sprintf("lens_icons/%d.png", updatedLenses[0].ID), nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize icon storage"))
+				_, _ = w.Write([]byte("failed initialize icon storage"))
 				return
 			}
 
 			_, err = io.Copy(bw, f)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to save to icon storage"))
+				_, _ = w.Write([]byte("failed to save to icon storage"))
 				return
 			}
 
 			err = bw.Close()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to icon storage"))
+				_, _ = w.Write([]byte("failed to close connection to icon storage"))
 				return
 			}
 		}

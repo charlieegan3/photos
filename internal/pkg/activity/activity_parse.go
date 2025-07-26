@@ -147,8 +147,6 @@ func parseFit(rawData []byte) (models.Activity, []Point, error) {
 		return activity, points, fmt.Errorf("failed to parse data: %w", err)
 	}
 
-	fitData.FileId.Manufacturer.String()
-
 	fitActivity, err := fitData.Activity()
 	if err != nil {
 		return activity, points, fmt.Errorf("failed to get activity from fit file: %w", err)

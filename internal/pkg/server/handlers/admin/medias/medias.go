@@ -45,14 +45,14 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		medias, err := database.AllMedias(r.Context(), db, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		posts, err := database.AllPosts(db, true, database.SelectOptions{})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		postMediaMap := make(map[int]bool)
@@ -67,7 +67,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -80,21 +80,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		id, ok := mux.Vars(r)["mediaID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("media id is required"))
+			_, _ = w.Write([]byte("media id is required"))
 			return
 		}
 
 		intID, err := strconv.Atoi(id)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse supplied ID"))
+			_, _ = w.Write([]byte("failed to parse supplied ID"))
 			return
 		}
 
 		medias, err := database.FindMediasByID(r.Context(), db, []int{intID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -106,7 +106,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -118,7 +118,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -132,7 +132,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		posts, err := database.FindPostsByMediaID(r.Context(), db, medias[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -145,7 +145,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -163,28 +163,28 @@ func BuildFormHandler(
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be set"))
+			_, _ = w.Write([]byte("Content-Type must be set"))
 			return
 		}
 
 		id, ok := mux.Vars(r)["mediaID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("media id is required"))
+			_, _ = w.Write([]byte("media id is required"))
 			return
 		}
 
 		intID, err := strconv.Atoi(id)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse supplied ID"))
+			_, _ = w.Write([]byte("failed to parse supplied ID"))
 			return
 		}
 
 		existingMedias, err := database.FindMediasByID(r.Context(), db, []int{intID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -198,20 +198,20 @@ func BuildFormHandler(
 			err := r.ParseForm()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to parse delete form"))
+				_, _ = w.Write([]byte("failed to parse delete form"))
 				return
 			}
 
 			if r.Form.Get("_method") != http.MethodDelete {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("expected _method to be DELETE"))
+				_, _ = w.Write([]byte("expected _method to be DELETE"))
 				return
 			}
 
 			err = database.DeleteMedias(r.Context(), db, []models.Media{existingMedias[0]})
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -219,7 +219,7 @@ func BuildFormHandler(
 			err = bucket.Delete(r.Context(), mediaKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -234,14 +234,14 @@ func BuildFormHandler(
 				}
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 
 				err = bucket.Delete(r.Context(), obj.Key)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 			}
@@ -252,20 +252,20 @@ func BuildFormHandler(
 
 		if !strings.HasPrefix(contentType[0], "multipart/form-data") {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
 		err = r.ParseMultipartForm(32 << 20)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse multipart form"))
+			_, _ = w.Write([]byte("failed to parse multipart form"))
 			return
 		}
 
 		if r.PostForm.Get("_method") != http.MethodPut {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("expected _method to be PUT or DELETE in form"))
+			_, _ = w.Write([]byte("expected _method to be PUT or DELETE in form"))
 			return
 		}
 
@@ -357,7 +357,7 @@ func BuildFormHandler(
 		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse device ID"))
+			_, _ = w.Write([]byte("failed to parse device ID"))
 			return
 		}
 
@@ -367,7 +367,7 @@ func BuildFormHandler(
 			media.LensID, err = strconv.ParseInt(rawLensID, 10, 0)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to parse lens ID"))
+				_, _ = w.Write([]byte("failed to parse lens ID"))
 				return
 			}
 		}
@@ -375,13 +375,13 @@ func BuildFormHandler(
 		updatedMedias, err := database.UpdateMedias(r.Context(), db, []models.Media{media})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(updatedMedias) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of updatedMedias"))
+			_, _ = w.Write([]byte("unexpected number of updatedMedias"))
 			return
 		}
 
@@ -394,7 +394,7 @@ func BuildFormHandler(
 				!strings.HasSuffix(lowerFilename, ".jpeg") &&
 				!strings.HasSuffix(lowerFilename, ".mp4") {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("media file must be jpg or mp4"))
+				_, _ = w.Write([]byte("media file must be jpg or mp4"))
 				return
 			}
 
@@ -403,28 +403,28 @@ func BuildFormHandler(
 			bw, err := bucket.NewWriter(r.Context(), key, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed initialize media storage"))
+				_, _ = w.Write([]byte("failed initialize media storage"))
 				return
 			}
 
 			_, err = io.Copy(bw, f)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to save to media storage"))
+				_, _ = w.Write([]byte("failed to save to media storage"))
 				return
 			}
 
 			err = bw.Close()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to close connection to media storage"))
+				_, _ = w.Write([]byte("failed to close connection to media storage"))
 				return
 			}
 
 			br, err := bucket.NewReader(r.Context(), key, nil)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to read from media storage"))
+				_, _ = w.Write([]byte("failed to read from media storage"))
 				return
 			}
 			defer br.Close()
@@ -432,7 +432,7 @@ func BuildFormHandler(
 			imageBytes, err := io.ReadAll(br)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("failed to read from media storage"))
+				_, _ = w.Write([]byte("failed to read from media storage"))
 				return
 			}
 
@@ -460,7 +460,7 @@ func BuildFormHandler(
 				if err != nil {
 					w.Header().Set("Content-Type", "application/text")
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(err.Error()))
+					_, _ = w.Write([]byte(err.Error()))
 					return
 				}
 			}
@@ -482,7 +482,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -495,14 +495,14 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		device, err := database.MostRecentlyUsedDevice(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -521,7 +521,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		err = renderer(ctx, newTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -539,7 +539,7 @@ func BuildCreateHandler(
 
 		if val, ok := r.Header["Content-Type"]; !ok || !strings.HasPrefix(val[0], "multipart/form-data") {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
 			return
 		}
 
@@ -560,7 +560,7 @@ func BuildCreateHandler(
 		media.DeviceID, err = strconv.ParseInt(r.Form.Get("DeviceID"), 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("failed to parse device ID"))
+			_, _ = w.Write([]byte("failed to parse device ID"))
 			return
 		}
 
@@ -568,7 +568,7 @@ func BuildCreateHandler(
 			media.LensID, err = strconv.ParseInt(r.Form.Get("LensID"), 10, 64)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("failed to parse lens ID"))
+				_, _ = w.Write([]byte("failed to parse lens ID"))
 				return
 			}
 		}
@@ -584,7 +584,7 @@ func BuildCreateHandler(
 		if !strings.HasSuffix(lowerFilename, ".jpg") &&
 			!strings.HasSuffix(lowerFilename, ".jpeg") {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("media file must be jpg"))
+			_, _ = w.Write([]byte("media file must be jpg"))
 			return
 		}
 
@@ -595,7 +595,7 @@ func BuildCreateHandler(
 			}
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("file must have name and extension"))
+			_, _ = w.Write([]byte("file must have name and extension"))
 			return
 		}
 
@@ -619,7 +619,7 @@ func BuildCreateHandler(
 		longValue, _ := exifData.Longitude.ToDecimal()
 		if latValue == 0 && longValue == 0 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("images must have a location set"))
+			_, _ = w.Write([]byte("images must have a location set"))
 			return
 		}
 
@@ -657,13 +657,13 @@ func BuildCreateHandler(
 		persistedMedias, err := database.CreateMedias(r.Context(), db, []models.Media{media})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(persistedMedias) != 1 {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("unexpected number of persistedMedias"))
+			_, _ = w.Write([]byte("unexpected number of persistedMedias"))
 			return
 		}
 
@@ -672,28 +672,28 @@ func BuildCreateHandler(
 		bw, err := bucket.NewWriter(r.Context(), key, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed initialize media storage"))
+			_, _ = w.Write([]byte("failed initialize media storage"))
 			return
 		}
 
 		_, err = io.Copy(bw, bytes.NewReader(fileBytes))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to save to media storage"))
+			_, _ = w.Write([]byte("failed to save to media storage"))
 			return
 		}
 
 		err = bw.Close()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to close connection to media storage"))
+			_, _ = w.Write([]byte("failed to close connection to media storage"))
 			return
 		}
 
 		br, err := bucket.NewReader(r.Context(), key, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to read from media storage"))
+			_, _ = w.Write([]byte("failed to read from media storage"))
 			return
 		}
 		defer br.Close()
@@ -701,7 +701,7 @@ func BuildCreateHandler(
 		imageBytes, err := io.ReadAll(br)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to read from media storage"))
+			_, _ = w.Write([]byte("failed to read from media storage"))
 			return
 		}
 
@@ -729,7 +729,7 @@ func BuildCreateHandler(
 			if err != nil {
 				w.Header().Set("Content-Type", "application/text")
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 		}

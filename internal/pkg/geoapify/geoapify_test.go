@@ -17,7 +17,7 @@ func TestGeoapifyGeocoding(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unable to read file: %v", err)
 		}
-		w.Write(body)
+		_, _ = w.Write(body)
 	}))
 	defer ts.Close()
 

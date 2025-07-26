@@ -68,7 +68,8 @@ func CreateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (result
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.lenses").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLenses)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert lenses")
 	}
 
@@ -84,7 +85,8 @@ func FindLensesByID(ctx context.Context, db *sql.DB, id []int64) (results []mode
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.lenses").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLenses)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select lenses by slug")
 	}
 
@@ -100,7 +102,8 @@ func FindLensesByName(ctx context.Context, db *sql.DB, name string) (results []m
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.lenses").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLenses)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select lenses by slug")
 	}
 
@@ -128,7 +131,8 @@ func AllLenses(ctx context.Context, db *sql.DB) (results []models.Lens, err erro
 		GroupBy(goqu.I("lenses.id")).
 		Executor()
 
-	if err := selectLenses.ScanStructsContext(ctx, &dbLenses); err != nil {
+	err = selectLenses.ScanStructsContext(ctx, &dbLenses)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select lenses")
 	}
 
@@ -151,7 +155,8 @@ func MostRecentlyUsedLens(ctx context.Context, db *sql.DB) (result models.Lens, 
 		Select("lenses.*").
 		Order(goqu.I("medias.taken_at").Desc()).
 		Executor()
-	if err := selectLenses.ScanStructsContext(ctx, &dbLenses); err != nil {
+	err = selectLenses.ScanStructsContext(ctx, &dbLenses)
+	if err != nil {
 		return result, errors.Wrap(err, "failed to select lenses")
 	}
 
@@ -171,9 +176,9 @@ func MostRecentlyUsedLens(ctx context.Context, db *sql.DB) (result models.Lens, 
 }
 
 func DeleteLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (err error) {
-	var ids []int64
-	for _, d := range lenses {
-		ids = append(ids, d.ID)
+	ids := make([]int64, len(lenses))
+	for i, d := range lenses {
+		ids[i] = d.ID
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -214,8 +219,10 @@ func UpdateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (result
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStructContext(ctx, &result); err != nil {
-			if rErr := tx.Rollback(); rErr != nil {
+		_, err = update.ScanStructContext(ctx, &result)
+		if err != nil {
+			rErr := tx.Rollback()
+			if rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
 			return results, errors.Wrap(err, "failed to update, rolled back")
@@ -223,7 +230,8 @@ func UpdateLenses(ctx context.Context, db *sql.DB, lenses []models.Lens) (result
 
 		results = append(results, newLens(result))
 	}
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
 	}
 
@@ -242,7 +250,8 @@ func FindLensByLensMatches(ctx context.Context, db *sql.DB, lensMatch string) (r
 		)).
 		Limit(1).
 		Executor()
-	if err := insert.ScanStructsContext(ctx, &dbLenses); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbLenses)
+	if err != nil {
 		return nil, errors.Wrap(err, "failed to select lenses by lens matches")
 	}
 
@@ -265,7 +274,8 @@ func LensPosts(ctx context.Context, db *sql.DB, lensID int64) (results []models.
 		Where(goqu.Ex{"lenses.id": lensID}).
 		Order(goqu.I("posts.publish_date").Desc()).
 		Executor()
-	if err := selectPosts.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = selectPosts.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 

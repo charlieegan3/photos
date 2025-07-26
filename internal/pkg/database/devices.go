@@ -73,7 +73,8 @@ func CreateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (re
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.devices").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbDevices)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert devices")
 	}
 
@@ -89,7 +90,8 @@ func FindDevicesByID(ctx context.Context, db *sql.DB, id []int64) (results []mod
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbDevices)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}
 
@@ -105,7 +107,8 @@ func FindDevicesByName(ctx context.Context, db *sql.DB, name string) (results []
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbDevices)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select devices by slug")
 	}
 
@@ -125,7 +128,8 @@ func FindDeviceByModelMatches(ctx context.Context, db *sql.DB, modelMatch string
 		Where(goqu.L(`"model_matches" ILIKE ?`, modelMatch)).
 		Limit(1).
 		Executor()
-	if err := insert.ScanStructsContext(ctx, &dbDevices); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbDevices)
+	if err != nil {
 		return nil, errors.Wrap(err, "failed to select devices by slug")
 	}
 
@@ -153,7 +157,8 @@ func AllDevices(ctx context.Context, db *sql.DB) (results []models.Device, err e
 		GroupBy(goqu.I("devices.id")).
 		Executor()
 
-	if err := selectDevices.ScanStructsContext(ctx, &dbDevices); err != nil {
+	err = selectDevices.ScanStructsContext(ctx, &dbDevices)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select devices")
 	}
 
@@ -176,7 +181,8 @@ func MostRecentlyUsedDevice(ctx context.Context, db *sql.DB) (result models.Devi
 		Select("devices.*").
 		Order(goqu.I("medias.taken_at").Desc()).
 		Executor()
-	if err := selectDevices.ScanStructsContext(ctx, &dbDevices); err != nil {
+	err = selectDevices.ScanStructsContext(ctx, &dbDevices)
+	if err != nil {
 		return result, errors.Wrap(err, "failed to select devices")
 	}
 
@@ -196,9 +202,9 @@ func MostRecentlyUsedDevice(ctx context.Context, db *sql.DB) (result models.Devi
 }
 
 func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) (err error) {
-	var ids []int64
-	for _, d := range devices {
-		ids = append(ids, d.ID)
+	ids := make([]int64, len(devices))
+	for i, d := range devices {
+		ids[i] = d.ID
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -239,8 +245,10 @@ func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (re
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStructContext(ctx, &result); err != nil {
-			if rErr := tx.Rollback(); rErr != nil {
+		_, err = update.ScanStructContext(ctx, &result)
+		if err != nil {
+			rErr := tx.Rollback()
+			if rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
 			return results, errors.Wrap(err, "failed to update, rolled back")
@@ -248,7 +256,8 @@ func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (re
 
 		results = append(results, newDevice(result))
 	}
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
 	}
 
@@ -266,7 +275,8 @@ func DevicePosts(ctx context.Context, db *sql.DB, deviceID int64) (results []mod
 		Where(goqu.Ex{"devices.id": deviceID}).
 		Order(goqu.I("posts.publish_date").Desc()).
 		Executor()
-	if err := selectPosts.ScanStructsContext(ctx, &dbPosts); err != nil {
+	err = selectPosts.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select posts")
 	}
 

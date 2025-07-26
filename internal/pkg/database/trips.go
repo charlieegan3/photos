@@ -81,7 +81,8 @@ func CreateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results 
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.Insert("photos.trips").Returning(goqu.Star()).Rows(records).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTrips); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTrips)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to insert trips")
 	}
 
@@ -97,7 +98,8 @@ func FindTripsByID(ctx context.Context, db *sql.DB, id []int) (results []models.
 
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.trips").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	if err := insert.ScanStructsContext(ctx, &dbTrips); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTrips)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select trips by id")
 	}
 
@@ -114,7 +116,8 @@ func AllTrips(ctx context.Context, db *sql.DB) (results []models.Trip, err error
 	goquDB := goqu.New("postgres", db)
 	insert := goquDB.From("photos.trips").Select("*").Order(goqu.I("start_date").Desc()).Executor()
 
-	if err := insert.ScanStructsContext(ctx, &dbTrips); err != nil {
+	err = insert.ScanStructsContext(ctx, &dbTrips)
+	if err != nil {
 		return results, errors.Wrap(err, "failed to select trips")
 	}
 
@@ -129,9 +132,9 @@ func AllTrips(ctx context.Context, db *sql.DB) (results []models.Trip, err error
 }
 
 func DeleteTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (err error) {
-	var ids []int
+	ids := make([]int, len(trips))
 	for i := range trips {
-		ids = append(ids, trips[i].ID)
+		ids[i] = trips[i].ID
 	}
 
 	goquDB := goqu.New("postgres", db)
@@ -172,8 +175,10 @@ func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results 
 			Set(record).
 			Returning(goqu.Star()).
 			Executor()
-		if _, err = update.ScanStructContext(ctx, &result); err != nil {
-			if rErr := tx.Rollback(); rErr != nil {
+		_, err = update.ScanStructContext(ctx, &result)
+		if err != nil {
+			rErr := tx.Rollback()
+			if rErr != nil {
 				return results, errors.Wrap(err, "failed to rollback")
 			}
 			return results, errors.Wrap(err, "failed to update, rolled back")
@@ -181,7 +186,8 @@ func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results 
 
 		results = append(results, newTrip(result))
 	}
-	if err = tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return results, errors.Wrap(err, "failed to commit transaction")
 	}
 

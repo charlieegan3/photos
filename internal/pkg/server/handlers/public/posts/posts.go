@@ -79,7 +79,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -91,7 +91,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -103,7 +103,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -127,7 +127,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 		err = renderer(ctx, indexTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -142,7 +142,7 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			err := renderer(plush.NewContext(), searchFormTemplate, w)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			return
@@ -155,7 +155,7 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		posts, err := database.SearchPosts(r.Context(), db, safeQuery)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -169,7 +169,7 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -186,7 +186,7 @@ func BuildSearchHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		err = renderer(ctx, searchTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -199,21 +199,21 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		rawID, ok := mux.Vars(r)["postID"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("post ID is required"))
+			_, _ = w.Write([]byte("post ID is required"))
 			return
 		}
 
 		id, err := strconv.Atoi(rawID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("postID was not integer"))
+			_, _ = w.Write([]byte("postID was not integer"))
 			return
 		}
 
 		posts, err := database.FindPostsByID(r.Context(), db, []int{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -226,7 +226,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		taggings, err := database.FindTaggingsByPostID(db, posts[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -238,14 +238,14 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		tags, err := database.FindTagsByID(r.Context(), db, tagIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		medias, err := database.FindMediasByID(r.Context(), db, []int{posts[0].MediaID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if len(medias) == 0 {
@@ -256,7 +256,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		locations, err := database.FindLocationsByID(r.Context(), db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if len(locations) == 0 {
@@ -267,7 +267,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		devices, err := database.FindDevicesByID(r.Context(), db, []int64{medias[0].DeviceID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if len(devices) == 0 {
@@ -278,20 +278,20 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		lenses, err := database.FindLensesByID(r.Context(), db, []int64{medias[0].LensID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		nextPosts, err := database.FindNextPost(db, posts[0], false)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		previousPosts, err := database.FindNextPost(db, posts[0], true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -318,7 +318,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		}
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -330,7 +330,7 @@ func BuildLegacyPostRedirect() func(http.ResponseWriter, *http.Request) {
 		date, ok := mux.Vars(r)["date"]
 		if !ok {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse date from legacy URL"))
+			_, _ = w.Write([]byte("failed to parse date from legacy URL"))
 			return
 		}
 		http.Redirect(w, r, "/posts/period/"+date, http.StatusMovedPermanently)
@@ -344,13 +344,13 @@ func BuildLegacyPeriodRedirect() func(http.ResponseWriter, *http.Request) {
 		day, dayOk := mux.Vars(r)["day"]
 		if !monthOk || !dayOk {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse legacy archive URL"))
+			_, _ = w.Write([]byte("failed to parse legacy archive URL"))
 			return
 		}
 		date, err := time.Parse("01-02", fmt.Sprintf("%s-%s", month, day))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to parse date in legacy URL"))
+			_, _ = w.Write([]byte("failed to parse date in legacy URL"))
 			return
 		}
 		http.Redirect(
@@ -369,14 +369,14 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		fromString, ok := mux.Vars(r)["from"]
 		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("from param required"))
+			_, _ = w.Write([]byte("from param required"))
 			return
 		}
 
 		fromTime, err := time.Parse("2006-01-02", fromString)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("invalid from date format"))
+			_, _ = w.Write([]byte("invalid from date format"))
 			return
 		}
 
@@ -386,7 +386,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			toTime, err = time.Parse("2006-01-02", toString)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("invalid from date format"))
+				_, _ = w.Write([]byte("invalid from date format"))
 				return
 			}
 			toTime = toTime.Add(24 * time.Hour).Add(-time.Second)
@@ -413,7 +413,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		posts, err := database.PostsInDateRange(r.Context(), db, fromTime, toTime)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -422,7 +422,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 			err := renderer(plush.NewContext(), periodMissingTemplate, w)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			return
@@ -437,7 +437,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		locations, err := database.FindLocationsByID(r.Context(), db, locationIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		locationsByID := make(map[int]models.Location)
@@ -454,7 +454,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -485,7 +485,7 @@ func BuildPeriodHandler(db *sql.DB, renderer templating.PageRenderer) func(http.
 		err = renderer(ctx, periodTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -500,7 +500,7 @@ func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(
 			trips, err := database.AllTrips(r.Context(), db)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 
@@ -510,7 +510,7 @@ func BuildPeriodIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(
 			err = renderer(ctx, periodIndexTemplate, w)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				_, _ = w.Write([]byte(err.Error()))
 				return
 			}
 			return
@@ -539,13 +539,13 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(posts) < 1 {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("no post found"))
+			_, _ = w.Write([]byte("no post found"))
 			return
 		}
 
@@ -553,13 +553,13 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		locations, err := database.FindLocationsByID(r.Context(), db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
 		if len(locations) < 1 {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("no location found"))
+			_, _ = w.Write([]byte("no location found"))
 			return
 		}
 
@@ -575,7 +575,7 @@ func BuildLatestHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -596,7 +596,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -613,7 +613,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if len(medias) == 0 {
@@ -628,7 +628,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		locations, err := database.FindLocationsByID(r.Context(), db, []int{posts[0].LocationID})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if len(locations) == 0 {
@@ -643,7 +643,7 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		devices, err := database.AllDevices(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 		if len(devices) == 0 {
@@ -691,16 +691,16 @@ func BuildRSSHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		output, err := xml.MarshalIndent(rssFeed, "", "    ")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
-		w.Write([]byte(`<?xml version="1.0" encoding="UTF-8" ?>
+		_, _ = w.Write([]byte(`<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 `))
-		w.Write([]byte(output))
+		_, _ = w.Write(output)
 
-		w.Write([]byte("\n</rss>"))
+		_, _ = w.Write([]byte("\n</rss>"))
 	}
 }
 
@@ -728,7 +728,7 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		posts, err := database.PostsOnThisDay(r.Context(), db, month.Month(), day)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -745,7 +745,7 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -762,7 +762,7 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		locations, err := database.FindLocationsByID(r.Context(), db, locationIDs)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -781,7 +781,7 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 		err = renderer(ctx, onThisDayTemplate, w)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -792,7 +792,7 @@ func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		postID, err := database.RandomPostID(r.Context(), db)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 			return
 		}
 

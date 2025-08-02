@@ -15,6 +15,17 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/imageproxy"
 )
 
+var validMediaResizeSizes = map[string]bool{
+	"200,fit":  true,
+	"500,fit":  true,
+	"1000,fit": true,
+	"2000,fit": true,
+	"200x":     true,
+	"500x":     true,
+	"1000x":    true,
+	"2000x":    true,
+}
+
 func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter, *http.Request) {
 	ir := imageproxy.Resizer{}
 
@@ -66,6 +77,14 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 		// if there are no options, serve the image from the media upload path
 		if imageResizeString == "" {
 			serveImageFromBucket(w, r, bucket, originalMediaPath)
+			return
+		}
+
+		// Validate resize string to prevent path injection
+		if !validMediaResizeSizes[imageResizeString] {
+			w.Header().Set("Content-Type", "application/text")
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte("Invalid resize parameter"))
 			return
 		}
 

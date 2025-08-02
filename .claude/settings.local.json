@@ -22,7 +22,8 @@
       "Bash(curl:*)",
       "Bash(pkill:*)",
       "Bash(true)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(go mod:*)"
     ],
     "deny": []
   }

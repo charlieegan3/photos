@@ -15,7 +15,7 @@ type DBConverter[T any] interface {
 	ToRecord(bool) goqu.Record
 }
 
-func BulkUpdate[T any, D any, DBPointer interface {
+func BulkUpdateGeneric[T any, D any, DBPointer interface {
 	*D
 	DBConverter[T]
 }](

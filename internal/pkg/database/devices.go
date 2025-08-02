@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -11,8 +10,6 @@ import (
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
 )
-
-var ErrDeviceNotFound = errors.New("device not found")
 
 type dbDevice struct {
 	ID           int64  `db:"id"`
@@ -25,7 +22,7 @@ type dbDevice struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
+func (d dbDevice) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"name":          d.Name,
 		"icon_kind":     d.IconKind,
@@ -39,7 +36,7 @@ func (d *dbDevice) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func (d *dbDevice) ToModel() models.Device {
+func (d dbDevice) ToModel() models.Device {
 	return models.Device{
 		ID:           d.ID,
 		Name:         d.Name,
@@ -52,7 +49,7 @@ func (d *dbDevice) ToModel() models.Device {
 }
 
 func newDevice(device dbDevice) models.Device {
-	return (&device).ToModel()
+	return device.ToModel()
 }
 
 func newDBDevice(device models.Device) dbDevice {
@@ -66,147 +63,114 @@ func newDBDevice(device models.Device) dbDevice {
 	}
 }
 
-func CreateDevices(ctx context.Context, db *sql.DB, devices []models.Device) (results []models.Device, err error) {
-	records := []goqu.Record{}
-	for _, v := range devices {
-		d := newDBDevice(v)
-		records = append(records, d.ToRecord(false))
-	}
-
-	var dbDevices []dbDevice
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("photos.devices").Returning(goqu.Star()).Rows(records).Executor()
-	err = insert.ScanStructsContext(ctx, &dbDevices)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to insert devices")
-	}
-
-	for _, v := range dbDevices {
-		results = append(results, newDevice(v))
-	}
-
-	return results, nil
+// DeviceRepository provides device-specific database operations.
+type DeviceRepository struct {
+	*BaseRepository[models.Device, dbDevice]
 }
 
-func FindDevicesByID(ctx context.Context, db *sql.DB, id []int64) (results []models.Device, err error) {
-	var dbDevices []dbDevice
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbDevices)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select devices by slug")
+// NewDeviceRepository creates a new device repository instance.
+func NewDeviceRepository(db *sql.DB) *DeviceRepository {
+	return &DeviceRepository{
+		BaseRepository: NewBaseRepository(db, "devices", newDevice, newDBDevice, "created_at"),
 	}
-
-	for _, v := range dbDevices {
-		results = append(results, newDevice(v))
-	}
-
-	return results, nil
 }
 
-func FindDevicesByName(ctx context.Context, db *sql.DB, name string) (results []models.Device, err error) {
-	var dbDevices []dbDevice
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.devices").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbDevices)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select devices by slug")
+// FindByModelMatches finds a device using ILIKE pattern matching on model_matches field.
+func (r *DeviceRepository) FindByModelMatches(ctx context.Context, modelMatch string) (*models.Device, error) {
+	if modelMatch == "" {
+		return nil, errors.New("modelMatch cannot be empty for matching")
 	}
 
-	for _, v := range dbDevices {
-		results = append(results, newDevice(v))
-	}
-
-	return results, nil
-}
-
-func FindDeviceByModelMatches(ctx context.Context, db *sql.DB, modelMatch string) (result *models.Device, err error) {
 	var dbDevices []dbDevice
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.devices").
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
 		Select("*").
-		Where(goqu.L(`"model_matches" ILIKE ?`, modelMatch)).
+		Where(goqu.L(`"model_matches" ILIKE ?`, "%"+modelMatch+"%")).
 		Limit(1).
 		Executor()
-	err = insert.ScanStructsContext(ctx, &dbDevices)
+
+	err := query.ScanStructsContext(ctx, &dbDevices)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to select devices by slug")
+		return nil, errors.Wrapf(err, "failed to select device by model matches for %s", modelMatch)
 	}
 
-	for _, v := range dbDevices {
-		d := newDevice(v)
-		return &d, nil
+	if len(dbDevices) == 0 {
+		return nil, sql.ErrNoRows
 	}
 
-	return nil, ErrDeviceNotFound
+	device := newDevice(dbDevices[0])
+	return &device, nil
 }
 
-func AllDevices(ctx context.Context, db *sql.DB) (results []models.Device, err error) {
-	var dbDevices []dbDevice
-
-	goquDB := goqu.New("postgres", db)
-	selectDevices := goquDB.From("photos.devices").
-		FullOuterJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.device_id": goqu.I("devices.id")})).
-		FullOuterJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.media_id": goqu.I("medias.id")})).
-		Select(
-			"devices.*",
-		).
-		Order(
-			goqu.L("MAX(coalesce(posts.publish_date, timestamp with time zone 'epoch'))").Desc(),
-		).
-		GroupBy(goqu.I("devices.id")).
-		Executor()
-
-	err = selectDevices.ScanStructsContext(ctx, &dbDevices)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select devices")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results = []models.Device{}
-	for _, v := range dbDevices {
-		results = append(results, newDevice(v))
-	}
-
-	return results, nil
+// All retrieves all devices with complex join to posts and medias, ordered by most recent post.
+func (r *DeviceRepository) All(ctx context.Context) ([]models.Device, error) {
+	return r.AllWithMediaJoins(ctx, "medias.device_id", "devices")
 }
 
-func MostRecentlyUsedDevice(ctx context.Context, db *sql.DB) (result models.Device, err error) {
-	return mostRecentlyUsedEntity[models.Device, dbDevice](ctx, db, "devices", "medias.device_id", newDevice)
+// MostRecentlyUsed returns the device that was most recently used in media.
+func (r *DeviceRepository) MostRecentlyUsed(ctx context.Context) (models.Device, error) {
+	return mostRecentlyUsedEntity[models.Device, dbDevice](ctx, r.db, r.tableName, "medias.device_id", newDevice)
 }
 
-func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) (err error) {
-	ids := make([]int64, len(devices))
-	for i, d := range devices {
-		ids[i] = d.ID
-	}
-
-	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("photos.devices").Where(
-		goqu.Ex{"id": ids},
-	).ToSQL()
-	if err != nil {
-		return fmt.Errorf("failed to build devices delete query: %w", err)
-	}
-	_, err = db.ExecContext(ctx, del)
-	if err != nil {
-		return fmt.Errorf("failed to delete devices: %w", err)
-	}
-
-	return nil
+// Posts returns all posts associated with a device.
+func (r *DeviceRepository) Posts(ctx context.Context, deviceID int64) ([]models.Post, error) {
+	return entityPosts(ctx, r.db, r.tableName, "medias.device_id", "devices.id", deviceID)
 }
 
-// UpdateDevices is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO).
+// Legacy function wrappers for backward compatibility with test files.
+// These should be removed after all tests are updated.
+
+// CreateDevices creates multiple devices using the repository.
+func CreateDevices(ctx context.Context, db *sql.DB, devices []models.Device) ([]models.Device, error) {
+	repo := NewDeviceRepository(db)
+	return repo.Create(ctx, devices)
+}
+
+// FindDevicesByID finds devices by their IDs using the repository.
+func FindDevicesByID(ctx context.Context, db *sql.DB, ids []int64) ([]models.Device, error) {
+	repo := NewDeviceRepository(db)
+	return repo.FindByIDs(ctx, ids)
+}
+
+// FindDevicesByName finds devices by name using the repository.
+func FindDevicesByName(ctx context.Context, db *sql.DB, name string) ([]models.Device, error) {
+	repo := NewDeviceRepository(db)
+	return repo.FindByField(ctx, "name", name)
+}
+
+// FindDeviceByModelMatches finds a device by model matches using the repository.
+func FindDeviceByModelMatches(ctx context.Context, db *sql.DB, modelMatch string) (*models.Device, error) {
+	repo := NewDeviceRepository(db)
+	return repo.FindByModelMatches(ctx, modelMatch)
+}
+
+// AllDevices gets all devices using the repository.
+func AllDevices(ctx context.Context, db *sql.DB) ([]models.Device, error) {
+	repo := NewDeviceRepository(db)
+	return repo.All(ctx)
+}
+
+// MostRecentlyUsedDevice gets the most recently used device using the repository.
+func MostRecentlyUsedDevice(ctx context.Context, db *sql.DB) (models.Device, error) {
+	repo := NewDeviceRepository(db)
+	return repo.MostRecentlyUsed(ctx)
+}
+
+// DeleteDevices deletes devices using the repository.
+func DeleteDevices(ctx context.Context, db *sql.DB, devices []models.Device) error {
+	repo := NewDeviceRepository(db)
+	return repo.Delete(ctx, devices)
+}
+
+// UpdateDevices updates devices using the repository.
 func UpdateDevices(ctx context.Context, db *sql.DB, devices []models.Device) ([]models.Device, error) {
-	return BulkUpdate(ctx, db, "photos.devices", devices, newDBDevice)
+	repo := NewDeviceRepository(db)
+	return repo.Update(ctx, devices)
 }
 
-func DevicePosts(ctx context.Context, db *sql.DB, deviceID int64) (results []models.Post, err error) {
-	return entityPosts(ctx, db, "devices", "medias.device_id", "devices.id", deviceID)
+// DevicePosts returns posts associated with a device using the repository.
+func DevicePosts(ctx context.Context, db *sql.DB, deviceID int64) ([]models.Post, error) {
+	repo := NewDeviceRepository(db)
+	return repo.Posts(ctx, deviceID)
 }

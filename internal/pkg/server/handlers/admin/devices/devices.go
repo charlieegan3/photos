@@ -36,7 +36,8 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
-		devices, err := database.AllDevices(r.Context(), db)
+		deviceRepo := database.NewDeviceRepository(db)
+		devices, err := deviceRepo.All(r.Context())
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -90,7 +91,8 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
+		deviceRepo := database.NewDeviceRepository(db)
+		devices, err := deviceRepo.FindByIDs(r.Context(), []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -161,7 +163,8 @@ func BuildCreateHandler(
 			return
 		}
 
-		persistedDevices, err := database.CreateDevices(r.Context(), db, []models.Device{device})
+		deviceRepo := database.NewDeviceRepository(db)
+		persistedDevices, err := deviceRepo.Create(r.Context(), []models.Device{device})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -220,7 +223,8 @@ func BuildDeleteHandler(
 			return
 		}
 
-		existingDevices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
+		deviceRepo := database.NewDeviceRepository(db)
+		existingDevices, err := deviceRepo.FindByIDs(r.Context(), []int64{id})
 		if err != nil {
 			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
@@ -242,7 +246,7 @@ func BuildDeleteHandler(
 			return
 		}
 
-		err = database.DeleteDevices(r.Context(), db, []models.Device{existingDevices[0]})
+		err = deviceRepo.Delete(r.Context(), []models.Device{existingDevices[0]})
 		if err != nil {
 			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
@@ -272,7 +276,8 @@ func BuildUpdateHandler(
 			return
 		}
 
-		existingDevices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
+		deviceRepo := database.NewDeviceRepository(db)
+		existingDevices, err := deviceRepo.FindByIDs(r.Context(), []int64{id})
 		if err != nil {
 			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return
@@ -316,7 +321,7 @@ func BuildUpdateHandler(
 			}
 		}
 
-		updatedDevices, err := database.UpdateDevices(r.Context(), db, []models.Device{device})
+		updatedDevices, err := deviceRepo.Update(r.Context(), []models.Device{device})
 		if err != nil {
 			shared.WriteError(w, http.StatusInternalServerError, err.Error())
 			return

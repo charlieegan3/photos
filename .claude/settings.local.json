@@ -21,7 +21,8 @@
       "WebFetch(domain:github.com)",
       "Bash(curl:*)",
       "Bash(pkill:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "Bash(echo:*)"
     ],
     "deny": []
   }

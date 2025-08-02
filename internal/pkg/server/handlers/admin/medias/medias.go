@@ -724,7 +724,8 @@ func enrichMediaFromEXIF(media *models.Media, fileBytes []byte, filename string)
 }
 
 func matchDeviceAndLens(ctx context.Context, db *sql.DB, media *models.Media) {
-	modelMatchedDevice, err := database.FindDeviceByModelMatches(ctx, db, media.Model)
+	deviceRepo := database.NewDeviceRepository(db)
+	modelMatchedDevice, err := deviceRepo.FindByModelMatches(ctx, media.Model)
 	if err == nil && modelMatchedDevice != nil {
 		media.DeviceID = modelMatchedDevice.ID
 	}

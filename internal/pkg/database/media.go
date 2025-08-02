@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -51,7 +50,7 @@ type dbMedia struct {
 	DisplayOffset int `db:"display_offset"`
 }
 
-func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
+func (d dbMedia) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"kind":                      d.Kind,
 		"make":                      d.Make,
@@ -86,7 +85,7 @@ func (d *dbMedia) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func (d *dbMedia) ToModel() models.Media {
+func (d dbMedia) ToModel() models.Media {
 	media := models.Media{
 		ID: d.ID,
 
@@ -131,7 +130,7 @@ func (d *dbMedia) ToModel() models.Media {
 }
 
 func newMedia(media dbMedia) models.Media {
-	return (&media).ToModel()
+	return media.ToModel()
 }
 
 func newDBMedia(media models.Media) dbMedia {
@@ -181,85 +180,43 @@ func newDBMedia(media models.Media) dbMedia {
 	return m
 }
 
-func CreateMedias(ctx context.Context, db *sql.DB, medias []models.Media) (results []models.Media, err error) {
-	records := make([]goqu.Record, len(medias))
-	for i := range medias {
-		d := newDBMedia(medias[i])
-		records[i] = d.ToRecord(false)
-	}
-
-	var dbMedias []dbMedia
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("photos.medias").Returning(goqu.Star()).Rows(records).Executor()
-	err = insert.ScanStructsContext(ctx, &dbMedias)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to insert medias")
-	}
-
-	for i := range dbMedias {
-		results = append(results, newMedia(dbMedias[i]))
-	}
-
-	return results, nil
+// UpdateMedias is not implemented as a single SQL query since update many in
+// place is not supported by goqu and it wasn't worth the work (TODO).
+// MediaRepository provides media-specific database operations.
+type MediaRepository struct {
+	*BaseRepository[models.Media, dbMedia]
 }
 
-func FindMediasByID(ctx context.Context, db *sql.DB, ids []int) (results []models.Media, err error) {
-	var dbMedias []dbMedia
-
-	if len(ids) == 0 {
-		return results, nil
+// NewMediaRepository creates a new media repository instance.
+func NewMediaRepository(db *sql.DB) *MediaRepository {
+	return &MediaRepository{
+		BaseRepository: NewBaseRepository(db, "medias", newMedia, newDBMedia, "taken_at"),
 	}
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"id": ids}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbMedias)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select medias by id")
-	}
-
-	for i := range dbMedias {
-		results = append(results, newMedia(dbMedias[i]))
-	}
-
-	return results, nil
 }
 
-func FindMediasByInstagramCode(ctx context.Context, db *sql.DB, code string) (results []models.Media, err error) {
-	var dbMedias []dbMedia
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbMedias)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select medias by instagram code")
-	}
-
-	for i := range dbMedias {
-		results = append(results, newMedia(dbMedias[i]))
-	}
-
-	return results, nil
+// FindByInstagramCode finds media by Instagram code.
+func (r *MediaRepository) FindByInstagramCode(ctx context.Context, code string) ([]models.Media, error) {
+	return r.FindByField(ctx, "instagram_code", code)
 }
 
-func AllMedias(ctx context.Context, db *sql.DB, descending bool) (results []models.Media, err error) {
+// AllDescending retrieves all media ordered by taken_at and created_at descending.
+func (r *MediaRepository) AllDescending(ctx context.Context) ([]models.Media, error) {
 	var dbMedias []dbMedia
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.medias").Select("*")
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Order(goqu.I("taken_at").Desc(), goqu.I("created_at").Desc()).
+		Executor()
 
-	if descending {
-		insert = insert.Order(goqu.I("taken_at").Desc(), goqu.I("created_at").Desc())
-	}
-
-	err = insert.Executor().ScanStructsContext(ctx, &dbMedias)
+	err := query.ScanStructsContext(ctx, &dbMedias)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select medias")
+		return nil, errors.Wrap(err, "failed to select medias")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
-	results = []models.Media{}
+	results := make([]models.Media, 0, len(dbMedias))
 	for i := range dbMedias {
 		results = append(results, newMedia(dbMedias[i]))
 	}
@@ -267,29 +224,75 @@ func AllMedias(ctx context.Context, db *sql.DB, descending bool) (results []mode
 	return results, nil
 }
 
-func DeleteMedias(ctx context.Context, db *sql.DB, medias []models.Media) (err error) {
+// Legacy function wrappers for backward compatibility with test files.
+// These should be removed after all tests are updated.
+
+// CreateMedias creates multiple medias using the repository.
+func CreateMedias(ctx context.Context, db *sql.DB, medias []models.Media) ([]models.Media, error) {
+	repo := NewMediaRepository(db)
+	return repo.Create(ctx, medias)
+}
+
+// FindMediasByID finds medias by their IDs using the repository.
+func FindMediasByID(ctx context.Context, db *sql.DB, ids []int) ([]models.Media, error) {
+	if len(ids) == 0 {
+		return []models.Media{}, nil
+	}
+
+	var dbMedias []dbMedia
+
+	goquDB := goqu.New("postgres", db)
+	query := goquDB.From("photos.medias").Select("*").Where(goqu.Ex{"id": ids}).Executor()
+	err := query.ScanStructsContext(ctx, &dbMedias)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to select medias by id")
+	}
+
+	results := make([]models.Media, 0, len(dbMedias))
+	for i := range dbMedias {
+		results = append(results, newMedia(dbMedias[i]))
+	}
+
+	return results, nil
+}
+
+// FindMediasByInstagramCode finds media by Instagram code using the repository.
+func FindMediasByInstagramCode(ctx context.Context, db *sql.DB, code string) ([]models.Media, error) {
+	repo := NewMediaRepository(db)
+	return repo.FindByInstagramCode(ctx, code)
+}
+
+// AllMedias gets all medias using the repository.
+func AllMedias(ctx context.Context, db *sql.DB, descending bool) ([]models.Media, error) {
+	repo := NewMediaRepository(db)
+	if descending {
+		return repo.AllDescending(ctx)
+	}
+	return repo.All(ctx)
+}
+
+// DeleteMedias deletes medias using the repository.
+func DeleteMedias(ctx context.Context, db *sql.DB, medias []models.Media) error {
+	if len(medias) == 0 {
+		return nil
+	}
+
 	ids := make([]int, len(medias))
 	for i := range medias {
 		ids[i] = medias[i].ID
 	}
 
 	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("photos.medias").Where(
-		goqu.Ex{"id": ids},
-	).ToSQL()
+	query := goquDB.From("photos.medias").Where(goqu.Ex{"id": ids}).Delete()
+	_, err := query.Executor().ExecContext(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to build medias delete query: %w", err)
-	}
-	_, err = db.ExecContext(ctx, del)
-	if err != nil {
-		return fmt.Errorf("failed to delete medias: %w", err)
+		return errors.Wrap(err, "failed to delete medias")
 	}
 
 	return nil
 }
 
-// UpdateMedias is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO).
+// UpdateMedias updates medias using the repository.
 func UpdateMedias(ctx context.Context, db *sql.DB, medias []models.Media) ([]models.Media, error) {
-	return BulkUpdate(ctx, db, "photos.medias", medias, newDBMedia)
+	return BulkUpdateGeneric(ctx, db, "photos.medias", medias, newDBMedia)
 }

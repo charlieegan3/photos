@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -23,7 +22,7 @@ type dbLocation struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func (d *dbLocation) ToRecord(includeID bool) goqu.Record {
+func (d dbLocation) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"name":      d.Name,
 		"latitude":  d.Latitude,
@@ -37,7 +36,7 @@ func (d *dbLocation) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func (d *dbLocation) ToModel() models.Location {
+func (d dbLocation) ToModel() models.Location {
 	return models.Location{
 		ID:        d.ID,
 		Name:      d.Name,
@@ -50,7 +49,7 @@ func (d *dbLocation) ToModel() models.Location {
 }
 
 func newLocation(location dbLocation) models.Location {
-	return (&location).ToModel()
+	return location.ToModel()
 }
 
 func newDBLocation(location models.Location) dbLocation {
@@ -65,26 +64,34 @@ func newDBLocation(location models.Location) dbLocation {
 	}
 }
 
-func CreateLocations(
-	ctx context.Context,
-	db *sql.DB,
-	locations []models.Location,
-) (results []models.Location, err error) {
-	records := []goqu.Record{}
-	for _, v := range locations {
-		d := newDBLocation(v)
-		records = append(records, d.ToRecord(false))
-	}
+// LocationRepository provides location-specific database operations.
+type LocationRepository struct {
+	*BaseRepository[models.Location, dbLocation]
+}
 
+// NewLocationRepository creates a new location repository instance.
+func NewLocationRepository(db *sql.DB) *LocationRepository {
+	return &LocationRepository{
+		BaseRepository: NewBaseRepository(db, "locations", newLocation, newDBLocation, "created_at"),
+	}
+}
+
+// All retrieves all locations ordered by name (original behavior).
+func (r *LocationRepository) All(ctx context.Context) ([]models.Location, error) {
 	var dbLocations []dbLocation
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("photos.locations").Returning(goqu.Star()).Rows(records).Executor()
-	err = insert.ScanStructsContext(ctx, &dbLocations)
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Order(goqu.I("name").Asc()).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbLocations)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to insert locations")
+		return nil, errors.Wrap(err, "failed to select all locations")
 	}
 
+	results := make([]models.Location, 0, len(dbLocations))
 	for _, v := range dbLocations {
 		results = append(results, newLocation(v))
 	}
@@ -92,162 +99,133 @@ func CreateLocations(
 	return results, nil
 }
 
-func FindLocationsByID(ctx context.Context, db *sql.DB, id []int) (results []models.Location, err error) {
+// Posts returns all posts associated with a location.
+func (r *LocationRepository) Posts(ctx context.Context, locationID int64) ([]models.Post, error) {
+	return entityPosts(ctx, r.db, r.tableName, "posts.location_id", "locations.id", locationID)
+}
+
+// Legacy function wrappers for backward compatibility with test files.
+// These should be removed after all tests are updated.
+
+// CreateLocations creates multiple locations using the repository.
+func CreateLocations(ctx context.Context, db *sql.DB, locations []models.Location) ([]models.Location, error) {
+	repo := NewLocationRepository(db)
+	return repo.Create(ctx, locations)
+}
+
+// FindLocationsByID finds locations by their IDs using the repository.
+func FindLocationsByID(ctx context.Context, db *sql.DB, ids []int) ([]models.Location, error) {
+	if len(ids) == 0 {
+		return []models.Location{}, nil
+	}
+
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbLocations)
+	query := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"id": ids}).Executor()
+	err := query.ScanStructsContext(ctx, &dbLocations)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select locations by id")
+		return nil, errors.Wrap(err, "failed to select locations by id")
 	}
 
-	for _, v := range dbLocations {
-		results = append(results, newLocation(v))
+	results := make([]models.Location, 0, len(dbLocations))
+	for _, location := range dbLocations {
+		results = append(results, newLocation(location))
 	}
 
 	return results, nil
 }
 
-func FindLocationsByName(ctx context.Context, db *sql.DB, name string) (results []models.Location, err error) {
-	var dbLocations []dbLocation
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.locations").Select("*").Where(goqu.Ex{"name": name}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbLocations)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select locations by name")
-	}
-
-	for _, v := range dbLocations {
-		results = append(results, newLocation(v))
-	}
-
-	return results, nil
+// FindLocationsByName finds locations by name using the repository.
+func FindLocationsByName(ctx context.Context, db *sql.DB, name string) ([]models.Location, error) {
+	repo := NewLocationRepository(db)
+	return repo.FindByField(ctx, "name", name)
 }
 
-func AllLocations(ctx context.Context, db *sql.DB) (results []models.Location, err error) {
-	var dbLocations []dbLocation
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.locations").Select("*").Order(goqu.I("name").Asc()).Executor()
-
-	err = insert.ScanStructsContext(ctx, &dbLocations)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select locations")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results = []models.Location{}
-	for _, v := range dbLocations {
-		results = append(results, newLocation(v))
-	}
-
-	return results, nil
+// AllLocations gets all locations using the repository.
+func AllLocations(ctx context.Context, db *sql.DB) ([]models.Location, error) {
+	repo := NewLocationRepository(db)
+	return repo.All(ctx)
 }
 
-func DeleteLocations(ctx context.Context, db *sql.DB, locations []models.Location) (err error) {
-	ids := make([]int, len(locations))
-	for i, d := range locations {
-		ids[i] = d.ID
-	}
-
-	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("photos.locations").Where(
-		goqu.Ex{"id": ids},
-	).ToSQL()
-	if err != nil {
-		return fmt.Errorf("failed to build locations delete query: %w", err)
-	}
-	_, err = db.ExecContext(ctx, del)
-	if err != nil {
-		return fmt.Errorf("failed to delete locations: %w", err)
-	}
-
-	return nil
+// DeleteLocations deletes locations using the repository.
+func DeleteLocations(ctx context.Context, db *sql.DB, locations []models.Location) error {
+	repo := NewLocationRepository(db)
+	return repo.Delete(ctx, locations)
 }
 
-// UpdateLocations is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateLocations(
-	ctx context.Context,
-	db *sql.DB,
-	locations []models.Location,
-) ([]models.Location, error) {
-	return BulkUpdate(ctx, db, "photos.locations", locations, newDBLocation)
+// UpdateLocations updates locations using the repository.
+func UpdateLocations(ctx context.Context, db *sql.DB, locations []models.Location) ([]models.Location, error) {
+	repo := NewLocationRepository(db)
+	return repo.Update(ctx, locations)
 }
 
-func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationName string) (id int, err error) {
+// LocationPosts returns posts associated with a location using the repository.
+func LocationPosts(ctx context.Context, db *sql.DB, locationID int64) ([]models.Post, error) {
+	repo := NewLocationRepository(db)
+	return repo.Posts(ctx, locationID)
+}
+
+// MergeLocations merges two locations by moving all posts from the second location to the first.
+func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationName string) (int, error) {
 	goquDB := goqu.New("postgres", db)
 
-	var oldID int
+	var id, oldID int
 
 	tx, err := goquDB.Begin()
 	if err != nil {
 		return 0, errors.Wrap(err, "failed to open transaction")
 	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
+	// Get the target location ID
 	newLocationID := tx.From("photos.locations").
 		Select("id").
 		Where(goqu.Ex{"name": locationName}).Executor()
 
 	result, err := newLocationID.ScanValContext(ctx, &id)
 	if err != nil {
-		rErr := tx.Rollback()
-		if rErr != nil {
-			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, nil // Return 0 with no error when target location is missing
 		}
 		return 0, errors.Wrap(err, "failed to get new location ID")
 	}
 	if !result {
-		rErr := tx.Rollback()
-		if rErr != nil {
-			return 0, errors.Wrap(rErr, "failed to rollback transaction")
-		}
-		return 0, errors.Wrap(err, "failed to get new location from queried row")
+		return 0, nil // Return 0 with no error when target location is missing
 	}
 
+	// Get the old location ID
 	oldLocationID := tx.From("photos.locations").
 		Select("id").
 		Where(goqu.Ex{"name": oldLocationName}).Executor()
 	result, err = oldLocationID.ScanVal(&oldID)
 	if err != nil {
-		rErr := tx.Rollback()
-		if rErr != nil {
-			return 0, errors.Wrap(rErr, "failed to rollback transaction")
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, nil // Return 0 with no error when old location is missing
 		}
 		return 0, errors.Wrap(err, "failed to get old location ID")
 	}
 	if !result {
-		rErr := tx.Rollback()
-		if rErr != nil {
-			return 0, errors.Wrap(rErr, "failed to rollback transaction")
-		}
-		return 0, errors.Wrap(err, "failed to get old location from queried row")
+		return 0, nil // Return 0 with no error when old location is missing
 	}
 
+	// Update posts to point to the new location
 	updatePosts := tx.Update("photos.posts").
 		Where(goqu.Ex{"location_id": oldID}).
 		Set(map[string]interface{}{"location_id": id}).
 		Executor()
 	_, err = updatePosts.Exec()
 	if err != nil {
-		rErr := tx.Rollback()
-		if rErr != nil {
-			return 0, errors.Wrap(rErr, "failed to rollback transaction")
-		}
 		return 0, errors.Wrap(err, "failed to update posts to merged location")
 	}
 
+	// Delete the old location
 	deleteLocation := tx.Delete("photos.locations").
 		Where(goqu.Ex{"id": oldID}).Executor()
 	_, err = deleteLocation.Exec()
 	if err != nil {
-		rErr := tx.Rollback()
-		if rErr != nil {
-			return 0, errors.Wrap(rErr, "failed to rollback transaction")
-		}
 		return 0, errors.Wrap(err, "failed to delete old location")
 	}
 
@@ -259,7 +237,8 @@ func MergeLocations(ctx context.Context, db *sql.DB, locationName, oldLocationNa
 	return id, nil
 }
 
-func NearbyLocations(db *sql.DB, lat, lon float64) (results []models.Location, err error) {
+// NearbyLocations finds locations near the given coordinates.
+func NearbyLocations(db *sql.DB, lat, lon float64) ([]models.Location, error) {
 	var dbLocations []dbLocation
 
 	goquDB := goqu.New("postgres", db)
@@ -282,14 +261,14 @@ func NearbyLocations(db *sql.DB, lat, lon float64) (results []models.Location, e
 			"updated_at").
 		Limit(10)
 
-	err = sel.Executor().ScanStructs(&dbLocations)
+	err := sel.Executor().ScanStructs(&dbLocations)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select locations")
+		return nil, errors.Wrap(err, "failed to select locations")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
-	results = []models.Location{}
+	results := make([]models.Location, 0, len(dbLocations))
 	for _, v := range dbLocations {
 		results = append(results, newLocation(v))
 	}

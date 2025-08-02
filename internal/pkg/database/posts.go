@@ -4,15 +4,31 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"regexp"
+	"sort"
 	"strings"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/exp"
 	"github.com/pkg/errors"
 
 	"github.com/charlieegan3/photos/internal/pkg/models"
 )
+
+// PostFilterOptions provides filtering options for post queries.
+type PostFilterOptions struct {
+	Tags      []string
+	Devices   []string
+	Lenses    []string
+	Locations []string
+	Trips     []string
+
+	From time.Time
+	To   time.Time
+
+	Limit  int
+	Offset int
+}
 
 type dbPost struct {
 	ID int `db:"id"`
@@ -32,7 +48,7 @@ type dbPost struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func (d *dbPost) ToRecord(includeID bool) goqu.Record {
+func (d dbPost) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"description":    d.Description,
 		"instagram_code": d.InstagramCode,
@@ -49,7 +65,7 @@ func (d *dbPost) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func (d *dbPost) ToModel() models.Post {
+func (d dbPost) ToModel() models.Post {
 	return models.Post{
 		ID: d.ID,
 
@@ -68,7 +84,7 @@ func (d *dbPost) ToModel() models.Post {
 }
 
 func newPost(post dbPost) models.Post {
-	return (&post).ToModel()
+	return post.ToModel()
 }
 
 func newDBPost(post models.Post) dbPost {
@@ -89,67 +105,50 @@ func newDBPost(post models.Post) dbPost {
 	}
 }
 
-func CreatePosts(ctx context.Context, db *sql.DB, posts []models.Post) (results []models.Post, err error) {
-	records := []goqu.Record{}
-	for i := range posts {
-		d := newDBPost(posts[i])
-		records = append(records, d.ToRecord(false))
-	}
-
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("photos.posts").Returning(goqu.Star()).Rows(records).Executor()
-	err = insert.ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to insert posts")
-	}
-
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+// PostRepository provides post-specific database operations.
+type PostRepository struct {
+	*BaseRepository[models.Post, dbPost]
 }
 
-func RandomPostID(ctx context.Context, db *sql.DB) (int, error) {
-	var postID int
+// NewPostRepository creates a new post repository instance.
+func NewPostRepository(db *sql.DB) *PostRepository {
+	return &PostRepository{
+		BaseRepository: NewBaseRepository(db, "posts", newPost, newDBPost, "publish_date"),
+	}
+}
 
-	rows, err := db.QueryContext(ctx, "SELECT id from photos.posts ORDER BY RANDOM() LIMIT 1")
+// RandomPostID returns a random post ID.
+func (r *PostRepository) RandomPostID(ctx context.Context) (int, error) {
+	var result struct {
+		ID int `db:"id"`
+	}
+
+	sql := `SELECT id FROM photos.posts WHERE is_draft = false ORDER BY RANDOM() LIMIT 1`
+	err := r.db.QueryRowContext(ctx, sql).Scan(&result.ID)
 	if err != nil {
 		return 0, errors.Wrap(err, "failed to select random post")
 	}
-	defer rows.Close()
 
-	err = rows.Err()
-	if err != nil {
-		return 0, errors.Wrap(err, "failed to query for random post")
-	}
-
-	for rows.Next() {
-		err := rows.Scan(&postID)
-		if err != nil {
-			return 0, errors.Wrap(err, "failed to scan random post")
-		}
-	}
-
-	if postID == 0 {
-		return 0, errors.New("no posts found")
-	}
-
-	return postID, nil
+	return result.ID, nil
 }
 
-func FindPostsByID(ctx context.Context, db *sql.DB, id []int) (results []models.Post, err error) {
+// FindByLocation finds posts by location IDs.
+func (r *PostRepository) FindByLocation(ctx context.Context, locationIDs []int) ([]models.Post, error) {
 	var dbPosts []dbPost
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbPosts)
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(goqu.Ex{"location_id": locationIDs}).
+		Order(goqu.I("publish_date").Desc()).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbPosts)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts by id")
+		return nil, errors.Wrap(err, "failed to select posts by location")
 	}
 
+	results := make([]models.Post, 0, len(dbPosts))
 	for i := range dbPosts {
 		results = append(results, newPost(dbPosts[i]))
 	}
@@ -157,115 +156,136 @@ func FindPostsByID(ctx context.Context, db *sql.DB, id []int) (results []models.
 	return results, nil
 }
 
-func FindPostsByLocation(ctx context.Context, db *sql.DB, id []int) (results []models.Post, err error) {
-	var dbPosts []dbPost
+// Search performs text search on posts.
+func (r *PostRepository) Search(ctx context.Context, query string) ([]models.Post, error) {
+	if query == "" {
+		return []models.Post{}, nil
+	}
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"location_id": id}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbPosts)
+	// Sanitize query for SQL ILIKE pattern
+	safeQuery := strings.TrimSpace(query)
+	safeQuery = strings.ReplaceAll(safeQuery, "%", "\\%")
+	safeQuery = strings.ReplaceAll(safeQuery, "_", "\\_")
+	searchPattern := "%" + safeQuery + "%"
+
+	var dbPosts []dbPost
+	goquDB := goqu.New("postgres", r.db)
+
+	// Search in descriptions using ILIKE
+	descQuery := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(goqu.L("description ILIKE ?", searchPattern)).
+		Order(goqu.I("publish_date").Desc()).
+		Executor()
+
+	err := descQuery.ScanStructsContext(ctx, &dbPosts)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts by id")
+		return nil, errors.Wrap(err, "failed to search posts by description")
 	}
 
+	// Convert results
+	results := make([]models.Post, 0, len(dbPosts))
 	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
+		post := newPost(dbPosts[i])
+		results = append(results, post)
 	}
 
-	return results, nil
-}
-
-func SearchPosts(ctx context.Context, db *sql.DB, query string) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	safeQuery := regexp.MustCompile(`[^\w\s]+`).ReplaceAllString(query, "")
-	matcher := regexp.MustCompile(fmt.Sprintf(`(^|\W)%s(s|\W|$)`, strings.ToLower(safeQuery)))
-
-	goquDB := goqu.New("postgres", db)
-	inner := goquDB.From("photos.posts").
+	// Also search in tags
+	var tagPosts []dbPost
+	tagQuery := goquDB.From(goqu.T("tags").Schema("photos")).
+		InnerJoin(goqu.T("taggings").Schema("photos"), goqu.On(goqu.Ex{"taggings.tag_id": goqu.I("tags.id")})).
+		InnerJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.id": goqu.I("taggings.post_id")})).
 		Select("posts.*").
-		Distinct("posts.id").
-		LeftJoin(goqu.T("locations").Schema("photos"), goqu.On(goqu.Ex{"posts.location_id": goqu.I("locations.id")})).
-		LeftJoin(goqu.T("taggings").Schema("photos"), goqu.On(goqu.Ex{"posts.id": goqu.I("taggings.post_id")})).
-		LeftJoin(goqu.T("tags").Schema("photos"), goqu.On(goqu.Ex{"taggings.tag_id": goqu.I("tags.id")})).
-		GroupBy("posts.id", "locations.id", "tags.id").
-		Having(
-			goqu.Or(
-				goqu.Ex{"posts.description": goqu.Op{"ilike": matcher}},
-				goqu.Ex{"locations.name": goqu.Op{"ilike": matcher}},
-				goqu.Ex{"tags.name": goqu.Op{"ilike": matcher}},
-			),
-		)
-	outer := goquDB.From(inner).Select("*").Order(goqu.I("publish_date").Desc())
-	err = outer.ScanStructsContext(ctx, &dbPosts)
+		Where(goqu.L(`tags.name ILIKE ?`, searchPattern)).
+		Order(goqu.I("posts.publish_date").Desc()).
+		Executor()
+
+	err = tagQuery.ScanStructsContext(ctx, &tagPosts)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts by id")
+		return nil, errors.Wrap(err, "failed to search posts by tags")
 	}
 
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
+	// Also search in location names
+	var locationPosts []dbPost
+	locationQuery := goquDB.From(goqu.T("locations").Schema("photos")).
+		InnerJoin(goqu.T("posts").Schema("photos"), goqu.On(goqu.Ex{"posts.location_id": goqu.I("locations.id")})).
+		Select("posts.*").
+		Where(goqu.L(`locations.name ILIKE ?`, searchPattern)).
+		Order(goqu.I("posts.publish_date").Desc()).
+		Executor()
+
+	err = locationQuery.ScanStructsContext(ctx, &locationPosts)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to search posts by location")
 	}
+
+	// Merge results and deduplicate
+	postMap := make(map[int]models.Post)
+	for i := range results {
+		postMap[results[i].ID] = results[i]
+	}
+	for i := range tagPosts {
+		post := newPost(tagPosts[i])
+		postMap[post.ID] = post
+	}
+	for i := range locationPosts {
+		post := newPost(locationPosts[i])
+		postMap[post.ID] = post
+	}
+
+	// Convert map back to slice
+	results = make([]models.Post, 0, len(postMap))
+	for postID := range postMap {
+		results = append(results, postMap[postID])
+	}
+
+	// Sort by publish date descending
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].PublishDate.After(results[j].PublishDate)
+	})
 
 	return results, nil
 }
 
-func FindPostsByInstagramCode(ctx context.Context, db *sql.DB, code string) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"instagram_code": code}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts by instagram_code")
-	}
-
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+// FindByInstagramCode finds posts by Instagram code.
+func (r *PostRepository) FindByInstagramCode(ctx context.Context, code string) ([]models.Post, error) {
+	return r.FindByField(ctx, "instagram_code", code)
 }
 
-func FindPostsByMediaID(ctx context.Context, db *sql.DB, id int) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.posts").Select("*").Where(goqu.Ex{"media_id": id}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts by media_id")
-	}
-
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+// FindByMediaID finds posts by media ID.
+func (r *PostRepository) FindByMediaID(ctx context.Context, mediaID int) ([]models.Post, error) {
+	return r.FindByField(ctx, "media_id", mediaID)
 }
 
-func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models.Post, err error) {
+// FindNextPost finds the next or previous post relative to a given post.
+func (r *PostRepository) FindNextPost(post models.Post, previous bool) ([]models.Post, error) {
 	var dbPosts []dbPost
 
-	query := goqu.C("publish_date").Gt(post.PublishDate)
+	goquDB := goqu.New("postgres", r.db)
+
+	var operator string
+	var order exp.OrderedExpression
 	if previous {
-		query = goqu.C("publish_date").Lt(post.PublishDate)
-	}
-
-	order := goqu.I("publish_date").Asc()
-	if previous {
+		operator = "<"
 		order = goqu.I("publish_date").Desc()
+	} else {
+		operator = ">"
+		order = goqu.I("publish_date").Asc()
 	}
 
-	goquDB := goqu.New("postgres", db)
-	operation := goquDB.From("photos.posts").Select("*").
-		Where(query).
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(goqu.L(fmt.Sprintf(`"publish_date" %s ?`, operator), post.PublishDate)).
 		Order(order).
 		Limit(1).
 		Executor()
-	err = operation.ScanStructs(&dbPosts)
+
+	err := query.ScanStructsContext(context.Background(), &dbPosts)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts by media_id")
+		return nil, errors.Wrap(err, "failed to find next post")
 	}
 
+	results := make([]models.Post, 0, len(dbPosts))
 	for i := range dbPosts {
 		results = append(results, newPost(dbPosts[i]))
 	}
@@ -273,62 +293,316 @@ func FindNextPost(db *sql.DB, post models.Post, previous bool) (results []models
 	return results, nil
 }
 
-func SetPostTags(ctx context.Context, db *sql.DB, post models.Post, rawTags []string) (err error) {
+// SetTags sets tags for a post.
+func (r *PostRepository) SetTags(ctx context.Context, post models.Post, rawTags []string) error {
+	// Filter out empty tags
+	var filteredTags []string
+	for _, tag := range rawTags {
+		if strings.TrimSpace(tag) != "" {
+			filteredTags = append(filteredTags, strings.TrimSpace(tag))
+		}
+	}
+
+	// First, find or create the tags
 	var tags []models.Tag
-	if len(rawTags) > 0 {
-		tags, err = FindOrCreateTagsByName(ctx, db, rawTags)
+	var err error
+	if len(filteredTags) > 0 {
+		tags, err = FindOrCreateTagsByName(ctx, r.db, filteredTags)
 		if err != nil {
-			return errors.Wrap(err, "failed to find or created tags")
+			return errors.Wrap(err, "failed to find or create tags")
 		}
 	}
 
-	existingTaggings, err := FindTaggingsByPostID(db, post.ID)
+	goquDB := goqu.New("postgres", r.db)
+	tx, err := goquDB.Begin()
 	if err != nil {
-		return errors.Wrap(err, "failed to find existing taggings for post")
+		return errors.Wrap(err, "failed to begin transaction")
 	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
-	requiredTaggings := make([]models.Tagging, len(tags))
-	for i, t := range tags {
-		requiredTaggings[i] = models.Tagging{
-			PostID: post.ID,
-			TagID:  t.ID,
-		}
-	}
-
-	var taggingsToDelete []models.Tagging
-	for _, tagging := range existingTaggings {
-		found := false
-		for _, t := range tags {
-			if t.ID == tagging.TagID {
-				found = true
-				break
-			}
-		}
-
-		if !found {
-			taggingsToDelete = append(taggingsToDelete, tagging)
-		}
-	}
-
-	err = DeleteTaggings(ctx, db, taggingsToDelete)
+	// Delete existing taggings
+	_, err = tx.Delete("photos.taggings").
+		Where(goqu.Ex{"post_id": post.ID}).
+		Executor().
+		ExecContext(ctx)
 	if err != nil {
-		return errors.Wrap(err, "failed to delete old taggings")
+		return errors.Wrap(err, "failed to delete existing taggings")
 	}
 
-	_, err = FindOrCreateTaggings(ctx, db, requiredTaggings)
+	// Insert new taggings
+	for _, tag := range tags {
+		_, err = tx.Insert("photos.taggings").
+			Rows(goqu.Record{"post_id": post.ID, "tag_id": tag.ID}).
+			Executor().
+			ExecContext(ctx)
+		if err != nil {
+			return errors.Wrapf(err, "failed to create tagging for tag '%s'", tag.Name)
+		}
+	}
+
+	err = tx.Commit()
 	if err != nil {
-		return errors.Wrap(err, "failed to find or create taggings")
+		return errors.Wrap(err, "failed to commit transaction")
 	}
 
 	return nil
 }
 
-func AllPosts(
-	ctx context.Context,
-	db *sql.DB,
-	includeDrafts bool,
-	options SelectOptions,
-) (results []models.Post, err error) {
+// AllWithOptions retrieves all posts with filtering options.
+func (r *PostRepository) AllWithOptions(
+	ctx context.Context, includeDrafts bool, options PostFilterOptions,
+) ([]models.Post, error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", r.db)
+	query := r.buildBaseQueryWithJoins(goquDB).Select("posts.*")
+
+	// Add filtering conditions
+	conditions := goqu.Ex{}
+	if !includeDrafts {
+		conditions["posts.is_draft"] = false
+	}
+
+	if len(options.Tags) > 0 {
+		query = query.InnerJoin(
+			goqu.T("taggings").Schema("photos"),
+			goqu.On(goqu.Ex{"taggings.post_id": goqu.I("posts.id")}),
+		).
+			InnerJoin(goqu.T("tags").Schema("photos"), goqu.On(goqu.Ex{"tags.id": goqu.I("taggings.tag_id")}))
+		conditions["tags.name"] = options.Tags
+	}
+
+	if len(options.Devices) > 0 {
+		conditions["devices.name"] = options.Devices
+	}
+	if len(options.Lenses) > 0 {
+		conditions["lenses.name"] = options.Lenses
+	}
+	if len(options.Locations) > 0 {
+		conditions["locations.name"] = options.Locations
+	}
+	if len(options.Trips) > 0 {
+		conditions["trips.title"] = options.Trips
+	}
+
+	if !options.From.IsZero() {
+		conditions["posts.publish_date"] = goqu.Op{"gte": options.From}
+	}
+	if !options.To.IsZero() {
+		conditions["posts.publish_date"] = goqu.Op{"lte": options.To}
+	}
+
+	query = query.Where(conditions).
+		GroupBy(goqu.I("posts.id")).
+		Order(goqu.I("posts.publish_date").Desc())
+
+	if options.Limit > 0 {
+		query = query.Limit(uint(options.Limit))
+	}
+	if options.Offset > 0 {
+		query = query.Offset(uint(options.Offset))
+	}
+
+	err := query.Executor().ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to select posts with options")
+	}
+
+	results := make([]models.Post, 0, len(dbPosts))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
+	}
+
+	return results, nil
+}
+
+// Count returns the count of posts with filtering options.
+func (r *PostRepository) Count(ctx context.Context, includeDrafts bool, options PostFilterOptions) (uint, error) {
+	goquDB := goqu.New("postgres", r.db)
+	query := r.buildBaseQueryWithJoins(goquDB).Select(goqu.COUNT(goqu.DISTINCT("posts.id")))
+
+	// Add same filtering logic as AllWithOptions
+	conditions := goqu.Ex{}
+	if !includeDrafts {
+		conditions["posts.is_draft"] = false
+	}
+
+	if len(options.Tags) > 0 {
+		query = query.InnerJoin(
+			goqu.T("taggings").Schema("photos"),
+			goqu.On(goqu.Ex{"taggings.post_id": goqu.I("posts.id")}),
+		).
+			InnerJoin(goqu.T("tags").Schema("photos"), goqu.On(goqu.Ex{"tags.id": goqu.I("taggings.tag_id")}))
+		conditions["tags.name"] = options.Tags
+	}
+
+	if len(options.Devices) > 0 {
+		conditions["devices.name"] = options.Devices
+	}
+	if len(options.Lenses) > 0 {
+		conditions["lenses.name"] = options.Lenses
+	}
+	if len(options.Locations) > 0 {
+		conditions["locations.name"] = options.Locations
+	}
+	if len(options.Trips) > 0 {
+		conditions["trips.title"] = options.Trips
+	}
+
+	if !options.From.IsZero() {
+		conditions["posts.publish_date"] = goqu.Op{"gte": options.From}
+	}
+	if !options.To.IsZero() {
+		conditions["posts.publish_date"] = goqu.Op{"lte": options.To}
+	}
+
+	query = query.Where(conditions)
+
+	var count uint
+	sql, args, err := query.ToSQL()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to build count query")
+	}
+	err = r.db.QueryRowContext(ctx, sql, args...).Scan(&count)
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to count posts")
+	}
+
+	return count, nil
+}
+
+// InDateRange finds posts within a date range.
+func (r *PostRepository) InDateRange(ctx context.Context, after, before time.Time) ([]models.Post, error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(
+			goqu.And(
+				goqu.I("publish_date").Gte(after),
+				goqu.I("publish_date").Lte(before),
+				goqu.I("is_draft").Eq(false),
+			),
+		).
+		Order(goqu.I("publish_date").Desc()).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to select posts in date range")
+	}
+
+	results := make([]models.Post, 0, len(dbPosts))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
+	}
+
+	return results, nil
+}
+
+// OnThisDay finds posts on this day (month/day) from previous years.
+func (r *PostRepository) OnThisDay(ctx context.Context, month time.Month, day int) ([]models.Post, error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(goqu.L(
+			"EXTRACT(month FROM publish_date) = ? AND EXTRACT(day FROM publish_date) = ? AND is_draft = false",
+			int(month), day,
+		)).
+		Order(goqu.I("publish_date").Desc()).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to select posts on this day")
+	}
+
+	results := make([]models.Post, 0, len(dbPosts))
+	for i := range dbPosts {
+		results = append(results, newPost(dbPosts[i]))
+	}
+
+	return results, nil
+}
+
+// buildBaseQueryWithJoins creates the base query with all common joins.
+func (r *PostRepository) buildBaseQueryWithJoins(goquDB *goqu.Database) *goqu.SelectDataset {
+	return goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		InnerJoin(goqu.T("medias").Schema("photos"), goqu.On(goqu.Ex{"medias.id": goqu.I("posts.media_id")})).
+		LeftJoin(goqu.T("devices").Schema("photos"), goqu.On(goqu.Ex{"devices.id": goqu.I("medias.device_id")})).
+		LeftJoin(goqu.T("lenses").Schema("photos"), goqu.On(goqu.Ex{"lenses.id": goqu.I("medias.lens_id")})).
+		LeftJoin(goqu.T("locations").Schema("photos"), goqu.On(goqu.Ex{"locations.id": goqu.I("posts.location_id")})).
+		LeftJoin(goqu.T("trips").Schema("photos"), goqu.On(goqu.Ex{"trips.id": goqu.I("medias.trip_id")}))
+}
+
+// Legacy function wrappers for backward compatibility with test files.
+// These should be removed after all tests are updated.
+
+// CreatePosts creates multiple posts using the repository.
+func CreatePosts(ctx context.Context, db *sql.DB, posts []models.Post) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.Create(ctx, posts)
+}
+
+// RandomPostID returns a random post ID.
+func RandomPostID(ctx context.Context, db *sql.DB) (int, error) {
+	repo := NewPostRepository(db)
+	return repo.RandomPostID(ctx)
+}
+
+// FindPostsByID finds posts by their IDs using the repository.
+func FindPostsByID(ctx context.Context, db *sql.DB, ids []int) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	int64IDs := make([]int64, len(ids))
+	for i, id := range ids {
+		int64IDs[i] = int64(id)
+	}
+	return repo.FindByIDs(ctx, int64IDs)
+}
+
+// FindPostsByLocation finds posts by location IDs.
+func FindPostsByLocation(ctx context.Context, db *sql.DB, locationIDs []int) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.FindByLocation(ctx, locationIDs)
+}
+
+// SearchPosts performs text search on posts.
+func SearchPosts(ctx context.Context, db *sql.DB, query string) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.Search(ctx, query)
+}
+
+// FindPostsByInstagramCode finds posts by Instagram code.
+func FindPostsByInstagramCode(ctx context.Context, db *sql.DB, code string) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.FindByInstagramCode(ctx, code)
+}
+
+// FindPostsByMediaID finds posts by media ID.
+func FindPostsByMediaID(ctx context.Context, db *sql.DB, mediaID int) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.FindByMediaID(ctx, mediaID)
+}
+
+// FindNextPost finds the next or previous post.
+func FindNextPost(db *sql.DB, post models.Post, previous bool) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.FindNextPost(post, previous)
+}
+
+// SetPostTags sets tags for a post.
+func SetPostTags(ctx context.Context, db *sql.DB, post models.Post, rawTags []string) error {
+	repo := NewPostRepository(db)
+	return repo.SetTags(ctx, post, rawTags)
+}
+
+// AllPosts retrieves all posts with basic sorting and pagination (original behavior).
+func AllPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options SelectOptions) ([]models.Post, error) {
 	var dbPosts []dbPost
 
 	goquDB := goqu.New("postgres", db)
@@ -339,10 +613,11 @@ func AllPosts(
 	}
 
 	if options.SortField != "" {
-		query = query.Order(goqu.I(options.SortField).Asc())
-	}
-	if options.SortField != "" && options.SortDescending {
-		query = query.Order(goqu.I(options.SortField).Desc())
+		if options.SortDescending {
+			query = query.Order(goqu.I(options.SortField).Desc())
+		} else {
+			query = query.Order(goqu.I(options.SortField).Asc())
+		}
 	}
 
 	if options.Offset != 0 {
@@ -353,14 +628,12 @@ func AllPosts(
 		query = query.Limit(options.Limit)
 	}
 
-	err = query.Executor().ScanStructsContext(ctx, &dbPosts)
+	err := query.Executor().ScanStructsContext(ctx, &dbPosts)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts")
+		return nil, errors.Wrap(err, "failed to select posts")
 	}
 
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results = []models.Post{}
+	results := make([]models.Post, 0, len(dbPosts))
 	for i := range dbPosts {
 		results = append(results, newPost(dbPosts[i]))
 	}
@@ -368,125 +641,47 @@ func AllPosts(
 	return results, nil
 }
 
-func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, options SelectOptions) (uint, error) {
+// CountPosts returns the count of posts (original behavior).
+func CountPosts(ctx context.Context, db *sql.DB, includeDrafts bool, _ SelectOptions) (uint, error) {
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.posts").Select("*")
+	query := goquDB.From("photos.posts").Select(goqu.COUNT("*"))
 
 	if !includeDrafts {
-		insert = insert.Where(goqu.Ex{"is_draft": false})
+		query = query.Where(goqu.Ex{"is_draft": false})
 	}
 
-	if options.SortField != "" && options.SortDescending {
-		insert = insert.Order(goqu.I(options.SortField).Desc())
-	}
-
-	if options.Offset != 0 {
-		insert = insert.Offset(options.Offset)
-	}
-
-	if options.Limit != 0 {
-		insert = insert.Limit(options.Limit)
-	}
-
-	count, err := insert.CountContext(ctx)
+	var count uint
+	found, err := query.Executor().ScanValContext(ctx, &count)
 	if err != nil {
 		return 0, errors.Wrap(err, "failed to count posts")
 	}
-
-	if count < 0 {
-		return 0, errors.New("count cannot be negative")
+	if !found {
+		return 0, nil
 	}
 
-	return uint(count), nil
+	return count, nil
 }
 
-func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) (err error) {
-	ids := make([]int, len(posts))
-	for i := range posts {
-		ids[i] = posts[i].ID
-	}
-
-	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("photos.posts").Where(
-		goqu.Ex{"id": ids},
-	).ToSQL()
-	if err != nil {
-		return fmt.Errorf("failed to build posts delete query: %w", err)
-	}
-	_, err = db.ExecContext(ctx, del)
-	if err != nil {
-		return fmt.Errorf("failed to delete posts: %w", err)
-	}
-
-	return nil
+// DeletePosts deletes posts using the repository.
+func DeletePosts(ctx context.Context, db *sql.DB, posts []models.Post) error {
+	repo := NewPostRepository(db)
+	return repo.Delete(ctx, posts)
 }
 
-// UpdatePosts is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO).
+// UpdatePosts updates posts using the repository.
 func UpdatePosts(ctx context.Context, db *sql.DB, posts []models.Post) ([]models.Post, error) {
-	return BulkUpdate(ctx, db, "photos.posts", posts, newDBPost)
+	repo := NewPostRepository(db)
+	return repo.Update(ctx, posts)
 }
 
-func PostsInDateRange(ctx context.Context, db *sql.DB, after, before time.Time) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("photos.posts").
-		Select("*").
-		Where(
-			goqu.And(
-				goqu.Ex{
-					"publish_date": goqu.Op{"gt": after},
-				},
-				goqu.Ex{
-					"publish_date": goqu.Op{"lt": before},
-				},
-			),
-		).
-		Order(goqu.I("publish_date").Asc())
-
-	err = query.Executor().ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results = []models.Post{}
-
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+// PostsInDateRange finds posts within a date range.
+func PostsInDateRange(ctx context.Context, db *sql.DB, after, before time.Time) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.InDateRange(ctx, after, before)
 }
 
-func PostsOnThisDay(ctx context.Context, db *sql.DB, month time.Month, day int) (results []models.Post, err error) {
-	var dbPosts []dbPost
-
-	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("photos.posts").
-		Select(
-			"*",
-		).
-		Where(
-			goqu.L(`EXTRACT(MONTH from publish_date)`).Eq(month),
-			goqu.L(`EXTRACT(DAY from publish_date)`).Eq(day),
-		).
-		Order(goqu.I("publish_date").Desc())
-
-	err = query.Executor().ScanStructsContext(ctx, &dbPosts)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select posts")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results = []models.Post{}
-
-	for i := range dbPosts {
-		results = append(results, newPost(dbPosts[i]))
-	}
-
-	return results, nil
+// PostsOnThisDay finds posts on this day from previous years.
+func PostsOnThisDay(ctx context.Context, db *sql.DB, month time.Month, day int) ([]models.Post, error) {
+	repo := NewPostRepository(db)
+	return repo.OnThisDay(ctx, month, day)
 }

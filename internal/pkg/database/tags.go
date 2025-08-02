@@ -21,7 +21,7 @@ type dbTag struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func (d *dbTag) ToRecord(includeID bool) goqu.Record {
+func (d dbTag) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"name":   d.Name,
 		"hidden": d.Hidden,
@@ -34,7 +34,7 @@ func (d *dbTag) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func (d *dbTag) ToModel() models.Tag {
+func (d dbTag) ToModel() models.Tag {
 	return models.Tag{
 		ID:        d.ID,
 		Name:      d.Name,
@@ -45,7 +45,7 @@ func (d *dbTag) ToModel() models.Tag {
 }
 
 func newTag(tag dbTag) models.Tag {
-	return (&tag).ToModel()
+	return tag.ToModel()
 }
 
 func newDBTag(tag models.Tag) dbTag {
@@ -64,73 +64,75 @@ func (TagNameConflictError) Error() string {
 	return "tag name conflicted with an existing tag"
 }
 
-func CreateTags(ctx context.Context, db *sql.DB, tags []models.Tag) (results []models.Tag, err error) {
-	records := []goqu.Record{}
-	for _, v := range tags {
-		d := newDBTag(v)
-		records = append(records, d.ToRecord(false))
-	}
+// TagRepository provides tag-specific database operations.
+type TagRepository struct {
+	*BaseRepository[models.Tag, dbTag]
+}
 
+// NewTagRepository creates a new tag repository instance.
+func NewTagRepository(db *sql.DB) *TagRepository {
+	return &TagRepository{
+		BaseRepository: NewBaseRepository(db, "tags", newTag, newDBTag, "created_at"),
+	}
+}
+
+// FindByName finds tags by their names.
+func (r *TagRepository) FindByName(ctx context.Context, names []string) ([]models.Tag, error) {
 	var dbTags []dbTag
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("photos.tags").Returning(goqu.Star()).Rows(records).Executor()
-	err = insert.ScanStructsContext(ctx, &dbTags)
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(goqu.I("name").In(names)).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbTags)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to insert tags")
+		return nil, errors.Wrap(err, "failed to select tags by name")
 	}
 
-	for _, v := range dbTags {
-		results = append(results, newTag(v))
+	results := make([]models.Tag, 0, len(dbTags))
+	for _, tag := range dbTags {
+		results = append(results, newTag(tag))
 	}
 
 	return results, nil
 }
 
-func FindTagsByName(ctx context.Context, db *sql.DB, names []string) (results []models.Tag, err error) {
-	var dbTags []dbTag
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("name").In(names)).Executor()
-	err = insert.ScanStructsContext(ctx, &dbTags)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select tags by name")
-	}
-
-	for _, v := range dbTags {
-		results = append(results, newTag(v))
-	}
-
-	return results, nil
-}
-
-func FindTagsByID(ctx context.Context, db *sql.DB, ids []int) (results []models.Tag, err error) {
+// FindByIntIDs finds tags by their int IDs (compatibility wrapper).
+func (r *TagRepository) FindByIntIDs(ctx context.Context, ids []int) ([]models.Tag, error) {
 	if len(ids) == 0 {
-		return results, nil
+		return []models.Tag{}, nil
 	}
 
 	var dbTags []dbTag
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.tags").Select("*").Where(goqu.I("id").In(ids)).Executor()
-	err = insert.ScanStructsContext(ctx, &dbTags)
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Where(goqu.I("id").In(ids)).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbTags)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select tags by id")
+		return nil, errors.Wrap(err, "failed to select tags by id")
 	}
 
-	for _, v := range dbTags {
-		results = append(results, newTag(v))
+	results := make([]models.Tag, 0, len(dbTags))
+	for _, tag := range dbTags {
+		results = append(results, newTag(tag))
 	}
 
 	return results, nil
 }
 
-func FindOrCreateTagsByName(ctx context.Context, db *sql.DB, names []string) (results []models.Tag, err error) {
+// FindOrCreateByName finds or creates tags by their names.
+func (r *TagRepository) FindOrCreateByName(ctx context.Context, names []string) ([]models.Tag, error) {
 	resultMap := make(map[string]models.Tag)
 
-	foundTags, err := FindTagsByName(ctx, db, names)
+	foundTags, err := r.FindByName(ctx, names)
 	if err != nil {
-		return results, err
+		return nil, err
 	}
 	for _, t := range foundTags {
 		resultMap[t.Name] = t
@@ -144,19 +146,20 @@ func FindOrCreateTagsByName(ctx context.Context, db *sql.DB, names []string) (re
 	}
 
 	if len(tagsToCreate) > 0 {
-		createdTags, err := CreateTags(ctx, db, tagsToCreate)
+		createdTags, err := r.Create(ctx, tagsToCreate)
 		if err != nil {
-			return results, err
+			return nil, err
 		}
 		for _, t := range createdTags {
 			resultMap[t.Name] = t
 		}
 	}
 
+	results := make([]models.Tag, 0, len(names))
 	for _, t := range names {
 		tag, ok := resultMap[t]
 		if !ok {
-			return results, fmt.Errorf("expected tag %q to have been found or created", t)
+			return nil, fmt.Errorf("expected tag %q to have been found or created", t)
 		}
 
 		results = append(results, tag)
@@ -165,26 +168,25 @@ func FindOrCreateTagsByName(ctx context.Context, db *sql.DB, names []string) (re
 	return results, nil
 }
 
-func AllTags(
-	ctx context.Context,
-	db *sql.DB,
-	includeHidden bool,
-	options SelectOptions,
-) (results []models.Tag, err error) {
+// AllWithOptions retrieves all tags with additional filtering and sorting options.
+func (r *TagRepository) AllWithOptions(
+	ctx context.Context, includeHidden bool, options SelectOptions,
+) ([]models.Tag, error) {
 	var dbTags []dbTag
 
-	goquDB := goqu.New("postgres", db)
-	query := goquDB.From("photos.tags").Select("*")
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).Select("*")
 
 	if !includeHidden {
 		query = query.Where(goqu.Ex{"hidden": false})
 	}
 
 	if options.SortField != "" {
-		query = query.Order(goqu.I(options.SortField).Asc())
-	}
-	if options.SortField != "" && options.SortDescending {
-		query = query.Order(goqu.I(options.SortField).Desc())
+		if options.SortDescending {
+			query = query.Order(goqu.I(options.SortField).Desc())
+		} else {
+			query = query.Order(goqu.I(options.SortField).Asc())
+		}
 	}
 
 	if options.Offset != 0 {
@@ -195,55 +197,24 @@ func AllTags(
 		query = query.Limit(options.Limit)
 	}
 
-	err = query.Executor().ScanStructsContext(ctx, &dbTags)
+	err := query.Executor().ScanStructsContext(ctx, &dbTags)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select tags")
+		return nil, errors.Wrap(err, "failed to select tags")
 	}
 
 	// this is needed in case there are no items added, we don't want to return
 	// nil but rather an empty slice
-	results = []models.Tag{}
-	for _, v := range dbTags {
-		results = append(results, newTag(v))
+	results := make([]models.Tag, 0, len(dbTags))
+	for _, tag := range dbTags {
+		results = append(results, newTag(tag))
 	}
 
 	return results, nil
 }
 
-func DeleteTags(ctx context.Context, db *sql.DB, tags []models.Tag) (err error) {
-	ids := make([]int, len(tags))
-	for i, t := range tags {
-		ids[i] = t.ID
-	}
-
-	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("photos.tags").Where(
-		goqu.Ex{"id": ids},
-	).ToSQL()
-	if err != nil {
-		return fmt.Errorf("failed to build tags delete query: %w", err)
-	}
-	_, err = db.ExecContext(ctx, del)
-	if err != nil {
-		return fmt.Errorf("failed to delete tags: %w", err)
-	}
-
-	return nil
-}
-
-// UpdateTags is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO).
-func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) ([]models.Tag, error) {
-	results, err := BulkUpdate(ctx, db, "photos.tags", tags, newDBTag)
-	if err != nil {
-		return results, &TagNameConflictError{}
-	}
-	return results, nil
-}
-
-// TODO make this a transaction.
-func MergeTags(ctx context.Context, db *sql.DB, tag1, tag2 models.Tag) (err error) {
-	taggings, err := FindTaggingsByTagID(ctx, db, tag2.ID)
+// Merge merges two tags by moving all taggings from tag2 to tag1, then deleting tag2.
+func (r *TagRepository) Merge(ctx context.Context, tag1, tag2 models.Tag) error {
+	taggings, err := FindTaggingsByTagID(ctx, r.db, tag2.ID)
 	if err != nil {
 		return errors.Wrap(err, "failed to list all taggings")
 	}
@@ -255,16 +226,85 @@ func MergeTags(ctx context.Context, db *sql.DB, tag1, tag2 models.Tag) (err erro
 			newTaggings = append(newTaggings, models.Tagging{TagID: tag1.ID, PostID: t.PostID})
 		}
 
-		_, err = CreateTaggings(ctx, db, newTaggings)
+		_, err = CreateTaggings(ctx, r.db, newTaggings)
 		if err != nil {
 			return errors.Wrap(err, "failed to create new taggings for tag1")
 		}
 	}
 
-	err = DeleteTags(ctx, db, []models.Tag{tag2})
+	err = r.Delete(ctx, []models.Tag{tag2})
 	if err != nil {
 		return errors.Wrap(err, "failed to delete tag2")
 	}
 
 	return nil
+}
+
+// Legacy function wrappers for backward compatibility with test files.
+// These should be removed after all tests are updated.
+
+// CreateTags creates multiple tags using the repository.
+func CreateTags(ctx context.Context, db *sql.DB, tags []models.Tag) ([]models.Tag, error) {
+	repo := NewTagRepository(db)
+	return repo.Create(ctx, tags)
+}
+
+// FindTagsByName finds tags by name using the repository.
+func FindTagsByName(ctx context.Context, db *sql.DB, names []string) ([]models.Tag, error) {
+	repo := NewTagRepository(db)
+	return repo.FindByName(ctx, names)
+}
+
+// FindTagsByID finds tags by their IDs using the repository.
+func FindTagsByID(ctx context.Context, db *sql.DB, ids []int) ([]models.Tag, error) {
+	repo := NewTagRepository(db)
+	return repo.FindByIntIDs(ctx, ids)
+}
+
+// FindOrCreateTagsByName finds or creates tags by name using the repository.
+func FindOrCreateTagsByName(ctx context.Context, db *sql.DB, names []string) ([]models.Tag, error) {
+	repo := NewTagRepository(db)
+	return repo.FindOrCreateByName(ctx, names)
+}
+
+// AllTags gets all tags using the repository.
+func AllTags(ctx context.Context, db *sql.DB, includeHidden bool, options SelectOptions) ([]models.Tag, error) {
+	repo := NewTagRepository(db)
+	return repo.AllWithOptions(ctx, includeHidden, options)
+}
+
+// DeleteTags deletes tags using the repository.
+func DeleteTags(ctx context.Context, db *sql.DB, tags []models.Tag) error {
+	if len(tags) == 0 {
+		return nil
+	}
+
+	ids := make([]int, len(tags))
+	for i, tag := range tags {
+		ids[i] = tag.ID
+	}
+
+	goquDB := goqu.New("postgres", db)
+	query := goquDB.From("photos.tags").Where(goqu.Ex{"id": ids}).Delete()
+	_, err := query.Executor().ExecContext(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed to delete tags")
+	}
+
+	return nil
+}
+
+// UpdateTags updates tags using the repository.
+func UpdateTags(ctx context.Context, db *sql.DB, tags []models.Tag) ([]models.Tag, error) {
+	results, err := BulkUpdateGeneric(ctx, db, "photos.tags", tags, newDBTag)
+	if err != nil {
+		return results, &TagNameConflictError{}
+	}
+	return results, nil
+}
+
+// MergeTags merges two tags using the repository.
+func MergeTags(ctx context.Context, db *sql.DB, tag1, tag2 models.Tag) error {
+	repo := NewTagRepository(db)
+	return repo.Merge(ctx, tag1, tag2)
 }

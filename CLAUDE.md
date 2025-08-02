@@ -51,6 +51,7 @@ make local_bucket  # Start local bucket server for file storage
 2. **Database**
    - PostgreSQL with PostGIS extensions
    - Migrations in `/internal/pkg/database/migrations/`
+   - Generic repository pattern in `/internal/pkg/database/` with type-safe CRUD operations
    - Models in `/internal/pkg/models/` (devices, lenses, media, posts, tags, trips, locations)
 
 3. **Web Server** (`/internal/pkg/server/`)
@@ -69,7 +70,7 @@ make local_bucket  # Start local bucket server for file storage
 
 ### Important Patterns
 
-- Repository pattern for database access (see `*_store.go` files in models)
+- Generic repository pattern for database access (see `BaseRepository` in `/internal/pkg/database/repository.go`)
 - Dependency injection through server initialization
 - Command pattern using Cobra for CLI (`/cmd/`)
 - Toolbelt integration for development tools (`/pkg/tool/`)

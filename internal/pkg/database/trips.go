@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -25,7 +24,7 @@ type dbTrip struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-func (d *dbTrip) ToRecord(includeID bool) goqu.Record {
+func (d dbTrip) ToRecord(includeID bool) goqu.Record {
 	record := goqu.Record{
 		"title":       d.Title,
 		"description": d.Description,
@@ -40,7 +39,7 @@ func (d *dbTrip) ToRecord(includeID bool) goqu.Record {
 	return record
 }
 
-func (d *dbTrip) ToModel() models.Trip {
+func (d dbTrip) ToModel() models.Trip {
 	return models.Trip{
 		ID: d.ID,
 
@@ -56,40 +55,49 @@ func (d *dbTrip) ToModel() models.Trip {
 }
 
 func newTrip(trip dbTrip) models.Trip {
-	return (&trip).ToModel()
+	return trip.ToModel()
 }
 
 func newDBTrip(trip models.Trip) dbTrip {
 	return dbTrip{
-		ID: trip.ID,
-
+		ID:          trip.ID,
 		Title:       trip.Title,
 		Description: trip.Description,
-
-		StartDate: trip.StartDate.UTC(),
-		EndDate:   trip.EndDate.UTC(),
-
-		CreatedAt: trip.CreatedAt,
-		UpdatedAt: trip.UpdatedAt,
+		StartDate:   trip.StartDate.UTC(),
+		EndDate:     trip.EndDate.UTC(),
+		CreatedAt:   trip.CreatedAt,
+		UpdatedAt:   trip.UpdatedAt,
 	}
 }
 
-func CreateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results []models.Trip, err error) {
-	records := []goqu.Record{}
-	for i := range trips {
-		d := newDBTrip(trips[i])
-		records = append(records, d.ToRecord(false))
-	}
+// TripRepository provides trip-specific database operations.
+type TripRepository struct {
+	*BaseRepository[models.Trip, dbTrip]
+}
 
+// NewTripRepository creates a new trip repository instance.
+func NewTripRepository(db *sql.DB) *TripRepository {
+	return &TripRepository{
+		BaseRepository: NewBaseRepository(db, "trips", newTrip, newDBTrip, "start_date"),
+	}
+}
+
+// All retrieves all trips ordered by start date (original behavior).
+func (r *TripRepository) All(ctx context.Context) ([]models.Trip, error) {
 	var dbTrips []dbTrip
 
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.Insert("photos.trips").Returning(goqu.Star()).Rows(records).Executor()
-	err = insert.ScanStructsContext(ctx, &dbTrips)
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.From(goqu.T(r.tableName).Schema(r.schema)).
+		Select("*").
+		Order(goqu.I("start_date").Desc()).
+		Executor()
+
+	err := query.ScanStructsContext(ctx, &dbTrips)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to insert trips")
+		return nil, errors.Wrap(err, "failed to select all trips")
 	}
 
+	results := make([]models.Trip, 0, len(dbTrips))
 	for i := range dbTrips {
 		results = append(results, newTrip(dbTrips[i]))
 	}
@@ -97,16 +105,38 @@ func CreateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (results 
 	return results, nil
 }
 
-func FindTripsByID(ctx context.Context, db *sql.DB, id []int) (results []models.Trip, err error) {
+// Posts returns all posts associated with a trip.
+// NOTE: This relationship may not exist in the current schema.
+func (*TripRepository) Posts(_ context.Context, _ int64) ([]models.Post, error) {
+	// TODO: Implement trip-post relationship when schema supports it
+	return []models.Post{}, nil
+}
+
+// Legacy function wrappers for backward compatibility with test files.
+// These should be removed after all tests are updated.
+
+// CreateTrips creates multiple trips using the repository.
+func CreateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) ([]models.Trip, error) {
+	repo := NewTripRepository(db)
+	return repo.Create(ctx, trips)
+}
+
+// FindTripsByID finds trips by their IDs using the repository.
+func FindTripsByID(ctx context.Context, db *sql.DB, ids []int) ([]models.Trip, error) {
+	if len(ids) == 0 {
+		return []models.Trip{}, nil
+	}
+
 	var dbTrips []dbTrip
 
 	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.trips").Select("*").Where(goqu.Ex{"id": id}).Executor()
-	err = insert.ScanStructsContext(ctx, &dbTrips)
+	query := goquDB.From("photos.trips").Select("*").Where(goqu.Ex{"id": ids}).Executor()
+	err := query.ScanStructsContext(ctx, &dbTrips)
 	if err != nil {
-		return results, errors.Wrap(err, "failed to select trips by id")
+		return nil, errors.Wrap(err, "failed to select trips by id")
 	}
 
+	results := make([]models.Trip, 0, len(dbTrips))
 	for i := range dbTrips {
 		results = append(results, newTrip(dbTrips[i]))
 	}
@@ -114,50 +144,32 @@ func FindTripsByID(ctx context.Context, db *sql.DB, id []int) (results []models.
 	return results, nil
 }
 
-func AllTrips(ctx context.Context, db *sql.DB) (results []models.Trip, err error) {
-	var dbTrips []dbTrip
-
-	goquDB := goqu.New("postgres", db)
-	insert := goquDB.From("photos.trips").Select("*").Order(goqu.I("start_date").Desc()).Executor()
-
-	err = insert.ScanStructsContext(ctx, &dbTrips)
-	if err != nil {
-		return results, errors.Wrap(err, "failed to select trips")
-	}
-
-	// this is needed in case there are no items added, we don't want to return
-	// nil but rather an empty slice
-	results = []models.Trip{}
-	for i := range dbTrips {
-		results = append(results, newTrip(dbTrips[i]))
-	}
-
-	return results, nil
+// FindTripsByName finds trips by title using the repository.
+func FindTripsByName(ctx context.Context, db *sql.DB, title string) ([]models.Trip, error) {
+	repo := NewTripRepository(db)
+	return repo.FindByField(ctx, "title", title)
 }
 
-func DeleteTrips(ctx context.Context, db *sql.DB, trips []models.Trip) (err error) {
-	ids := make([]int, len(trips))
-	for i := range trips {
-		ids[i] = trips[i].ID
-	}
-
-	goquDB := goqu.New("postgres", db)
-	del, _, err := goquDB.Delete("photos.trips").Where(
-		goqu.Ex{"id": ids},
-	).ToSQL()
-	if err != nil {
-		return fmt.Errorf("failed to build trips delete query: %w", err)
-	}
-	_, err = db.ExecContext(ctx, del)
-	if err != nil {
-		return fmt.Errorf("failed to delete trips: %w", err)
-	}
-
-	return nil
+// AllTrips gets all trips using the repository.
+func AllTrips(ctx context.Context, db *sql.DB) ([]models.Trip, error) {
+	repo := NewTripRepository(db)
+	return repo.All(ctx)
 }
 
-// UpdateTrips is not implemented as a single SQL query since update many in
-// place is not supported by goqu and it wasn't worth the work (TODO).
+// DeleteTrips deletes trips using the repository.
+func DeleteTrips(ctx context.Context, db *sql.DB, trips []models.Trip) error {
+	repo := NewTripRepository(db)
+	return repo.Delete(ctx, trips)
+}
+
+// UpdateTrips updates trips using the repository.
 func UpdateTrips(ctx context.Context, db *sql.DB, trips []models.Trip) ([]models.Trip, error) {
-	return BulkUpdate(ctx, db, "photos.trips", trips, newDBTrip)
+	repo := NewTripRepository(db)
+	return repo.Update(ctx, trips)
+}
+
+// TripPosts returns posts associated with a trip using the repository.
+func TripPosts(ctx context.Context, db *sql.DB, tripID int64) ([]models.Post, error) {
+	repo := NewTripRepository(db)
+	return repo.Posts(ctx, tripID)
 }

@@ -1,6 +1,7 @@
 package public
 
 import (
+	"context"
 	"database/sql"
 	_ "embed"
 	"net/http"
@@ -26,7 +27,8 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
-		devices, err := database.AllDevices(r.Context(), db)
+		deviceRepo := database.NewDeviceRepository(db)
+		devices, err := deviceRepo.All(r.Context())
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -68,7 +70,8 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		devices, err := database.FindDevicesByID(r.Context(), db, []int64{id})
+		deviceRepo := database.NewDeviceRepository(db)
+		devices, err := deviceRepo.FindByIDs(r.Context(), []int64{id})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -86,7 +89,7 @@ func BuildShowHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Re
 			return
 		}
 
-		posts, err := database.DevicePosts(r.Context(), db, devices[0].ID)
+		posts, err := deviceRepo.Posts(r.Context(), devices[0].ID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
@@ -129,7 +132,10 @@ func BuildIconHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter,
 		db,
 		bucket,
 		"deviceID",
-		database.FindDevicesByID,
+		func(ctx context.Context, db *sql.DB, ids []int64) ([]models.Device, error) {
+			deviceRepo := database.NewDeviceRepository(db)
+			return deviceRepo.FindByIDs(ctx, ids)
+		},
 		func(device models.Device) shared.IconEntity {
 			return shared.DeviceIcon{
 				ID:       device.ID,

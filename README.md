@@ -23,13 +23,9 @@ Should you want to run an instance of this application yourself,
 the required configuration file looks like this:
 
 ```yaml
-environment: development
+environment: development # or production
 admin:
   auth:
-    param: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    provider_url: https://xxxxxxxxxxxxxx
-    client_id: xxxxxxxxxxxxxxxxxxxxxxx
-    client_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     permitted_email_suffix: "@example.com"
 server:
   address: "localhost"
@@ -50,4 +46,11 @@ notification_webhook:
   endpoint: https://example.com
 ```
 
-Note that a database will also need to be provided.
+### Authentication
+
+The application supports two authentication modes based on the environment:
+
+- **Development** (`environment: development`): No authentication required for admin routes (`/admin/*`)
+- **Production** (`environment: production`): Admin routes require authentication via reverse proxy
+
+In production mode, the reverse proxy must set an `X-Email` header containing the authenticated user's email address. The application validates that this email ends with the configured `permitted_email_suffix`.

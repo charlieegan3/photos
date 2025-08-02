@@ -13,6 +13,13 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/imageproxy"
 )
 
+var validResizeSizes = map[string]bool{
+	"100x":  true,
+	"200x":  true,
+	"500x":  true,
+	"1000x": true,
+}
+
 type IconEntity interface {
 	GetID() int64
 	GetIconPath() string
@@ -109,6 +116,15 @@ func BuildIconHandler[T any](
 		}
 		w.Header().Set("Content-Type", contentType)
 		imageResizeString := r.URL.Query().Get("o")
+
+		// Validate resize string to prevent path injection
+		if imageResizeString != "" {
+			if !validResizeSizes[imageResizeString] {
+				WriteError(w, http.StatusBadRequest, "Invalid resize parameter")
+				return
+			}
+		}
+
 		originalIconPath := icon.GetIconPath()
 		thumbIconPath := icon.GetThumbPath(imageResizeString)
 

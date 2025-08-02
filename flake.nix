@@ -92,6 +92,7 @@
               gci
               golangci-lint
               gofumpt
+              google-cloud-sdk
               gotools
               google-cloud-sql-proxy
 

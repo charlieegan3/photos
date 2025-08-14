@@ -54,7 +54,7 @@
         <div class="mb2 f7 silver mw5 center">
           <div class="flex justify-between">
             <div class="tc w-third">
-              <span>&#119943;/<%= media.FNumber %></span>
+              <span>&#119943;/<%= format_fnumber(media.FNumber) %></span>
             </div>
             <div class="tc bl bw1 tc b--light-gray w-third">
               <span><%= media.ExposureTimeNumerator %>/<%= media.ExposureTimeDenominator %></span>

@@ -82,6 +82,10 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 			return fmt.Sprintf("%v days", math.Abs(math.Ceil(t2.Sub(t1).Hours()/24)))
 		})
 
+		ctx.Set("format_fnumber", func(f float64) string {
+			return fmt.Sprintf("%.1f", f)
+		})
+
 		body, err := plush.Render(t, ctx)
 		if err != nil {
 			return errors.Wrap(err, "failed to evaluate provided template")

@@ -26,7 +26,8 @@
       "Bash(go mod:*)",
       "Bash(exiftool:*)",
       "Bash(cp:*)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "Bash(sudo lsof:*)"
     ],
     "deny": []
   }

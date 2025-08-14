@@ -65,6 +65,8 @@ func (s *TagsSuite) TestListTags() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
@@ -139,6 +141,8 @@ func (s *TagsSuite) TestGetTag() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)

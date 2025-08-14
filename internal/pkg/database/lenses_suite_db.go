@@ -83,6 +83,8 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			LensID:   returnedLenses[1].ID,
@@ -99,6 +101,8 @@ func (s *LensesSuite) TestMostRecentlyUsedLens() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 	_, err = CreateMedias(s.T().Context(), s.DB, medias)

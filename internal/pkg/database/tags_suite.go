@@ -364,7 +364,7 @@ func (s *TagsSuite) TestMergeTags() {
 	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
-	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
+	medias := []models.Media{{DeviceID: returnedDevices[0].ID, Orientation: 1}}
 	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 

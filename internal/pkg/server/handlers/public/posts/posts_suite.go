@@ -67,6 +67,8 @@ func (s *PostsSuite) TestListPosts() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
@@ -142,6 +144,8 @@ func (s *PostsSuite) TestGetPost() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
@@ -206,7 +210,7 @@ func (s *PostsSuite) TestPeriodHandler() {
 	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
 	s.Require().NoError(err)
 
-	medias := []models.Media{{DeviceID: returnedDevices[0].ID}}
+	medias := []models.Media{{DeviceID: returnedDevices[0].ID, Orientation: 1}}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)
 
@@ -368,6 +372,8 @@ func (s *PostsSuite) TestLatestPost() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
@@ -443,6 +449,8 @@ func (s *PostsSuite) TestRSS() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
@@ -534,6 +542,8 @@ func (s *PostsSuite) TestSearchPosts() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
@@ -601,8 +611,8 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	s.Require().NoError(err)
 
 	medias := []models.Media{
-		{DeviceID: returnedDevices[0].ID},
-		{DeviceID: returnedDevices[0].ID},
+		{DeviceID: returnedDevices[0].ID, Orientation: 1},
+		{DeviceID: returnedDevices[0].ID, Orientation: 1},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
 	s.Require().NoError(err)

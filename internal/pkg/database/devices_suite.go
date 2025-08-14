@@ -58,6 +58,8 @@ func (s *DevicesSuite) TestMostRecentlyUsedDevice() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[1].ID,
@@ -73,6 +75,8 @@ func (s *DevicesSuite) TestMostRecentlyUsedDevice() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 	_, err = CreateMedias(s.T().Context(), s.DB, medias)
@@ -393,8 +397,8 @@ func (s *DevicesSuite) TestDevicePosts() {
 	}
 
 	medias := []models.Media{
-		{DeviceID: returnedDevices[0].ID},
-		{DeviceID: returnedDevices[1].ID},
+		{DeviceID: returnedDevices[0].ID, Orientation: 1},
+		{DeviceID: returnedDevices[1].ID, Orientation: 1},
 	}
 	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
 	if err != nil {

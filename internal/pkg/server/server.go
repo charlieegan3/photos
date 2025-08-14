@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"time"
 
@@ -199,13 +200,22 @@ func Serve(
 		log.Fatal(err)
 	}
 
+	// Check if port is available before starting server
+	serverAddr := fmt.Sprintf("%s:%s", addr, port)
+	listener, err := net.Listen("tcp", serverAddr)
+	if err != nil {
+		log.Fatalf("Failed to bind to address %s: %v", serverAddr, err)
+	}
+	listener.Close()
+
 	srv := &http.Server{
 		Handler:      router,
-		Addr:         fmt.Sprintf("%s:%s", addr, port),
+		Addr:         serverAddr,
 		WriteTimeout: 30 * time.Second,
 		// this is set to 3 mins to allow many images to resized in a queue
 		ReadTimeout: 180 * time.Second,
 	}
 
+	log.Printf("starting server on http://localhost:%s", port)
 	log.Fatal(srv.ListenAndServe())
 }

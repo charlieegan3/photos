@@ -332,7 +332,10 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("location", locations[0])
 		ctx.Set("tags", tags)
 
-		if medias[0].Width > medias[0].Height {
+		// Determine effective display dimensions based on orientation
+		effectiveWidth, effectiveHeight := getEffectiveDimensions(medias[0].Width, medias[0].Height, medias[0].Orientation)
+		
+		if effectiveWidth > effectiveHeight {
 			err = renderer(ctx, showWideTemplate, w)
 		} else {
 			err = renderer(ctx, showTemplate, w)
@@ -820,5 +823,17 @@ func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 		}
 
 		http.Redirect(w, r, fmt.Sprintf("/posts/%d", postID), http.StatusSeeOther)
+	}
+}
+
+// getEffectiveDimensions returns the effective display dimensions of an image
+// considering EXIF orientation. For orientations 6 and 8 (90° rotations),
+// width and height are swapped.
+func getEffectiveDimensions(width, height, orientation int) (int, int) {
+	switch orientation {
+	case 6, 8: // 90° rotations - swap dimensions
+		return height, width
+	default: // 1 (normal), 3 (180°), or any other value - keep original
+		return width, height
 	}
 }

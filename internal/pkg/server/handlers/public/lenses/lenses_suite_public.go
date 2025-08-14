@@ -109,10 +109,12 @@ func (s *LensesSuite) TestShow() {
 		{
 			LensID:   returnedLenses[0].ID,
 			DeviceID: returnedDevices[0].ID,
+			Orientation: 1,
 		},
 		{
 			LensID:   returnedLenses[0].ID,
 			DeviceID: returnedDevices[0].ID,
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)

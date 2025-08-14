@@ -16,6 +16,7 @@ import (
 )
 
 var validMediaResizeSizes = map[string]bool{
+	"100,fit":  true,
 	"200,fit":  true,
 	"500,fit":  true,
 	"1000,fit": true,

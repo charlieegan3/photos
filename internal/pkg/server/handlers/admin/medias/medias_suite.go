@@ -74,6 +74,8 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -89,6 +91,8 @@ func (s *EndpointsMediasSuite) TestListMedias() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 
@@ -168,6 +172,8 @@ func (s *EndpointsMediasSuite) TestGetMedia() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 
@@ -232,6 +238,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 			Longitude: 52.2,
 			Altitude:  100.0,
 
+			Orientation: 1,
 			DisplayOffset: 10,
 		},
 	}
@@ -362,6 +369,8 @@ func (s *EndpointsMediasSuite) TestDeleteMedia() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 

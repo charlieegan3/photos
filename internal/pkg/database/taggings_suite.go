@@ -59,6 +59,8 @@ func (s *TaggingsSuite) TestCreateTaggings() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
@@ -141,6 +143,8 @@ func (s *TaggingsSuite) TestFindOrCreateTaggings() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
@@ -229,6 +233,8 @@ func (s *TaggingsSuite) TestFindTaggingsByPostID() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
@@ -314,6 +320,8 @@ func (s *TaggingsSuite) TestDeleteTaggings() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)

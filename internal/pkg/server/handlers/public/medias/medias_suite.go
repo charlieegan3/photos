@@ -55,6 +55,7 @@ func (s *MediasSuite) TestGetMedia() {
 			Kind:     "jpg",
 			Width:    100,
 			Height:   200,
+			Orientation: 1,
 		},
 	}
 
@@ -100,7 +101,7 @@ func (s *MediasSuite) TestGetMedia() {
 	bodySha := hex.EncodeToString(h.Sum(nil))
 
 	// load the resized image to test the response content
-	imageFilePath = "../../../pkg/server/handlers/public/medias/fixtures/image-100x.jpg"
+	imageFilePath = "../../../pkg/server/handlers/public/medias/fixtures/image-100-fit.jpg"
 	imageBytes, err := os.ReadFile(imageFilePath)
 	s.Require().NoError(err)
 	h = sha1.New()
@@ -159,6 +160,7 @@ func (s *MediasSuite) TestGetMediaFit() {
 			// image with size set, means we use fit
 			Width:  100,
 			Height: 200,
+			Orientation: 1,
 		},
 	}
 

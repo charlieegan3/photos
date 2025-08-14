@@ -207,9 +207,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 				focalLength = fmt.Sprintf("%.2f", value)
 				focalLength = strings.TrimSuffix(focalLength, ".00")
-				if strings.HasSuffix(focalLength, ".0") {
-					focalLength = strings.TrimSuffix(focalLength, ".0")
-				}
+				focalLength = strings.TrimSuffix(focalLength, ".0")
 			}
 		}
 

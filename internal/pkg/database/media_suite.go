@@ -56,7 +56,8 @@ func (s *MediasSuite) TestCreateMedias() {
 			Longitude: 52.2,
 			Altitude:  100.0,
 
-			UTCCorrect: true,
+			Orientation: 1,
+			UTCCorrect:  true,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -73,7 +74,8 @@ func (s *MediasSuite) TestCreateMedias() {
 			Longitude: 54.2,
 			Altitude:  200.0,
 
-			UTCCorrect: false,
+			Orientation: 1,
+			UTCCorrect:  false,
 		},
 	}
 
@@ -128,6 +130,8 @@ func (s *MediasSuite) TestFindMediasByID() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -143,6 +147,8 @@ func (s *MediasSuite) TestFindMediasByID() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 
@@ -201,6 +207,8 @@ func (s *MediasSuite) TestFindMediasByInstagramPost() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -216,6 +224,8 @@ func (s *MediasSuite) TestFindMediasByInstagramPost() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 
@@ -272,6 +282,8 @@ func (s *MediasSuite) TestAllMedias() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -287,6 +299,8 @@ func (s *MediasSuite) TestAllMedias() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 
@@ -346,6 +360,8 @@ func (s *MediasSuite) TestDeleteMedias() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -361,6 +377,8 @@ func (s *MediasSuite) TestDeleteMedias() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 
@@ -420,6 +438,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 		{
 			DeviceID: returnedDevices[0].ID,
@@ -435,6 +455,8 @@ func (s *MediasSuite) TestUpdateMedias() {
 			Latitude:  53.1,
 			Longitude: 54.2,
 			Altitude:  200.0,
+
+			Orientation: 1,
 		},
 	}
 

@@ -205,6 +205,8 @@ func (s *EndpointsTagsSuite) TestUpdateTag() {
 			Latitude:  51.1,
 			Longitude: 52.2,
 			Altitude:  100.0,
+
+			Orientation: 1,
 		},
 	}
 	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)

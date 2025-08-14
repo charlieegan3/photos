@@ -4,7 +4,7 @@ TAG := $(shell git rev-parse --short HEAD)
 IMAGE := "eu.gcr.io/charlieegan3-photos/photos:$(TAG)"
 
 dev:
-	@lsof -i :3000 | tail -n +2 | awk '{print $$2}' | xargs -r kill -9 || true
+	@lsof -i :3000 | tail -n +2 | awk '{print $$2}' | xargs kill -9 2>/dev/null || true
 	find . | grep -E '\.(html|css|go|sql)$$|plush|Makefile' | entr -rn bash -c 'clear; go run main.go server --config=config.dev.yaml'
 
 new_migration:

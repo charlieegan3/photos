@@ -14,6 +14,15 @@ import (
 	exifcommon "github.com/dsoprea/go-exif/v3/common"
 )
 
+type Orientation int
+
+const (
+	OrientationNormal           Orientation = 1 // Normal (0° rotation)
+	OrientationUpsideDown       Orientation = 3 // Upside-down (180° rotation)
+	OrientationRotate90CCW      Orientation = 6 // Rotated 90° counterclockwise (270° clockwise)
+	OrientationRotate90CW       Orientation = 8 // Rotated 90° clockwise (270° counterclockwise)
+)
+
 type Metadata struct {
 	Make  string
 	Model string
@@ -30,6 +39,8 @@ type Metadata struct {
 	Latitude  Coordinate
 	Longitude Coordinate
 	Altitude  Altitude
+
+	Orientation Orientation
 
 	Height int
 	Width  int
@@ -196,7 +207,9 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 				focalLength = fmt.Sprintf("%.2f", value)
 				focalLength = strings.TrimSuffix(focalLength, ".00")
-				focalLength = strings.TrimSuffix(focalLength, "0")
+				if strings.HasSuffix(focalLength, ".0") {
+					focalLength = strings.TrimSuffix(focalLength, ".0")
+				}
 			}
 		}
 
@@ -394,6 +407,24 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 
 			metadata.Altitude.Value.Numerator = val[0].Numerator
 			metadata.Altitude.Value.Denominator = val[0].Denominator
+		}
+
+		if ite.TagName() == "Orientation" {
+			rawValue, err := ite.Value()
+			if err != nil {
+				return errors.New("could not get raw Orientation value")
+			}
+
+			val, ok := rawValue.([]uint16)
+			if !ok {
+				return fmt.Errorf("Orientation was not in expected format: %#v", rawValue)
+			}
+
+			if len(val) != 1 {
+				return fmt.Errorf("found %d Orientation values", len(val))
+			}
+
+			metadata.Orientation = Orientation(val[0])
 		}
 
 		return nil

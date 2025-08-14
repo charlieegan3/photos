@@ -47,6 +47,8 @@ type dbMedia struct {
 	Width  int `db:"width"`
 	Height int `db:"height"`
 
+	Orientation int `db:"orientation"`
+
 	DisplayOffset int `db:"display_offset"`
 }
 
@@ -70,6 +72,7 @@ func (d dbMedia) ToRecord(includeID bool) goqu.Record {
 		"utc_correct":               d.UTCCorrect,
 		"width":                     d.Width,
 		"height":                    d.Height,
+		"orientation":               d.Orientation,
 		"display_offset":            d.DisplayOffset,
 	}
 
@@ -119,6 +122,8 @@ func (d dbMedia) ToModel() models.Media {
 		Width:  d.Width,
 		Height: d.Height,
 
+		Orientation: d.Orientation,
+
 		DisplayOffset: d.DisplayOffset,
 	}
 
@@ -162,6 +167,8 @@ func newDBMedia(media models.Media) dbMedia {
 
 		Width:  media.Width,
 		Height: media.Height,
+
+		Orientation: media.Orientation,
 
 		DisplayOffset: media.DisplayOffset,
 	}

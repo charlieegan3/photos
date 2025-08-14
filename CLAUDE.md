@@ -9,7 +9,7 @@ This is a personal photo sharing web application written in Go, designed as a sp
 ### Running the Development Server
 
 ```bash
-make dev_server  # Starts server with hot reload on port 3007
+make dev         # Starts server with hot reload on port 3000
 ```
 
 ### Testing

@@ -378,6 +378,20 @@ func parseMediaForm(r *http.Request, existing models.Media) (models.Media, error
 		}
 	}
 
+	var orientation int
+	if val := r.PostForm.Get("Orientation"); val != "" {
+		var err error
+		orientation, err = strconv.Atoi(val)
+		if err != nil {
+			return models.Media{}, fmt.Errorf("orientation value %v was invalid", val)
+		}
+		if orientation != 1 && orientation != 3 && orientation != 6 && orientation != 8 {
+			return models.Media{}, fmt.Errorf("orientation must be 1, 3, 6, or 8, got %d", orientation)
+		}
+	} else {
+		orientation = 1
+	}
+
 	var exposureTimeNumerator uint32
 	if val := r.PostForm.Get("ExposureTimeNumerator"); val != "" {
 		val64, err := strconv.ParseUint(val, 10, 32)
@@ -420,6 +434,7 @@ func parseMediaForm(r *http.Request, existing models.Media) (models.Media, error
 		Latitude:                floatMap["Latitude"],
 		Longitude:               floatMap["Longitude"],
 		Altitude:                floatMap["Altitude"],
+		Orientation:             orientation,
 		DisplayOffset:           displayOffset,
 		Width:                   existing.Width,
 		Height:                  existing.Height,
@@ -707,6 +722,7 @@ func enrichMediaFromEXIF(media *models.Media, fileBytes []byte, filename string)
 	media.Latitude, _ = exifData.Latitude.ToDecimal()
 	media.Longitude, _ = exifData.Longitude.ToDecimal()
 	media.Altitude, _ = exifData.Altitude.ToDecimal()
+	media.Orientation = int(exifData.Orientation)
 	media.Width = exifData.Width
 	media.Height = exifData.Height
 

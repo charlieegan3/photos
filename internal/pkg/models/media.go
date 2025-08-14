@@ -41,5 +41,7 @@ type Media struct {
 	Width  int
 	Height int
 
+	Orientation int
+
 	DisplayOffset int
 }

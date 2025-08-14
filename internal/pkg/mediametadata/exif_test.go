@@ -69,8 +69,9 @@ func TestExtract(t *testing.T) {
 					},
 					Ref: "W",
 				},
-				Width:  4032,
-				Height: 3024,
+				Orientation: OrientationRotate90CCW,
+				Width:       4032,
+				Height:      3024,
 			},
 		},
 		"iphone jpg non utc": {
@@ -126,8 +127,9 @@ func TestExtract(t *testing.T) {
 					},
 					Ref: "W",
 				},
-				Width:  3024,
-				Height: 4032,
+				Orientation: OrientationNormal,
+				Width:       3024,
+				Height:      4032,
 			},
 		},
 		"fuji jpg": {
@@ -156,7 +158,7 @@ func TestExtract(t *testing.T) {
 				Make:        "FUJIFILM",
 				Model:       "X-T20",
 				Lens:        "XC16-50mmF3.5-5.6 OIS II",
-				FocalLength: "45.2mm (68mm in 35mm format)",
+				FocalLength: "45.20mm (68mm in 35mm format)",
 				DateTime:    time.Date(2022, time.April, 21, 12, 2, 30, 0, time.UTC),
 				FNumber: Fraction{
 					Numerator: 56, Denominator: 10,
@@ -168,6 +170,64 @@ func TestExtract(t *testing.T) {
 				ISOSpeed: 1600,
 				Width:    1717,
 				Height:   1717,
+			},
+		},
+		"rotated jpg": {
+			sourceFile: "./samples/rotated.jpg",
+			expectedMetadata: Metadata{
+				Make:        "FUJIFILM",
+				Model:       "X-T5",
+				Lens:        "XF50mmF2 R WR",
+				FocalLength: "50mm (75mm in 35mm format)",
+				DateTime:    time.Date(2025, time.July, 12, 14, 2, 48, 0, time.UTC),
+				FNumber: Fraction{
+					Numerator: 2, Denominator: 1,
+				},
+				ExposureTime: Fraction{
+					Numerator:   1,
+					Denominator: 4000,
+				},
+				ISOSpeed: 250,
+				Altitude: Altitude{
+					Value: Fraction{
+						Numerator:   3,
+						Denominator: 1,
+					},
+					Ref: 0,
+				},
+				Latitude: Coordinate{
+					Degrees: Fraction{
+						Numerator:   45,
+						Denominator: 1,
+					},
+					Minutes: Fraction{
+						Numerator:   26,
+						Denominator: 1,
+					},
+					Seconds: Fraction{
+						Numerator:   272,
+						Denominator: 100,
+					},
+					Ref: "N",
+				},
+				Longitude: Coordinate{
+					Degrees: Fraction{
+						Numerator:   12,
+						Denominator: 1,
+					},
+					Minutes: Fraction{
+						Numerator:   20,
+						Denominator: 1,
+					},
+					Seconds: Fraction{
+						Numerator:   1068,
+						Denominator: 100,
+					},
+					Ref: "E",
+				},
+				Orientation: OrientationRotate90CCW,
+				Width:       7728,
+				Height:      5152,
 			},
 		},
 	}

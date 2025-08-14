@@ -1,0 +1,1 @@
+ALTER TABLE photos.medias DROP COLUMN orientation;

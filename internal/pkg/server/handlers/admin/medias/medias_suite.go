@@ -265,6 +265,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 		"File":          imageFile,
 		"DeviceID":      strings.NewReader(strconv.FormatInt(returnedDevices[0].ID, 10)),
 		"DisplayOffset": strings.NewReader("50"),
+		"Orientation":   strings.NewReader("3"),
 		"LensID":        strings.NewReader("0"), // remove the previously set lens
 		"_method":       strings.NewReader(http.MethodPut),
 	}
@@ -320,6 +321,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 					ID:            persistedMedias[0].ID,
 					Make:          "Fuji",
 					LensID:        0,
+					Orientation:   3,
 					DisplayOffset: 50,
 				},
 				td.StructFields{
@@ -578,6 +580,8 @@ func (s *EndpointsMediasSuite) TestCreateMedia() {
 
 					Width:  4032,
 					Height: 3024,
+
+					Orientation: 6,
 
 					ExposureTimeDenominator: 122,
 					ExposureTimeNumerator:   1,

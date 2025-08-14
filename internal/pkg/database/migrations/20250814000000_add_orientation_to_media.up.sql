@@ -1,0 +1,1 @@
+ALTER TABLE photos.medias ADD COLUMN orientation INTEGER DEFAULT 1 CHECK (orientation IN (1, 3, 6, 8));

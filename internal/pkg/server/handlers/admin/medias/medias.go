@@ -727,6 +727,8 @@ func enrichMediaFromEXIF(media *models.Media, fileBytes []byte, filename string)
 	media.Altitude, _ = exifData.Altitude.ToDecimal()
 	if int(exifData.Orientation) > 0 {
 		media.Orientation = int(exifData.Orientation)
+	} else {
+		media.Orientation = 1 // Default to normal orientation if not set in EXIF
 	}
 	media.Width = exifData.Width
 	media.Height = exifData.Height

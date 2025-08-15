@@ -107,13 +107,13 @@ func (s *LensesSuite) TestShow() {
 
 	medias := []models.Media{
 		{
-			LensID:   returnedLenses[0].ID,
-			DeviceID: returnedDevices[0].ID,
+			LensID:      returnedLenses[0].ID,
+			DeviceID:    returnedDevices[0].ID,
 			Orientation: 1,
 		},
 		{
-			LensID:   returnedLenses[0].ID,
-			DeviceID: returnedDevices[0].ID,
+			LensID:      returnedLenses[0].ID,
+			DeviceID:    returnedDevices[0].ID,
 			Orientation: 1,
 		},
 	}

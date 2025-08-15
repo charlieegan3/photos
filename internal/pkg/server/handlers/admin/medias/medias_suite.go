@@ -238,7 +238,7 @@ func (s *EndpointsMediasSuite) TestUpdateMedia() {
 			Longitude: 52.2,
 			Altitude:  100.0,
 
-			Orientation: 1,
+			Orientation:   1,
 			DisplayOffset: 10,
 		},
 	}

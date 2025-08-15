@@ -52,9 +52,9 @@ func BuildPageRenderFunc(showMenu bool, headContent string, intermediateTemplate
 		ctx.Set("display_offset", func(media models.Media) string {
 			x := 50
 			y := 50
-			
+
 			isRotated := media.Orientation == 6 || media.Orientation == 8
-			
+
 			if isRotated {
 				if media.Width < media.Height {
 					x = media.DisplayOffset

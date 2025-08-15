@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/suite"
 	"gocloud.dev/blob"
 	_ "gocloud.dev/blob/fileblob"
@@ -17,6 +18,7 @@ import (
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
 	"github.com/charlieegan3/photos/internal/pkg/models"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 )
 
@@ -694,4 +696,69 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	s.Contains(string(body), "post from 2022")
 	s.Contains(string(body), "post from 2021")
 	s.NotContains(string(body), "other post")
+}
+
+func (s *PostsSuite) TestMediaRedirectHandler() {
+	// Create test data
+	devices := []models.Device{{Name: "Test Device"}}
+	returnedDevices, err := database.CreateDevices(s.T().Context(), s.DB, devices)
+	s.Require().NoError(err)
+
+	medias := []models.Media{{
+		DeviceID:    returnedDevices[0].ID,
+		Orientation: 1,
+	}}
+	returnedMedias, err := database.CreateMedias(s.T().Context(), s.DB, medias)
+	s.Require().NoError(err)
+
+	locations := []models.Location{{
+		Name:      "Test Location",
+		Latitude:  1.1,
+		Longitude: 1.2,
+	}}
+	returnedLocations, err := database.CreateLocations(s.T().Context(), s.DB, locations)
+	s.Require().NoError(err)
+
+	posts := []models.Post{{
+		Description: "Test post for redirect",
+		PublishDate: time.Now(),
+		MediaID:     returnedMedias[0].ID,
+		LocationID:  returnedLocations[0].ID,
+	}}
+	returnedPosts, err := database.CreatePosts(s.T().Context(), s.DB, posts)
+	s.Require().NoError(err)
+
+	// Test the actual redirect handler
+	router := mux.NewRouter()
+	router.HandleFunc("/posts/{postID}/media", handlers.BuildMediaRedirectHelperHandler(s.DB)).Methods(http.MethodGet)
+
+	// Test successful redirect
+	req, err := http.NewRequestWithContext(s.T().Context(), http.MethodGet,
+		fmt.Sprintf("/posts/%d/media", returnedPosts[0].ID), nil)
+	s.Require().NoError(err)
+	rr := httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	s.Require().Equal(http.StatusSeeOther, rr.Code)
+	expectedLocation := fmt.Sprintf("/admin/medias/%d", returnedMedias[0].ID)
+	td.Cmp(s.T(), rr.Result().Header["Location"], []string{expectedLocation})
+
+	// Test with non-existent post ID
+	req, err = http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/99999/media", nil)
+	s.Require().NoError(err)
+	rr = httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	s.Require().Equal(http.StatusNotFound, rr.Code)
+
+	// Test with invalid post ID format
+	req, err = http.NewRequestWithContext(s.T().Context(), http.MethodGet, "/posts/invalid/media", nil)
+	s.Require().NoError(err)
+	rr = httptest.NewRecorder()
+
+	router.ServeHTTP(rr, req)
+
+	s.Require().Equal(http.StatusNotFound, rr.Code)
 }

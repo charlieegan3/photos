@@ -50,11 +50,11 @@ func (s *MediasSuite) TestGetMedia() {
 	// insert a sample media to allow the request to be validated as being for a valid media item
 	medias := []models.Media{
 		{
-			DeviceID: returnedDevices[0].ID,
-			Make:     "Apple",
-			Kind:     "jpg",
-			Width:    100,
-			Height:   200,
+			DeviceID:    returnedDevices[0].ID,
+			Make:        "Apple",
+			Kind:        "jpg",
+			Width:       100,
+			Height:      200,
 			Orientation: 1,
 		},
 	}
@@ -158,8 +158,8 @@ func (s *MediasSuite) TestGetMediaFit() {
 			Make:     "Apple",
 			Kind:     "jpg",
 			// image with size set, means we use fit
-			Width:  100,
-			Height: 200,
+			Width:       100,
+			Height:      200,
 			Orientation: 1,
 		},
 	}

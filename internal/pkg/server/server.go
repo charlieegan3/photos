@@ -83,6 +83,7 @@ func Attach(
 		publicposts.BuildOnThisDayHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/on-this-day", publicposts.BuildOnThisDayHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/{postID}", publicposts.BuildGetHandler(db, renderer)).Methods(http.MethodGet)
+	router.HandleFunc("/posts/{postID}/media", handlers.BuildMediaRedirectHelperHandler(db)).Methods(http.MethodGet)
 	router.HandleFunc("/posts/", handlers.BuildRedirectHandler("/")).Methods(http.MethodGet)
 	router.HandleFunc("/posts", handlers.BuildRedirectHandler("/")).Methods(http.MethodGet)
 

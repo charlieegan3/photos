@@ -17,10 +17,10 @@ import (
 type Orientation int
 
 const (
-	OrientationNormal           Orientation = 1 // Normal (0° rotation)
-	OrientationUpsideDown       Orientation = 3 // Upside-down (180° rotation)
-	OrientationRotate90CCW      Orientation = 6 // Rotated 90° counterclockwise (270° clockwise)
-	OrientationRotate90CW       Orientation = 8 // Rotated 90° clockwise (270° counterclockwise)
+	OrientationNormal      Orientation = 1 // Normal (0° rotation)
+	OrientationUpsideDown  Orientation = 3 // Upside-down (180° rotation)
+	OrientationRotate90CCW Orientation = 6 // Rotated 90° counterclockwise (270° clockwise)
+	OrientationRotate90CW  Orientation = 8 // Rotated 90° clockwise (270° counterclockwise)
 )
 
 type Metadata struct {

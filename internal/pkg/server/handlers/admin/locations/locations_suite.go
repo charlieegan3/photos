@@ -439,9 +439,9 @@ func (s *EndpointsLocationsSuite) TestLocationSelector() {
 
 	testDataMedias := []models.Media{
 		{
-			DeviceID:  persistedDevices[0].ID,
-			Latitude:  1.1,
-			Longitude: 1.1,
+			DeviceID:    persistedDevices[0].ID,
+			Latitude:    1.1,
+			Longitude:   1.1,
 			Orientation: 1,
 		},
 	}

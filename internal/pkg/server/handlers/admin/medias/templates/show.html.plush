@@ -1,41 +1,75 @@
 <p><a href="./new">New Media</a></p>
 
 <h1 xmlns:2006-01-02T15="http://www.w3.org/1999/xhtml" xmlns:2006-01-02T15="http://www.w3.org/1999/xhtml"><%= media.ID %></h1>
-<p>Kind: <%= media.Kind %></p>
 
-<%= if (media.Kind == "jpg") { %>
-  <img class="w-100 mw6" src="/medias/<%= media.ID %>/file.jpg"/>
+<div class="flex-ns flex-column flex-row-ns">
+  <div class="w-100 w-50-ns pr3-ns">
+    <%= if (media.Kind == "jpg") { %>
+      <img class="w-100 mw6" src="/medias/<%= media.ID %>/file.jpg"/>
 
-  <div class="pa3-ns image-grid">
-    <div>
-      <a href="/medias/<%= media.ID %>/file.jpg">
-        <picture>
-          <source srcset="/medias/<%= media.ID %>/image.jpg?o=500,fit 1x, /medias/<%= media.ID %>/image.jpg?o=1000,fit 2x" media="(min-width: 60em)">
-          <source srcset="/medias/<%= media.ID %>/image.jpg?o=200,fit 1x, /medias/<%= media.ID %>/image.jpg?o=500,fit 2x" media="(min-width: 30em)">
-          <source srcset="/medias/<%= media.ID %>/image.jpg?o=200,fit 1x, /medias/<%= media.ID %>/image.jpg?o=200,fit 2x">
-          <img loading="lazy"
-               alt="media desc"
-               src="/medias/<%= media.ID %>/image.jpg"
-               style="object-position: <%= display_offset(media) %>"/>
-        </picture>
-      </a>
-    </div>
-  </div>
-<% } else { %>
-  Cannot display media of kind: <%= media.Kind %>
-<% } %>
-<div class="mv3">
-  <a href="/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&mediaID=<%= media.ID %>&timestamp=<%= media.TakenAt.Unix() %>">Create Post</a>
-
-  <%= if (len(posts) > 0) { %>
-    - Used in posts:
-    <%= for (p) in posts { %>
-    <a href="/admin/posts/<%= p.ID %>"><%= p.ID %></a>
+      <%= if (media.Width != media.Height) { %>
+        <div class="pa3-ns image-grid">
+          <div>
+            <a href="/medias/<%= media.ID %>/file.jpg">
+              <picture>
+                <source srcset="/medias/<%= media.ID %>/image.jpg?o=500,fit 1x, /medias/<%= media.ID %>/image.jpg?o=1000,fit 2x" media="(min-width: 60em)">
+                <source srcset="/medias/<%= media.ID %>/image.jpg?o=200,fit 1x, /medias/<%= media.ID %>/image.jpg?o=500,fit 2x" media="(min-width: 30em)">
+                <source srcset="/medias/<%= media.ID %>/image.jpg?o=200,fit 1x, /medias/<%= media.ID %>/image.jpg?o=200,fit 2x">
+                <img loading="lazy"
+                     alt="media desc"
+                     src="/medias/<%= media.ID %>/image.jpg"
+                     style="object-position: <%= display_offset(media) %>"/>
+              </picture>
+            </a>
+          </div>
+        </div>
+      <% } %>
+    <% } else { %>
+      Cannot display media of kind: <%= media.Kind %>
     <% } %>
-  <% } %>
-</div>
+    <%= if (len(posts) > 0) { %>
+      <div class="mv3">
+        Used in posts:
+        <%= for (p) in posts { %>
+        <a href="/admin/posts/<%= p.ID %>"><%= p.ID %></a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="w-100 w-50-ns pl3-ns">
+    <div class="mb3">
+      <a href="/admin/locations/select?redirectTo=%2Fadmin%2Fposts%2Fnew&mediaID=<%= media.ID %>&timestamp=<%= media.TakenAt.Unix() %>">Create Post</a>
+    </div>
 
 <%= form_for(media, {class: "mb3", action:"/admin/medias/"+to_string(media.ID), method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.SelectTag("Orientation", {options: {"Normal (1)": 1, "Upside-down (3)": 3, "Rotate 90° CCW (6)": 6, "Rotate 90° CW (8)": 8}}) %>
+  </div>
+  <div class="mb1">
+    <%= f.InputTag("DisplayOffset") %>
+  </div>
+  <div class="mb1">
+    <%= f.SelectTag("DeviceID", {options: devices, label: "Device"}) %>
+  </div>
+  <div class="mb1">
+    <a href="/admin/devices/<%= media.DeviceID %>">View Device</a>
+  </div>
+  <div class="mb1">
+    <%= f.SelectTag("LensID", {options: lenses}) %>
+  </div>
+  <%= if (media.LensID != int64(0)) { %>
+    <div class="mb3">
+      <a href="/admin/lenses/<%= media.LensID %>">View Lens</a>
+    </div>
+  <% } else { %>
+    <div class="mb3"></div>
+  <% } %>
+
+  <hr class="mb3">
+
+  <p class="mt0">Kind: <%= media.Kind %></p>
+
   <div class="mb1">
     <%= f.InputTag("Make") %>
   </div>
@@ -89,35 +123,16 @@
   <div class="mb1">
     <%= (media.Width * media.Height) / 1000000 %>MP
   </div>
-  <div class="mb1">
-    <%= f.SelectTag("Orientation", {options: {"Normal (1)": 1, "Upside-down (3)": 3, "Rotate 90° CCW (6)": 6, "Rotate 90° CW (8)": 8}}) %>
-  </div>
-  <div class="mb3">
-    <%= f.InputTag("DisplayOffset") %>
-  </div>
 
   <div class="mb3">
     <%= f.FileTag("File") %>
   </div>
 
-  <div class="mb1">
-    <%= f.SelectTag("DeviceID", {options: devices}) %>
-  </div>
-  <div class="mb1">
-    <a href="/admin/devices/<%= media.DeviceID %>">View Device</a>
-  </div>
-  <div class="mb1">
-    <%= f.SelectTag("LensID", {options: lenses}) %>
-  </div>
-  <%= if (media.LensID != int64(0)) { %>
-    <div class="mb1">
-      <a href="/admin/lenses/<%= media.LensID %>">View Lens</a>
-    </div>
-  <% } %>
-
   <%= f.SubmitTag("Update Media", { class: "mt2" }) %>
 <% } %>
 
-<%= form_for(media, {action:"/admin/medias/"+to_string(media.ID), method: "DELETE"}) { %>
-  <%= f.SubmitTag("Delete Media") %>
-<% } %>
+    <%= form_for(media, {action:"/admin/medias/"+to_string(media.ID), method: "DELETE"}) { %>
+      <%= f.SubmitTag("Delete Media") %>
+    <% } %>
+  </div>
+</div>

@@ -39,6 +39,18 @@ func (sm SelectableModel) SelectValue() interface{} {
 	return sm.ID
 }
 
+func uniqueStrings(input []string) []string {
+	keys := make(map[string]bool)
+	var result []string
+	for _, item := range input {
+		if !keys[item] {
+			keys[item] = true
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
@@ -296,7 +308,7 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 			return
 		}
 
-		tags := strings.Fields(strings.ToLower(r.Form.Get("Tags")))
+		tags := uniqueStrings(strings.Fields(strings.ToLower(r.Form.Get("Tags"))))
 		err = database.SetPostTags(r.Context(), db, persistedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -417,7 +429,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 			return
 		}
 
-		tags := strings.Fields(strings.ToLower(r.Form.Get("Tags")))
+		tags := uniqueStrings(strings.Fields(strings.ToLower(r.Form.Get("Tags"))))
 		err = database.SetPostTags(r.Context(), db, updatedPosts[0], tags)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

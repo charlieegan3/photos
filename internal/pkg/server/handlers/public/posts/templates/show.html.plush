@@ -125,7 +125,7 @@
 
 <script>
   // Keyboard navigation
-  document.addEventListener('keydown', function(e) {
+  document.addEventListener('keyup', function(e) {
     // Only handle if not typing in an input/textarea
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 

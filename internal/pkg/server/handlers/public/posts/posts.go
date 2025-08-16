@@ -332,6 +332,9 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("location", locations[0])
 		ctx.Set("tags", tags)
 
+		randomParam := r.URL.Query().Get("random")
+		ctx.Set("isRandom", randomParam == "true")
+
 		// Determine effective display dimensions based on orientation
 		effectiveWidth, effectiveHeight := getEffectiveDimensions(medias[0].Width, medias[0].Height, medias[0].Orientation)
 
@@ -826,7 +829,7 @@ func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
-		http.Redirect(w, r, fmt.Sprintf("/posts/%d", postID), http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/posts/%d?random=true", postID), http.StatusSeeOther)
 	}
 }
 

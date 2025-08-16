@@ -33,7 +33,7 @@
     <div class="f4 underline">Lenses</div>
     <div class="pt1 f6 f5-ns silver">View posts by which lens was used to take the photo</div>
   </a>
-  <a class="mt2 db no-underline" href="/random?random=true">
+  <a class="mt2 db no-underline" href="/random">
     <div class="f4 underline">Random</div>
     <div class="pt1 f6 f5-ns silver">View a random post</div>
   </a>

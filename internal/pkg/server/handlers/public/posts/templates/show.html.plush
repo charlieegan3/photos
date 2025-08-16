@@ -11,14 +11,19 @@
       </div>
 
       <div class="dn flex-l w-100 justify-between f6 mv2">
-        <div class="tl w-50">
+        <div class="tl w-third">
           <%= if (nextPost != 0) { %>
           <a href="/posts/<%= nextPost %>">Next</a>
           <% } else { %>
           <span class="moon-gray">Next</span>
           <% } %>
         </div>
-        <div class="tr w-50 bl bw1 b--light-gray">
+        <div class="tc w-third bl br bw1 b--light-gray">
+          <%= if (isRandom) { %>
+          <a href="/random">Random</a>
+          <% } %>
+        </div>
+        <div class="tr w-third">
           <%= if (previousPost != 0) { %>
           <a href="/posts/<%= previousPost %>">Previous</a>
           <% } else { %>
@@ -96,14 +101,19 @@
   </div>
 
   <div class="dn-l flex w-100 justify-between f6 mv3 ph3">
-    <div class="tl w-50">
+    <div class="tl w-third">
       <%= if (nextPost != 0) { %>
         <a href="/posts/<%= nextPost %>">Next</a>
       <% } else { %>
         <span class="moon-gray">Next</span>
       <% } %>
     </div>
-    <div class="tr w-50 bl bw1 b--light-gray">
+    <div class="tc w-third bl br bw1 b--light-gray">
+      <%= if (isRandom) { %>
+        <a href="/random">Random</a>
+      <% } %>
+    </div>
+    <div class="tr w-third">
       <%= if (previousPost != 0) { %>
         <a href="/posts/<%= previousPost %>">Previous</a>
       <% } else { %>
@@ -133,6 +143,9 @@
         e.preventDefault();
         nextLink.click();
       }
+    } else if (e.key === 'r') {
+      e.preventDefault();
+      window.location = '/random';
     }
   });
 

@@ -1,14 +1,18 @@
 <h1>ID: <%= post.ID %></h1>
 
-<div class="mv2">
-  <a href="/posts/<%= post.ID %>">View Public Post</a>
-</div>
+<div class="flex-ns flex-column flex-row-ns">
+  <div class="w-100 w-50-ns pr3-ns">
+    <%= if (media.Kind == "jpg") { %>
+      <img class="w-100 mw6" src="/medias/<%= post.MediaID %>/file.jpg"/>
+    <% } else { %>
+      Cannot display media of kind: <%= media.Kind %>
+    <% } %>
+  </div>
 
-<%= if (media.Kind == "jpg") { %>
-  <img class="w-100 mw6" src="/medias/<%= post.MediaID %>/file.jpg"/>
-<% } else { %>
-  Cannot display media of kind: <%= media.Kind %>
-<% } %>
+  <div class="w-100 w-50-ns pl3-ns">
+    <div class="mb3">
+      <a href="/posts/<%= post.ID %>">View Public Post</a>
+    </div>
 
 <%= form_for(post, {class: "mb3", action:"/admin/posts/"+post.ID, method: "PUT"}) { %>
   <div class="mb1">
@@ -18,52 +22,62 @@
   </div>
   <div class="mb1">
     <label for="Tags">Tags</label>
-    <textarea class="w-100" name="Tags" rows="4"><%= for (tag) in tags { %><%= tag.Name %> <% } %></textarea>
+    <input class="w-100 border-box" name="Tags" value="<%= for (tag) in tags { %><%= tag.Name %> <% } %>">
   </div>
-  <div class="mb2">
-    <label for="PublishDate">PublishDate</label>
+
+  <div class="ba b--silver pa2 mv3">
+    <div class="mb2 fw6">Location</div>
+    <div class="mb1">
+      <%= f.SelectTag("LocationID", {options: locations, label: ""}) %>
+    </div>
+    <div class="mb1">
+      <a href="/admin/locations/<%= post.LocationID %>">View Location</a>
+    </div>
+  </div>
+
+  <div class="ba b--silver pa2 mv3">
+    <div class="mb2 fw6">Media</div>
+    <div class="mb1">
+      <%= f.SelectTag("MediaID", {options: medias, label: ""}) %>
+    </div>
+    <div class="mb1">
+      <a href="/admin/medias/<%= post.MediaID %>">View Media</a>
+    </div>
+  </div>
+
+  <div class="ba b--silver pa2 mv3">
+    <div class="mb2 fw6">Collections</div>
+    <%= for (collection) in collections { %>
+      <div class="mb1">
+        <label>
+          <input type="checkbox" name="Collections" value="<%= collection.ID %>" <%= if (postCollectionIDs[collection.ID]) { %>checked<% } %>>
+          <%= collection.Title %>
+        </label>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="mb1">
+    <label>
+      <input type="checkbox" name="IsDraft" value="true" <%= if (post.IsDraft) { %>checked<% } %>>
+      <span class="ml1">Is Draft</span>
+    </label>
+  </div>
+
+  <div class="mb3">
+    <label for="PublishDate">Publish Date</label>
     <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
   </div>
-
-  <div class="mb1">
-    <%= f.SelectTag("LocationID", {label: "Location", options: locations}) %>
-  </div>
-  <div class="mb2">
-    <a href="/admin/locations/<%= post.LocationID %>">View Location</a>
-  </div>
-
-  <div class="mb1">
-    <%= f.SelectTag("MediaID", {label: "Media", options: medias}) %>
-  </div>
-  <div class="mb2">
-    <a href="/admin/medias/<%= post.MediaID %>">View Media</a>
-  </div>
-
-  <div class="mb1">
-    <%= f.CheckboxTag("IsDraft", {label: "Is Draft"}) %>
-  </div>
-
-  <details class="mb2">
-    <summary>Collections</summary>
-    <div class="ml3 mt2">
-      <%= for (collection) in collections { %>
-        <div class="mb1">
-          <label>
-            <input type="checkbox" name="Collections" value="<%= collection.ID %>" <%= if (postCollectionIDs[collection.ID]) { %>checked<% } %>>
-            <%= collection.Title %>
-          </label>
-        </div>
-      <% } %>
-    </div>
-  </details>
 
   <%= f.SubmitTag("Update Post") %>
 <% } %>
 
-<%= if (post.IsDraft) { %>
-  <%= form_for(post, {action:"/admin/posts/"+post.ID, method: "DELETE"}) { %>
-    <%= f.SubmitTag("Delete Post") %>
-  <% } %>
-<% } else { %>
-  <p class="mt2 silver">Mark post as draft to delete it</p>
-<% } %>
+    <%= if (post.IsDraft) { %>
+      <%= form_for(post, {action:"/admin/posts/"+post.ID, method: "DELETE"}) { %>
+        <%= f.SubmitTag("Delete Post") %>
+      <% } %>
+    <% } else { %>
+      <p class="mt2 silver">Mark post as draft to delete it</p>
+    <% } %>
+  </div>
+</div>

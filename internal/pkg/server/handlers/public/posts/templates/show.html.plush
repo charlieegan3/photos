@@ -1,12 +1,14 @@
 <div class="mw6 mw9-l center ph3-ns">
   <div class="cf ph2-ns">
     <div class="fl w-100 w-two-thirds-l">
-      <picture>
-        <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=1000,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000,fit 2x" media="(min-width: 60em)">
-        <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000,fit 2x" media="(min-width: 30em)">
-        <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000,fit 2x">
-        <img class="mb1 db w-100 center mw7 br0 br1-l" src="/medias/<%= post.MediaID %>/image.jpg?o=1000,fit" alt="<%= post.Description %>">
-      </picture>
+      <div class="photo-placeholder mb1 br0 br1-l" style="aspect-ratio: <%= aspectRatio %>;">
+        <picture>
+          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=1000,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000,fit 2x" media="(min-width: 60em)">
+          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=2000,fit 2x" media="(min-width: 30em)">
+          <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000,fit 2x">
+          <img class="db w-100 center mw7" src="/medias/<%= post.MediaID %>/image.jpg?o=1000,fit" alt="<%= post.Description %>">
+        </picture>
+      </div>
 
       <div class="dn flex-l w-100 justify-between f6 mv2">
         <div class="tl w-50">

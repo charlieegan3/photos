@@ -335,6 +335,10 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		// Determine effective display dimensions based on orientation
 		effectiveWidth, effectiveHeight := getEffectiveDimensions(medias[0].Width, medias[0].Height, medias[0].Orientation)
 
+		// Calculate aspect ratio for placeholder container
+		aspectRatio := float64(effectiveWidth) / float64(effectiveHeight)
+		ctx.Set("aspectRatio", aspectRatio)
+
 		if effectiveWidth > effectiveHeight {
 			err = renderer(ctx, showWideTemplate, w)
 		} else {

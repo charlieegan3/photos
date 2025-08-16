@@ -27,7 +27,8 @@
       "Bash(exiftool:*)",
       "Bash(cp:*)",
       "Bash(make:*)",
-      "Bash(sudo lsof:*)"
+      "Bash(sudo lsof:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }

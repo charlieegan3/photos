@@ -374,3 +374,37 @@ func (r *BaseRepository[T, D]) AllWithMediaJoins(
 
 	return results, nil
 }
+
+// CreateWithConflictHandling inserts multiple entities with ON CONFLICT DO NOTHING behavior.
+// This is useful for junction tables where duplicate entries should be ignored.
+func (r *BaseRepository[T, D]) CreateWithConflictHandling(ctx context.Context, entities []T) ([]T, error) {
+	if len(entities) == 0 {
+		return []T{}, nil
+	}
+
+	records := make([]goqu.Record, 0, len(entities))
+	for _, entity := range entities {
+		dbEntity := r.toDB(entity)
+		records = append(records, dbEntity.ToRecord(false))
+	}
+
+	goquDB := goqu.New("postgres", r.db)
+	query := goquDB.Insert(goqu.T(r.tableName).Schema(r.schema)).
+		Returning(goqu.Star()).
+		Rows(records).
+		OnConflict(goqu.DoNothing()).
+		Executor()
+
+	var dbEntities []D
+	err := query.ScanStructsContext(ctx, &dbEntities)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to insert %s entities with conflict handling", r.tableName)
+	}
+
+	results := make([]T, 0, len(dbEntities))
+	for _, dbEntity := range dbEntities {
+		results = append(results, r.toModel(dbEntity))
+	}
+
+	return results, nil
+}

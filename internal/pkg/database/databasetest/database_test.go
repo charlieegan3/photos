@@ -15,6 +15,7 @@ import (
 	"gocloud.dev/blob"
 
 	"github.com/charlieegan3/photos/internal/pkg/database"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/collections"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/devices"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/lenses"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/locations"
@@ -22,6 +23,7 @@ import (
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/posts"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/tags"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/trips"
+	publiccollections "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/collections"
 	publicdevices "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/devices"
 	publiclenses "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/lenses"
 	publiclocations "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/locations"
@@ -181,6 +183,14 @@ func (s *DatabaseSuite) TestTripsSuite() {
 	suite.Run(s.T(), &database.TripsSuite{DB: s.DB})
 }
 
+func (s *DatabaseSuite) TestCollectionsSuite() {
+	suite.Run(s.T(), &database.CollectionsSuite{DB: s.DB})
+}
+
+func (s *DatabaseSuite) TestPostCollectionsSuite() {
+	suite.Run(s.T(), &database.PostCollectionsSuite{DB: s.DB})
+}
+
 func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 	// TODO move to suite to be shared
 	bucketBaseURL := "mem://test_bucket/"
@@ -197,6 +207,12 @@ func (s *DatabaseSuite) TestEndpointsDevicesSuite() {
 
 func (s *DatabaseSuite) TestEndpointsTripsSuite() {
 	suite.Run(s.T(), &trips.EndpointsTripsSuite{
+		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestEndpointsCollectionsSuite() {
+	suite.Run(s.T(), &collections.EndpointsCollectionsSuite{
 		DB: s.DB,
 	})
 }
@@ -264,6 +280,12 @@ func (s *DatabaseSuite) TestPublicLocationsSuite() {
 
 func (s *DatabaseSuite) TestPublicTripsSuite() {
 	suite.Run(s.T(), &publictrips.TripsSuite{
+		DB: s.DB,
+	})
+}
+
+func (s *DatabaseSuite) TestPublicCollectionsSuite() {
+	suite.Run(s.T(), &publiccollections.EndpointsCollectionsSuite{
 		DB: s.DB,
 	})
 }

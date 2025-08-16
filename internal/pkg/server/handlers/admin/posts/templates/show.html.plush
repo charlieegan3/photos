@@ -43,6 +43,20 @@
     <%= f.CheckboxTag("IsDraft", {label: "Is Draft"}) %>
   </div>
 
+  <details class="mb2">
+    <summary>Collections</summary>
+    <div class="ml3 mt2">
+      <%= for (collection) in collections { %>
+        <div class="mb1">
+          <label>
+            <input type="checkbox" name="Collections" value="<%= collection.ID %>" <%= if (postCollectionIDs[collection.ID]) { %>checked<% } %>>
+            <%= collection.Title %>
+          </label>
+        </div>
+      <% } %>
+    </div>
+  </details>
+
   <%= f.SubmitTag("Update Post") %>
 <% } %>
 

@@ -1,0 +1,49 @@
+<div class="w-100">
+  <div class="mv3 pt2 pl3 pl0-l f3"><%= collection.Title %></div>
+  <%= if (collection.Description != "") { %>
+    <div class="mv3 pl3 pl0-l f5"><%= raw(markdown(collection.Description)) %></div>
+  <% } %>
+  <div class="ph3 pl0-l">
+    <%= for (i, post) in posts { %>
+    <% let location = locations[post.LocationID] %>
+    <% let media = medias[post.MediaID] %>
+    <article class="cf mb3 mb0-ns">
+      <div class="f7 fl w-100 w-third-ns">
+        <div class="pa3-ns image-grid one">
+          <div>
+            <a href="/posts/<%= post.ID %>">
+              <picture>
+                <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=500,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=1000,fit 2x" media="(min-width: 60em)">
+                <source srcset="/medias/<%= post.MediaID %>/image.jpg?o=200,fit 1x, /medias/<%= post.MediaID %>/image.jpg?o=500,fit 2x">
+                <img loading="lazy"
+                     alt="<%= post.Description %>"
+                     src="/medias/<%= post.MediaID %>/image.jpg"
+                     style="object-position: <%= display_offset(medias[post.MediaID]) %>"/>
+              </picture>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="fl dib w-100 w-two-thirds-ns pt1-ns ph0 ph2-ns">
+        <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-ns">
+          <%= if (post.Description != "") { %>
+          <div class="mt1 mb3 f6 f5-ns md"><%= raw(markdown(post.Description)) %></div>
+          <% } %>
+
+          <p class="mt1 mb3 f6 silver">
+            <em>
+              <%= raw(location.Name) %>
+              &horbar;
+              <%= post.PublishDate.Format("January 2, 2006 3:04PM") %>
+            </em>
+          </p>
+
+          <div class="f6">
+            <a href="/posts/<%= post.ID %>">View</a>
+          </div>
+        </div>
+      </div>
+    </article>
+    <% } %>
+  </div>
+</div>

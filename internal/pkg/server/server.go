@@ -15,6 +15,7 @@ import (
 
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin"
+	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/collections"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/devices"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/lenses"
 	"github.com/charlieegan3/photos/internal/pkg/server/handlers/admin/locations"
@@ -26,6 +27,7 @@ import (
 	publictrips "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/trips"
 	"github.com/charlieegan3/photos/internal/pkg/server/templating"
 
+	publiccollections "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/collections"
 	publicdevices "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/devices"
 	publicLenses "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/lenses"
 	publiclocations "github.com/charlieegan3/photos/internal/pkg/server/handlers/public/locations"
@@ -109,6 +111,10 @@ func Attach(
 
 	router.HandleFunc("/trips/{tripID}", publictrips.BuildGetHandler(db, renderer)).Methods(http.MethodGet)
 
+	router.HandleFunc("/collections", publiccollections.BuildIndexHandler(db, renderer)).Methods(http.MethodGet)
+	router.HandleFunc("/collections/{collectionID}",
+		publiccollections.BuildGetHandler(db, renderer)).Methods(http.MethodGet)
+
 	adminRouter := router.PathPrefix(adminPath).Subrouter()
 
 	// Apply email authentication middleware for non-development environments
@@ -168,6 +174,14 @@ func Attach(
 	adminRouter.HandleFunc("/trips/new", trips.BuildNewHandler(rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/trips/{tripID}", trips.BuildGetHandler(db, rendererAdmin)).Methods(http.MethodGet)
 	adminRouter.HandleFunc("/trips/{tripID}", trips.BuildFormHandler(db, rendererAdmin)).Methods(http.MethodPost)
+
+	adminRouter.HandleFunc("/collections", collections.BuildIndexHandler(db, rendererAdmin)).Methods(http.MethodGet)
+	adminRouter.HandleFunc("/collections", collections.BuildCreateHandler(db, rendererAdmin)).Methods(http.MethodPost)
+	adminRouter.HandleFunc("/collections/new", collections.BuildNewHandler(rendererAdmin)).Methods(http.MethodGet)
+	adminRouter.HandleFunc("/collections/{collectionID}",
+		collections.BuildGetHandler(db, rendererAdmin)).Methods(http.MethodGet)
+	adminRouter.HandleFunc("/collections/{collectionID}",
+		collections.BuildFormHandler(db, rendererAdmin)).Methods(http.MethodPost)
 
 	// catch all handlers to serve static files
 	router.HandleFunc("/{.*}", buildStaticHandler()).Methods(http.MethodGet)

@@ -12,6 +12,10 @@
     <div class="f4 underline">Trips & Date Range View</div>
     <div class="pt1 f6 f5-ns silver">View posts between two dates or for a specific day</div>
   </a>
+  <a class="mt2 db no-underline" href="/collections">
+    <div class="f4 underline">Collections</div>
+    <div class="pt1 f6 f5-ns silver">View manually curated photo collections</div>
+  </a>
   <a class="mt2 db no-underline" href="/posts/on-this-day">
     <div class="f4 underline">'On This Day'</div>
     <div class="pt1 f6 f5-ns silver">View posts taken on this day in years gone by</div>

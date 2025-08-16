@@ -1,0 +1,16 @@
+<div class="w-100">
+  <div class="mv3 pt2 pl3 f3 f3-ns">Browse Posts by Collection</div>
+
+  <div class="cf pa2-ns f7 ph2">
+    <%= for (collection) in collections { %>
+      <div class="flex items-center mb3">
+        <div class="f5 f4-ns">
+          <a href="/collections/<%= collection.ID %>"><%= collection.Title %></a>
+          <%= if (collection.Description != "") { %>
+            <div class="f6 silver mt1"><%= truncate(collection.Description, 100, true) %></div>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

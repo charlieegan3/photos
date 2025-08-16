@@ -1,0 +1,23 @@
+<h1><%= collection.Title %></h1>
+<p>ID: <%= collection.ID %></p>
+<p><a href="/collections/<%= collection.ID %>">View Collection</a></p>
+
+<%= form_for(collection, {class: "mb3", action:"/admin/collections/"+collection.ID, method: "PUT"}) { %>
+  <div class="mb1">
+    <%= f.InputTag("Title") %>
+  </div>
+  <div class="mb1">
+    <label for="Description">Description</label>
+    <div><%= raw(markdown(collection.Description)) %></div>
+    <textarea class="w-100" name="Description" rows="4"><%= collection.Description %></textarea>
+  </div>
+
+<%= f.SubmitTag("Update Collection") %>
+<% } %>
+
+<details>
+  <summary>Delete</summary>
+  <%= form_for(collection, {action:"/admin/collections/"+collection.ID, method: "DELETE"}) { %>
+  <%= f.SubmitTag("Delete collection") %>
+  <% } %>
+</details>

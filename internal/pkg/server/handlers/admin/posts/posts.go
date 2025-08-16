@@ -158,12 +158,38 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			formLocations = append(formLocations, SelectableModel{Name: l.Name, ID: l.ID})
 		}
 
+		// Load collections for form
+		collectionsRepo := database.NewCollectionRepository(db)
+		allCollections, err := collectionsRepo.AllOrderedByPostCount(r.Context())
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error()))
+			return
+		}
+
+		// Load existing post-collection relationships
+		postCollectionsRepo := database.NewPostCollectionRepository(db)
+		postCollections, err := postCollectionsRepo.FindByPostID(r.Context(), posts[0].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error()))
+			return
+		}
+
+		// Create map of collection IDs that this post belongs to
+		postCollectionIDs := make(map[int]bool)
+		for _, pc := range postCollections {
+			postCollectionIDs[pc.CollectionID] = true
+		}
+
 		ctx := plush.NewContext()
 		ctx.Set("post", posts[0])
 		ctx.Set("media", medias[0])
 		ctx.Set("locations", formLocations)
 		ctx.Set("medias", mediaMap)
 		ctx.Set("tags", tags)
+		ctx.Set("collections", allCollections)
+		ctx.Set("postCollectionIDs", postCollectionIDs)
 
 		err = renderer(ctx, showTemplate, w)
 		if err != nil {
@@ -435,6 +461,46 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 			w.WriteHeader(http.StatusInternalServerError)
 			_, _ = w.Write([]byte(err.Error()))
 			return
+		}
+
+		// Handle collections
+		collectionValues := r.Form["Collections"]
+		var selectedCollectionIDs []int
+		for _, collectionIDStr := range collectionValues {
+			collectionID, err := strconv.Atoi(collectionIDStr)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				_, _ = w.Write([]byte("failed to parse collection ID"))
+				return
+			}
+			selectedCollectionIDs = append(selectedCollectionIDs, collectionID)
+		}
+
+		// Remove existing post-collection relationships
+		postCollectionsRepo := database.NewPostCollectionRepository(db)
+		err = postCollectionsRepo.DeleteByPostID(r.Context(), updatedPosts[0].ID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error()))
+			return
+		}
+
+		// Create new post-collection relationships
+		if len(selectedCollectionIDs) > 0 {
+			var postCollections []models.PostCollection
+			for _, collectionID := range selectedCollectionIDs {
+				postCollections = append(postCollections, models.PostCollection{
+					PostID:       updatedPosts[0].ID,
+					CollectionID: collectionID,
+				})
+			}
+
+			_, err = postCollectionsRepo.CreateWithConflictHandling(r.Context(), postCollections)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				_, _ = w.Write([]byte(err.Error()))
+				return
+			}
 		}
 
 		http.Redirect(

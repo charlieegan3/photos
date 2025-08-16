@@ -1,0 +1,21 @@
+<h1>Collections</h1>
+<p><a href="/admin/collections/new">New Collection</a></p>
+<p><%= len(collections) %> collections</p>
+<table>
+<thead>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Created</th>
+  </tr>
+</thead>
+<tbody>
+<%= for (collection) in collections { %>
+  <tr>
+    <td><a href="/admin/collections/<%= collection.ID %>"><%= truncate(collection.Title, 20, false) %></a></td>
+    <td><%= truncate(collection.Description, 30, false) %></td>
+    <td><%= collection.CreatedAt.Format("2006-01-02") %></td>
+  </tr>
+<% } %>
+</tbody>
+</table>

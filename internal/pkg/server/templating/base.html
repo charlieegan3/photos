@@ -26,27 +26,5 @@
       href="/menu"
     >Menu</a>
     {{end}}
-    <script>
-      document.addEventListener('keydown', function(e) {
-        // Only handle if not typing in an input/textarea
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        
-        if (e.key === 'ArrowRight' || e.key === 'p') {
-          const links = Array.from(document.querySelectorAll('a'));
-          const prevLink = links.find(link => link.textContent.trim() === 'Previous');
-          if (prevLink) {
-            e.preventDefault();
-            prevLink.click();
-          }
-        } else if (e.key === 'ArrowLeft' || e.key === 'n') {
-          const links = Array.from(document.querySelectorAll('a'));
-          const nextLink = links.find(link => link.textContent.trim() === 'Next');
-          if (nextLink) {
-            e.preventDefault();
-            nextLink.click();
-          }
-        }
-      });
-    </script>
   </body>
 </html>

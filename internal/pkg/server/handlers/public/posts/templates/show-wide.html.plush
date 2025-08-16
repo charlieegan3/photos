@@ -93,3 +93,59 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    // Only handle if not typing in an input/textarea
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if (e.key === 'ArrowRight' || e.key === 'p') {
+      const links = Array.from(document.querySelectorAll('a'));
+      const prevLink = links.find(link => link.textContent.trim() === 'Previous');
+      if (prevLink) {
+        e.preventDefault();
+        prevLink.click();
+      }
+    } else if (e.key === 'ArrowLeft' || e.key === 'n') {
+      const links = Array.from(document.querySelectorAll('a'));
+      const nextLink = links.find(link => link.textContent.trim() === 'Next');
+      if (nextLink) {
+        e.preventDefault();
+        nextLink.click();
+      }
+    }
+  });
+
+  // Touch/swipe navigation on photo
+  let startX = null;
+  const photoImg = document.querySelector('picture img');
+
+  if (photoImg) {
+    photoImg.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    photoImg.addEventListener('touchend', function(e) {
+      if (startX === null) return;
+
+      const endX = e.changedTouches[0].clientX;
+      const diffX = startX - endX;
+      const threshold = 50; // minimum swipe distance
+
+      if (Math.abs(diffX) > threshold) {
+        const links = Array.from(document.querySelectorAll('a'));
+
+        if (diffX > 0) { // Swipe left (previous photo)
+          const prevLink = links.find(link => link.textContent.trim() === 'Previous');
+          if (prevLink) prevLink.click();
+        } else { // Swipe right (next photo)
+          const nextLink = links.find(link => link.textContent.trim() === 'Next');
+          if (nextLink) nextLink.click();
+        }
+      }
+
+      startX = null;
+    }, { passive: true });
+  }
+</script>

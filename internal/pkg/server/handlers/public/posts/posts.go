@@ -340,6 +340,9 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 
 		// Calculate aspect ratio for placeholder container
 		aspectRatio := float64(effectiveWidth) / float64(effectiveHeight)
+		if math.IsNaN(aspectRatio) || math.IsInf(aspectRatio, 0) {
+			aspectRatio = 1.0 // Assume square when dimensions are invalid
+		}
 		ctx.Set("aspectRatio", aspectRatio)
 
 		if effectiveWidth > effectiveHeight {

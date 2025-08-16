@@ -67,6 +67,7 @@ func Attach(
 	router.HandleFunc("/", publicposts.BuildIndexHandler(db, renderer)).Methods(http.MethodGet)
 
 	router.HandleFunc("/menu", menu.BuildIndexHandler(db, rendererMenu)).Methods(http.MethodGet)
+	router.HandleFunc("/favourites", publicposts.BuildFavouritesHandler(db, renderer)).Methods(http.MethodGet)
 
 	router.HandleFunc("/tags", publictags.BuildIndexHandler(db, renderer)).Methods(http.MethodGet)
 	router.HandleFunc("/tags/{tagName}", publictags.BuildGetHandler(db, renderer)).Methods(http.MethodGet)

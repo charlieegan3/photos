@@ -4,6 +4,10 @@
     <div class="f4 underline">Home</div>
     <div class="pt1 f6 f5-ns silver">All posts with most recent first</div>
   </a>
+  <a class="mt2 db no-underline" href="/favourites">
+    <div class="f4 underline">Favourites</div>
+    <div class="pt1 f6 f5-ns silver">View some personal favorites</div>
+  </a>
   <a class="mt2 db no-underline" href="/posts/search">
     <div class="f4 underline">Search</div>
     <div class="pt1 f6 f5-ns silver">Find matching posts by tag, description and location</div>

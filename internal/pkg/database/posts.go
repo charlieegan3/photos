@@ -41,6 +41,8 @@ type dbPost struct {
 
 	IsDraft bool `db:"is_draft"`
 
+	IsFavourite bool `db:"is_favourite"`
+
 	MediaID    int `db:"media_id"`
 	LocationID int `db:"location_id"`
 
@@ -53,6 +55,7 @@ func (d dbPost) ToRecord(includeID bool) goqu.Record {
 		"description":    d.Description,
 		"instagram_code": d.InstagramCode,
 		"is_draft":       d.IsDraft,
+		"is_favourite":   d.IsFavourite,
 		"publish_date":   d.PublishDate.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
 		"media_id":       d.MediaID,
 		"location_id":    d.LocationID,
@@ -73,7 +76,8 @@ func (d dbPost) ToModel() models.Post {
 		InstagramCode: d.InstagramCode,
 		PublishDate:   d.PublishDate.UTC(),
 
-		IsDraft: d.IsDraft,
+		IsDraft:     d.IsDraft,
+		IsFavourite: d.IsFavourite,
 
 		CreatedAt: d.CreatedAt,
 		UpdatedAt: d.UpdatedAt,
@@ -95,7 +99,8 @@ func newDBPost(post models.Post) dbPost {
 		InstagramCode: post.InstagramCode,
 		PublishDate:   post.PublishDate.UTC(),
 
-		IsDraft: post.IsDraft,
+		IsDraft:     post.IsDraft,
+		IsFavourite: post.IsFavourite,
 
 		CreatedAt: post.CreatedAt,
 		UpdatedAt: post.UpdatedAt,
@@ -599,6 +604,28 @@ func FindNextPost(db *sql.DB, post models.Post, previous bool) ([]models.Post, e
 func SetPostTags(ctx context.Context, db *sql.DB, post models.Post, rawTags []string) error {
 	repo := NewPostRepository(db)
 	return repo.SetTags(ctx, post, rawTags)
+}
+
+// FavouritePosts retrieves all favourite posts ordered by created_at descending.
+func FavouritePosts(ctx context.Context, db *sql.DB) ([]models.Post, error) {
+	var dbPosts []dbPost
+
+	goquDB := goqu.New("postgres", db)
+	query := goquDB.From("photos.posts").Select("*").
+		Where(goqu.Ex{"is_draft": false, "is_favourite": true}).
+		Order(goqu.I("created_at").Desc())
+
+	err := query.Executor().ScanStructsContext(ctx, &dbPosts)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to select favourite posts")
+	}
+
+	posts := make([]models.Post, len(dbPosts))
+	for i := range dbPosts {
+		posts[i] = dbPosts[i].ToModel()
+	}
+
+	return posts, nil
 }
 
 // AllPosts retrieves all posts with basic sorting and pagination (original behavior).

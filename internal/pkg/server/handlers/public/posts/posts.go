@@ -823,6 +823,47 @@ func BuildOnThisDayHandler(db *sql.DB, renderer templating.PageRenderer) func(ht
 	}
 }
 
+func BuildFavouritesHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+
+		posts, err := database.FavouritePosts(r.Context(), db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error()))
+			return
+		}
+
+		var mediaIDs []int
+		for i := range posts {
+			mediaIDs = append(mediaIDs, posts[i].MediaID)
+		}
+
+		medias, err := database.FindMediasByID(r.Context(), db, mediaIDs)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error()))
+			return
+		}
+
+		mediasByID := make(map[int]models.Media)
+		for i := range medias {
+			mediasByID[medias[i].ID] = medias[i]
+		}
+
+		ctx := plush.NewContext()
+		ctx.Set("posts", posts)
+		ctx.Set("medias", mediasByID)
+
+		err = renderer(ctx, indexTemplate, w)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(err.Error()))
+			return
+		}
+	}
+}
+
 func BuildRandomHandler(db *sql.DB) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		postID, err := database.RandomPostID(r.Context(), db)

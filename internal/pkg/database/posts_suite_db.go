@@ -1249,3 +1249,99 @@ func (s *PostsSuite) TestPostsOnThisDay() {
 	s.Require().NoError(err)
 	expectPostIDs(results, []int{returnedPosts[0].ID, returnedPosts[1].ID})
 }
+
+func (s *PostsSuite) TestFavouritePosts() {
+	devices := []models.Device{
+		{
+			Name: "Example Device",
+		},
+	}
+	returnedDevices, err := CreateDevices(s.T().Context(), s.DB, devices)
+	s.Require().NoError(err)
+
+	medias := []models.Media{
+		{DeviceID: returnedDevices[0].ID, Orientation: 1},
+		{DeviceID: returnedDevices[0].ID, Orientation: 1},
+		{DeviceID: returnedDevices[0].ID, Orientation: 1},
+	}
+	returnedMedias, err := CreateMedias(s.T().Context(), s.DB, medias)
+	s.Require().NoError(err)
+
+	locations := []models.Location{
+		{
+			Name:      "London",
+			Latitude:  1.1,
+			Longitude: 1.2,
+		},
+	}
+	returnedLocations, err := CreateLocations(s.T().Context(), s.DB, locations)
+	s.Require().NoError(err)
+
+	posts := []models.Post{
+		{
+			Description: "Regular post",
+			PublishDate: time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[0].ID,
+			LocationID:  returnedLocations[0].ID,
+			IsFavourite: false,
+		},
+		{
+			Description: "Favourite post 1",
+			PublishDate: time.Date(2021, time.November, 25, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[1].ID,
+			LocationID:  returnedLocations[0].ID,
+			IsFavourite: true,
+		},
+		{
+			Description: "Draft favourite post",
+			PublishDate: time.Date(2021, time.November, 26, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[2].ID,
+			LocationID:  returnedLocations[0].ID,
+			IsFavourite: true,
+			IsDraft:     true,
+		},
+		{
+			Description: "Favourite post 2",
+			PublishDate: time.Date(2021, time.November, 27, 19, 56, 0, 0, time.UTC),
+			MediaID:     returnedMedias[2].ID,
+			LocationID:  returnedLocations[0].ID,
+			IsFavourite: true,
+		},
+	}
+
+	_, err = CreatePosts(s.T().Context(), s.DB, posts)
+	s.Require().NoError(err)
+
+	// Test FavouritePosts function
+	favourites, err := FavouritePosts(s.T().Context(), s.DB)
+	s.Require().NoError(err)
+
+	// Should return only non-draft favourite posts, ordered by created_at desc
+	// Note: ordering by created_at means the last created post comes first
+	s.Require().Len(favourites, 2)
+
+	// Verify we got the right posts (both favourites, excluding draft)
+	foundPost1 := false
+	foundPost2 := false
+	for i := range favourites {
+		if favourites[i].Description == "Favourite post 1" {
+			foundPost1 = true
+		}
+		if favourites[i].Description == "Favourite post 2" {
+			foundPost2 = true
+		}
+	}
+	s.Require().True(foundPost1, "Should include 'Favourite post 1'")
+	s.Require().True(foundPost2, "Should include 'Favourite post 2'")
+
+	// Verify ordering - most recently created should be first
+	firstAfterSecond := favourites[0].CreatedAt.After(favourites[1].CreatedAt)
+	firstEqualSecond := favourites[0].CreatedAt.Equal(favourites[1].CreatedAt)
+	s.Require().True(firstAfterSecond || firstEqualSecond)
+
+	// Verify all returned posts are favourites and not drafts
+	for i := range favourites {
+		s.Require().True(favourites[i].IsFavourite, "All returned posts should be favourites")
+		s.Require().False(favourites[i].IsDraft, "All returned posts should not be drafts")
+	}
+}

@@ -15,6 +15,8 @@ type Post struct {
 
 	IsDraft bool
 
+	IsFavourite bool
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 

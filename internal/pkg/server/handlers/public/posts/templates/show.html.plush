@@ -36,6 +36,10 @@
       <div class="bl-l bw1 b--light-gray pl3-l ph3 pt2 pt0-l">
         <div class="mt0 mb2 md"><%= raw(markdown(post.Description)) %></div>
 
+        <%= if (post.IsFavourite) { %>
+        <div class="mb2 f6 orange fw6">&#9733; Favourite</div>
+        <% } %>
+
         <p class="mt0 mb2 f6 silver"><em>Posted <%= post.PublishDate.Format("January 2, 2006") %> from <%= raw(location.Name) %></em></p>
 
         <div class="mb2">

@@ -64,6 +64,13 @@
     </label>
   </div>
 
+  <div class="mb1">
+    <label>
+      <input type="checkbox" name="IsFavourite" value="true" <%= if (post.IsFavourite) { %>checked<% } %>>
+      <span class="ml1">&#9733; Favourite</span>
+    </label>
+  </div>
+
   <div class="mb3">
     <label for="PublishDate">Publish Date</label>
     <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">

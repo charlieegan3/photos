@@ -300,6 +300,9 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		if r.Form.Get("IsDraft") != "" {
 			post.IsDraft = true
 		}
+		if r.Form.Get("IsFavourite") != "" {
+			post.IsFavourite = true
+		}
 		if val := r.PostForm.Get("PublishDate"); val != "" {
 			post.PublishDate, err = time.Parse("2006-01-02T15:04", val)
 			if err != nil {
@@ -420,6 +423,9 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		}
 		if r.Form.Get("IsDraft") != "" {
 			post.IsDraft = true
+		}
+		if r.Form.Get("IsFavourite") != "" {
+			post.IsFavourite = true
 		}
 		if val := r.PostForm.Get("PublishDate"); val != "" {
 			post.PublishDate, err = time.Parse("2006-01-02T15:04", val)

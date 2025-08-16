@@ -26,6 +26,12 @@
   <div class="mb1">
     <%= f.CheckboxTag("IsDraft") %>
   </div>
+  <div class="mb1">
+    <label>
+      <input type="checkbox" name="IsFavourite" value="true">
+      <span class="ml1">&#9733; Favourite</span>
+    </label>
+  </div>
 
   <%= f.SubmitTag("Create Post") %>
 <% } %>

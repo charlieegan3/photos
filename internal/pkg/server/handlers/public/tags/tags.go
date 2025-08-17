@@ -21,7 +21,7 @@ var showTemplate string
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		tags, err := database.AllTags(
 			r.Context(),
@@ -51,7 +51,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		tagName, ok := mux.Vars(r)["tagName"]
 		if !ok {

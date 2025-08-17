@@ -16,7 +16,7 @@ func BuildIndexHandler(_ *sql.DB, renderer templating.PageRenderer) func(http.Re
 	return func(w http.ResponseWriter, _ *http.Request) {
 		var err error
 
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		ctx := plush.NewContext()
 

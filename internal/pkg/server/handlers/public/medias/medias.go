@@ -31,7 +31,7 @@ func BuildMediaHandler(db *sql.DB, bucket *blob.Bucket) func(http.ResponseWriter
 	ir := imageproxy.Resizer{}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		rawID, ok := mux.Vars(r)["mediaID"]
 		if !ok {

@@ -164,7 +164,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 		if ite.TagName() == "LensModel" {
 			rawValue, err := ite.Value()
 			if err != nil {
-				return errors.New("could not get raw Make value")
+				return errors.New("could not get raw LensModel value")
 			}
 
 			val, ok := rawValue.(string)
@@ -440,9 +440,7 @@ func ExtractMetadata(b []byte) (metadata Metadata, err error) {
 			metadata.FocalLength = fmt.Sprintf("%smm (%smm in 35mm format)", focalLength, focalLength35mm)
 		}
 	} else if focalLength35mm != "" {
-		if focalLength35mm != "" {
-			metadata.FocalLength = focalLength35mm + "mm in 35mm format"
-		}
+		metadata.FocalLength = focalLength35mm + "mm in 35mm format"
 	}
 
 	// handle non UTC images

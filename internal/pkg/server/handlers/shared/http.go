@@ -34,7 +34,7 @@ func ValidateContentType(r *http.Request, expected string) error {
 		return errors.New("Content-Type must be set")
 	}
 
-	if contentType[0] != expected {
+	if len(contentType) == 0 || contentType[0] != expected {
 		return fmt.Errorf("Content-Type must be %s", expected)
 	}
 

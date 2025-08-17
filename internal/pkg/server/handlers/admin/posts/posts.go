@@ -53,7 +53,7 @@ func uniqueStrings(input []string) []string {
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		posts, err := database.AllPosts(
 			r.Context(), db, true,
@@ -79,7 +79,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		rawID, ok := mux.Vars(r)["postID"]
 		if !ok {
@@ -206,7 +206,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 
 func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		newPost := models.Post{}
 
@@ -287,7 +287,7 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 
 func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -314,7 +314,7 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		dateVal := r.PostForm.Get("PublishDate")
 		timeVal := r.PostForm.Get("PublishTime")
 		if dateVal != "" && timeVal != "" {
-			dateTimeStr := dateVal + "T" + timeVal + ":00Z"
+			dateTimeStr := fmt.Sprintf("%sT%s:00Z", dateVal, timeVal)
 			post.PublishDate, err = time.Parse("2006-01-02T15:04:05Z", dateTimeStr)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
@@ -362,7 +362,7 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 
 func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {
@@ -442,7 +442,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		dateVal := r.PostForm.Get("PublishDate")
 		timeVal := r.PostForm.Get("PublishTime")
 		if dateVal != "" && timeVal != "" {
-			dateTimeStr := dateVal + "T" + timeVal + ":00Z"
+			dateTimeStr := fmt.Sprintf("%sT%s:00Z", dateVal, timeVal)
 			post.PublishDate, err = time.Parse("2006-01-02T15:04:05Z", dateTimeStr)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)

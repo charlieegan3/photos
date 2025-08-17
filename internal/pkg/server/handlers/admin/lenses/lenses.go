@@ -33,7 +33,7 @@ var showTemplate string
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		lenses, err := database.AllLenses(r.Context(), db)
 		if err != nil {
@@ -56,7 +56,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		ctx := plush.NewContext()
 		ctx.Set("lens", models.Lens{})
@@ -73,7 +73,7 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 
 func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		rawID, ok := mux.Vars(r)["lensID"]
 		if !ok {
@@ -119,7 +119,7 @@ func BuildCreateHandler(
 	_ templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		if val, ok := r.Header["Content-Type"]; !ok || !strings.HasPrefix(val[0], "multipart/form-data") {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -206,7 +206,7 @@ func BuildFormHandler(
 	_ templating.PageRenderer,
 ) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {

@@ -27,7 +27,7 @@ var newTemplate string
 
 func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		trips, err := database.AllTrips(r.Context(), db)
 		if err != nil {
@@ -50,7 +50,7 @@ func BuildIndexHandler(db *sql.DB, renderer templating.PageRenderer) func(http.R
 
 func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		rawID, ok := mux.Vars(r)["tripID"]
 		if !ok {
@@ -92,7 +92,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 
 func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		trip := models.Trip{
 			StartDate: time.Now(),
@@ -113,11 +113,11 @@ func BuildNewHandler(renderer templating.PageRenderer) func(http.ResponseWriter,
 
 func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		if val, ok := r.Header["Content-Type"]; !ok || val[0] != "application/x-www-form-urlencoded" {
 			w.WriteHeader(http.StatusInternalServerError)
-			_, _ = w.Write([]byte("Content-Type must be 'multipart/form-data'"))
+			_, _ = w.Write([]byte("Content-Type must be 'application/x-www-form-urlencoded'"))
 			return
 		}
 
@@ -170,7 +170,7 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 
 func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=UTF-a")
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
 		contentType, ok := r.Header["Content-Type"]
 		if !ok {

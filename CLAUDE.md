@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a personal photo sharing web application written in Go, designed as a spiritual successor to Instagram backup. It provides comprehensive photo organization with metadata extraction, cloud-agnostic storage, and features like trips, tags, devices, and location tracking.
+This is a personal photo sharing web application written in Go, designed as a spiritual successor to Instagram backup. It provides comprehensive photo organization with metadata extraction, local file storage, and features like trips, tags, devices, and location tracking.
 
 ## Development Commands
 
@@ -45,7 +45,7 @@ make local_bucket  # Start local bucket server for file storage
 ### Key Components
 
 1. **Storage Layer** (`/bucket/`)
-   - Uses gocloud.dev for cloud-agnostic storage (supports GCS and local filesystem)
+   - Uses gocloud.dev for local filesystem storage
    - Structure: `media/` (originals), `thumbs/` (generated), `device_icons/`, `lens_icons/`, `location_maps/`
 
 2. **Database**
@@ -106,7 +106,7 @@ Comments should begin with the name of the thing being described and end in a pe
 
 - Environment-specific configs: `config.dev.yaml`, `config.prod.yaml`, `config.test.yaml`
 - Uses Viper for configuration management
-- OAuth and storage backends are configured via environment variables
+- OAuth is configured via environment variables
 
 #### Database Connection Types
 

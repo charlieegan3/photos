@@ -29,7 +29,8 @@
       "Bash(make:*)",
       "Bash(sudo lsof:*)",
       "Bash(mkdir:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(go vet:*)"
     ],
     "deny": []
   }

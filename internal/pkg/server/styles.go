@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 //go:embed static/css/*
@@ -28,21 +29,23 @@ func buildStylesHandler() (handler func(http.ResponseWriter, *http.Request), err
 		return handler, fmt.Errorf("failed to load site styles css data: %w", err)
 	}
 
-	allStyleData := ""
+	var allStyleData strings.Builder
 	for _, b := range []*[]byte{&normalizeData, &tachyonsData, &siteStyleData} {
-		allStyleData += string(*b) + "\n"
+		allStyleData.Write(*b)
+		allStyleData.WriteString("\n")
 	}
+	allStyleDataStr := allStyleData.String()
 
 	// this is just used as a cache-busting ETag for the styles
 	//nolint:gosec
 	styleHash := sha1.New()
-	styleHash.Write([]byte(allStyleData))
+	styleHash.Write([]byte(allStyleDataStr))
 
 	return func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=60")
 		w.Header().Set("Content-Type", "text/css")
 		w.Header().Set("ETag", hex.EncodeToString(styleHash.Sum(nil)))
 
-		fmt.Fprint(w, allStyleData)
+		fmt.Fprint(w, allStyleDataStr)
 	}, nil
 }

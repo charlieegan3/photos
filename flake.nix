@@ -68,7 +68,7 @@
         packages.default = pkgs.buildGoModule {
           pname = "photos";
           version = "0.1.0";
-          vendorHash = "sha256-SmfTIRcD/Nl9IR17ooAKBPHQv5sA0ShvJxcrlaHC/zQ=";
+          vendorHash = "sha256-Q7V4Kp2t9skOvYEYEj+okWgLFn12fhQWNorn6svs+eA=";
           src = ./.;
           checkPhase = "";
           nativeBuildInputs = with pkgs; [ pkg-config ];

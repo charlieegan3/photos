@@ -292,7 +292,9 @@ func (s *EndpointsPostsSuite) TestCreatePost() {
 	form := url.Values{}
 	form.Add("Description", "foobar")
 	form.Add("IsDraft", "true")
-	form.Add("PublishDate", time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC).Format("2006-01-02T15:04"))
+	testTime := time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC)
+	form.Add("PublishDate", testTime.Format("2006-01-02"))
+	form.Add("PublishTime", testTime.Format("15:04"))
 	form.Add("LocationID", strconv.Itoa(returnedLocations[0].ID))
 	form.Add("MediaID", strconv.Itoa(returnedMedias[0].ID))
 	form.Add("Tags", "tag_a tagb tag_c")
@@ -426,7 +428,9 @@ func (s *EndpointsPostsSuite) TestUpdatePost() {
 	form := url.Values{}
 	form.Add("_method", http.MethodPut)
 	form.Add("Description", "foobar")
-	form.Add("PublishDate", time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC).Format("2006-01-02T15:04"))
+	testTime := time.Date(2021, time.November, 24, 19, 56, 0, 0, time.UTC)
+	form.Add("PublishDate", testTime.Format("2006-01-02"))
+	form.Add("PublishTime", testTime.Format("15:04"))
 	form.Add("IsDraft", "true")
 	form.Add("MediaID", strconv.Itoa(returnedMedias[0].ID))
 	form.Add("LocationID", strconv.Itoa(returnedLocations[0].ID))

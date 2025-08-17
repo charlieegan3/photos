@@ -56,7 +56,7 @@ func (d dbPost) ToRecord(includeID bool) goqu.Record {
 		"instagram_code": d.InstagramCode,
 		"is_draft":       d.IsDraft,
 		"is_favourite":   d.IsFavourite,
-		"publish_date":   d.PublishDate.Format("2006-01-02 15:04:05"), // strip the zone since it's not in exif
+		"publish_date":   d.PublishDate.UTC().Format("2006-01-02 15:04:05+00:00"), // explicit UTC timezone
 		"media_id":       d.MediaID,
 		"location_id":    d.LocationID,
 	}
@@ -97,7 +97,7 @@ func newDBPost(post models.Post) dbPost {
 
 		Description:   post.Description,
 		InstagramCode: post.InstagramCode,
-		PublishDate:   post.PublishDate.UTC(),
+		PublishDate:   post.PublishDate,
 
 		IsDraft:     post.IsDraft,
 		IsFavourite: post.IsFavourite,

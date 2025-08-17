@@ -14,14 +14,27 @@
     <textarea class="w-100" name="Tags" rows="4"></textarea>
   </div>
   <div class="mb1">
-    <label for="PublishDate">PublishDate</label>
-    <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
+    <label for="PublishDate">PublishDate (UTC)</label>
+    <div>
+      <input type="date" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02") %>">
+      <input type="time" name="PublishTime" value="<%= post.PublishDate.Format("15:04") %>">
+    </div>
   </div>
   <div class="mb1">
-    <%= f.SelectTag("LocationID", {label: "Location", options: locations}) %>
+    <label for="LocationID">Location</label>
+    <select name="LocationID" class="w-100">
+      <%= for (location) in locations { %>
+        <option value="<%= location.ID %>" <%= if (location.ID == post.LocationID) { %>selected<% } %>><%= location.Name %></option>
+      <% } %>
+    </select>
   </div>
   <div class="mb1">
-    <%= f.SelectTag("MediaID", {label: "Media", options: medias}) %>
+    <label for="MediaID">Media</label>
+    <select name="MediaID" class="w-100">
+      <%= for (media) in medias { %>
+        <option value="<%= media.ID %>" <%= if (media.ID == post.MediaID) { %>selected<% } %>><%= media.Name %></option>
+      <% } %>
+    </select>
   </div>
   <div class="mb1">
     <%= f.CheckboxTag("IsDraft") %>

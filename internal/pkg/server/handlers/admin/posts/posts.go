@@ -26,16 +26,16 @@ var showTemplate string
 //go:embed templates/new.html.plush
 var newTemplate string
 
-type SelectableModel struct {
+type selectableModel struct {
 	Name string
 	ID   int
 }
 
-func (sm SelectableModel) SelectLabel() string {
+func (sm selectableModel) SelectLabel() string {
 	return sm.Name
 }
 
-func (sm SelectableModel) SelectValue() interface{} {
+func (sm selectableModel) SelectValue() interface{} {
 	return sm.ID
 }
 
@@ -148,14 +148,18 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		mediaMap := make(map[string]interface{})
+		var formMedias []selectableModel
 		for i := range allMedias {
-			mediaMap[fmt.Sprintf("%d-%s", allMedias[i].ID, allMedias[i].TakenAt)] = allMedias[i].ID
+			m := &allMedias[i]
+			formMedias = append(formMedias, selectableModel{
+				Name: fmt.Sprintf("%d - %s", m.ID, m.TakenAt.Format("2006-01-02 15:04:05")),
+				ID:   m.ID,
+			})
 		}
 
-		var formLocations []SelectableModel
+		var formLocations []selectableModel
 		for _, l := range locations {
-			formLocations = append(formLocations, SelectableModel{Name: l.Name, ID: l.ID})
+			formLocations = append(formLocations, selectableModel{Name: l.Name, ID: l.ID})
 		}
 
 		// Load collections for form
@@ -186,7 +190,7 @@ func BuildGetHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 		ctx.Set("post", posts[0])
 		ctx.Set("media", medias[0])
 		ctx.Set("locations", formLocations)
-		ctx.Set("medias", mediaMap)
+		ctx.Set("medias", formMedias)
 		ctx.Set("tags", tags)
 		ctx.Set("collections", allCollections)
 		ctx.Set("postCollectionIDs", postCollectionIDs)
@@ -253,20 +257,24 @@ func BuildNewHandler(db *sql.DB, renderer templating.PageRenderer) func(http.Res
 			return
 		}
 
-		mediaMap := make(map[string]interface{})
+		var formMedias []selectableModel
 		for i := range medias {
-			mediaMap[fmt.Sprintf("%d-%s", medias[i].ID, medias[i].TakenAt)] = medias[i].ID
+			m := &medias[i]
+			formMedias = append(formMedias, selectableModel{
+				Name: fmt.Sprintf("%d - %s", m.ID, m.TakenAt.Format("2006-01-02 15:04:05")),
+				ID:   m.ID,
+			})
 		}
 
-		var formLocations []SelectableModel
+		var formLocations []selectableModel
 		for _, l := range locations {
-			formLocations = append(formLocations, SelectableModel{Name: l.Name, ID: l.ID})
+			formLocations = append(formLocations, selectableModel{Name: l.Name, ID: l.ID})
 		}
 
 		ctx := plush.NewContext()
 		ctx.Set("post", newPost)
 		ctx.Set("locations", formLocations)
-		ctx.Set("medias", mediaMap)
+		ctx.Set("medias", formMedias)
 
 		err = renderer(ctx, newTemplate, w)
 		if err != nil {
@@ -303,11 +311,14 @@ func BuildCreateHandler(db *sql.DB, _ templating.PageRenderer) func(http.Respons
 		if r.Form.Get("IsFavourite") != "" {
 			post.IsFavourite = true
 		}
-		if val := r.PostForm.Get("PublishDate"); val != "" {
-			post.PublishDate, err = time.Parse("2006-01-02T15:04", val)
+		dateVal := r.PostForm.Get("PublishDate")
+		timeVal := r.PostForm.Get("PublishTime")
+		if dateVal != "" && timeVal != "" {
+			dateTimeStr := dateVal + "T" + timeVal + ":00Z"
+			post.PublishDate, err = time.Parse("2006-01-02T15:04:05Z", dateTimeStr)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "time value '%v' was invalid", val)
+				fmt.Fprintf(w, "date/time values '%v %v' were invalid", dateVal, timeVal)
 				return
 			}
 		}
@@ -420,6 +431,7 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		post := models.Post{
 			ID:          existingPosts[0].ID,
 			Description: r.Form.Get("Description"),
+			PublishDate: existingPosts[0].PublishDate, // Preserve existing PublishDate
 		}
 		if r.Form.Get("IsDraft") != "" {
 			post.IsDraft = true
@@ -427,11 +439,14 @@ func BuildFormHandler(db *sql.DB, _ templating.PageRenderer) func(http.ResponseW
 		if r.Form.Get("IsFavourite") != "" {
 			post.IsFavourite = true
 		}
-		if val := r.PostForm.Get("PublishDate"); val != "" {
-			post.PublishDate, err = time.Parse("2006-01-02T15:04", val)
+		dateVal := r.PostForm.Get("PublishDate")
+		timeVal := r.PostForm.Get("PublishTime")
+		if dateVal != "" && timeVal != "" {
+			dateTimeStr := dateVal + "T" + timeVal + ":00Z"
+			post.PublishDate, err = time.Parse("2006-01-02T15:04:05Z", dateTimeStr)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				fmt.Fprintf(w, "time value '%v' was invalid", val)
+				fmt.Fprintf(w, "date/time values '%v %v' were invalid", dateVal, timeVal)
 				return
 			}
 		}

@@ -7,6 +7,9 @@
     <% } else { %>
       Cannot display media of kind: <%= media.Kind %>
     <% } %>
+    <div class="mt3">
+      <%= raw(markdown(post.Description)) %>
+    </div>
   </div>
 
   <div class="w-100 w-50-ns pl3-ns">
@@ -15,33 +18,44 @@
     </div>
 
 <%= form_for(post, {class: "mb3", action:"/admin/posts/"+post.ID, method: "PUT"}) { %>
-  <div class="mb1">
-    <label for="Description">Description</label>
-    <div><%= raw(markdown(post.Description)) %></div>
-    <textarea class="w-100" name="Description" rows="4"><%= post.Description %></textarea>
-  </div>
-  <div class="mb1">
-    <label for="Tags">Tags</label>
-    <input class="w-100 border-box" name="Tags" value="<%= for (tag) in tags { %><%= tag.Name %> <% } %>">
-  </div>
-
   <div class="ba b--silver pa2 mv3">
-    <div class="mb2 fw6">Location</div>
+    <div class="mb2 fw6">Description</div>
     <div class="mb1">
-      <%= f.SelectTag("LocationID", {options: locations, label: ""}) %>
+      <textarea class="w-100" name="Description" rows="4"><%= post.Description %></textarea>
     </div>
+  </div>
+  <div class="ba b--silver pa2 mv3">
+    <div class="mb2 fw6">Tags</div>
     <div class="mb1">
-      <a href="/admin/locations/<%= post.LocationID %>">View Location</a>
+      <input class="w-100 border-box" name="Tags" value="<%= for (tag) in tags { %><%= tag.Name %> <% } %>">
     </div>
   </div>
 
   <div class="ba b--silver pa2 mv3">
-    <div class="mb2 fw6">Media</div>
-    <div class="mb1">
-      <%= f.SelectTag("MediaID", {options: medias, label: ""}) %>
+    <div class="mb2 fw6 flex justify-between">
+      Location
+      <a href="/admin/locations/<%= post.LocationID %>" class="fw4">View</a>
     </div>
     <div class="mb1">
-      <a href="/admin/medias/<%= post.MediaID %>">View Media</a>
+      <select name="LocationID" class="w-100">
+        <%= for (location) in locations { %>
+          <option value="<%= location.ID %>" <%= if (location.ID == post.LocationID) { %>selected<% } %>><%= location.Name %></option>
+        <% } %>
+      </select>
+    </div>
+  </div>
+
+  <div class="ba b--silver pa2 mv3">
+    <div class="mb2 fw6 flex justify-between">
+      Media
+      <a href="/admin/medias/<%= post.MediaID %>" class="fw4">View</a>
+    </div>
+    <div class="mb1">
+      <select name="MediaID" class="w-100">
+        <%= for (media) in medias { %>
+          <option value="<%= media.ID %>" <%= if (media.ID == post.MediaID) { %>selected<% } %>><%= media.Name %></option>
+        <% } %>
+      </select>
     </div>
   </div>
 
@@ -72,8 +86,11 @@
   </div>
 
   <div class="mb3">
-    <label for="PublishDate">Publish Date</label>
-    <input type="datetime-local" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02T15:04") %>">
+    <label for="PublishDate">Publish Date (UTC)</label>
+    <div>
+      <input type="date" name="PublishDate" value="<%= post.PublishDate.Format("2006-01-02") %>">
+      <input type="time" name="PublishTime" value="<%= post.PublishDate.Format("15:04") %>">
+    </div>
   </div>
 
   <%= f.SubmitTag("Update Post") %>

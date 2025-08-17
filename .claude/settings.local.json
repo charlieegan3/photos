@@ -28,7 +28,8 @@
       "Bash(cp:*)",
       "Bash(make:*)",
       "Bash(sudo lsof:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(cat:*)"
     ],
     "deny": []
   }

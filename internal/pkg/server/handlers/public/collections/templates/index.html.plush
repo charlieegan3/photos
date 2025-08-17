@@ -1,7 +1,7 @@
 <div class="w-100">
   <div class="mv3 pt2 pl3 f3 f3-ns">Browse Posts by Collection</div>
 
-  <div class="cf pa2-ns f7 ph2">
+  <div class="cf pa3 f7 pa3">
     <%= for (collection) in collections { %>
       <div class="flex items-center mb3">
         <div class="f5 f4-ns">

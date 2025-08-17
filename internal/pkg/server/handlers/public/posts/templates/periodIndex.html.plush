@@ -1,5 +1,5 @@
 <div class="w-100">
-  <div class="pa2">
+  <div class="pa3">
     <div class="mv3 f4 f3-ns">View Posts from a Trip or Date Range</div>
 
     <p class="mt0 mb3">
@@ -22,8 +22,8 @@
     </form>
 
     </div>
-    <h2>Trips</h2>
-    <div>
+    <div class="pa3">
+      <h2 class="mt0">Trips</h2>
       <%= for (trip) in trips { %>
         <a class="mt2 db no-underline" href="/trips/<%= trip.ID %>">
           <div class="f5 underline"><%= trip.Title %></div>
